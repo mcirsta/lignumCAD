@@ -1,0 +1,50 @@
+for i in *.ui; do echo "processing $i"; uic3 -o ./newui/$i -convert $i; done
+processing aboutdialog.ui
+uic3: property `paletteBackgroundColor' for widget `aboutDialog' of type `QDialog' is not supported. Line: 3 Column: 24
+uic3: property `paletteForegroundColor' for widget `programVersionLabel' of type `QLabel' is not supported. Line: 102 Column: 31
+uic3: property `paletteForegroundColor' for widget `copyrightLabel' of type `QLabel' is not supported. Line: 127 Column: 31
+uic3: property `paletteForegroundColor' for widget `contactLabel' of type `QLabel' is not supported. Line: 152 Column: 31
+uic3: property `paletteForegroundColor' for widget `GPLLabel' of type `QLabel' is not supported. Line: 177 Column: 31
+uic3: flag 'WordBreak' for widget 'QLabel' is not supported
+uic3: property `paletteForegroundColor' for widget `Line1' of type `Line' is not supported. Line: 197 Column: 29
+uic3: property `paletteBackgroundColor' for widget `Line1' of type `Line' is not supported. Line: 197 Column: 29
+uic3: property `paletteForegroundColor' for widget `freeTypeVersionLabel' of type `QLabel' is not supported. Line: 239 Column: 58
+uic3: property `paletteForegroundColor' for widget `openCASCADELabel' of type `QLabel' is not supported. Line: 254 Column: 58
+uic3: property `paletteForegroundColor' for widget `acknowledgementsLabel' of type `QLabel' is not supported. Line: 269 Column: 82
+uic3: flag 'WordBreak' for widget 'QLabel' is not supported
+uic3: property `paletteForegroundColor' for widget `openGLGLUVersionLabel' of type `QLabel' is not supported. Line: 287 Column: 58
+uic3: property `paletteForegroundColor' for widget `qtLabel' of type `QLabel' is not supported. Line: 302 Column: 58
+uic3: property `paletteForegroundColor' for widget `openCASCADEVersionLabel' of type `QLabel' is not supported. Line: 317 Column: 58
+uic3: property `paletteForegroundColor' for widget `freeTypeLabel' of type `QLabel' is not supported. Line: 332 Column: 58
+uic3: property `paletteForegroundColor' for widget `openGLGLULabel' of type `QLabel' is not supported. Line: 347 Column: 58
+uic3: property `paletteForegroundColor' for widget `qtVersionLabel' of type `QLabel' is not supported. Line: 362 Column: 58
+uic3: property `paletteForegroundColor' for widget `Line1_2' of type `Line' is not supported. Line: 379 Column: 29
+uic3: property `paletteBackgroundColor' for widget `Line1_2' of type `Line' is not supported. Line: 379 Column: 29
+uic3: property `paletteForegroundColor' for widget `openGLLabel' of type `QLabel' is not supported. Line: 421 Column: 39
+uic3: property `paletteForegroundColor' for widget `openGLVersionLabel' of type `QLabel' is not supported. Line: 436 Column: 39
+processing annotationinfodialog.ui
+processing assemblyadddialog.ui
+processing assemblyconfigdialog.ui
+processing assemblyconstraintform.ui
+processing centerlineinfodialog.ui
+processing dimensioninfodialog.ui
+uic3: enumerator 'MShape' for widget 'QLabel' is not supported
+uic3: enumerator 'MShadow' for widget 'QLabel' is not supported
+processing lignumcadmainwindow.ui
+uic3: property `paletteBackgroundColor' for widget `mainPixmapLabel' of type `QLabel' is not supported. Line: 34 Column: 50
+uic3: property `paletteForegroundColor' for widget `titleLabel' of type `QLabel' is not supported. Line: 61 Column: 50
+uic3: property `paletteBackgroundColor' for widget `titleLabel' of type `QLabel' is not supported. Line: 61 Column: 50
+uic3: flag 'WordBreak' for widget 'QLabel' is not supported
+processing materialdialog.ui
+processing modelinfodialog.ui
+processing newmodelwizard.ui
+processing newpartwizard.ui
+processing offsetinfodialog.ui
+processing pageinfodialog.ui
+processing parameterinfodialog.ui
+processing partinfodialog.ui
+processing preferencesdialog.ui
+processing rectangleinfodialog.ui
+uic3: enumerator 'MShape' for widget 'QLabel' is not supported
+uic3: enumerator 'MShadow' for widget 'QLabel' is not supported
+processing referencelineinfodialog.ui

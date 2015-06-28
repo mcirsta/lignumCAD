@@ -1,165 +1,145 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
-<class>OffsetInfoDialog</class>
-<widget class="QDialog">
-    <property name="name">
-        <cstring>OffsetInfoDialog</cstring>
-    </property>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0" stdsetdef="1">
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>OffsetInfoDialog</class>
+  <widget class="QDialog" name="OffsetInfoDialog">
     <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>308</width>
-            <height>157</height>
-        </rect>
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>308</width>
+        <height>157</height>
+      </rect>
     </property>
-    <property name="caption">
-        <string>Offset Information</string>
+    <property name="windowTitle">
+      <string>Offset Information</string>
     </property>
     <property name="sizeGripEnabled">
-        <bool>true</bool>
+      <bool>true</bool>
     </property>
-    <grid>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <property name="margin">
-            <number>11</number>
-        </property>
-        <property name="spacing">
+    <layout class="QGridLayout">
+      <property name="margin">
+        <number>11</number>
+      </property>
+      <property name="spacing">
+        <number>6</number>
+      </property>
+      <item row="1" column="0">
+        <layout class="QHBoxLayout">
+          <property name="margin">
+            <number>0</number>
+          </property>
+          <property name="spacing">
             <number>6</number>
-        </property>
-        <widget class="QLayoutWidget" row="1" column="0">
-            <property name="name">
-                <cstring>Layout1</cstring>
-            </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>0</number>
-                </property>
-                <property name="spacing">
-                    <number>6</number>
-                </property>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>buttonHelp</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Help</string>
-                    </property>
-                    <property name="accel">
-                        <number>276824136</number>
-                    </property>
-                    <property name="autoDefault">
-                        <bool>true</bool>
-                    </property>
-                </widget>
-                <spacer>
-                    <property name="name">
-                        <cstring>Horizontal Spacing2</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Horizontal</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>0</height>
-                        </size>
-                    </property>
-                </spacer>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>buttonOk</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;OK</string>
-                    </property>
-                    <property name="accel">
-                        <number>276824143</number>
-                    </property>
-                    <property name="autoDefault">
-                        <bool>true</bool>
-                    </property>
-                    <property name="default">
-                        <bool>true</bool>
-                    </property>
-                </widget>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>buttonCancel</cstring>
-                    </property>
-                    <property name="text">
-                        <string>&amp;Cancel</string>
-                    </property>
-                    <property name="accel">
-                        <number>276824131</number>
-                    </property>
-                    <property name="autoDefault">
-                        <bool>true</bool>
-                    </property>
-                </widget>
-            </hbox>
+          </property>
+          <item>
+            <widget class="QPushButton" name="buttonHelp">
+              <property name="text">
+                <string>&amp;Help</string>
+              </property>
+              <property name="shortcut">
+                <number>276824136</number>
+              </property>
+              <property name="autoDefault">
+                <bool>true</bool>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <spacer name="Horizontal Spacing2">
+              <property name="sizeHint">
+                <size>
+                  <width>20</width>
+                  <height>0</height>
+                </size>
+              </property>
+              <property name="sizeType">
+                <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+              </property>
+            </spacer>
+          </item>
+          <item>
+            <widget class="QPushButton" name="buttonOk">
+              <property name="text">
+                <string>&amp;OK</string>
+              </property>
+              <property name="shortcut">
+                <number>276824143</number>
+              </property>
+              <property name="autoDefault">
+                <bool>true</bool>
+              </property>
+              <property name="default">
+                <bool>true</bool>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QPushButton" name="buttonCancel">
+              <property name="text">
+                <string>&amp;Cancel</string>
+              </property>
+              <property name="shortcut">
+                <number>276824131</number>
+              </property>
+              <property name="autoDefault">
+                <bool>true</bool>
+              </property>
+            </widget>
+          </item>
+        </layout>
+      </item>
+      <item row="0" column="0">
+        <widget class="lCDefaultLengthConstraint" name="offsetLengthConstraint">
+          <property name="title">
+            <string>Temporary label</string>
+          </property>
+          <property name="specifiedButtonToolTip">
+            <string>Use a specified size.</string>
+          </property>
+          <property name="specifiedButtonWhatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Specified Size&lt;/b&gt;&lt;/p&gt; &lt;p&gt;Select this option if you want the parameter to have an independent, specified size.&lt;/p&gt;</string>
+          </property>
+          <property name="specifiedSpinBoxToolTip">
+            <string>Enter the size.</string>
+          </property>
+          <property name="specifiedSpinBoxWhatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Specified Size&lt;/b&gt;&lt;/p&gt; &lt;p&gt;Enter the size of the parameter. The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).&lt;/p&gt; &lt;p&gt;If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:&lt;/p&gt; &lt;p&gt;&lt;code&gt;1.234&lt;/code&gt;&lt;/p&gt; &lt;p&gt;If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:&lt;/p&gt; &lt;p&gt;&lt;code&gt;1&lt;/code&gt; (equals 1.0)&lt;/p&gt; &lt;p&gt;&lt;code&gt;1/2&lt;/code&gt; (equals 0.5)&lt;/p&gt; &lt;p&gt;&lt;code&gt;1 1/2&lt;/code&gt; (equals 1.5, note the blank separating the whole number and the fraction)&lt;/p&gt; &lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src=&quot;default_active.png&quot;&gt; button&lt;/p&gt;</string>
+          </property>
         </widget>
-        <widget class="lCDefaultLengthConstraint" row="0" column="0">
-            <property name="name">
-                <cstring>offsetLengthConstraint</cstring>
-            </property>
-            <property name="title">
-                <string>Temporary label</string>
-            </property>
-            <property name="specifiedButtonToolTip">
-                <string>Use a specified size.</string>
-            </property>
-            <property name="specifiedButtonWhatsThis">
-                <string>&lt;p&gt;&lt;b&gt;Specified Size&lt;/b&gt;&lt;/p&gt; &lt;p&gt;Select this option if you want the parameter to have an independent, specified size.&lt;/p&gt;</string>
-            </property>
-            <property name="specifiedSpinBoxToolTip">
-                <string>Enter the size.</string>
-            </property>
-            <property name="specifiedSpinBoxWhatsThis">
-                <string>&lt;p&gt;&lt;b&gt;Specified Size&lt;/b&gt;&lt;/p&gt; &lt;p&gt;Enter the size of the parameter. The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).&lt;/p&gt; &lt;p&gt;If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:&lt;/p&gt; &lt;p&gt;&lt;code&gt;1.234&lt;/code&gt;&lt;/p&gt; &lt;p&gt;If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:&lt;/p&gt; &lt;p&gt;&lt;code&gt;1&lt;/code&gt; (equals 1.0)&lt;/p&gt; &lt;p&gt;&lt;code&gt;1/2&lt;/code&gt; (equals 0.5)&lt;/p&gt; &lt;p&gt;&lt;code&gt;1 1/2&lt;/code&gt; (equals 1.5, note the blank separating the whole number and the fraction)&lt;/p&gt; &lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
-            </property>
-        </widget>
-    </grid>
-</widget>
-<connections>
-    <connection>
-        <sender>buttonOk</sender>
-        <signal>clicked()</signal>
-        <receiver>OffsetInfoDialog</receiver>
-        <slot>accept()</slot>
-    </connection>
-    <connection>
-        <sender>buttonCancel</sender>
-        <signal>clicked()</signal>
-        <receiver>OffsetInfoDialog</receiver>
-        <slot>reject()</slot>
-    </connection>
-    <connection>
-        <sender>buttonHelp</sender>
-        <signal>clicked()</signal>
-        <receiver>OffsetInfoDialog</receiver>
-        <slot>buttonHelp_clicked()</slot>
-    </connection>
-</connections>
-<tabstops>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11"/>
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
     <tabstop>buttonOk</tabstop>
     <tabstop>buttonCancel</tabstop>
     <tabstop>buttonHelp</tabstop>
-</tabstops>
-<includes>
-    <include location="local" impldecl="in implementation">offsetinfodialog.ui.h</include>
-    <include location="local" impldecl="in implementation">../lcdefaultlengthconstraint/lcdefaultlengthconstraint.h</include>
-</includes>
-<slots>
-    <slot>buttonHelp_clicked()</slot>
-</slots>
-<pixmapinproject/>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+  </tabstops>
+  <connections>
+    <connection>
+      <sender>buttonOk</sender>
+      <signal>clicked()</signal>
+      <receiver>OffsetInfoDialog</receiver>
+      <slot>accept()</slot>
+    </connection>
+    <connection>
+      <sender>buttonCancel</sender>
+      <signal>clicked()</signal>
+      <receiver>OffsetInfoDialog</receiver>
+      <slot>reject()</slot>
+    </connection>
+    <connection>
+      <sender>buttonHelp</sender>
+      <signal>clicked()</signal>
+      <receiver>OffsetInfoDialog</receiver>
+      <slot>buttonHelp_clicked()</slot>
+    </connection>
+  </connections>
+</ui>

@@ -1,340 +1,275 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
-<class>NewPartWizard</class>
-<widget class="QWizard">
-    <property name="name">
-        <cstring>NewPartWizard</cstring>
-    </property>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0" stdsetdef="1">
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>NewPartWizard</class>
+  <widget class="Q3Wizard" name="NewPartWizard">
     <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>563</width>
-            <height>462</height>
-        </rect>
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>563</width>
+        <height>462</height>
+      </rect>
     </property>
-    <property name="caption">
-        <string>New Part Wizard</string>
+    <property name="windowTitle">
+      <string>New Part Wizard</string>
     </property>
-    <property name="icon">
-        <pixmap>lignumCAD.png</pixmap>
+    <property name="windowIcon">
+      <pixmap>lignumCAD.png</pixmap>
     </property>
-    <widget class="QWidget">
-        <property name="name">
-            <cstring>initialPartPage</cstring>
+    <widget class="QWidget" name="initialPartPage">
+      <attribute name="title">
+        <string>Select an initial form for the part</string>
+      </attribute>
+      <layout class="QGridLayout">
+        <property name="margin">
+          <number>11</number>
         </property>
-        <attribute name="title">
-            <string>Select an initial form for the part</string>
-        </attribute>
-        <grid>
-            <property name="name">
-                <cstring>unnamed</cstring>
-            </property>
+        <property name="spacing">
+          <number>6</number>
+        </property>
+        <item row="0" column="0" rowspan="2" colspan="1">
+          <layout class="QVBoxLayout">
             <property name="margin">
-                <number>11</number>
+              <number>0</number>
             </property>
             <property name="spacing">
-                <number>6</number>
+              <number>6</number>
             </property>
-            <widget class="QLayoutWidget" row="0" column="0" rowspan="2" colspan="1">
-                <property name="name">
-                    <cstring>Layout6</cstring>
+            <item>
+              <spacer name="Spacer20">
+                <property name="sizeHint">
+                  <size>
+                    <width>0</width>
+                    <height>51</height>
+                  </size>
                 </property>
-                <vbox>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>0</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <spacer>
-                        <property name="name">
-                            <cstring>Spacer20</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>0</width>
-                                <height>51</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QLabel">
-                        <property name="name">
-                            <cstring>PixmapLabel5</cstring>
-                        </property>
-                        <property name="pixmap">
-                            <pixmap>machines.png</pixmap>
-                        </property>
-                        <property name="scaledContents">
-                            <bool>false</bool>
-                        </property>
-                    </widget>
-                    <spacer>
-                        <property name="name">
-                            <cstring>Spacer21</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>0</width>
-                                <height>61</height>
-                            </size>
-                        </property>
-                    </spacer>
-                </vbox>
-            </widget>
-            <widget class="QLineEdit" row="0" column="2">
-                <property name="name">
-                    <cstring>nameEdit</cstring>
+                <property name="sizeType">
+                  <enum>QSizePolicy::Expanding</enum>
                 </property>
-                <property name="toolTip" stdset="0">
-                    <string>Edit the name of the part.</string>
+                <property name="orientation">
+                  <enum>Qt::Vertical</enum>
                 </property>
-                <property name="whatsThis" stdset="0">
-                    <string>&lt;p&gt;&lt;b&gt;Part Name&lt;/b&gt;&lt;/p&gt;
+              </spacer>
+            </item>
+            <item>
+              <widget class="QLabel" name="PixmapLabel5">
+                <property name="pixmap">
+                  <pixmap>machines.png</pixmap>
+                </property>
+                <property name="scaledContents">
+                  <bool>false</bool>
+                </property>
+                <property name="wordWrap">
+                  <bool>false</bool>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <spacer name="Spacer21">
+                <property name="sizeHint">
+                  <size>
+                    <width>0</width>
+                    <height>61</height>
+                  </size>
+                </property>
+                <property name="sizeType">
+                  <enum>QSizePolicy::Expanding</enum>
+                </property>
+                <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                </property>
+              </spacer>
+            </item>
+          </layout>
+        </item>
+        <item row="0" column="2">
+          <widget class="QLineEdit" name="nameEdit">
+            <property name="toolTip" stdset="0">
+              <string>Edit the name of the part.</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+              <string>&lt;p&gt;&lt;b&gt;Part Name&lt;/b&gt;&lt;/p&gt;
 Enter a name for the part.</string>
-                </property>
-            </widget>
-            <widget class="QLabel" row="0" column="1">
-                <property name="name">
-                    <cstring>nameLabel</cstring>
-                </property>
-                <property name="text">
-                    <string>N&amp;ame:</string>
-                </property>
-                <property name="buddy" stdset="0">
-                    <cstring>nameEdit</cstring>
-                </property>
-            </widget>
-            <widget class="QGroupBox" row="1" column="1" rowspan="1" colspan="2">
-                <property name="name">
-                    <cstring>partLibraryGroupBox</cstring>
-                </property>
-                <property name="title">
-                    <string>&amp;Initial Part Library</string>
-                </property>
-                <grid>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <widget class="QListView" row="0" column="0">
-                        <column>
-                            <property name="text">
-                                <string>Parts</string>
-                            </property>
-                            <property name="clickable">
-                                <bool>true</bool>
-                            </property>
-                            <property name="resizeable">
-                                <bool>true</bool>
-                            </property>
-                        </column>
-                        <column>
-                            <property name="text">
-                                <string>Example</string>
-                            </property>
-                            <property name="clickable">
-                                <bool>false</bool>
-                            </property>
-                            <property name="resizeable">
-                                <bool>true</bool>
-                            </property>
-                        </column>
-                        <property name="name">
-                            <cstring>partLibraryListView</cstring>
-                        </property>
-                        <property name="toolTip" stdset="0">
-                            <string>Select a template part from the list.</string>
-                        </property>
-                        <property name="whatsThis" stdset="0">
-                            <string>&lt;p&gt;&lt;b&gt;Part Library&lt;/b&gt;&lt;/p&gt;
+            </property>
+          </widget>
+        </item>
+        <item row="0" column="1">
+          <widget class="QLabel" name="nameLabel">
+            <property name="text">
+              <string>N&amp;ame:</string>
+            </property>
+            <property name="buddy" stdset="0">
+              <cstring>nameEdit</cstring>
+            </property>
+            <property name="wordWrap">
+              <bool>false</bool>
+            </property>
+          </widget>
+        </item>
+        <item row="1" column="1" rowspan="1" colspan="2">
+          <widget class="Q3GroupBox" name="partLibraryGroupBox">
+            <property name="title">
+              <string>&amp;Initial Part Library</string>
+            </property>
+            <layout class="QGridLayout">
+              <property name="margin">
+                <number>11</number>
+              </property>
+              <property name="spacing">
+                <number>6</number>
+              </property>
+              <item row="0" column="0">
+                <widget class="Q3ListView" name="partLibraryListView">
+                  <property name="toolTip" stdset="0">
+                    <string>Select a template part from the list.</string>
+                  </property>
+                  <property name="whatsThis" stdset="0">
+                    <string>&lt;p&gt;&lt;b&gt;Part Library&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;
 This list contains the available template parts. The parts are categorized by group. &lt;em&gt;Blanks&lt;/em&gt; are generally used in milling operations to create custom parts. You can also modify the more specific parts, but this is generally not necessary. 
 &lt;/p&gt;</string>
-                        </property>
-                    </widget>
-                </grid>
-            </widget>
-        </grid>
+                  </property>
+                  <column>
+                    <property name="text">
+                      <string>Parts</string>
+                    </property>
+                    <property name="clickable">
+                      <bool>true</bool>
+                    </property>
+                    <property name="resizeable">
+                      <bool>true</bool>
+                    </property>
+                  </column>
+                  <column>
+                    <property name="text">
+                      <string>Example</string>
+                    </property>
+                    <property name="clickable">
+                      <bool>false</bool>
+                    </property>
+                    <property name="resizeable">
+                      <bool>true</bool>
+                    </property>
+                  </column>
+                </widget>
+              </item>
+            </layout>
+          </widget>
+        </item>
+      </layout>
     </widget>
-    <widget class="QWidget">
-        <property name="name">
-            <cstring>partParametersPage</cstring>
+    <widget class="QWidget" name="partParametersPage">
+      <attribute name="title">
+        <string>Enter the parameters for the part</string>
+      </attribute>
+      <layout class="QGridLayout">
+        <property name="margin">
+          <number>11</number>
         </property>
-        <attribute name="title">
-            <string>Enter the parameters for the part</string>
-        </attribute>
-        <grid>
-            <property name="name">
-                <cstring>unnamed</cstring>
-            </property>
+        <property name="spacing">
+          <number>6</number>
+        </property>
+        <item row="0" column="0">
+          <layout class="QVBoxLayout">
             <property name="margin">
-                <number>11</number>
+              <number>0</number>
             </property>
             <property name="spacing">
-                <number>6</number>
+              <number>6</number>
             </property>
-            <widget class="QLayoutWidget" row="0" column="0">
-                <property name="name">
-                    <cstring>Layout6_2</cstring>
+            <item>
+              <spacer name="Spacer20_2">
+                <property name="sizeHint">
+                  <size>
+                    <width>0</width>
+                    <height>51</height>
+                  </size>
                 </property>
-                <vbox>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>0</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <spacer>
-                        <property name="name">
-                            <cstring>Spacer20_2</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>0</width>
-                                <height>51</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QLabel">
-                        <property name="name">
-                            <cstring>PixmapLabel5_2</cstring>
-                        </property>
-                        <property name="pixmap">
-                            <pixmap>machines.png</pixmap>
-                        </property>
-                        <property name="scaledContents">
-                            <bool>false</bool>
-                        </property>
-                    </widget>
-                    <spacer>
-                        <property name="name">
-                            <cstring>Spacer21_2</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>0</width>
-                                <height>61</height>
-                            </size>
-                        </property>
-                    </spacer>
-                </vbox>
-            </widget>
-            <widget class="QGroupBox" row="0" column="1">
-                <property name="name">
-                    <cstring>partParameterFrame</cstring>
+                <property name="sizeType">
+                  <enum>QSizePolicy::Expanding</enum>
                 </property>
-                <property name="title">
-                    <string>&amp;Parameters</string>
+                <property name="orientation">
+                  <enum>Qt::Vertical</enum>
                 </property>
-                <grid>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                </grid>
-            </widget>
-        </grid>
+              </spacer>
+            </item>
+            <item>
+              <widget class="QLabel" name="PixmapLabel5_2">
+                <property name="pixmap">
+                  <pixmap>machines.png</pixmap>
+                </property>
+                <property name="scaledContents">
+                  <bool>false</bool>
+                </property>
+                <property name="wordWrap">
+                  <bool>false</bool>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <spacer name="Spacer21_2">
+                <property name="sizeHint">
+                  <size>
+                    <width>0</width>
+                    <height>61</height>
+                  </size>
+                </property>
+                <property name="sizeType">
+                  <enum>QSizePolicy::Expanding</enum>
+                </property>
+                <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                </property>
+              </spacer>
+            </item>
+          </layout>
+        </item>
+        <item row="0" column="1">
+          <widget class="Q3GroupBox" name="partParameterFrame">
+            <property name="title">
+              <string>&amp;Parameters</string>
+            </property>
+            <layout class="QGridLayout">
+              <property name="margin">
+                <number>11</number>
+              </property>
+              <property name="spacing">
+                <number>6</number>
+              </property>
+            </layout>
+          </widget>
+        </item>
+      </layout>
     </widget>
-</widget>
-<connections>
+  </widget>
+  <layoutdefault spacing="6" margin="11"/>
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <includes>
+    <include location="global">q3vbox.h</include>
+    <include location="global">q3dict.h</include>
+    <include location="global">q3scrollview.h</include>
+  </includes>
+  <connections>
     <connection>
-        <sender>partLibraryListView</sender>
-        <signal>currentChanged(QListViewItem*)</signal>
-        <receiver>NewPartWizard</receiver>
-        <slot>partLibraryListView_currentChanged(QListViewItem*)</slot>
+      <sender>partLibraryListView</sender>
+      <signal>currentChanged(Q3ListViewItem*)</signal>
+      <receiver>NewPartWizard</receiver>
+      <slot>partLibraryListView_currentChanged(Q3ListViewItem*)</slot>
     </connection>
     <connection>
-        <sender>NewPartWizard</sender>
-        <signal>selected(const QString&amp;)</signal>
-        <receiver>NewPartWizard</receiver>
-        <slot>NewPartWizard_selected(const QString&amp;)</slot>
+      <sender>NewPartWizard</sender>
+      <signal>selected(QString)</signal>
+      <receiver>NewPartWizard</receiver>
+      <slot>NewPartWizard_selected(QString)</slot>
     </connection>
     <connection>
-        <sender>NewPartWizard</sender>
-        <signal>helpClicked()</signal>
-        <receiver>NewPartWizard</receiver>
-        <slot>NewPartWizard_helpClicked()</slot>
+      <sender>NewPartWizard</sender>
+      <signal>helpClicked()</signal>
+      <receiver>NewPartWizard</receiver>
+      <slot>NewPartWizard_helpClicked()</slot>
     </connection>
-</connections>
-<includes>
-    <include location="global" impldecl="in declaration">qvbox.h</include>
-    <include location="global" impldecl="in declaration">qdict.h</include>
-    <include location="global" impldecl="in declaration">qscrollview.h</include>
-    <include location="global" impldecl="in implementation">qapplication.h</include>
-    <include location="global" impldecl="in implementation">qpushbutton.h</include>
-    <include location="local" impldecl="in implementation">lcdefaultlengthconstraint/lcdefaultlengthconstraint.h</include>
-    <include location="local" impldecl="in implementation">part.h</include>
-    <include location="local" impldecl="in implementation">constants.h</include>
-    <include location="local" impldecl="in implementation">partview.h</include>
-    <include location="local" impldecl="in implementation">designbookview.h</include>
-    <include location="local" impldecl="in implementation">newpartwizard.ui.h</include>
-</includes>
-<forwards>
-    <forward>class PartView;</forward>
-    <forward>class lCDefaultLengthConstraint;</forward>
-    <forward>class PartMetadata;</forward>
-</forwards>
-<variables>
-    <variable>QMap&lt;QListViewItem*,PartMetadata*&gt; parts_;</variable>
-    <variable>QScrollView* scroll_view_;</variable>
-    <variable>QPtrList&lt;lCDefaultLengthConstraint&gt; labels_;</variable>
-    <variable>QDict&lt;QListViewItem&gt; groups_;</variable>
-    <variable>QDict&lt;lCDefaultLengthConstraint&gt; parameter_labels_;</variable>
-    <variable>QVBox* scroll_vbox_;</variable>
-    <variable>PartView* part_view_;</variable>
-</variables>
-<slots>
-    <slot>init()</slot>
-    <slot>partLibraryListView_currentChanged( QListViewItem * item )</slot>
-    <slot>NewPartWizard_selected( const QString &amp; )</slot>
-    <slot specifier="non virtual" returnType="const QDict&lt;lCDefaultLengthConstraint&gt;&amp;">parameters( void )</slot>
-    <slot specifier="non virtual" returnType="const PartMetadata *">part( void )</slot>
-    <slot access="private" specifier="non virtual">updateValidity( double )</slot>
-    <slot>NewPartWizard_helpClicked()</slot>
-    <slot access="private" specifier="non virtual">validateName( void )</slot>
-    <slot specifier="non virtual">setPartView( PartView * part_view )</slot>
-    <slot access="private" specifier="non virtual" returnType="QString">trC( const QString &amp; string )</slot>
-</slots>
-<pixmapinproject/>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+  </connections>
+</ui>

@@ -1,681 +1,632 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
-<class>MaterialDialog</class>
-<widget class="QDialog">
-    <property name="name">
-        <cstring>MaterialDialog</cstring>
-    </property>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0" stdsetdef="1">
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>MaterialDialog</class>
+  <widget class="QDialog" name="MaterialDialog">
     <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>538</width>
-            <height>468</height>
-        </rect>
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>538</width>
+        <height>468</height>
+      </rect>
     </property>
     <property name="sizePolicy">
-        <sizepolicy>
-            <hsizetype>7</hsizetype>
-            <vsizetype>5</vsizetype>
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-        </sizepolicy>
+      <sizepolicy>
+        <hsizetype>7</hsizetype>
+        <vsizetype>5</vsizetype>
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+      </sizepolicy>
     </property>
-    <property name="caption">
-        <string>Set the Material for the Part</string>
+    <property name="windowTitle">
+      <string>Set the Material for the Part</string>
     </property>
-    <property name="icon">
-        <pixmap>lignumCAD.png</pixmap>
+    <property name="windowIcon">
+      <pixmap>lignumCAD.png</pixmap>
     </property>
     <property name="sizeGripEnabled">
-        <bool>true</bool>
+      <bool>true</bool>
     </property>
-    <grid>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <property name="margin">
-            <number>11</number>
-        </property>
-        <property name="spacing">
-            <number>6</number>
-        </property>
-        <widget class="QPushButton" row="1" column="0">
-            <property name="name">
-                <cstring>buttonHelp</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Help</string>
-            </property>
-            <property name="accel">
-                <number>276824136</number>
-            </property>
-            <property name="autoDefault">
-                <bool>true</bool>
-            </property>
+    <layout class="QGridLayout">
+      <property name="margin">
+        <number>11</number>
+      </property>
+      <property name="spacing">
+        <number>6</number>
+      </property>
+      <item row="1" column="0">
+        <widget class="QPushButton" name="buttonHelp">
+          <property name="text">
+            <string>&amp;Help</string>
+          </property>
+          <property name="shortcut">
+            <number>276824136</number>
+          </property>
+          <property name="autoDefault">
+            <bool>true</bool>
+          </property>
         </widget>
-        <widget class="QGroupBox" row="0" column="2" rowspan="1" colspan="3">
-            <property name="name">
-                <cstring>detailsGroupBox</cstring>
+      </item>
+      <item row="0" column="2" rowspan="1" colspan="3">
+        <widget class="Q3GroupBox" name="detailsGroupBox">
+          <property name="title">
+            <string>Material Details</string>
+          </property>
+          <layout class="QHBoxLayout">
+            <property name="margin">
+              <number>11</number>
             </property>
-            <property name="title">
-                <string>Material Details</string>
+            <property name="spacing">
+              <number>6</number>
             </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
+            <item>
+              <widget class="Q3TextEdit" name="MaterialText">
+                <property name="sizePolicy">
+                  <sizepolicy>
+                    <hsizetype>7</hsizetype>
+                    <vsizetype>7</vsizetype>
+                    <horstretch>100</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                  <size>
+                    <width>250</width>
+                    <height>0</height>
+                  </size>
+                </property>
+                <property name="readOnly">
+                  <bool>true</bool>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <layout class="QVBoxLayout">
                 <property name="margin">
-                    <number>11</number>
+                  <number>0</number>
                 </property>
                 <property name="spacing">
-                    <number>6</number>
+                  <number>6</number>
                 </property>
-                <widget class="QTextEdit">
-                    <property name="name">
-                        <cstring>MaterialText</cstring>
+                <item>
+                  <layout class="QGridLayout">
+                    <property name="margin">
+                      <number>0</number>
                     </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>7</hsizetype>
-                            <vsizetype>7</vsizetype>
-                            <horstretch>100</horstretch>
+                    <property name="spacing">
+                      <number>6</number>
+                    </property>
+                    <item row="1" column="0" rowspan="1" colspan="3">
+                      <widget class="QLabel" name="SolidColorLabel">
+                        <property name="text">
+                          <string>Solid Color</string>
+                        </property>
+                        <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                        </property>
+                        <property name="wordWrap">
+                          <bool>false</bool>
+                        </property>
+                      </widget>
+                    </item>
+                    <item row="0" column="2">
+                      <spacer name="Spacer5_2">
+                        <property name="sizeHint">
+                          <size>
+                            <width>21</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item row="0" column="1">
+                      <widget class="QLabel" name="SolidColor">
+                        <property name="sizePolicy">
+                          <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
                             <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>250</width>
-                            <height>0</height>
-                        </size>
-                    </property>
-                    <property name="readOnly">
-                        <bool>true</bool>
-                    </property>
-                </widget>
-                <widget class="QLayoutWidget">
-                    <property name="name">
-                        <cstring>Layout19</cstring>
-                    </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
+                          </sizepolicy>
                         </property>
-                        <property name="margin">
-                            <number>0</number>
+                        <property name="minimumSize">
+                          <size>
+                            <width>64</width>
+                            <height>64</height>
+                          </size>
                         </property>
-                        <property name="spacing">
-                            <number>6</number>
+                        <property name="maximumSize">
+                          <size>
+                            <width>64</width>
+                            <height>64</height>
+                          </size>
                         </property>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>Layout10</cstring>
-                            </property>
-                            <grid>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>0</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>6</number>
-                                </property>
-                                <widget class="QLabel" row="1" column="0" rowspan="1" colspan="3">
-                                    <property name="name">
-                                        <cstring>SolidColorLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Solid Color</string>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignCenter</set>
-                                    </property>
-                                </widget>
-                                <spacer row="0" column="2">
-                                    <property name="name">
-                                        <cstring>Spacer5_2</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>21</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="QLabel" row="0" column="1">
-                                    <property name="name">
-                                        <cstring>SolidColor</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="minimumSize">
-                                        <size>
-                                            <width>64</width>
-                                            <height>64</height>
-                                        </size>
-                                    </property>
-                                    <property name="maximumSize">
-                                        <size>
-                                            <width>64</width>
-                                            <height>64</height>
-                                        </size>
-                                    </property>
-                                    <property name="frameShape">
-                                        <enum>Box</enum>
-                                    </property>
-                                    <property name="frameShadow">
-                                        <enum>Sunken</enum>
-                                    </property>
-                                    <property name="text">
-                                        <string></string>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignCenter</set>
-                                    </property>
-                                </widget>
-                                <spacer row="2" column="1">
-                                    <property name="name">
-                                        <cstring>Spacer2</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Vertical</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>16</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <spacer row="0" column="0">
-                                    <property name="name">
-                                        <cstring>Spacer5</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>21</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                            </grid>
-                        </widget>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>Layout16</cstring>
-                            </property>
-                            <grid>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>0</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>6</number>
-                                </property>
-                                <spacer row="0" column="2">
-                                    <property name="name">
-                                        <cstring>Spacer5_3_2</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>21</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="QLabel" row="1" column="0" rowspan="1" colspan="3">
-                                    <property name="name">
-                                        <cstring>FaceGrainLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Face Grain</string>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignCenter</set>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel" row="0" column="1">
-                                    <property name="name">
-                                        <cstring>FaceGrainPixmap</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="minimumSize">
-                                        <size>
-                                            <width>64</width>
-                                            <height>64</height>
-                                        </size>
-                                    </property>
-                                    <property name="maximumSize">
-                                        <size>
-                                            <width>64</width>
-                                            <height>64</height>
-                                        </size>
-                                    </property>
-                                    <property name="frameShape">
-                                        <enum>Box</enum>
-                                    </property>
-                                    <property name="frameShadow">
-                                        <enum>Sunken</enum>
-                                    </property>
-                                    <property name="scaledContents">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignCenter</set>
-                                    </property>
-                                </widget>
-                                <spacer row="0" column="0">
-                                    <property name="name">
-                                        <cstring>Spacer5_3</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>21</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <spacer row="2" column="1">
-                                    <property name="name">
-                                        <cstring>Spacer3</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Vertical</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>16</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                            </grid>
-                        </widget>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>Layout17</cstring>
-                            </property>
-                            <grid>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>0</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>6</number>
-                                </property>
-                                <spacer row="2" column="1">
-                                    <property name="name">
-                                        <cstring>Spacer4</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Vertical</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>16</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <spacer row="0" column="2">
-                                    <property name="name">
-                                        <cstring>Spacer5_3_4</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>21</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <spacer row="0" column="0">
-                                    <property name="name">
-                                        <cstring>Spacer5_3_3</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>21</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="QLabel" row="1" column="0" rowspan="1" colspan="3">
-                                    <property name="name">
-                                        <cstring>EndGrainLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>End Grain</string>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignCenter</set>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel" row="0" column="1">
-                                    <property name="name">
-                                        <cstring>EndGrainPixmap</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="minimumSize">
-                                        <size>
-                                            <width>64</width>
-                                            <height>64</height>
-                                        </size>
-                                    </property>
-                                    <property name="maximumSize">
-                                        <size>
-                                            <width>64</width>
-                                            <height>64</height>
-                                        </size>
-                                    </property>
-                                    <property name="frameShape">
-                                        <enum>Box</enum>
-                                    </property>
-                                    <property name="frameShadow">
-                                        <enum>Sunken</enum>
-                                    </property>
-                                    <property name="scaledContents">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignCenter</set>
-                                    </property>
-                                </widget>
-                            </grid>
-                        </widget>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>Layout18</cstring>
-                            </property>
-                            <grid>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>0</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>6</number>
-                                </property>
-                                <widget class="QLabel" row="1" column="0" rowspan="1" colspan="3">
-                                    <property name="name">
-                                        <cstring>EdgeGrainLabel</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Edge Grain</string>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignCenter</set>
-                                    </property>
-                                </widget>
-                                <widget class="QLabel" row="0" column="1">
-                                    <property name="name">
-                                        <cstring>EdgeGrainPixmap</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="minimumSize">
-                                        <size>
-                                            <width>64</width>
-                                            <height>64</height>
-                                        </size>
-                                    </property>
-                                    <property name="maximumSize">
-                                        <size>
-                                            <width>64</width>
-                                            <height>64</height>
-                                        </size>
-                                    </property>
-                                    <property name="frameShape">
-                                        <enum>Box</enum>
-                                    </property>
-                                    <property name="frameShadow">
-                                        <enum>Sunken</enum>
-                                    </property>
-                                    <property name="scaledContents">
-                                        <bool>false</bool>
-                                    </property>
-                                    <property name="alignment">
-                                        <set>AlignCenter</set>
-                                    </property>
-                                </widget>
-                                <spacer row="0" column="0">
-                                    <property name="name">
-                                        <cstring>Spacer5_3_5</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>21</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <spacer row="0" column="2">
-                                    <property name="name">
-                                        <cstring>Spacer5_3_6</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>21</width>
-                                            <height>21</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                            </grid>
-                        </widget>
-                    </vbox>
-                </widget>
-            </hbox>
+                        <property name="frameShape">
+                          <enum>QFrame::Box</enum>
+                        </property>
+                        <property name="frameShadow">
+                          <enum>QFrame::Sunken</enum>
+                        </property>
+                        <property name="text">
+                          <string/>
+                        </property>
+                        <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                        </property>
+                        <property name="wordWrap">
+                          <bool>false</bool>
+                        </property>
+                      </widget>
+                    </item>
+                    <item row="2" column="1">
+                      <spacer name="Spacer2">
+                        <property name="sizeHint">
+                          <size>
+                            <width>16</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item row="0" column="0">
+                      <spacer name="Spacer5">
+                        <property name="sizeHint">
+                          <size>
+                            <width>21</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                  </layout>
+                </item>
+                <item>
+                  <layout class="QGridLayout">
+                    <property name="margin">
+                      <number>0</number>
+                    </property>
+                    <property name="spacing">
+                      <number>6</number>
+                    </property>
+                    <item row="0" column="2">
+                      <spacer name="Spacer5_3_2">
+                        <property name="sizeHint">
+                          <size>
+                            <width>21</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item row="1" column="0" rowspan="1" colspan="3">
+                      <widget class="QLabel" name="FaceGrainLabel">
+                        <property name="text">
+                          <string>Face Grain</string>
+                        </property>
+                        <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                        </property>
+                        <property name="wordWrap">
+                          <bool>false</bool>
+                        </property>
+                      </widget>
+                    </item>
+                    <item row="0" column="1">
+                      <widget class="QLabel" name="FaceGrainPixmap">
+                        <property name="sizePolicy">
+                          <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                          </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                          <size>
+                            <width>64</width>
+                            <height>64</height>
+                          </size>
+                        </property>
+                        <property name="maximumSize">
+                          <size>
+                            <width>64</width>
+                            <height>64</height>
+                          </size>
+                        </property>
+                        <property name="frameShape">
+                          <enum>QFrame::Box</enum>
+                        </property>
+                        <property name="frameShadow">
+                          <enum>QFrame::Sunken</enum>
+                        </property>
+                        <property name="scaledContents">
+                          <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                        </property>
+                        <property name="wordWrap">
+                          <bool>false</bool>
+                        </property>
+                      </widget>
+                    </item>
+                    <item row="0" column="0">
+                      <spacer name="Spacer5_3">
+                        <property name="sizeHint">
+                          <size>
+                            <width>21</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item row="2" column="1">
+                      <spacer name="Spacer3">
+                        <property name="sizeHint">
+                          <size>
+                            <width>16</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                  </layout>
+                </item>
+                <item>
+                  <layout class="QGridLayout">
+                    <property name="margin">
+                      <number>0</number>
+                    </property>
+                    <property name="spacing">
+                      <number>6</number>
+                    </property>
+                    <item row="2" column="1">
+                      <spacer name="Spacer4">
+                        <property name="sizeHint">
+                          <size>
+                            <width>16</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item row="0" column="2">
+                      <spacer name="Spacer5_3_4">
+                        <property name="sizeHint">
+                          <size>
+                            <width>21</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item row="0" column="0">
+                      <spacer name="Spacer5_3_3">
+                        <property name="sizeHint">
+                          <size>
+                            <width>21</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item row="1" column="0" rowspan="1" colspan="3">
+                      <widget class="QLabel" name="EndGrainLabel">
+                        <property name="text">
+                          <string>End Grain</string>
+                        </property>
+                        <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                        </property>
+                        <property name="wordWrap">
+                          <bool>false</bool>
+                        </property>
+                      </widget>
+                    </item>
+                    <item row="0" column="1">
+                      <widget class="QLabel" name="EndGrainPixmap">
+                        <property name="sizePolicy">
+                          <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                          </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                          <size>
+                            <width>64</width>
+                            <height>64</height>
+                          </size>
+                        </property>
+                        <property name="maximumSize">
+                          <size>
+                            <width>64</width>
+                            <height>64</height>
+                          </size>
+                        </property>
+                        <property name="frameShape">
+                          <enum>QFrame::Box</enum>
+                        </property>
+                        <property name="frameShadow">
+                          <enum>QFrame::Sunken</enum>
+                        </property>
+                        <property name="scaledContents">
+                          <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                        </property>
+                        <property name="wordWrap">
+                          <bool>false</bool>
+                        </property>
+                      </widget>
+                    </item>
+                  </layout>
+                </item>
+                <item>
+                  <layout class="QGridLayout">
+                    <property name="margin">
+                      <number>0</number>
+                    </property>
+                    <property name="spacing">
+                      <number>6</number>
+                    </property>
+                    <item row="1" column="0" rowspan="1" colspan="3">
+                      <widget class="QLabel" name="EdgeGrainLabel">
+                        <property name="text">
+                          <string>Edge Grain</string>
+                        </property>
+                        <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                        </property>
+                        <property name="wordWrap">
+                          <bool>false</bool>
+                        </property>
+                      </widget>
+                    </item>
+                    <item row="0" column="1">
+                      <widget class="QLabel" name="EdgeGrainPixmap">
+                        <property name="sizePolicy">
+                          <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                          </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                          <size>
+                            <width>64</width>
+                            <height>64</height>
+                          </size>
+                        </property>
+                        <property name="maximumSize">
+                          <size>
+                            <width>64</width>
+                            <height>64</height>
+                          </size>
+                        </property>
+                        <property name="frameShape">
+                          <enum>QFrame::Box</enum>
+                        </property>
+                        <property name="frameShadow">
+                          <enum>QFrame::Sunken</enum>
+                        </property>
+                        <property name="scaledContents">
+                          <bool>false</bool>
+                        </property>
+                        <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                        </property>
+                        <property name="wordWrap">
+                          <bool>false</bool>
+                        </property>
+                      </widget>
+                    </item>
+                    <item row="0" column="0">
+                      <spacer name="Spacer5_3_5">
+                        <property name="sizeHint">
+                          <size>
+                            <width>21</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item row="0" column="2">
+                      <spacer name="Spacer5_3_6">
+                        <property name="sizeHint">
+                          <size>
+                            <width>21</width>
+                            <height>21</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                  </layout>
+                </item>
+              </layout>
+            </item>
+          </layout>
         </widget>
-        <widget class="QListView" row="0" column="0" rowspan="1" colspan="2">
-            <column>
-                <property name="text">
-                    <string>Materials</string>
-                </property>
-                <property name="clickable">
-                    <bool>true</bool>
-                </property>
-                <property name="resizeable">
-                    <bool>true</bool>
-                </property>
-            </column>
-            <property name="name">
-                <cstring>MaterialList</cstring>
+      </item>
+      <item row="0" column="0" rowspan="1" colspan="2">
+        <widget class="Q3ListView" name="MaterialList">
+          <property name="minimumSize">
+            <size>
+              <width>150</width>
+              <height>0</height>
+            </size>
+          </property>
+          <property name="allColumnsShowFocus">
+            <bool>true</bool>
+          </property>
+          <column>
+            <property name="text">
+              <string>Materials</string>
             </property>
-            <property name="minimumSize">
-                <size>
-                    <width>150</width>
-                    <height>0</height>
-                </size>
+            <property name="clickable">
+              <bool>true</bool>
             </property>
-            <property name="allColumnsShowFocus">
-                <bool>true</bool>
+            <property name="resizeable">
+              <bool>true</bool>
             </property>
+          </column>
         </widget>
-        <spacer row="1" column="1" rowspan="1" colspan="2">
-            <property name="name">
-                <cstring>Horizontal Spacing2</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>150</width>
-                    <height>16</height>
-                </size>
-            </property>
+      </item>
+      <item row="1" column="1" rowspan="1" colspan="2">
+        <spacer name="Horizontal Spacing2">
+          <property name="sizeHint">
+            <size>
+              <width>150</width>
+              <height>16</height>
+            </size>
+          </property>
+          <property name="sizeType">
+            <enum>QSizePolicy::Expanding</enum>
+          </property>
+          <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+          </property>
         </spacer>
-        <widget class="QPushButton" row="1" column="3">
-            <property name="name">
-                <cstring>buttonOk</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;OK</string>
-            </property>
-            <property name="accel">
-                <number>276824143</number>
-            </property>
-            <property name="autoDefault">
-                <bool>true</bool>
-            </property>
-            <property name="default">
-                <bool>true</bool>
-            </property>
+      </item>
+      <item row="1" column="3">
+        <widget class="QPushButton" name="buttonOk">
+          <property name="text">
+            <string>&amp;OK</string>
+          </property>
+          <property name="shortcut">
+            <number>276824143</number>
+          </property>
+          <property name="autoDefault">
+            <bool>true</bool>
+          </property>
+          <property name="default">
+            <bool>true</bool>
+          </property>
         </widget>
-        <widget class="QPushButton" row="1" column="4">
-            <property name="name">
-                <cstring>buttonCancel</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Cancel</string>
-            </property>
-            <property name="accel">
-                <number>276824131</number>
-            </property>
-            <property name="autoDefault">
-                <bool>true</bool>
-            </property>
+      </item>
+      <item row="1" column="4">
+        <widget class="QPushButton" name="buttonCancel">
+          <property name="text">
+            <string>&amp;Cancel</string>
+          </property>
+          <property name="shortcut">
+            <number>276824131</number>
+          </property>
+          <property name="autoDefault">
+            <bool>true</bool>
+          </property>
         </widget>
-    </grid>
-</widget>
-<connections>
-    <connection>
-        <sender>buttonOk</sender>
-        <signal>clicked()</signal>
-        <receiver>MaterialDialog</receiver>
-        <slot>accept()</slot>
-    </connection>
-    <connection>
-        <sender>buttonCancel</sender>
-        <signal>clicked()</signal>
-        <receiver>MaterialDialog</receiver>
-        <slot>reject()</slot>
-    </connection>
-    <connection>
-        <sender>MaterialList</sender>
-        <signal>selectionChanged(QListViewItem*)</signal>
-        <receiver>MaterialDialog</receiver>
-        <slot>MaterialList_selectionChanged(QListViewItem*)</slot>
-    </connection>
-    <connection>
-        <sender>buttonHelp</sender>
-        <signal>clicked()</signal>
-        <receiver>MaterialDialog</receiver>
-        <slot>buttonHelp_clicked()</slot>
-    </connection>
-</connections>
-<tabstops>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11"/>
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
     <tabstop>MaterialList</tabstop>
     <tabstop>buttonOk</tabstop>
     <tabstop>buttonHelp</tabstop>
     <tabstop>buttonCancel</tabstop>
     <tabstop>MaterialText</tabstop>
-</tabstops>
-<includes>
-    <include location="local" impldecl="in declaration">material.h</include>
-    <include location="global" impldecl="in implementation">qwhatsthis.h</include>
-    <include location="global" impldecl="in implementation">qdir.h</include>
-    <include location="global" impldecl="in implementation">qdom.h</include>
-    <include location="local" impldecl="in implementation">constants.h</include>
-    <include location="global" impldecl="in implementation">qpalette.h</include>
-    <include location="local" impldecl="in implementation">materialdialog.ui.h</include>
-</includes>
-<slots>
-    <slot>init()</slot>
-    <slot>MaterialList_selectionChanged( QListViewItem * item )</slot>
-    <slot>setMaterial( const Material * material )</slot>
-    <slot>buttonHelp_clicked()</slot>
-</slots>
-<pixmapinproject/>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+  </tabstops>
+  <includes>
+    <include location="local">material.h</include>
+  </includes>
+  <connections>
+    <connection>
+      <sender>buttonOk</sender>
+      <signal>clicked()</signal>
+      <receiver>MaterialDialog</receiver>
+      <slot>accept()</slot>
+    </connection>
+    <connection>
+      <sender>buttonCancel</sender>
+      <signal>clicked()</signal>
+      <receiver>MaterialDialog</receiver>
+      <slot>reject()</slot>
+    </connection>
+    <connection>
+      <sender>MaterialList</sender>
+      <signal>selectionChanged(Q3ListViewItem*)</signal>
+      <receiver>MaterialDialog</receiver>
+      <slot>MaterialList_selectionChanged(Q3ListViewItem*)</slot>
+    </connection>
+    <connection>
+      <sender>buttonHelp</sender>
+      <signal>clicked()</signal>
+      <receiver>MaterialDialog</receiver>
+      <slot>buttonHelp_clicked()</slot>
+    </connection>
+  </connections>
+</ui>
