@@ -155,6 +155,7 @@
 </tabstops>
 <includes>
     <include location="local" impldecl="in implementation">offsetinfodialog.ui.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultlengthconstraint/lcdefaultlengthconstraint.h</include>
 </includes>
 <slots>
     <slot>buttonHelp_clicked()</slot>

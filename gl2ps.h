@@ -213,7 +213,7 @@ GLvoid gl2psBeginPage(GLint format,
 		      GLint colormode, GLint colorsize, GL2PSrgba *colormap, 
 		      GLint buffersize, void * stream);
 #endif
-GLint  gl2psEndPage(GLvoid);
+GLint  gl2psEndPage(void);
 GLvoid gl2psText(char *str, char *fontname, GLint size);
 GLvoid gl2psEnable(GLint mode);
 GLvoid gl2psDisable(GLint mode);
@@ -222,9 +222,9 @@ GLvoid gl2psLineWidth(GLfloat value);
 GLvoid gl2psLineStipple(GLuint mode);
 
 #ifdef GL2PS_USE_QT
-GLvoid gl2psPrintQtHeader ( GLvoid );
+GLvoid gl2psPrintQtHeader ( void );
 GLvoid gl2psPrintQtPrimitive ( GLvoid* a, GLvoid* b );
-GLvoid gl2psPrintQtFooter ( GLvoid );
+GLvoid gl2psPrintQtFooter ( void );
 #endif
 
 #ifdef __cplusplus

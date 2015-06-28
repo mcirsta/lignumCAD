@@ -69,7 +69,7 @@ XftNameGetType (const char *object)
     
     for (i = 0; i < NUM_OBJECT_TYPES; i++)
     {
-	if (!_XftStrCmpIgnoreCase (object, _XftObjectTypes[i].object))
+	if (!FcStrCmpIgnoreCase (object, _XftObjectTypes[i].object))
 	    return &_XftObjectTypes[i];
     }
     return 0;
@@ -110,7 +110,7 @@ _XftNameConstantLookup (char *string)
   unsigned int	i;
     
     for (i = 0; i < NUM_XFT_CONSTANTS; i++)
-	if (!_XftStrCmpIgnoreCase (string, XftConstants[i].name))
+	if (!FcStrCmpIgnoreCase (string, XftConstants[i].name))
 	    return &XftConstants[i];
     return 0;
 }
@@ -128,6 +128,30 @@ XftNameConstant (char *string, int *result)
     return False;
 }
 
+XftDefaultParseBool (char *v)
+{
+    char    c0, c1;
+
+    c0 = *v;
+    if (isupper ((int)c0))
+        c0 = tolower (c0);
+    if (c0 == 't' || c0 == 'y' || c0 == '1')
+        return 1;
+    if (c0 == 'f' || c0 == 'n' || c0 == '0')
+        return 0;
+    if (c0 == 'o')
+    {
+        c1 = v[1];
+        if (isupper ((int)c1))
+            c1 = tolower (c1);
+        if (c1 == 'n')
+            return 1;
+        if (c1 == 'f')
+            return 0;
+    }
+    return -1;
+}
+
 static XftValue
 _XftNameConvert (XftType type, char *string, XftMatrix *m)
 {
@@ -140,7 +164,7 @@ _XftNameConvert (XftType type, char *string, XftMatrix *m)
 	    v.u.i = atoi (string);
 	break;
     case XftTypeString:
-	v.u.s = string;
+	v.u.s = (unsigned char *)string;
 	break;
     case XftTypeBool:
 	v.u.b = XftDefaultParseBool (string);
@@ -311,14 +335,18 @@ _XftNameUnparseValue (XftValue v, char *escape, char **destp, int *lenp)
 	sprintf (temp, "%g", v.u.d);
 	return _XftNameUnparseString (temp, 0, destp, lenp);
     case XftTypeString:
-	return _XftNameUnparseString (v.u.s, escape, destp, lenp);
+	return _XftNameUnparseString ((char *)v.u.s, escape, destp, lenp);
     case XftTypeBool:
 	return _XftNameUnparseString (v.u.b ? "True" : "False", 0, destp, lenp);
     case XftTypeMatrix:
 	sprintf (temp, "%g %g %g %g", 
 		 v.u.m->xx, v.u.m->xy, v.u.m->yx, v.u.m->yy);
 	return _XftNameUnparseString (temp, 0, destp, lenp);
-    }
+     case FcTypeCharSet:
+     case FcTypeFTFace:
+     case FcTypeLangSet:
+	return True;
+   }
     return False;
 }
 
@@ -338,6 +366,44 @@ _XftNameUnparseValueList (XftValueList *v, char *escape, char **destp, int *lenp
 
 #define XFT_ESCAPE_FIXED    "\\-:,"
 #define XFT_ESCAPE_VARIABLE "\\=_:,"
+
+static int
+XftPatternPosition (const XftPattern *p, const char *object)
+{
+    int	    low, high, mid, c;
+
+    low = 0;
+    high = p->num - 1;
+    c = 1;
+    mid = 0;
+    while (low <= high)
+    {
+	mid = (low + high) >> 1;
+	c = strcmp (p->elts[mid].object, object);
+	if (c == 0)
+	    return mid;
+	if (c < 0)
+	    low = mid + 1;
+	else
+	    high = mid - 1;
+    }
+    if (c < 0)
+	mid++;
+    return -(mid + 1);
+}
+
+XftPatternElt *
+XftPatternFindElt (const XftPattern *p, const char *object)
+{
+    int	    i = XftPatternPosition (p, object);
+    if (i < 0)
+	return 0;
+    return &p->elts[i];
+}
+
+XftPatternElt *
+XftPatternFind (XftPattern *p, const char *object, Bool insert)
+{ return FcPatternFind (p, object, insert); }
 
 Bool
 XftNameUnparse (XftPattern *pat, char *dest, int len)

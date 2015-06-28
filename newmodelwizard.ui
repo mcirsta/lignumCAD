@@ -458,6 +458,7 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
     <include location="local" impldecl="in implementation">pagefactory.h</include>
     <include location="global" impldecl="in implementation">qbuttongroup.h</include>
     <include location="local" impldecl="in implementation">newmodelwizard.ui.h</include>
+    <include location="local" impldecl="in implementation">../lcfilechooser/lcfilechooser.h</include>
 </includes>
 <forwards>
     <forward>class QRadioButton;</forward>

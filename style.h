@@ -107,7 +107,7 @@ public:
 
 private:
   //! The general style.
-  enum lC::Render::Style style_;
+  lC::Render::Style style_;
   //! A custom edge stipple style.
   enum lC::Edge::Style edge_;
   //! Custom outline color.

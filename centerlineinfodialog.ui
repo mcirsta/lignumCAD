@@ -356,7 +356,11 @@
 </tabstops>
 <includes>
     <include location="local" impldecl="in implementation">centerlineinfodialog.ui.h</include>
+    <include location="local" impldecl="in implementation">../lcfilechooser/lcfilechooser.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultlengthspinbox/lcdefaultlengthspinbox.h</include>
+    <include location="local" impldecl="in implementation">../lcconstraintchooser/lcconstraintchooser.h</include>
 </includes>
+
 <slots>
     <slot>buttonHelp_clicked()</slot>
 </slots>

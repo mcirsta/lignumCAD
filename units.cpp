@@ -607,6 +607,8 @@ public:
 		   bool /*use_unicode*/ ) const
   {
     switch ( format ) {
+    case FRACTIONAL:
+      break;
     case DECIMAL:
       // Since mm are so small, the number of useful significant digits
       // to the right of the decimal point is much fewer than for the other
@@ -623,6 +625,8 @@ public:
   {
     double value = 0;
     switch ( format ) {
+    case FRACTIONAL:
+      break;
     case DECIMAL:
       value = text.toDouble() / MM_PER_INCH;
       break;
@@ -648,6 +652,8 @@ public:
 		   bool /*use_unicode*/ ) const
   {
     switch ( format ) {
+    case FRACTIONAL:
+      break;
     case DECIMAL:
       // cm...inches...they're about the same, but both the 10cm and 1cm
       // precision steps don't require any signicant digits to the right
@@ -664,6 +670,8 @@ public:
   {
     double value = 0;
     switch ( format ) {
+    case FRACTIONAL:
+      break;
     case DECIMAL:
       value = text.toDouble() / CM_PER_INCH;
       break;
@@ -689,6 +697,8 @@ public:
 		   bool /*use_unicode*/ ) const
   {
     switch ( format ) {
+    case FRACTIONAL:
+      break;
     case DECIMAL:
       // Of course, meters are largest unit we have here, so they need
       // the most significant digits.
@@ -703,6 +713,8 @@ public:
   {
     double value = 0;
     switch ( format ) {
+    case FRACTIONAL:
+      break;
     case DECIMAL:
       value = text.toDouble() / M_PER_INCH;
       break;

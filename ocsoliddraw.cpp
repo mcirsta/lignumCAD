@@ -143,7 +143,7 @@ namespace Space3D {
       // Assign a selection name to this face if it doesn't have one already.
       GLuint selection_name;
 
-      map< uint, GLuint >::const_iterator face_id =
+      std::map< uint, GLuint >::const_iterator face_id =
 	face_ids_.find( solid_->faceID( face ) );
       if ( face_id == face_ids_.end() ) {
 	selection_name = view_->genSelectionName();
@@ -153,7 +153,7 @@ namespace Space3D {
 	selection_name = (*face_id).second;
       }
 
-      map<GLuint,GV>::const_iterator wire_view =
+      std::map<GLuint,GV>::const_iterator wire_view =
 	wire_views_.find( selection_name );
       if ( wire_view == wire_views_.end() )
 	wire_views_[selection_name] = GV( glGenLists(1) );
@@ -187,7 +187,7 @@ namespace Space3D {
   }
 
   namespace {
-    struct Harlequin : map<QString,QColor> {
+    struct Harlequin : std::map<QString,QColor> {
       Harlequin ( void )
       {
 	(*this)[lC::STR::FRONT] = Qt::green;
@@ -216,7 +216,7 @@ namespace Space3D {
       // Assign a selection name to this face if it doesn't have one already.
       GLuint selection_name;
 
-      map< uint, GLuint >::const_iterator face_id =
+      std::map< uint, GLuint >::const_iterator face_id =
 	face_ids_.find( solid_->faceID( face ) );
       if ( face_id == face_ids_.end() ) {
 	selection_name = view_->genSelectionName();
@@ -226,7 +226,7 @@ namespace Space3D {
 	selection_name = (*face_id).second;
       }
 
-      map<GLuint,GV>::const_iterator face_view =
+      std::map<GLuint,GV>::const_iterator face_view =
 	face_views_.find( selection_name );
       if ( face_view == face_views_.end() )
 	face_views_[selection_name] = GV( glGenLists(1) );
@@ -343,7 +343,7 @@ namespace Space3D {
   {
     // Unfortunately, this involves a search...
 
-    map<uint,GLuint>::const_iterator face = face_ids_.begin();
+    std::map<uint,GLuint>::const_iterator face = face_ids_.begin();
     for ( ; face != face_ids_.end(); ++face )
       if ( (*face).second == selection_name )
 	return lC::formatName( solid_->name() ) + '.' + solid_->type() + '/' +
@@ -357,7 +357,7 @@ namespace Space3D {
   {
     // Unfortunately, this involves a search...
 
-    map<uint,GLuint>::const_iterator face = face_ids_.begin();
+    std::map<uint,GLuint>::const_iterator face = face_ids_.begin();
     for ( ; face != face_ids_.end(); ++face )
       if ( (*face).second == selection_name )
 	return lC::formatName( solid_->name() ) + '/' +
@@ -371,7 +371,7 @@ namespace Space3D {
     QValueVector<uint> id_path( 2 );
     // Unfortunately, this involves a search...
 
-    map<uint,GLuint>::const_iterator face = face_ids_.begin();
+    std::map<uint,GLuint>::const_iterator face = face_ids_.begin();
     for ( ; face != face_ids_.end(); ++face )
       if ( (*face).second == selection_name ) {
 	id_path[0] = solid_->id();
@@ -385,7 +385,7 @@ namespace Space3D {
   {
     // Only make new handle graphics views if the handle name is unknown
     // (i.e., this should only occur once, immediately after solid creation).
-    map<uint, HandleData>::const_iterator handle = solid_->handlesBegin();
+    std::map<uint, HandleData>::const_iterator handle = solid_->handlesBegin();
     for ( ; handle != solid_->handlesEnd(); ++handle ) {
       if ( handle_ids_.find( (*handle).first ) == handle_ids_.end() )
 	handle_ids_[ (*handle).first ] = view_->genSelectionName();
@@ -395,7 +395,7 @@ namespace Space3D {
   bool OCSolidDraw::isHandle ( GLuint selection_name ) const
   {
     // Unfortunately, this involves a search...
-    map<uint,GLuint>::const_iterator handle = handle_ids_.begin();
+    std::map<uint,GLuint>::const_iterator handle = handle_ids_.begin();
     for ( ; handle != handle_ids_.end(); ++handle )
       if ( (*handle).second == selection_name )
 	return true;
@@ -405,7 +405,7 @@ namespace Space3D {
 
   uint OCSolidDraw::handleID ( GLuint selection_name ) const
   {
-    map<uint,GLuint>::const_iterator handle = handle_ids_.begin();
+    std::map<uint,GLuint>::const_iterator handle = handle_ids_.begin();
     for ( ; handle != handle_ids_.end(); ++handle )
       if ( (*handle).second == selection_name )
 	return (*handle).first;
@@ -415,9 +415,9 @@ namespace Space3D {
 
   QString OCSolidDraw::activeDimensionName ( void ) const
   {
-    map<QString,GLuint>::const_iterator dimension_name = dimension_names_.begin();
+    std::map<QString,GLuint>::const_iterator dimension_name = dimension_names_.begin();
     for ( ; dimension_name != dimension_names_.end(); ++dimension_name ) {
-      map<GLuint,Dimension>::const_iterator dimension_view =
+      std::map<GLuint,Dimension>::const_iterator dimension_view =
 	dimension_views_.find( (*dimension_name).second );
       if ( dimension_view != dimension_views_.end() ) {
 	if ( (*dimension_view).second.mode() == lC::Render::ACTIVATED )
@@ -558,7 +558,7 @@ namespace Space3D {
 
     glEndList();
 
-    delete brep_hlr;
+    delete &brep_hlr;
   }
 
   void OCSolidDraw::updateMaterial ( void )
@@ -570,11 +570,11 @@ namespace Space3D {
 
   void OCSolidDraw::updateDimensionViews ( void )
   {
-    map<QString,Parameter>::const_iterator parameter = solid_->parametersBegin();
+    std::map<QString,Parameter>::const_iterator parameter = solid_->parametersBegin();
     for ( ; parameter != solid_->parametersEnd(); ++parameter ) {
 
       GLuint selection_name;
-      map<QString,GLuint>::const_iterator dimension_name =
+      std::map<QString,GLuint>::const_iterator dimension_name =
 	dimension_names_.find( (*parameter).first );
       if ( dimension_name == dimension_names_.end() ) {
 	selection_name = view_->genSelectionName();
@@ -593,10 +593,10 @@ namespace Space3D {
 		     (*parameter).second.normal().Y(),
 		     (*parameter).second.normal().Z() );
 
-      map<GLuint,Dimension>::iterator dimension =
+      std::map<GLuint,Dimension>::iterator dimension =
 	dimension_views_.find( selection_name );
       if ( dimension == dimension_views_.end() )
-	dimension_views_.insert( pair<GLuint,Dimension>( selection_name,
+	dimension_views_.insert( std::pair<GLuint,Dimension>( selection_name,
           Dimension( end0, end1, normal, view_, (*parameter).second.note() ) ) );
       else
 	(*dimension).second.setEndsNormal( end0, end1, normal, view_,
@@ -606,12 +606,12 @@ namespace Space3D {
 
   void OCSolidDraw::updateDatums ( void )
   {
-    map<QString,const ConstructionDatum*>::const_iterator datum =
+    std::map<QString,const ConstructionDatum*>::const_iterator datum =
       solid_->datumsBegin();
     for ( ; datum != solid_->datumsEnd(); ++datum ) {
 
       GLuint selection_name;
-      map<QString,GLuint>::const_iterator datum_name =
+      std::map<QString,GLuint>::const_iterator datum_name =
 	datum_names_.find( (*datum).first );
       if ( datum_name == datum_names_.end() ) {
 	selection_name = view_->genSelectionName();
@@ -620,10 +620,10 @@ namespace Space3D {
       else
 	selection_name = (*datum_name).second;
 
-      map<GLuint,ConstructionDatumView*>::iterator datum_view =
+      std::map<GLuint,ConstructionDatumView*>::iterator datum_view =
 	datum_views_.find( selection_name );
       if ( datum_view == datum_views_.end() )
-	datum_views_.insert( pair<GLuint,ConstructionDatumView*>( selection_name,
+	datum_views_.insert( std::pair<GLuint,ConstructionDatumView*>( selection_name,
 	  ConstructionDatumViewFactory::instance()->create( (*datum).second ) ) );
     }
   }
@@ -632,7 +632,7 @@ namespace Space3D {
   {
     const GLdouble* modelview = view_->viewOrientation();
 
-    map<GLuint,Dimension>::iterator dimension = dimension_views_.begin();
+    std::map<GLuint,Dimension>::iterator dimension = dimension_views_.begin();
     for ( ; dimension != dimension_views_.end(); ++dimension )
       (*dimension).second.setViewNormal( Vector( modelview[2],
 						 modelview[6],
@@ -643,11 +643,19 @@ namespace Space3D {
 			   lC::Render::Mode mode, bool draw_parameters ) const
   {
     switch ( style ) {
+    case lC::Render::PARENT:
+    case lC::Render::STIPPLE:
+      break;
     case lC::Render::WIREFRAME:
       switch ( entity ) {
+      case EDGE:
+      case VERTEX:
+	break;
       case NONE:
       case FIGURE:
 	switch ( mode ) {
+	case lC::Render::INVISIBLE:
+	  break;
 	case lC::Render::REGULAR:
 	  glColor3ubv( lC::qCubv( view_->geometryColor() ) );
 	  glCallList( edge_name_ );
@@ -661,11 +669,15 @@ namespace Space3D {
 	break;
       case FACE:
 	glColor3ubv( lC::qCubv( view_->geometryColor() ) );
-	map<GLuint,GV>::const_iterator wv = wire_views_.begin();
+	std::map<GLuint,GV>::const_iterator wv = wire_views_.begin();
 	for ( ; wv != wire_views_.end(); ++wv ) {
 
 	  switch ( (*wv).second.mode() ) {
 
+	  case lC::Render::INVISIBLE:
+	  case lC::Render::HIGHLIGHTED:
+	  case lC::Render::ACTIVATED:
+	    break;
 	  case lC::Render::REGULAR:
 	    glCallList( (*wv).second.displayList() );
 	    break;
@@ -678,6 +690,9 @@ namespace Space3D {
 	for ( ; wv != wire_views_.end(); ++wv ) {
 
 	  switch ( (*wv).second.mode() ) {
+	  case lC::Render::INVISIBLE:
+	  case lC::Render::REGULAR:
+	    break;
 	  case lC::Render::HIGHLIGHTED:
 	  case lC::Render::ACTIVATED:
 	    glCallList( (*wv).second.displayList() );
@@ -700,10 +715,13 @@ namespace Space3D {
       glPopMatrix();
 
       glColor3ubv( lC::qCubv( view_->geometryColor().light() ) );
-      map<GLuint,GV>::const_iterator wv = wire_views_.begin();
+      std::map<GLuint,GV>::const_iterator wv = wire_views_.begin();
       for ( ; wv != wire_views_.end(); ++wv ) {
 
 	switch ( (*wv).second.mode() ) {
+	case lC::Render::INVISIBLE:
+	case lC::Render::REGULAR:
+	  break;
 	case lC::Render::HIGHLIGHTED:
 	case lC::Render::ACTIVATED:
 	  glCallList( (*wv).second.displayList() );
@@ -723,15 +741,20 @@ namespace Space3D {
       QColor color = view_->geometryColor();
       if ( solid_->material() != 0 )
 	color = solid_->material()->color();
-      map<GLuint,GV>::const_iterator fv = face_views_.begin();
+      std::map<GLuint,GV>::const_iterator fv = face_views_.begin();
 
       switch ( entity ) {
 
+      case EDGE:
+      case VERTEX:
+	break;
       case NONE:
       case FIGURE:
 
 	switch ( mode ) {
 
+	case lC::Render::INVISIBLE:
+	  break;
 	case lC::Render::REGULAR:
 	  glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,
 			lC::qCfv( color ) );
@@ -754,6 +777,8 @@ namespace Space3D {
 
 	  switch ( (*fv).second.mode() ) {
 
+	  case lC::Render::INVISIBLE:
+	    break;
 	  case lC::Render::REGULAR:
 	    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,
 			  lC::qCfv( color ) );
@@ -784,15 +809,20 @@ namespace Space3D {
       QColor color = view_->geometryColor();
       if ( solid_->material() != 0 )
 	color = solid_->material()->color();
-      map<GLuint,GV>::const_iterator fv = face_views_.begin();
+      std::map<GLuint,GV>::const_iterator fv = face_views_.begin();
 
       switch ( entity ) {
 
+      case EDGE:
+      case VERTEX:
+	break;
       case NONE:
       case FIGURE:
 
 	switch ( mode ) {
 
+	case lC::Render::INVISIBLE:
+	  break;
 	case lC::Render::REGULAR:
 	  glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, material_std_);
 	  for ( ; fv != face_views_.end(); ++fv ) {
@@ -814,6 +844,8 @@ namespace Space3D {
 
 	  switch ( (*fv).second.mode() ) {
 
+	  case lC::Render::INVISIBLE:
+	    break;
 	  case lC::Render::REGULAR:
 	    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, material_std_);
 	    glCallList( (*fv).second.displayList() );
@@ -835,10 +867,13 @@ namespace Space3D {
     case lC::Render::HIGHLIGHTS: {
 
       glColor3ubv( lC::qCubv( view_->geometryColor().light() ) );
-      map<GLuint,GV>::const_iterator wv = wire_views_.begin();
+      std::map<GLuint,GV>::const_iterator wv = wire_views_.begin();
       for ( ; wv != wire_views_.end(); ++wv ) {
 
 	switch ( (*wv).second.mode() ) {
+	case lC::Render::INVISIBLE:
+	case lC::Render::REGULAR:
+	  break;
 	case lC::Render::HIGHLIGHTED:
 	case lC::Render::ACTIVATED:
 	  glCallList( (*wv).second.displayList() );
@@ -852,13 +887,18 @@ namespace Space3D {
 
     switch ( entity ) {
 
+    case EDGE:
+    case VERTEX:
+      break;
     case NONE:
     case FIGURE:
       switch ( mode ) {
-
+      case lC::Render::INVISIBLE:
+      case lC::Render::REGULAR:
+        break;
       case lC::Render::HIGHLIGHTED:
       case lC::Render::ACTIVATED:
-	map<uint, HandleData>::const_iterator handle = solid_->handlesBegin();
+	std::map<uint, HandleData>::const_iterator handle = solid_->handlesBegin();
 	for ( ; handle != solid_->handlesEnd(); ++handle ) {
 	  Point p( (*handle).second.position().X(),
 		   (*handle).second.position().Y(),
@@ -869,13 +909,16 @@ namespace Space3D {
       break;
 
     case FACE: {
-      map<uint,GLuint>::const_iterator fid = face_ids_.begin();
+      std::map<uint,GLuint>::const_iterator fid = face_ids_.begin();
       for ( ; fid != face_ids_.end(); ++fid ) {
 	// Note the need here for a map from face selection name
 	// to the face string name...
-	map<GLuint,GV>::const_iterator fv = face_views_.find((*fid).second);
+	std::map<GLuint,GV>::const_iterator fv = face_views_.find((*fid).second);
 	if ( fv != face_views_.end() ) {
 	  switch ( (*fv).second.mode() ) {
+	  case lC::Render::INVISIBLE:
+	  case lC::Render::REGULAR:
+	    break;
 	  case lC::Render::HIGHLIGHTED:
 	  case lC::Render::ACTIVATED:
 	    QValueVector<uint> handles( solid_->
@@ -903,18 +946,26 @@ namespace Space3D {
       case NONE:
       case FIGURE:
 	switch ( mode ) {
+	case lC::Render::INVISIBLE:
+	case lC::Render::REGULAR:
+	case lC::Render::HIGHLIGHTED:
+	  break;
 	case lC::Render::ACTIVATED:
-	  map<GLuint,Dimension>::const_iterator dimension =
+	  std::map<GLuint,Dimension>::const_iterator dimension =
 	    dimension_views_.begin();
 	  for ( ; dimension != dimension_views_.end(); ++dimension )
 	    (*dimension).second.draw();
 
-	  map<GLuint,ConstructionDatumView*>::const_iterator datum_view =
+	  std::map<GLuint,ConstructionDatumView*>::const_iterator datum_view =
 	    datum_views_.begin();
 	  for ( ; datum_view != datum_views_.end(); ++datum_view )
 	    (*datum_view).second->draw( view_ );
 	  break;
 	}
+      case FACE:
+      case EDGE:
+      case VERTEX:
+	break;
       }
     }
   }
@@ -922,7 +973,7 @@ namespace Space3D {
   void OCSolidDraw::select ( SelectionEntity entity, lC::Render::Mode mode,
 			     bool select_parameters )
   {
-    map<GLuint,GV>::const_iterator fv = face_views_.begin();
+    std::map<GLuint,GV>::const_iterator fv = face_views_.begin();
     switch ( entity ) {
     case FIGURE:
       // Note: In this case, we expect the view to have already pushed
@@ -933,7 +984,7 @@ namespace Space3D {
       switch ( mode ) {
       case lC::Render::ACTIVATED: {
 	if ( select_parameters ) {
-	  map<GLuint,Dimension>::const_iterator dimension =
+	  std::map<GLuint,Dimension>::const_iterator dimension =
 	    dimension_views_.begin();
 	  for ( ; dimension != dimension_views_.end(); ++dimension ) {
 	    glPushName( (*dimension).first );
@@ -944,9 +995,9 @@ namespace Space3D {
       }
       // Note, delibrate fall through.
       case lC::Render::HIGHLIGHTED: {
-	map<uint, HandleData>::const_iterator handle = solid_->handlesBegin();
+	std::map<uint, HandleData>::const_iterator handle = solid_->handlesBegin();
 	for ( ; handle != solid_->handlesEnd(); ++handle ) {
-	  map<uint,GLuint>::const_iterator h = handle_ids_.find( (*handle).first );
+	  std::map<uint,GLuint>::const_iterator h = handle_ids_.find( (*handle).first );
 	  if ( h != handle_ids_.end() ) {
 	    Point p( (*handle).second.position().X(),
 		     (*handle).second.position().Y(),
@@ -957,25 +1008,32 @@ namespace Space3D {
 	  }
 	}
       }
+      case lC::Render::INVISIBLE:
+      case lC::Render::REGULAR:
+	break;
       }
       break;
-    case FACE:
+     case FACE:
       for ( ; fv != face_views_.end(); ++fv ) {
 	glPushName( (*fv).first );
 	glCallList( (*fv).second.displayList() );
 	glPopName();
       }
       break;
+    case NONE:
+    case EDGE:
+    case VERTEX:
+      break;
     }
   }
 
   void OCSolidDraw::setHighlighted ( bool highlight, SelectionEntity entity,
-				     const vector<GLuint>& items )
+				     const std::vector<GLuint>& items )
   {
     // I guess this is now out of sync with the previous milieu
     switch ( entity ) {
     case FIGURE: {
-      map<GLuint,Dimension>::iterator dimension = dimension_views_.find( items[1] );
+      std::map<GLuint,Dimension>::iterator dimension = dimension_views_.find( items[1] );
       if ( dimension != dimension_views_.end() ) {
 	if ( (*dimension).second.mode() != lC::Render::ACTIVATED ) {
 	  if ( highlight )
@@ -997,16 +1055,20 @@ namespace Space3D {
 	  face_views_[ items[1] ].setMode( lC::Render::REGULAR );
 	}
       }
+    case NONE:
+    case EDGE:
+    case VERTEX:
+      break;
     }
   }
 
   void OCSolidDraw::setActivated ( bool activate, SelectionEntity entity,
-				   const vector<GLuint>& items )
+				   const std::vector<GLuint>& items )
   {
     // I guess this is now out of sync with the previous milieu
     switch ( entity ) {
     case FIGURE: {
-      map<GLuint,Dimension>::iterator dimension = dimension_views_.begin();
+      std::map<GLuint,Dimension>::iterator dimension = dimension_views_.begin();
       for ( ; dimension != dimension_views_.end(); ++dimension )
 	if ( activate )
 	  (*dimension).second.setMode( lC::Render::REGULAR );
@@ -1033,6 +1095,10 @@ namespace Space3D {
 	wire_views_[ items[1] ].setMode( lC::Render::REGULAR );
 	face_views_[ items[1] ].setMode( lC::Render::REGULAR );
       }
+    case NONE:
+    case EDGE:
+    case VERTEX:
+      break;
     }
   }
 } // End of Space3D namespace

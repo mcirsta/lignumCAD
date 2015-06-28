@@ -1553,6 +1553,14 @@ Note that the clearance length specified here is in &lt;i&gt;paper&lt;/i&gt; uni
     <include location="global" impldecl="in implementation">qpicture.h</include>
     <include location="global" impldecl="in implementation">qpaintdevicemetrics.h</include>
     <include location="local" impldecl="in implementation">preferencesdialog.ui.h</include>
+    <include location="local" impldecl="in implementation">../lcfilechooser/lcfilechooser.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultlengthspinbox/lcdefaultlengthspinbox.h</include>
+    <include location="local" impldecl="in implementation">../lcconstraintchooser/lcconstraintchooser.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultcombobox/lcdefaultcombobox.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultratiospinbox/lcdefaultratiospinbox.h</include>
+    <include location="local" impldecl="in implementation">../lccolorchooser/lccolorchooser.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultfilechooser/lcdefaultfilechooser.h</include>
+    <include location="local" impldecl="in implementation">../lcfontchooser/lcfontchooser.h</include>
 </includes>
 <variables>
     <variable>OpenGLExample* example_;</variable>

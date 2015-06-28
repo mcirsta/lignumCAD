@@ -581,7 +581,7 @@ namespace Space2D {
 	dynamic_cast< FigureView* >( rectangle_view_->parent()->
 				     figureSelectionNames()[ (*f).second[0] ] );
 
-      vector<GLuint>::const_iterator g;
+      std::vector<GLuint>::const_iterator g;
 
       for ( g = (*f).second.begin(); g != (*f).second.end(); ++g ) {
 
@@ -627,7 +627,7 @@ namespace Space2D {
 	dynamic_cast< FigureView* >( rectangle_view_->parent()->
 				     figureSelectionNames()[ (*f).second[0] ] );
 
-      vector<GLuint>::const_iterator g;
+      std::vector<GLuint>::const_iterator g;
 
       for ( g = (*f).second.begin(); g != (*f).second.end(); ++g ) {
 
@@ -854,7 +854,7 @@ namespace Space2D {
 
       if ( fv == rectangle_view_ ) continue;
 
-      vector<GLuint>::const_iterator g;
+      std::vector<GLuint>::const_iterator g;
 
       for ( g = (*f).second.begin(); g != (*f).second.end(); ++g ) {
 
@@ -1744,7 +1744,7 @@ namespace Space2D {
     return rectangle_->dbURL();
   }
 
-  QString RectangleView::selectionText ( const vector<GLuint>& selection_name,
+  QString RectangleView::selectionText ( const std::vector<GLuint>& selection_name,
 					 SelectionEntity entity ) const
   {
     QString text;
@@ -1755,6 +1755,12 @@ namespace Space2D {
     case EDGE:
       text = lC::formatName( rectangle_->name() ) + '/' +
 	lC::formatName( nameOf( selection_name[1] ) );
+    case NONE:
+      break;
+    case FACE:
+      break;
+    case VERTEX:
+      break;
     }
 
     return text;
@@ -1794,7 +1800,7 @@ namespace Space2D {
 
 
   void RectangleView::setHighlighted ( bool highlight, SelectionEntity entity,
-				       const vector<GLuint>& items )
+				       const std::vector<GLuint>& items )
   {
     if ( entity == FIGURE ) {
       DimensionView* dmv = 0;
@@ -1814,7 +1820,7 @@ namespace Space2D {
   }
 
   void RectangleView::setActivated ( bool activate, SelectionEntity entity,
-				     const vector<GLuint>& items )
+				     const std::vector<GLuint>& items )
   {
     if ( entity == FIGURE ) {
       DimensionView* dmv = 0;
@@ -2580,6 +2586,8 @@ namespace Space2D {
 	glLineStipple( 1, 0xf6f6 ); break;
       case lC::Edge::DASHDOTDOT:
 	glLineStipple( 1, 0xeaea ); break;
+      case lC::Edge::SOLID:
+	break;
       }
       stippled = true;
     }
@@ -4391,6 +4399,8 @@ namespace Space2D {
     case lC::Rejected:
       x0UpdateName( rectangle_->x0()->name() );
       return;
+    case lC::OK:
+      return;
     }
 
     DBURL old_db_url = rectangle_->x0()->dbURL();
@@ -4411,6 +4421,8 @@ namespace Space2D {
       y0_list_view_->startRename( lC::NAME );
     case lC::Rejected:
       y0UpdateName( rectangle_->y0()->name() );
+      return;
+    case lC::OK:
       return;
     }
 
@@ -4433,6 +4445,8 @@ namespace Space2D {
     case lC::Rejected:
       x1UpdateName( rectangle_->x1()->name() );
       return;
+    case lC::OK:
+      return;
     }
 
     DBURL old_db_url = rectangle_->x1()->dbURL();
@@ -4453,6 +4467,8 @@ namespace Space2D {
       y1_list_view_->startRename( lC::NAME );
     case lC::Rejected:
       y1UpdateName( rectangle_->y1()->name() );
+      return;
+    case lC::OK:
       return;
     }
 

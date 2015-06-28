@@ -474,6 +474,11 @@ void SketchView::startDisplay ( QPopupMenu* context_menu )
     context_menu_->setItemChecked( solid_id_, true ); break;
   case lC::Render::TEXTURED:
     context_menu_->setItemChecked( texture_id_, true ); break;
+  case lC::Render::PARENT:
+  case lC::Render::STIPPLE:
+  case lC::Render::HIDDEN:
+  case lC::Render::HIGHLIGHTS:
+    break;
   }
 
   connect( sketch_, SIGNAL( nameChanged( const QString& ) ),

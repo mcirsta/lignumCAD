@@ -262,6 +262,10 @@ namespace lC {
 	return "SOLID";
       case TEXTURED:
 	return "TEXTURED";
+      case HIGHLIGHTS:
+	return "HIGHLIGHTS";
+      case PARENT:
+	return "PARENT";
       }
 
       return "PARENT";
@@ -324,6 +328,8 @@ namespace lC {
 	return "DASHDOT";
       case DASHDOTDOT:
 	return "DASHDOTDOT";
+      case SOLID:
+	return "SOLID";
       }
       return "SOLID";
     }
@@ -720,7 +726,7 @@ namespace lC {
     const QString URL                 = "url";
     const QString VALUE               = "value";
     const QString VALUE_UNIT          = "%1%2";
-    const QString VERSION             = "version";
+    const QString LVERSION            = "version";
     const QString VIEW_DATA           = "view-data";
     const QString VIEW_POINT          = "view-point";
     const QString VIEW                = "view";

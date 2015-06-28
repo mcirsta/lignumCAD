@@ -1322,18 +1322,18 @@ View* DesignBookView::lookup ( const DBURL& db_url )
 
 // Find the OpenGL selection name path for a given id path.
 
-vector<GLuint> DesignBookView::lookup ( const QValueVector<uint>& id_path ) const
+std::vector<GLuint> DesignBookView::lookup ( const QValueVector<uint>& id_path ) const
 {
   QValueVector<uint> my_path = id_path;
 
   if ( my_path.empty() || my_path[0] != model_->id() )
-    return vector<GLuint>();	// Not this model! Really an error...
+    return std::vector<GLuint>();	// Not this model! Really an error...
 
   // Pop the model id off the list
   my_path.erase( my_path.begin() );
 
   if ( my_path.empty() )
-    return vector<GLuint>();	// Really an error...
+    return std::vector<GLuint>();	// Really an error...
 #if 0
   QMap<uint,PageBase*>::const_iterator p = pages_.find( my_path[0] );
 
@@ -1352,7 +1352,7 @@ vector<GLuint> DesignBookView::lookup ( const QValueVector<uint>& id_path ) cons
     }
   }
 #endif
-  return vector<GLuint>();	// Really an error...
+  return std::vector<GLuint>();	// Really an error...
 }
 
 // Replace the current model with a new one.
@@ -1666,7 +1666,7 @@ bool DesignBookView::read ( const QString file_name )
     return false;
   }
   else {
-    uint file_version = docElement.attribute( lC::STR::VERSION ).toUInt();
+    uint file_version = docElement.attribute( lC::STR::LVERSION ).toUInt();
     if ( file_version < lC::FILE_VERSION ) {
       qApp->restoreOverrideCursor();
 
@@ -1811,7 +1811,7 @@ bool DesignBookView::write ( void )
 
   QDomDocument document( lC::STR::LIGNUMCAD );
   QDomElement root = document.createElement( lC::STR::LIGNUMCAD );
-  root.setAttribute( lC::STR::VERSION, lC::FILE_VERSION );
+  root.setAttribute( lC::STR::LVERSION, lC::FILE_VERSION );
   document.appendChild( root );
 
   // First, the model geometric data...

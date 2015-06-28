@@ -49,7 +49,7 @@ namespace Space3D {
      * \param entity type of entity currently being sought.
      * \return selection string representation.
      */
-    virtual QString selectionText ( const vector<GLuint>& selection_name,
+    virtual QString selectionText ( const std::vector<GLuint>& selection_name,
 				    SelectionEntity entity ) const = 0;
     /*!
      * Draw the subassembly with the specified attributes.
@@ -74,19 +74,19 @@ namespace Space3D {
      * \param selection_names "path" to selected face.
      * \return path reference to selected face.
      */
-    virtual QString geometry ( const vector<GLuint>& selection_names ) const = 0;
+    virtual QString geometry ( const std::vector<GLuint>& selection_names ) const = 0;
     /*!
      * Try to locate the geometry (face) selected by this list of GL names.
      * \param selection_names "path" to selected face.
      * \return ID of selected face.
      */
-    virtual QValueVector<uint> ID ( const vector<GLuint>& selection_names ) const
+    virtual QValueVector<uint> ID ( const std::vector<GLuint>& selection_names ) const
       = 0;
     /*!
      * The inverse of the above function: Find the gl selection name list
      * from the ID.
      */
-    virtual void lookup ( QValueVector<uint>& id_path, vector<GLuint>& name_path )
+    virtual void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path )
       const = 0;
     /*!
      * Set the highlighting status of the given item.
@@ -95,7 +95,7 @@ namespace Space3D {
      * \param items selection name hierarchy.
      */
     virtual void setHighlighted ( bool highlight, SelectionEntity entity,
-				  const vector<GLuint>& items ) = 0;
+				  const std::vector<GLuint>& items ) = 0;
     /*!
      * Set the activated status of the given item.
      * \param activate to activate or not to activate.
@@ -103,7 +103,7 @@ namespace Space3D {
      * \param items selection name hierarchy.
      */
     virtual void setActivated ( bool activate, SelectionEntity entity,
-				const vector<GLuint>& items ) = 0;
+				const std::vector<GLuint>& items ) = 0;
     //! Modify rendering properties (namely, display lists) when the material
     //! changes. [An signal for the drawer (except it's not a QObject:-()]
     virtual void updateMaterial ( void ) = 0;

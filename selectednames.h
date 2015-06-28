@@ -36,7 +36,7 @@
  * There seems to be little reason to hide the nature of this structure
  * since every thing is essentially an automatic variable.
  */
-class SelectedNames : public multimap< GLfloat, vector< GLuint > >
+class SelectedNames : public std::multimap< GLfloat, std::vector< GLuint > >
 {
 public:
   /*!
@@ -52,7 +52,7 @@ public:
     GLfloat z0 = (GLfloat) (*hit_record++) / 0x7fffffff;
     hit_record++;		// For now, ignore the z far value.
     iterator record =
-      insert( pair< GLfloat, vector< GLuint > >( z0, vector< GLuint >( names ) ) );
+      insert( std::pair< GLfloat, std::vector< GLuint > >( z0, std::vector< GLuint >( names ) ) );
     for ( GLuint j = 0; j < names; j++ )
       (*record).second[j] = *hit_record++;
   }
@@ -114,20 +114,20 @@ inline bool operator== ( const SelectedNames& a, const SelectedNames& b )
   return equal;
 }
 
-inline ostream& operator<< ( ostream& o, const SelectedNames& sn )
+inline std::ostream& operator<< ( std::ostream& o, const SelectedNames& sn )
 {
   if ( sn.empty() )
-    return o << "empty" << endl;
+    return o << "empty" << std::endl;
 
   SelectedNames::const_iterator i = sn.begin();
 
   for ( ; i != sn.end(); ++i ) {
     o << "Depth: " << (*i).first << ": ";
-    vector<GLuint>::const_iterator j = (*i).second.begin();
+    std::vector<GLuint>::const_iterator j = (*i).second.begin();
     for ( ; j != (*i).second.end(); ++j ) {
       o << (*j) << " ";
     }
-    o << endl;
+    o << std::endl;
   }
 
   return o;

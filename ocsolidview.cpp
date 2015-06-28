@@ -231,17 +231,17 @@ namespace Space3D {
      * \param solid reference to solid.
      * \param old_parameters old parameters of solid.
      */
-    ModifySolidCommand::ModifySolidCommand ( const QString& name,
+    ModifySolidCommand ( const QString& name,
 					     DesignBookView* design_book_view,
 					     OCSolid* solid,
-					     const map<QString,double>&
+					     const std::map<QString,double>&
 					     old_parameters )
       : Command( name ), design_book_view_( design_book_view ),
 	db_url_( solid->dbURL() ), old_parameters_( old_parameters )
     {
       // Could improve the efficiency of this by limiting it to only
       // what's actually changed...
-      map<QString,Parameter>::const_iterator parameter =
+      std::map<QString,Parameter>::const_iterator parameter =
 	solid->parametersBegin();
       for ( ; parameter != solid->parametersEnd(); ++parameter )
 	new_parameters_[ (*parameter).first ] = (*parameter).second.value();
@@ -283,10 +283,10 @@ namespace Space3D {
 
       modify_solid_element.setAttribute( lC::STR::NAME, db_url_.toString(true) );
       
-      map<QString,double>::const_iterator old_parameter =old_parameters_.begin();
+      std::map<QString,double>::const_iterator old_parameter =old_parameters_.begin();
 
       for ( ; old_parameter != old_parameters_.end(); ++old_parameter ) {
-	map<QString,double>::const_iterator new_parameter =
+	std::map<QString,double>::const_iterator new_parameter =
 	  new_parameters_.find( (*old_parameter).first );
 	if ( new_parameter != new_parameters_.end() ) {
 	  QDomElement parameter_element = document->createElement(lC::STR::PARAMETER);
@@ -303,9 +303,9 @@ namespace Space3D {
     //! Reference of solid.
     DBURL db_url_;
     //! Old parameters.
-    map<QString,double> old_parameters_;
+    std::map<QString,double> old_parameters_;
     //! New parameters.
-    map<QString,double> new_parameters_;
+    std::map<QString,double> new_parameters_;
   };
 
   OCSolidModifyInput::OCSolidModifyInput ( OCSolid* solid,
@@ -372,7 +372,7 @@ namespace Space3D {
 
 	  if ( solid_view_->isGeometry( g ) ) {
 
-	    map<QString,Parameter>::const_iterator parameter =
+	    std::map<QString,Parameter>::const_iterator parameter =
 	      solid_->parametersBegin();
 	    for ( ; parameter != solid_->parametersEnd(); ++parameter )
 	      old_parameters_[ (*parameter).first ] = (*parameter).second.value();
@@ -509,7 +509,7 @@ namespace Space3D {
     list_view_item_->setText( lC::TYPE, trC( lC::STR::SOLID ) );
     QString detail = tr( "%1:" ).arg( solid_->baseShape() );
     QStringList param_strings;
-    map<QString,Parameter>::const_iterator parameter = solid_->parametersBegin();
+    std::map<QString,Parameter>::const_iterator parameter = solid_->parametersBegin();
     for ( ; parameter != solid_->parametersEnd(); ++parameter )
       param_strings << tr( " %1: %2" ).
 	arg( trC( (*parameter).second.title() ) ).
@@ -646,12 +646,16 @@ namespace Space3D {
     return solid_->dbURL();
   }
 
-  QString OCSolidView::selectionText ( const vector<GLuint>& selection_name,
+  QString OCSolidView::selectionText ( const std::vector<GLuint>& selection_name,
 				       SelectionEntity entity ) const
   {
     QString text;
 
     switch ( entity ) {
+    case NONE:
+    case EDGE:
+    case VERTEX:
+      break;
     case FIGURE:
       text = solid_->name(); break;
     case FACE:
@@ -668,7 +672,7 @@ namespace Space3D {
   }
 
   void OCSolidView::setHighlighted( bool highlight, SelectionEntity entity,
-				    const vector<GLuint>& items )
+				    const std::vector<GLuint>& items )
   {
     
     if (entity == FIGURE ) {
@@ -686,7 +690,7 @@ namespace Space3D {
   }
 
   void OCSolidView::setActivated( bool activate, SelectionEntity entity,
-				  const vector<GLuint>& items )
+				  const std::vector<GLuint>& items )
   {
     if ( entity == FIGURE ) {
 
@@ -736,7 +740,7 @@ namespace Space3D {
     // Update the list view.
     QString detail = tr( "%1:" ).arg( solid_->baseShape() );
     QStringList param_strings;
-    map<QString,Parameter>::const_iterator parameter = solid_->parametersBegin();
+    std::map<QString,Parameter>::const_iterator parameter = solid_->parametersBegin();
     for ( ; parameter != solid_->parametersEnd(); ++parameter )
       param_strings << tr( " %1: %2" ).
 	arg( trC( (*parameter).second.title() ) ).
@@ -792,7 +796,7 @@ namespace Space3D {
       if ( ret == QDialog::Rejected ) return;
 
       if ( parameter_info_dialog_->parameterLengthConstraint->edited() ) {
-	map<QString,double> old_parameter;
+	std::map<QString,double> old_parameter;
 	old_parameter[ parameter_name ] = parameter.value();
 	//	cout << "Updating parameter " << parameter_name << " of " << solid_->path()
 	//	     << endl;

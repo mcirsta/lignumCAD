@@ -53,7 +53,7 @@ public:
   /*!
    * Constructor takes the usual arguments defining the old and new state.
    */
-  ChangeViewCommand::ChangeViewCommand ( const QString& name,
+  ChangeViewCommand ( const QString& name,
 					 const PageView* page_view,
 					 const ViewData& old_view,
 					 const ViewData& new_view )
@@ -81,7 +81,7 @@ public:
       ChangeViewCommand* change_view = dynamic_cast< ChangeViewCommand* >( command);
 
       if ( db_url_ == change_view->db_url_ &&
-	   old_view_ != change_view->new_view_ ) {
+	   !( old_view_ == change_view->new_view_ )) {
 	new_view_ = change_view->new_view_;
 	return true;
       }

@@ -247,7 +247,7 @@ public:
    * \param old_offset the old offset.
    * \param new_offset the new offset.
    */
-  ChangeOffsetCommand::ChangeOffsetCommand ( const QString& name,
+  ChangeOffsetCommand ( const QString& name,
 					     DesignBookView* design_book_view,
 					     Subassembly* subassembly,
 					     int phase, double old_offset,
@@ -586,7 +586,7 @@ DBURL SubassemblyView::dbURL ( void ) const
   return subassembly_->dbURL();
 }
 
-QString SubassemblyView::selectionText ( const vector<GLuint>& selection_name,
+QString SubassemblyView::selectionText ( const std::vector<GLuint>& selection_name,
 					 SelectionEntity entity ) const
 {
   QString text;
@@ -618,7 +618,7 @@ View* SubassemblyView::lookup ( QStringList& /*path_components*/ ) const
   return 0;
 }
 
-QString SubassemblyView::geometry ( const vector<GLuint>& selection_names ) const
+QString SubassemblyView::geometry ( const std::vector<GLuint>& selection_names ) const
 {
   QString name = lC::STR::PATH_PATTERN.arg( parent()->dbURL() ).
     arg( drawer_->geometry( selection_names ) );
@@ -626,7 +626,7 @@ QString SubassemblyView::geometry ( const vector<GLuint>& selection_names ) cons
   return name;
 }
 
-QValueVector<uint> SubassemblyView::geomPath ( const vector<GLuint>& selection_names ) const
+QValueVector<uint> SubassemblyView::geomPath ( const std::vector<GLuint>& selection_names ) const
 {
   QValueVector<uint> id_path = parent()->ID();
   QValueVector<uint> subcomponent_path = drawer_->ID( selection_names );
@@ -644,13 +644,13 @@ QValueVector<uint> SubassemblyView::geomPath ( const vector<GLuint>& selection_n
 // path corresponding to the id path.
 
 void SubassemblyView::lookup ( QValueVector<uint>& id_path,
-			       vector<GLuint>& name_path ) const
+			       std::vector<GLuint>& name_path ) const
 {
   drawer_->lookup( id_path, name_path );
 }
 
 void SubassemblyView::setHighlighted( bool highlight, SelectionEntity entity,
-				      const vector<GLuint>& items )
+				      const std::vector<GLuint>& items )
 {
   if ( entity == FACE ) {
     if ( items.size() > 1 ) {
@@ -673,7 +673,7 @@ void SubassemblyView::setHighlighted( bool highlight, SelectionEntity entity,
 }
 
 void SubassemblyView::setActivated( bool activate, SelectionEntity entity,
-				    const vector<GLuint>& items )
+				    const std::vector<GLuint>& items )
 {
   if ( entity == FACE ) {
     if ( items.size() > 1 ) {

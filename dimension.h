@@ -171,6 +171,8 @@ namespace Space2D {
       return "EXTERIOR_END0";
     case Dimension::EXTERIOR_END1:
       return "EXTERIOR_END1";
+    case Dimension::INTERIOR:
+      return "INTERIOR";
     }
     return "INTERIOR";
   }
@@ -343,6 +345,8 @@ namespace Space3D {
       return "EXTERIOR_END0";
     case Dimension::EXTERIOR_END1:
       return "EXTERIOR_END1";
+    case Dimension::INTERIOR:
+      return "INTERIOR";
     }
     return "INTERIOR";
   }

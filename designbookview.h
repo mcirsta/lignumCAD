@@ -113,7 +113,7 @@ public:
   QListViewItem* previousItem ( uint id ) const;
   void deletePage ( PageView* page_view );
   View* lookup ( const DBURL& db_url );
-  vector<GLuint> lookup ( const QValueVector<uint>& id_path ) const;
+  std::vector<GLuint> lookup ( const QValueVector<uint>& id_path ) const;
 
   void modelChanged ( bool status );
 

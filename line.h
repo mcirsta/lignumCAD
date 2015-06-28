@@ -59,14 +59,14 @@ namespace Space2D {
     Vector normal ( void ) const;
 
     virtual bool dependsOn( const Line* line ) const = 0;
-    virtual ostream& edit ( ostream& o ) const = 0;
+    virtual std::ostream& edit ( std::ostream& o ) const = 0;
 
   signals:
     void destroyedLine ();
     //    void modifiedPosition ();
   };
 
-  ostream& operator<< ( ostream& o, Line* line );
+  std::ostream& operator<< ( std::ostream& o, Line* line );
 
   class Axis : public Line {
     Q_OBJECT
@@ -77,7 +77,7 @@ namespace Space2D {
     ~Axis ( void ) {}
 
     bool dependsOn ( const Line* ) const { return false; }
-    ostream& edit ( ostream& ) const;
+    std::ostream& edit ( std::ostream& ) const;
 
     void write ( QDomElement& xml_rep ) const;
   };
@@ -104,7 +104,7 @@ namespace Space2D {
     virtual Point setPosition ( const Point& position ) = 0;
     virtual void referenceModified ( void ) = 0;
     virtual bool dependsOn ( const Line* ) const = 0;
-    virtual ostream& edit ( ostream& o ) const = 0;
+    virtual std::ostream& edit ( std::ostream& o ) const = 0;
     virtual QString detail ( void ) const = 0;
     virtual QString note ( void ) const = 0;
     virtual void write ( QDomElement& xml_rep ) const = 0;
@@ -160,7 +160,7 @@ namespace Space2D {
     void resolvedReference ( Line* reference );
     void referenceModified ( void ) {}
 
-    ostream& edit ( ostream& o ) const;
+    std::ostream& edit ( std::ostream& o ) const;
     QString detail ( void ) const;
     QString note ( void ) const { return QString::null; }
     void write ( QDomElement& xml_rep ) const;
@@ -201,7 +201,7 @@ namespace Space2D {
 
     void referenceModified ( void );
 
-    ostream& edit ( ostream& o ) const;
+    std::ostream& edit ( std::ostream& o ) const;
     QString detail ( void ) const;
     QString note ( void ) const { return QString::null; }
     void write ( QDomElement& xml_rep ) const;
@@ -243,7 +243,7 @@ namespace Space2D {
 
     void referenceModified ( void );
 
-    ostream& edit ( ostream& o ) const;
+    std::ostream& edit ( std::ostream& o ) const;
     QString detail ( void ) const;
     QString note ( void ) const;
     void write ( QDomElement& xml_rep ) const;
@@ -284,7 +284,7 @@ namespace Space2D {
       return constraint_->dependsOn( line );
     }
 
-    ostream& edit ( ostream& o ) const { return constraint_->edit( o ); }
+    std::ostream& edit ( std::ostream& o ) const { return constraint_->edit( o ); }
 
     QString detail ( void ) const;
     // This is an (optional) annotation of the dimension string.
@@ -343,7 +343,7 @@ namespace Space3D {
     Vector normal ( void ) const;
 
     bool dependsOn( const Line* /*line*/ ) const { return false; }
-    ostream& edit ( ostream& o ) const
+    std::ostream& edit ( std::ostream& o ) const
     { return o << "Line: " << "origin: " << o_ << ", direction: " << e_; }
 
     void write ( QDomElement& /*xml_rep*/ ) const { }

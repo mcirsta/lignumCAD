@@ -139,7 +139,7 @@ public:
   void paste ( void );
 
   virtual View* lookup ( QStringList& path_components ) const;
-  virtual vector<GLuint> lookup ( QValueVector<uint>& id_path ) const;
+  virtual std::vector<GLuint> lookup ( QValueVector<uint>& id_path ) const;
 
   /*!
    * (Temporarily) turn off any highlights or activations
@@ -207,9 +207,9 @@ public:
   virtual void cancelOperation ( void ) = 0;
 
   void activateFigure ( FigureViewBase* figure_view );
-  void activateFigure ( const vector<GLuint>& selection_name );
+  void activateFigure ( const std::vector<GLuint>& selection_name );
   void deactivateFigure( GLuint figure, GLuint geometry );
-  void deactivateFigure ( const vector<GLuint>& selection_name );
+  void deactivateFigure ( const std::vector<GLuint>& selection_name );
   /*!
    * Check to make sure the new name is not used by another figure
    * of the same type on the page. Displays a modal dialog if the

@@ -69,24 +69,24 @@ public:
    * \param entity type of entity currently being sought.
    * \return selection string representation.
    */
-  virtual QString selectionText ( const vector<GLuint>& selection_name,
+  virtual QString selectionText ( const std::vector<GLuint>& selection_name,
 				  SelectionEntity entity ) const = 0;
 
   //  virtual FigureBase* figure ( void ) const = 0;
   virtual CreateObject* memento ( void ) = 0;
 
   virtual View* lookup ( QStringList& path_components ) const = 0;
-  virtual void lookup ( QValueVector<uint>& id_path, vector<GLuint>& name_path ) const = 0;
+  virtual void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path ) const = 0;
 
   bool isHighlighted ( void ) const { return highlighted_; }
   void setHighlighted ( bool highlight );
   virtual void setHighlighted ( bool highlight, SelectionEntity entity,
-				const vector<GLuint>& items ) = 0;
+				const std::vector<GLuint>& items ) = 0;
 
   bool isActivated ( void ) const { return activated_; }
   void setActivated ( bool activate );
   virtual void setActivated ( bool activate, SelectionEntity entity,
-			      const vector<GLuint>& items ) = 0;
+			      const std::vector<GLuint>& items ) = 0;
 
   virtual InputObject* createInput ( void ) = 0;
   virtual InputObject* modifyInput ( void ) = 0;
@@ -130,7 +130,7 @@ namespace Space2D {
     virtual Curve* geometry ( GLuint /*selection_name*/ ) const { return 0; }
 
     // Not implemented in 2D...
-    void lookup ( QValueVector<uint>& /*id_path*/, vector<GLuint>& /*name_path*/ )
+    void lookup ( QValueVector<uint>& /*id_path*/, std::vector<GLuint>& /*name_path*/ )
       const
     {}
   };

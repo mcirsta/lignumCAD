@@ -27,17 +27,17 @@
 #include "OGLFT.h"
 #include "oglpaintdevice.h"
 
-ostream& operator<< ( ostream& o, const QPoint& p )
+std::ostream& operator<< ( std::ostream& o, const QPoint& p )
 {
   return o << "[" << p.x() << ", " << p.y() << "]";
 }
 
-ostream& operator<< ( ostream& o, const QColor& c )
+std::ostream& operator<< ( std::ostream& o, const QColor& c )
 {
   return o << "[" << c.red() << ", " << c.green() << ", " << c.blue() << "]";
 }
 
-ostream& operator<< ( ostream& o, const QBrush& b )
+std::ostream& operator<< ( std::ostream& o, const QBrush& b )
 {
   o << "style ";
   switch ( b.style() ) {
@@ -51,7 +51,7 @@ ostream& operator<< ( ostream& o, const QBrush& b )
   return o << ", color " << b.color();
 }
 
-ostream& operator<< ( ostream& o, const QPen& p )
+std::ostream& operator<< ( std::ostream& o, const QPen& p )
 {
   o << "style ";
   switch( p.style() ) {
@@ -69,17 +69,17 @@ ostream& operator<< ( ostream& o, const QPen& p )
   return o << ", color " << p.color() << ", width " << p.width();
 }
 
-ostream& operator<< ( ostream& o, const QFont& f )
+std::ostream& operator<< ( std::ostream& o, const QFont& f )
 {
   return o << f.rawName().latin1();
 }
 
-ostream& operator<< ( ostream& o, const QRect& r )
+std::ostream& operator<< ( std::ostream& o, const QRect& r )
 {
   return o << r.left() << ", " << r.top() << "; " << r.right() << ", " << r.bottom();
 }
 
-ostream& operator<< ( ostream& o, const QRegion& r )
+std::ostream& operator<< ( std::ostream& o, const QRegion& r )
 {
   QMemArray<QRect> rects( r.rects() );
   for ( uint i = 0; i < rects.size(); i++ )
@@ -87,7 +87,7 @@ ostream& operator<< ( ostream& o, const QRegion& r )
   return o;
 }
 
-ostream& operator<< ( ostream& o, const QWMatrix& m )
+std::ostream& operator<< ( std::ostream& o, const QWMatrix& m )
 {
   o << "\t" << m.m11() << ", " << m.m12() << ": " << m.dx() << endl;
   o << "\t" << m.m21() << ", " << m.m22() << ": " << m.dy() << endl;

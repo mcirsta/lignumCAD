@@ -19,6 +19,8 @@
  *
  */
 #include "libemf.h"
+#include <limits.h>
+#include <ext/functional>
 
 namespace EMF {
 
@@ -48,7 +50,7 @@ namespace EMF {
       be32 = !be16;
 
     if ( be32 != be16 ) {
-      cerr << "endian-ness not consistent between short's and int's!" << endl;
+      std::cerr << "endian-ness not consistent between short's and int's!" << std::endl;
       ::abort();
     }
 
@@ -854,7 +856,7 @@ extern "C" {
     if ( dc->fp ) {
 
       std::for_each( dc->records.begin(), dc->records.end(),
-		     std::bind2nd( std::mem_fun1( &EMF::METARECORD::serialize ),
+		     std::bind2nd( __gnu_cxx::mem_fun1( &EMF::METARECORD::serialize ),
 				   dc->ds ) );
       fclose( dc->fp );
 
@@ -901,7 +903,7 @@ extern "C" {
     if ( dc->fp ) {
 
       std::for_each( dc->records.begin(), dc->records.end(),
-		     std::bind2nd( std::mem_fun1( &EMF::METARECORD::serialize ),
+		     std::bind2nd( __gnu_cxx::mem_fun1( &EMF::METARECORD::serialize ),
 				   dc->ds ) );
     }
 
@@ -1037,7 +1039,7 @@ extern "C" {
       if ( feof( fp ) ) break;
 
       if ( emr.nSize == 0 ) {
-	cerr << "GetEnhMetaFileW error: record size == 0. cannot continue" << endl;
+	std::cerr << "GetEnhMetaFileW error: record size == 0. cannot continue" << std::endl;
 	fclose( fp );
 	return 0;
       }
@@ -1055,8 +1057,8 @@ extern "C" {
 	dc->appendRecord( record );
       }
       else
-	cerr << "GetEnhMetaFileW warning: read unknown record type " << emr.iType
-	     << " of size " << emr.nSize << endl;
+	std::cerr << "GetEnhMetaFileW warning: read unknown record type " << emr.iType
+	     << " of size " << emr.nSize << std::endl;
 
       // Regardless, position ourselves at the next record.
       fseek( fp, next_position, SEEK_SET );

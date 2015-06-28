@@ -109,11 +109,11 @@ namespace Space3D {
      * \param o C++ output stream.
      * \return reference to output stream.
      */
-    virtual ostream& edit ( ostream& o ) const = 0;
+    virtual std::ostream& edit ( std::ostream& o ) const = 0;
 #endif
   };
 #ifndef LC_NO_DEBUG
-  inline ostream& operator<< ( ostream& o, const Curve& c )
+  inline std::ostream& operator<< ( std::ostream& o, const Curve& c )
   {
     return c.edit( o );
   }

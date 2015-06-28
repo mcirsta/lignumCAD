@@ -27,7 +27,6 @@
 #include "vectoralgebra.h"
 
 class QDomElement;
-enum Space;
 
 /*!
  * Save the information which (minimally) describes the current

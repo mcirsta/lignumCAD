@@ -929,6 +929,15 @@
 <includes>
     <include location="local" impldecl="in implementation">constants.h</include>
     <include location="local" impldecl="in implementation">rectangleinfodialog.ui.h</include>
+    <include location="local" impldecl="in implementation">../lcfilechooser/lcfilechooser.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultlengthspinbox/lcdefaultlengthspinbox.h</include>
+    <include location="local" impldecl="in implementation">../lcconstraintchooser/lcconstraintchooser.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultcombobox/lcdefaultcombobox.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultratiospinbox/lcdefaultratiospinbox.h</include>
+    <include location="local" impldecl="in implementation">../lccolorchooser/lccolorchooser.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultfilechooser/lcdefaultfilechooser.h</include>
+    <include location="local" impldecl="in implementation">../lcfontchooser/lcfontchooser.h</include>
+    <include location="local" impldecl="in implementation">../lcdefaultspinbox/lcdefaultspinbox.h</include>
 </includes>
 <slots>
     <slot>init()</slot>

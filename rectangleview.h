@@ -158,7 +158,7 @@ namespace Space2D {
     QIntDict< GraphicsView > rectangle_objects_;
     QIntDict< DimensionView > dimensionview_objects_;
 
-    map< int, lC::ValidDelta( Rectangle::* ) ( const Point&, Point& )> adjustments_;
+    std::map< int, lC::ValidDelta( Rectangle::* ) ( const Point&, Point& )> adjustments_;
 
     //! Optional style for the rectangle. Otherwise inherits page default.
     Style* style_;
@@ -196,14 +196,14 @@ namespace Space2D {
     QString name ( void ) const;
     QString type ( void ) const;
     DBURL dbURL ( void ) const;
-    QString selectionText ( const vector<GLuint>& selection_name,
+    QString selectionText ( const std::vector<GLuint>& selection_name,
 			    SelectionEntity entity ) const;
     View* lookup ( QStringList& path_components ) const;
 
     void setHighlighted ( bool highlight, SelectionEntity entity,
-			  const vector<GLuint>& items );
+			  const std::vector<GLuint>& items );
     void setActivated ( bool activate, SelectionEntity entity,
-			const vector<GLuint>& items );
+			const std::vector<GLuint>& items );
 
     uint dimensionPickCount ( void ) const { return 2; }
     void setDimensionView ( const QDomElement& xml_rep );

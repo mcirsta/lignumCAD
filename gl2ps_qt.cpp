@@ -98,7 +98,7 @@ extern "C" {
    *       Screen Coord[DOTS] * Printer window[DOTS] = Printer Coord[DOTS]
    *     This also takes care of the aspect ratio of the printer window.
    */
-  GLvoid gl2psPrintQtHeader ( GLvoid )
+  GLvoid gl2psPrintQtHeader ( void )
   {
     painter = reinterpret_cast<QPainter*>( gl2ps.stream );
 
@@ -127,7 +127,7 @@ extern "C" {
       break;
     case GL2PS_LINE :
       if(gl2ps.shade){
-	cout << "somehow, we got a shaded line anyway" << endl;
+	std::cout << "somehow, we got a shaded line anyway" << endl;
       }
       else{
 	QColor color( F2CI( prim->verts[0].rgba[0] ),
@@ -167,7 +167,7 @@ extern "C" {
       break;
     case GL2PS_TRIANGLE :
       if(gl2ps.shade){
-	cout << "somehow, we got a shaded triangle anyway" << endl;
+	std::cout << "somehow, we got a shaded triangle anyway" << endl;
       }
       else{
 #if 0
@@ -206,7 +206,7 @@ extern "C" {
     }
   }
 
-  GLvoid gl2psPrintQtFooter ( GLvoid )
+  GLvoid gl2psPrintQtFooter ( void )
   {
     painter->restore();
   }

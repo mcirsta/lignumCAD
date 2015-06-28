@@ -87,7 +87,7 @@ namespace Space3D {
     //! The singleton instance of the constructiondatumview factory.
     static ConstructionDatumViewFactory* instance_;
 
-    map< QString, const ConstructionDatumViewMetadata*> views_;
+    std::map< QString, const ConstructionDatumViewMetadata*> views_;
   };
 } // end of Space3D namespace
 #endif // CONSTRUCTIONDATUMVIEW_H

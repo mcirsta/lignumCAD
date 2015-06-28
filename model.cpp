@@ -98,7 +98,7 @@ void Model::restoreMetadata ( const QDomElement& xml_rep )
       else if ( e.tagName() == lC::STR::MODIFIED ) {
 	modified_ = QDateTime::fromString( e.attribute( lC::STR::VALUE ), Qt::ISODate );
       }
-      else if ( e.tagName() == lC::STR::VERSION ) {
+      else if ( e.tagName() == lC::STR::LVERSION ) {
 	version_ = e.attribute( lC::STR::VALUE ).toUInt();
       }
       else if ( e.tagName() == lC::STR::REVISION ) {
@@ -546,7 +546,7 @@ void Model::write ( QDomElement& xml_rep ) const
   modified_element.setAttribute( lC::STR::VALUE, modified_.toString( Qt::ISODate ) );
   metadata_element.appendChild( modified_element );
 
-  QDomElement version_element = document.createElement( lC::STR::VERSION );
+  QDomElement version_element = document.createElement( lC::STR::LVERSION );
   version_element.setAttribute( lC::STR::VALUE, version_ );
   metadata_element.appendChild( version_element );
 

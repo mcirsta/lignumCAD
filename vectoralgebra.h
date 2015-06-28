@@ -65,7 +65,7 @@ namespace Space2D {
   };
 
 #ifndef LC_NO_DEBUG
-  inline ostream& operator<< ( ostream& o, const Space2D::Vector v )
+  inline std::ostream& operator<< ( std::ostream& o, const Space2D::Vector v )
   {
     return o << v[Space2D::X] << ", " << v[Space2D::Y];
   }
@@ -159,7 +159,7 @@ namespace Space2D {
   };
 
 #ifndef LC_NO_DEBUG
-  inline ostream& operator<< ( ostream& o, const Space2D::Point p )
+  inline std::ostream& operator<< ( std::ostream& o, const Space2D::Point p )
   {
     return o << p[Space2D::X] << ", " << p[Space2D::Y];
   }
@@ -253,7 +253,7 @@ namespace Space3D {
   };
 
 #ifndef LC_NO_DEBUG
-  inline ostream& operator<< ( ostream& o, const Space3D::Vector v )
+  inline std::ostream& operator<< ( std::ostream& o, const Space3D::Vector v )
   {
     return o << v[Space3D::X] << ", " << v[Space3D::Y] << ", " << v[Space3D::Z];
   }
@@ -347,7 +347,7 @@ namespace Space3D {
   };
 
 #ifndef LC_NO_DEBUG
-  inline ostream& operator<< ( ostream& o, const Space3D::Point p )
+  inline std::ostream& operator<< ( std::ostream& o, const Space3D::Point p )
   {
     return o << p[Space3D::X] << ", " << p[Space3D::Y] << ", " << p[Space3D::Z];
   }
@@ -563,14 +563,14 @@ namespace Space3D {
     return c;
   }
 
-  inline ostream& operator<< ( ostream& o, const Matrix& m )
+  inline std::ostream& operator<< ( std::ostream& o, const Matrix& m )
   {
     o << "[[ " << m[X][X] << ", " << m[Y][X] << ", " << m[Z][X] << ", " << m[W][X]
-      << "]," << endl;
+      << "]," << std::endl;
     o << " [ " << m[X][Y] << ", " << m[Y][Y] << ", " << m[Z][Y] << ", " << m[W][Y]
-      << "]," << endl;
+      << "]," << std::endl;
     o << " [ " << m[X][Z] << ", " << m[Y][Z] << ", " << m[Z][Z] << ", " << m[W][Z]
-      << "]]" << endl;
+      << "]]" << std::endl;
     return o;
   }
 } // End of Space3D namespace

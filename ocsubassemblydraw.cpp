@@ -58,7 +58,7 @@ namespace Space3D {
      * \param entity type of entity currently being sought.
      * \return selection string representation.
      */
-    QString selectionText ( const vector<GLuint>& selection_name,
+    QString selectionText ( const std::vector<GLuint>& selection_name,
 			    SelectionEntity entity ) const
     {
       QString text;
@@ -78,7 +78,7 @@ namespace Space3D {
      * \param item OpenGL selection name path of subcomponent.
      */
     void setHighlighted ( bool highlight, SelectionEntity entity,
-			  const vector<GLuint>& item )
+			  const std::vector<GLuint>& item )
     {
       drawer_->setHighlighted( highlight, entity, item );
     }
@@ -89,7 +89,7 @@ namespace Space3D {
      * \param item OpenGL selection name path of subcomponent.
      */
     void setActivated ( bool activate, SelectionEntity entity,
-			const vector<GLuint>& item )
+			const std::vector<GLuint>& item )
     {
       drawer_->setActivated( activate, entity, item );
     }
@@ -140,7 +140,7 @@ namespace Space3D {
      * \param selection_names "path" to selected face.
      * \return name of selected face.
      */
-    QString geometry ( const vector<GLuint>& selection_names ) const
+    QString geometry ( const std::vector<GLuint>& selection_names ) const
     {
       // At this point, any assembly refereces should have been stripped out.
       // But that is currently not the case...
@@ -156,7 +156,7 @@ namespace Space3D {
      * \param selection_names "path" to selected face.
      * \return ID of selected face.
      */
-    QValueVector<uint> ID ( const vector<GLuint>& selection_names ) const
+    QValueVector<uint> ID ( const std::vector<GLuint>& selection_names ) const
     {
       QValueVector<uint> id_path( 4 );
       id_path[0] = subassembly_->id();
@@ -170,7 +170,7 @@ namespace Space3D {
      * The inverse of the above function: Find the gl selection name list
      * from the ID.
      */
-    void lookup ( QValueVector<uint>& id_path, vector<GLuint>& name_path )
+    void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path )
       const
     {
       // There should now be exactly three elements in the id_path
@@ -267,14 +267,14 @@ namespace Space3D {
      * \param entity type of entity currently being sought.
      * \return selection string representation.
      */
-    QString selectionText ( const vector<GLuint>& selection_name,
+    QString selectionText ( const std::vector<GLuint>& selection_name,
 			    SelectionEntity entity ) const
     {
-      vector<GLuint> subcomponent( selection_name.size()-1 );
+      std::vector<GLuint> subcomponent( selection_name.size()-1 );
       for ( uint i = 1; i < selection_name.size(); ++i )
 	subcomponent[i-1] = selection_name[i];
 
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
 	drawers_.find( selection_name[1] );
 
       if ( drawer != drawers_.end() )
@@ -289,13 +289,13 @@ namespace Space3D {
      * \param item OpenGL selection name path of subcomponent.
      */
     void setHighlighted ( bool highlight, SelectionEntity entity,
-			  const vector<GLuint>& item )
+			  const std::vector<GLuint>& item )
     {
-      vector<GLuint> subcomponent( item.size()-1 );
+      std::vector<GLuint> subcomponent( item.size()-1 );
       for ( uint i = 1; i < item.size(); ++i )
 	subcomponent[i-1] = item[i];
 
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
 	drawers_.find( subcomponent[0] );
 
       if ( drawer != drawers_.end() )
@@ -308,13 +308,13 @@ namespace Space3D {
      * \param item OpenGL selection names of subcomponents (none here).
      */
     void setActivated ( bool activate, SelectionEntity entity,
-			const vector<GLuint>& item )
+			const std::vector<GLuint>& item )
     {
-      vector<GLuint> subcomponent( item.size()-1 );
+      std::vector<GLuint> subcomponent( item.size()-1 );
       for ( uint i = 1; i < item.size(); ++i )
 	subcomponent[i-1] = item[i];
 
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
 	drawers_.find( subcomponent[0] );
 
       if ( drawer != drawers_.end() )
@@ -331,7 +331,7 @@ namespace Space3D {
     void draw ( lC::Render::Style style, SelectionEntity entity,
 		lC::Render::Mode mode ) const
     {
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
 
       if ( !subassembly_->location().IsIdentity() )
 	useTransform();
@@ -351,7 +351,7 @@ namespace Space3D {
      */
     void select ( SelectionEntity entity, lC::Render::Mode mode ) const
     {
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
 
       if ( !subassembly_->location().IsIdentity() )
 	useTransform();
@@ -370,13 +370,13 @@ namespace Space3D {
      * \param item "path" to selected face.
      * \return name of selected face.
      */
-    QString geometry ( const vector<GLuint>& item ) const
+    QString geometry ( const std::vector<GLuint>& item ) const
     {
-      vector<GLuint> subcomponent( item.size()-1 );
+      std::vector<GLuint> subcomponent( item.size()-1 );
       for ( uint i = 1; i < item.size(); ++i )
 	subcomponent[i-1] = item[i];
 
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
 	drawers_.find( item[1] );
 
       if ( drawer != drawers_.end() )
@@ -393,13 +393,13 @@ namespace Space3D {
      * \param item "path" to selected face.
      * \return ID of selected face.
      */
-    QValueVector<uint> ID ( const vector<GLuint>& item ) const
+    QValueVector<uint> ID ( const std::vector<GLuint>& item ) const
     {
-      vector<GLuint> subcomponent( item.size()-1 );
+      std::vector<GLuint> subcomponent( item.size()-1 );
       for ( uint i = 1; i < item.size(); ++i )
 	subcomponent[i-1] = item[i];
 
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
 	drawers_.find( item[1] );
 
       QValueVector<uint> id_path( 2 );
@@ -419,12 +419,12 @@ namespace Space3D {
      * The inverse of the above function: Find the gl selection name list
      * from the ID.
      */
-    void lookup ( QValueVector<uint>& id_path, vector<GLuint>& name_path )
+    void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path )
       const
     {
       id_path.erase( id_path.begin() );	// Erase subassembly (self?)
 
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
 
       for ( ; drawer != drawers_.end(); ++drawer ) {
 	if ( (*drawer).second->subassembly()->id() == id_path[0] ) {
@@ -444,7 +444,7 @@ namespace Space3D {
     void update ( void )
     {
       //      cout << now() << subassembly_->path() << " assembly drawer update [start]" << endl;
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
 
       for ( ; drawer != drawers_.end(); ++drawer )
 	(*drawer).second->update();
@@ -457,7 +457,7 @@ namespace Space3D {
     //! dimension arrows)
     void updateViewNormal ( void )
     {
-      map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
+      std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer = drawers_.begin();
 
       for ( ; drawer != drawers_.end(); ++drawer )
 	(*drawer).second->updateViewNormal();
@@ -492,7 +492,7 @@ namespace Space3D {
     }
 
     Subassembly* subassembly_;
-    map<GLuint,OCSubassemblyDraw*> drawers_;
+    std::map<GLuint,OCSubassemblyDraw*> drawers_;
   };
 
   OCSubassemblyDraw* OCSubassemblyDrawFactory::drawer ( Subassembly* subassembly,

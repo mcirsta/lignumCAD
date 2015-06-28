@@ -231,7 +231,7 @@ namespace Space3D {
      */
     QString faceName ( const TopoDS_Face& face ) const
     {
-      hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face_name;
+      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face_name;
 
       face_name = face_names_.find( face );
 
@@ -245,9 +245,9 @@ namespace Space3D {
      */
     const TopoDS_Face face ( const QString& name ) const
     {
-      pair<QString,uint> name_id = PartFactory::instance()->name( name );
+      std::pair<QString,uint> name_id = PartFactory::instance()->name( name );
 
-      hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
+      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
 	face_names_.begin();
 
       for ( ; face != face_names_.end(); ++face )
@@ -261,7 +261,7 @@ namespace Space3D {
      */
     const TopoDS_Face face ( uint id ) const
     {
-      hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
+      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
 	face_names_.begin();
       for ( ; face != face_names_.end(); ++face )
 	if ( (*face).second == id )
@@ -274,7 +274,7 @@ namespace Space3D {
      */
     uint faceID ( const QString& name ) const
     {
-      pair<QString,uint> name_id = PartFactory::instance()->name( name );
+      std::pair<QString,uint> name_id = PartFactory::instance()->name( name );
       return name_id.second;
     }
     /*!
@@ -282,7 +282,7 @@ namespace Space3D {
      */
     uint faceID ( const TopoDS_Face& face ) const
     {
-      hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator f =
+      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator f =
 	face_names_.find( face );
       if ( f != face_names_.end() )
 	return (*f).second;
@@ -297,11 +297,11 @@ namespace Space3D {
     void addResizeHandle ( uint id, const HandleData& handle );
 
     //! \return an iterator to the beginning of the list of handles.
-    map<uint, HandleData>::const_iterator handlesBegin ( void ) const
+    std::map<uint, HandleData>::const_iterator handlesBegin ( void ) const
     { return handles_.begin(); }
 
     //! \return an iterator to the end of the list of handles.
-    map<uint, HandleData>::const_iterator handlesEnd ( void ) const
+    std::map<uint, HandleData>::const_iterator handlesEnd ( void ) const
     { return handles_.end(); }
 
     /*!
@@ -321,11 +321,11 @@ namespace Space3D {
     void addParameter ( const QString& name, const Parameter& parameter );
 
     //! \return an iterator to the beginning of the list of parameters
-    map<QString, Parameter>::const_iterator parametersBegin ( void ) const
+    std::map<QString, Parameter>::const_iterator parametersBegin ( void ) const
     { return  parameters_.begin(); }
 
     //! \return an iterator to the end of the list of parameters
-    map<QString, Parameter>::const_iterator parametersEnd ( void ) const
+    std::map<QString, Parameter>::const_iterator parametersEnd ( void ) const
     { return  parameters_.end(); }
 
     /*!
@@ -345,11 +345,11 @@ namespace Space3D {
     void addDatum ( const QString& name, const ConstructionDatum* datum );
 
     //! \return an iterator to the beginning of the list of datums.
-    map<QString, const ConstructionDatum*>::const_iterator datumsBegin ( void) const
+    std::map<QString, const ConstructionDatum*>::const_iterator datumsBegin ( void) const
     { return datums_.begin(); }
 
     //! \return an iterator to the end of the list of datums.
-    map<QString, const ConstructionDatum*>::const_iterator datumsEnd ( void ) const
+    std::map<QString, const ConstructionDatum*>::const_iterator datumsEnd ( void ) const
     { return datums_.end(); }
 
     /*!
@@ -374,7 +374,7 @@ namespace Space3D {
      * Update some (or all) the solid parameters at one go.
      * \param parameters list of parameters to update.
      */
-    virtual void updateParameters ( const map<QString,double>& parameters ) = 0;
+    virtual void updateParameters ( const std::map<QString,double>& parameters ) = 0;
     /*!
      * Report an adjustment to the n-th handle.
      * \param id id of adjusted handle.
@@ -479,17 +479,17 @@ signals:
     gp_Ax2 grain_csys_;
 
     //! List of the resize handles supplied by this solid.
-    map<uint, HandleData> handles_;
+    std::map<uint, HandleData> handles_;
     //! List of dimensional parameters.
-    map<QString, Parameter> parameters_;
+    std::map<QString, Parameter> parameters_;
     //! List of construction datum used by this solid.
-    map<QString, const ConstructionDatum*> datums_;
+    std::map<QString, const ConstructionDatum*> datums_;
 
     //! The mapping the face data structures to their names.
-    hash_map< TopoDS_Face, uint, lCShapeHasher > face_names_;
+    __gnu_cxx::hash_map< TopoDS_Face, uint, lCShapeHasher > face_names_;
 
     //! The list of handles which are associated with each face.
-    map<QString, QValueVector<uint> > face_handles_;
+    std::map<QString, QValueVector<uint> > face_handles_;
 
     //! Is this necessary? (probably not...)
     static uint unique_index_;
@@ -534,7 +534,7 @@ signals:
      * Update some (or all) the solid parameters at one go.
      * \param parameters list of parameters to update.
      */
-    void updateParameters ( const map<QString,double>& parameters );
+    void updateParameters ( const std::map<QString,double>& parameters );
     /*!
      * Report an adjustment to the n-th handle.
      * \param id id of adjusted handle.
@@ -600,7 +600,7 @@ signals:
      * Update some (or all) the solid parameters at one go.
      * \param parameters list of parameters to update.
      */
-    void updateParameters ( const map<QString,double>& parameters );
+    void updateParameters ( const std::map<QString,double>& parameters );
     /*!
      * Report an adjustment to the n-th handle.
      * \param id id of adjusted handle.
@@ -665,7 +665,7 @@ signals:
      * Update some (or all) the solid parameters at one go.
      * \param parameters list of parameters to update.
      */
-    void updateParameters ( const map<QString,double>& parameters );
+    void updateParameters ( const std::map<QString,double>& parameters );
     /*!
      * Report an adjustment to the n-th handle.
      * \param id id of adjusted handle.
@@ -741,7 +741,7 @@ signals:
      * Update some (or all) the solid parameters at one go.
      * \param parameters list of parameters to update.
      */
-    void updateParameters ( const map<QString,double>& parameters );
+    void updateParameters ( const std::map<QString,double>& parameters );
     /*!
      * Report an adjustment to the n-th handle.
      * \param id id of adjusted handle.
@@ -816,7 +816,7 @@ signals:
      * Update some (or all) the solid parameters at one go.
      * \param parameters list of parameters to update.
      */
-    void updateParameters ( const map<QString,double>& parameters );
+    void updateParameters ( const std::map<QString,double>& parameters );
     /*!
      * Report an adjustment to the n-th handle.
      * \param id id of adjusted handle.
@@ -881,7 +881,7 @@ signals:
      * Update some (or all) the solid parameters at one go.
      * \param parameters list of parameters to update.
      */
-    void updateParameters ( const map<QString,double>& parameters );
+    void updateParameters ( const std::map<QString,double>& parameters );
     /*!
      * Report an adjustment to the n-th handle.
      * \param id id of adjusted handle.

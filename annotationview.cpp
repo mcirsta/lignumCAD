@@ -375,7 +375,7 @@ namespace Space2D {
      * \param new_origin the new origin of the annotation (in model units)
      * \param new_size the new size of the annotation box (in paper units)
      */
-    MoveAnnotationCommand::MoveAnnotationCommand ( const QString& name,
+    MoveAnnotationCommand ( const QString& name,
 						   DesignBookView* design_book_view,
 						   const DBURL& db_url,
 						   Point old_origin,
@@ -850,7 +850,7 @@ namespace Space2D {
     return annotation_->dbURL();
   }
 
-  QString AnnotationView::selectionText ( const vector<GLuint>& /*selection_name*/,
+  QString AnnotationView::selectionText ( const std::vector<GLuint>& /*selection_name*/,
 					  SelectionEntity /*entity*/ ) const
   {
     return annotation_->name();
@@ -858,14 +858,14 @@ namespace Space2D {
 
 
   void AnnotationView::setHighlighted ( bool highlight, SelectionEntity entity,
-					const vector<GLuint>& /*items*/ )
+					const std::vector<GLuint>& /*items*/ )
   {
     if ( entity == FIGURE )
       FigureViewBase::setHighlighted( highlight );
   }
 
   void AnnotationView::setActivated ( bool activate, SelectionEntity entity,
-				      const vector<GLuint>& /*items*/ )
+				      const std::vector<GLuint>& /*items*/ )
   {
     if ( entity == FIGURE )
       FigureViewBase::setActivated( activate );

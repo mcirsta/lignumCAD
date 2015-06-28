@@ -228,7 +228,7 @@ namespace Space3D {
 
   QString OCSolid::idPath ( QValueVector<uint> id_path ) const
   {
-    hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
+    __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
       face_names_.begin();
 
     for ( ; face != face_names_.end(); ++face )
@@ -251,7 +251,7 @@ namespace Space3D {
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );
 
-    hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
+    __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
       face_names_.begin();
 
     for ( ; face != face_names_.end(); ++face )
@@ -514,9 +514,9 @@ namespace Space3D {
     emit modified();
   }
 
-  void OCSolidRPP::updateParameters ( const map<QString,double>& parameters )
+  void OCSolidRPP::updateParameters ( const std::map<QString,double>& parameters )
   {
-    map<QString,double>::const_iterator p = parameters.begin();
+    std::map<QString,double>::const_iterator p = parameters.begin();
     for ( ; p != parameters.end(); ++p ) {
       parameter( (*p).first ).setValue( (*p).second );
     }
@@ -548,7 +548,7 @@ namespace Space3D {
     double length = parameter( lC::STR::LENGTH ).value();
     double width = parameter( lC::STR::WIDTH ).value();
     double thickness = parameter( lC::STR::THICKNESS ).value();
-    map<QString,double> parameters;
+    std::map<QString,double> parameters;
 
     if ( length + delta[X] <= minimum_size ) {
       if ( length <= minimum_size )
@@ -602,7 +602,7 @@ namespace Space3D {
       
     QDomElement rpp_element = document.createElement( lC::STR::RPP );
 
-    map<QString,Parameter>::const_iterator parameter = parametersBegin();
+    std::map<QString,Parameter>::const_iterator parameter = parametersBegin();
     for ( ; parameter != parametersEnd(); ++parameter )
       rpp_element.setAttribute( (*parameter).first,
 				lC::format( (*parameter).second.value() ) );
@@ -812,9 +812,9 @@ namespace Space3D {
     emit modified();
   }
 
-  void OCSolidPGP::updateParameters ( const map<QString,double>& parameters )
+  void OCSolidPGP::updateParameters ( const std::map<QString,double>& parameters )
   {
-    map<QString,double>::const_iterator p = parameters.begin();
+    std::map<QString,double>::const_iterator p = parameters.begin();
     for ( ; p != parameters.end(); ++p ) {
       parameter( (*p).first ).setValue( (*p).second );
     }
@@ -846,7 +846,7 @@ namespace Space3D {
     double length = parameter( lC::STR::LENGTH ).value();
     double width = parameter( lC::STR::WIDTH ).value();
     double thickness = parameter( lC::STR::THICKNESS ).value();
-    map<QString,double> parameters;
+    std::map<QString,double> parameters;
 
     if ( length + delta[X] <= minimum_size ) {
       if ( length <= minimum_size )
@@ -900,7 +900,7 @@ namespace Space3D {
       
     QDomElement pgp_element = document.createElement( lC::STR::PGP );
 
-    map<QString,Parameter>::const_iterator parameter = parametersBegin();
+    std::map<QString,Parameter>::const_iterator parameter = parametersBegin();
     for ( ; parameter != parametersEnd(); ++parameter )
       pgp_element.setAttribute( (*parameter).first,
 				lC::format( (*parameter).second.value() ) );
@@ -1051,9 +1051,9 @@ namespace Space3D {
     emit modified();
   }
 
-  void OCSolidCYL::updateParameters ( const map<QString,double>& parameters )
+  void OCSolidCYL::updateParameters ( const std::map<QString,double>& parameters )
   {
-    map<QString,double>::const_iterator p = parameters.begin();
+    std::map<QString,double>::const_iterator p = parameters.begin();
     for ( ; p != parameters.end(); ++p ) {
       parameter( (*p).first ).setValue( (*p).second );
     }
@@ -1083,7 +1083,7 @@ namespace Space3D {
 
     double length = parameter( lC::STR::LENGTH ).value();
     double diameter = parameter( lC::STR::DIAMETER ).value();
-    map<QString,double> parameters;
+    std::map<QString,double> parameters;
 
     if ( length + delta[Z] <= minimum_size ) {
       if ( length <= minimum_size )
@@ -1126,7 +1126,7 @@ namespace Space3D {
 
     QDomElement cyl_element = document.createElement( lC::STR::CYL );
 
-    map<QString,Parameter>::const_iterator parameter = parametersBegin();
+    std::map<QString,Parameter>::const_iterator parameter = parametersBegin();
     for ( ; parameter != parametersEnd(); ++parameter )
       cyl_element.setAttribute( (*parameter).first,
 				lC::format( (*parameter).second.value() ) );
@@ -1457,9 +1457,9 @@ namespace Space3D {
     emit modified();
   }
 
-  void OCSolidRPPCON::updateParameters ( const map<QString,double>& parameters )
+  void OCSolidRPPCON::updateParameters ( const std::map<QString,double>& parameters )
   {
-    map<QString,double>::const_iterator p = parameters.begin();
+    std::map<QString,double>::const_iterator p = parameters.begin();
     for ( ; p != parameters.end(); ++p ) {
       parameter( (*p).first ).setValue( (*p).second );
     }
@@ -1498,7 +1498,7 @@ namespace Space3D {
     double con_length = parameter( lC::STR::CON_LENGTH ).value();
     double con_top_diameter = parameter( lC::STR::CON_TOP_DIAMETER ).value();
     double con_bottom_diameter = parameter( lC::STR::CON_BOTTOM_DIAMETER ).value();
-    map<QString,double> parameters;
+    std::map<QString,double> parameters;
 
     if ( id == 0 || id == 1 || id == 2 || id == 3 ) {
       if ( length + delta[Z] <= minimum_size ) {
@@ -1619,7 +1619,7 @@ namespace Space3D {
 
     QDomElement rppcon_element = document.createElement( lC::STR::RPPCON );
 
-    map<QString,Parameter>::const_iterator parameter = parametersBegin();
+    std::map<QString,Parameter>::const_iterator parameter = parametersBegin();
     for ( ; parameter != parametersEnd(); ++parameter )
       rppcon_element.setAttribute( (*parameter).first,
 				   lC::format( (*parameter).second.value() ) );
@@ -1941,9 +1941,9 @@ namespace Space3D {
     //    cout << now() << path() << " modified [after emit]" << endl;
   }
 
-  void OCSolidRPPPYR::updateParameters ( const map<QString,double>& parameters )
+  void OCSolidRPPPYR::updateParameters ( const std::map<QString,double>& parameters )
   {
-    map<QString,double>::const_iterator p = parameters.begin();
+    std::map<QString,double>::const_iterator p = parameters.begin();
     for ( ; p != parameters.end(); ++p ) {
       parameter( (*p).first ).setValue( (*p).second );
     }
@@ -1977,7 +1977,7 @@ namespace Space3D {
     double rec_length = parameter( lC::STR::REC_LENGTH ).value();
     double rec_width = parameter( lC::STR::REC_WIDTH ).value();
     double pyr_width = parameter( lC::STR::PYR_WIDTH ).value();
-    map<QString,double> parameters;
+    std::map<QString,double> parameters;
 
     if ( id == 0 || id == 1 || id == 2 || id == 3 ||
 	 id == 4 || id == 5 || id == 6 || id == 7 ) {
@@ -2070,7 +2070,7 @@ namespace Space3D {
 
     QDomElement rpppyr_element = document.createElement( lC::STR::RPPPYR );
 
-    map<QString,Parameter>::const_iterator parameter = parametersBegin();
+    std::map<QString,Parameter>::const_iterator parameter = parametersBegin();
     for ( ; parameter != parametersEnd(); ++parameter )
       rpppyr_element.setAttribute( (*parameter).first,
 				   lC::format( (*parameter).second.value() ) );
@@ -2359,9 +2359,9 @@ namespace Space3D {
     emit modified();
   }
 
-  void OCSolidBSPCYL::updateParameters ( const map<QString,double>& parameters )
+  void OCSolidBSPCYL::updateParameters ( const std::map<QString,double>& parameters )
   {
-    map<QString,double>::const_iterator p = parameters.begin();
+    std::map<QString,double>::const_iterator p = parameters.begin();
     for ( ; p != parameters.end(); ++p ) {
       parameter( (*p).first ).setValue( (*p).second );
     }
@@ -2395,7 +2395,7 @@ namespace Space3D {
     double bsp_diameter = parameter( lC::STR::BSP_DIAMETER ).value();
     double cyl_diameter = parameter( lC::STR::CYL_DIAMETER ).value();
     double cyl_length = parameter( lC::STR::CYL_LENGTH ).value();
-    map<QString,double> parameters;
+    std::map<QString,double> parameters;
 
     if ( id == 2 || id == 3 ) {
       if ( length + delta[Z] <= minimum_size ) {
@@ -2486,7 +2486,7 @@ namespace Space3D {
 
     QDomElement bspcyl_element = document.createElement( lC::STR::BSPCYL );
 
-    map<QString,Parameter>::const_iterator parameter = parametersBegin();
+    std::map<QString,Parameter>::const_iterator parameter = parametersBegin();
     for ( ; parameter != parametersEnd(); ++parameter )
       bspcyl_element.setAttribute( (*parameter).first,
 				   lC::format( (*parameter).second.value() ) );

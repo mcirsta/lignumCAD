@@ -60,10 +60,10 @@ struct FaceData {
   QRgb color_;
 
   //! Horizontal justification of rendered text. Default is ORIGIN.
-  enum lC::HorizontalJustification horizontal_justification_;
+  lC::HorizontalJustification horizontal_justification_;
 
   //! Vertical justification of rendered text. Default is BASELINE.
-  enum lC::VerticalJustification vertical_justification_;
+  lC::VerticalJustification vertical_justification_;
 
   //! Scale of the view (matters to outline faces).
   Ratio scale_;
@@ -383,7 +383,7 @@ private:
    * \param a value to convert.
    * \return smallest power of two which is greater than or equal to a.
    */
-  uint OpenGLBase::nearestPowerCeil ( unsigned int a );
+  uint nearestPowerCeil ( unsigned int a );
 };
 
 /*!

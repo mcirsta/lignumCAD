@@ -330,7 +330,7 @@ namespace Space2D {
 	dynamic_cast< FigureView* >( centerline_view_->parent()->
 				     figureSelectionNames()[ (*f).second[0] ] );
 
-      vector<GLuint>::const_iterator g;
+      std::vector<GLuint>::const_iterator g;
 
       for ( g = (*f).second.begin(); g != (*f).second.end(); ++g ) {
 
@@ -566,7 +566,7 @@ namespace Space2D {
 
       if ( fv == centerline_view_ ) continue;
 
-      vector<GLuint>::const_iterator g;
+      std::vector<GLuint>::const_iterator g;
 
       for ( g = (*f).second.begin(); g != (*f).second.end(); ++g ) {
 
@@ -1095,7 +1095,7 @@ namespace Space2D {
     return centerline_->dbURL();
   }
 
-  QString CenterlineView::selectionText ( const vector<GLuint>& /*selection_name*/,
+  QString CenterlineView::selectionText ( const std::vector<GLuint>& /*selection_name*/,
 					  SelectionEntity /*entity*/ ) const
   {
     return centerline_->name();
@@ -1124,7 +1124,7 @@ namespace Space2D {
   }
 
   void CenterlineView::setHighlighted( bool highlight, SelectionEntity entity,
-				       const vector<GLuint>& items )
+				       const std::vector<GLuint>& items )
   {
     if (entity == FIGURE ) {
       DimensionView* dmv = 0;
@@ -1144,7 +1144,7 @@ namespace Space2D {
   }
 
   void CenterlineView::setActivated( bool activate, SelectionEntity entity,
-				     const vector<GLuint>& items )
+				     const std::vector<GLuint>& items )
   {
     if ( entity == FIGURE ) {
       DimensionView* dmv = 0;

@@ -109,7 +109,7 @@ private:
   static OCTextureFactory* instance_;
 
   //! The available texture function objects.
-  map<Standard_Integer, OCTextureFunction*> texture_functions_;
+  std::map<Standard_Integer, OCTextureFunction*> texture_functions_;
 };
 
 #endif // OCTEXTUREFUNCTION_H

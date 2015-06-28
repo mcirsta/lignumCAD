@@ -331,24 +331,24 @@ Space3D::OCSolid* PartFactory::create ( Part* parent,
 
 // Return a name and id for a geometry item.
 
-pair<QString,uint> PartFactory::name ( const QString& suggestion )
+std::pair<QString,uint> PartFactory::name ( const QString& suggestion )
 {
   // If there's no suggestion, make something completely up.
   if ( suggestion.isEmpty() ) {
     QString name = QString( "n[%1]" ).arg( ++unique_index_ );
     uint id = ++unique_id_;
-    pair<QString,uint> name_id( name, id );
+    std::pair<QString,uint> name_id( name, id );
     names_.insert( name_id );
     return name_id;
   }
 
   // If it's already there, return that.
-  map<QString,uint>::const_iterator entry = names_.find( suggestion );
+  std::map<QString,uint>::const_iterator entry = names_.find( suggestion );
   if ( entry != names_.end() ) {
     return *entry;
   }
   // Otherwise, use the suggested name but with a unique id.
-  pair<QString,uint> name_id( suggestion, ++unique_id_ );
+  std::pair<QString,uint> name_id( suggestion, ++unique_id_ );
   names_.insert( name_id );
 
   return name_id;
@@ -358,7 +358,7 @@ pair<QString,uint> PartFactory::name ( const QString& suggestion )
 
 QString PartFactory::name ( uint id )
 {
-  map<QString,uint>::const_iterator entry = names_.begin();
+  std::map<QString,uint>::const_iterator entry = names_.begin();
   for ( ; entry != names_.end(); ++entry )
     if ( (*entry).second == id )
       return (*entry).first;

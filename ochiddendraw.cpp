@@ -206,6 +206,6 @@ namespace Space3D {
 
     glEndList();
 
-    delete brep_hlr;
+    delete &brep_hlr;
   }
 } // End of Space3D namespace

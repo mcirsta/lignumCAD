@@ -343,6 +343,7 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
 </tabstops>
 <includes>
     <include location="local" impldecl="in implementation">modelinfodialog.ui.h</include>
+    <include location="local" impldecl="in implementation">../lcfilechooser/lcfilechooser.h</include>
 </includes>
 <slots>
     <slot access="private" specifier="non virtual">modelNameEdit_textChanged( const QString &amp; text )</slot>

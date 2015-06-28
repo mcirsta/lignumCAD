@@ -65,17 +65,17 @@ public:
    * \param entity entity selected for in view.
    * \return string representing selection.
    */
-  QString selectionText ( const vector<GLuint>& selection_name,
+  QString selectionText ( const std::vector<GLuint>& selection_name,
 			  SelectionEntity entity ) const;
   View* lookup ( QStringList& path_components ) const;
-  void lookup ( QValueVector<uint>& id_path, vector<GLuint>& name_path ) const;
-  QString geometry ( const vector<GLuint>& selection_name ) const;
-  QValueVector<uint> geomPath ( const vector<GLuint>& selection_name ) const;
+  void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path ) const;
+  QString geometry ( const std::vector<GLuint>& selection_name ) const;
+  QValueVector<uint> geomPath ( const std::vector<GLuint>& selection_name ) const;
 
   void setHighlighted ( bool highlight, SelectionEntity entity,
-			const vector<GLuint>& items );
+			const std::vector<GLuint>& items );
   void setActivated( bool activate, SelectionEntity entity,
-		     const vector<GLuint>& items );
+		     const std::vector<GLuint>& items );
 
   InputObject* createInput ( void ) { return 0; }
   InputObject* modifyInput ( void );

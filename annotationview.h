@@ -297,7 +297,7 @@ namespace Space2D {
      * \param entity entity selected for in view.
      * \return string representing selection.
      */
-    QString selectionText ( const vector<GLuint>& selection_name,
+    QString selectionText ( const std::vector<GLuint>& selection_name,
 			    SelectionEntity entity ) const;
     //! \return 0: has no subcomponents
     View* lookup ( QStringList& /*path_components*/ ) const { return 0; }
@@ -308,7 +308,7 @@ namespace Space2D {
      * \param item OpenGL selection names of subcomponents (none here).
      */
     void setHighlighted ( bool highlight, SelectionEntity entity,
-			  const vector<GLuint>& items );
+			  const std::vector<GLuint>& items );
     /*!
      * Set all the designated items to the given activation mode.
      * \param activate new activation mode.
@@ -316,7 +316,7 @@ namespace Space2D {
      * \param item OpenGL selection names of subcomponents (none here).
      */
     void setActivated ( bool activate, SelectionEntity entity,
-			const vector<GLuint>& items );
+			const std::vector<GLuint>& items );
     //! \return 0: annotations cannot be dimensioned.
     uint dimensionPickCount ( void ) const { return 0; }
     //! Does nothing in this context.
@@ -564,7 +564,7 @@ namespace Space2D {
     //! lookup via OpenGL selection name.
     QIntDict< GraphicsView > annotation_objects_;
     //! Convert a handle selection name into a modification action.
-    map< int, lC::ValidDelta( AnnotationView::* ) ( const Point&, Point& )> adjustments_;
+    std::map< int, lC::ValidDelta( AnnotationView::* ) ( const Point&, Point& )> adjustments_;
     //! The annotation text editing dialog.
     static AnnotationInfoDialog* annotation_info_dialog_;
   };

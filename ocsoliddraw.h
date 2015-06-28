@@ -126,7 +126,7 @@ namespace Space3D {
      * \param items selection name hierarchy.
      */
     void setHighlighted ( bool highlight, SelectionEntity entity,
-			  const vector<GLuint>& items );
+			  const std::vector<GLuint>& items );
 
     /*!
      * Set the activated status of the given item.
@@ -135,7 +135,7 @@ namespace Space3D {
      * \param items selection name hierarchy.
      */
     void setActivated ( bool activate, SelectionEntity entity,
-			const vector<GLuint>& items );
+			const std::vector<GLuint>& items );
     //! Generic update function. Generally the solid geometry has changed.
     void update ( void );
     //! Compute the hidden lines for the current orientation of the view.
@@ -175,7 +175,7 @@ namespace Space3D {
      */
     GLuint faceGLName ( uint id )
     {
-      map<uint,GLuint>::const_iterator gl_name = face_ids_.find( id );
+      std::map<uint,GLuint>::const_iterator gl_name = face_ids_.find( id );
       if ( gl_name != face_ids_.end() )
 	return (*gl_name).second;
       return 0;			// Really an error...
@@ -215,21 +215,21 @@ namespace Space3D {
     GLuint hlr_bg_name_;
 
     //! The selection names for the wire and solid assigned to each face.
-    map< uint, GLuint > face_ids_;
+    std::map< uint, GLuint > face_ids_;
     //! The display lists and the attributes of the corresponding graphics item.
-    map< GLuint, GV > face_views_;
+    std::map< GLuint, GV > face_views_;
     //! The display lists and the attributes of the corresponding graphics item.
-    map< GLuint, GV > wire_views_;
+    std::map< GLuint, GV > wire_views_;
     //! The selection name assigned to each handle.
-    map< uint, GLuint > handle_ids_;
+    std::map< uint, GLuint > handle_ids_;
     //! The selection name assigned to each parameter's dimension.
-    map< QString, GLuint > dimension_names_;
+    std::map< QString, GLuint > dimension_names_;
     //! The dimension drawer objects.
-    map< GLuint, Dimension > dimension_views_;
+    std::map< GLuint, Dimension > dimension_views_;
     //! The selection name assigned to each construction datum.
-    map< QString, GLuint > datum_names_;
+    std::map< QString, GLuint > datum_names_;
     //! The construction data drawer objects.
-    map< GLuint, ConstructionDatumView* > datum_views_;
+    std::map< GLuint, ConstructionDatumView* > datum_views_;
 
     //! Standard color material (not quite white).
     static GLfloat material_std_[4];

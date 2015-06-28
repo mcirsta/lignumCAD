@@ -1166,10 +1166,14 @@ namespace OGLFT {
 	dx = -bbox.x_min_; break;
       case CENTER:
 	dx = -( bbox.x_min_ + bbox.x_max_ ) / 2.; break;
+      case ORIGIN:
+        break;
       case RIGHT:
 	dx = -bbox.x_max_; break;
       }
       switch ( vertical_justification_ ) {
+      case BASELINE:
+        break;
       case BOTTOM:
 	dy = -bbox.y_min_; break;
       case MIDDLE:
@@ -1260,10 +1264,14 @@ namespace OGLFT {
 	dx = bbox.x_min_; break;
       case CENTER:
 	dx = ( bbox.x_min_ + bbox.x_max_ ) / 2; break;
+      case ORIGIN:
+        break;
       case RIGHT:
 	dx = bbox.x_max_; break;
       }
       switch ( vertical_justification_ ) {
+      case BASELINE:
+        break;
       case BOTTOM:
 	dy = bbox.y_min_; break;
       case MIDDLE:

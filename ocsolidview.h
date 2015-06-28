@@ -70,7 +70,7 @@ namespace Space3D {
     OCSolid* solid_;
     OCSolidView* solid_view_;
 
-    map< QString, double > old_parameters_;
+    std::map< QString, double > old_parameters_;
 
     GLuint drag_handle_;
     Point start_pnt_;
@@ -130,19 +130,19 @@ namespace Space3D {
      * \param entity entity selected for in view.
      * \return string representing selection.
      */
-    QString selectionText ( const vector<GLuint>& selection_name,
+    QString selectionText ( const std::vector<GLuint>& selection_name,
 			    SelectionEntity entity ) const;
 
     View* lookup ( QStringList& /*path_components*/ ) const
     { return 0; }
-    void lookup ( QValueVector<uint>& /*id_path*/, vector<GLuint>& /*name_path*/ )
+    void lookup ( QValueVector<uint>& /*id_path*/, std::vector<GLuint>& /*name_path*/ )
       const
     {}
 
     void setHighlighted ( bool highlight, SelectionEntity entity,
-			  const vector<GLuint>& items );
+			  const std::vector<GLuint>& items );
     void setActivated( bool activate, SelectionEntity entity,
-		       const vector<GLuint>& items );
+		       const std::vector<GLuint>& items );
 
     InputObject* createInput ( void ) { return 0; }
     InputObject* modifyInput ( void ) { return &modify_input_; }

@@ -29,7 +29,11 @@
 #ifdef FREETYPE2
 #include "XftFreetype.h"
 #else
-#include "Xft.h"
+#include <Xft.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 typedef struct _XftMatcher {
@@ -78,6 +82,26 @@ typedef struct _XftDisplayInfo {
     XftFontSet		    *coreFonts;
     Bool		    hasRender;
 } XftDisplayInfo;
+
+/* Stuff needed to fix missing bits from Xft... */
+typedef struct _XftValueList {
+    struct _XftValueList    *next;
+    XftValue		    value;
+} XftValueList;
+
+typedef struct _FcPatternElt {
+    const char	    *object;
+    XftValueList    *values;
+} FcPatternElt;
+
+typedef struct _FcPattern {
+    int		    num;
+    int		    size;
+    FcPatternElt    *elts;
+    int		    ref;
+} FcPattern;
+
+#define XftPatternElt	FcPatternElt
 
 extern XftFontSet	*_XftGlobalFontSet;
 extern XftDisplayInfo	*_XftDisplayInfo;
@@ -484,5 +508,9 @@ _XftStrCmpIgnoreCase (const char *s1, const char *s2);
 /* xftxlfd.c */
 Bool
 XftCoreAddFonts (XftFontSet *set, Display *dpy, Bool ignore_scalable);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _XFT_INT_H_ */

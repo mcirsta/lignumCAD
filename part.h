@@ -284,7 +284,7 @@ public:
    * invent a unique name.
    * \return the matched set of name and integer id.
    */
-  pair< QString, uint > name ( const QString& suggestion );
+  std::pair< QString, uint > name ( const QString& suggestion );
 
   /*!
    * Look up the name corresponding to this id.
@@ -303,7 +303,7 @@ private:
   //! List of parts in the library.
   QPtrList< PartMetadata > part_data_;
   //! Global list of geometry names and ids.
-  map<QString, uint> names_;
+  std::map<QString, uint> names_;
   //! Last unique name index used.
   uint unique_index_;
   //! Last unique id used.

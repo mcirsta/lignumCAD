@@ -695,7 +695,7 @@ OCTextureFunction* OCTextureFactory::function ( OpenGLBase* view,
 
   Handle( Geom_Surface ) surface = BRep_Tool::Surface( face );
 
-  map<Standard_Integer, OCTextureFunction*>::iterator tf =
+  std::map<Standard_Integer, OCTextureFunction*>::iterator tf =
     texture_functions_.find( surface->DynamicType()->HashCode( IntegerLast() ) );
 
   OCTextureFunction* texture_function;

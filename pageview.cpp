@@ -365,9 +365,9 @@ View* PageView::lookup ( QStringList& path_components ) const
 
 // Lookup the OpenGL selection name path for the given object.
 
-vector<GLuint> PageView::lookup ( QValueVector<uint>& id_path ) const
+std::vector<GLuint> PageView::lookup ( QValueVector<uint>& id_path ) const
 {
-  vector<GLuint> name_path;
+  std::vector<GLuint> name_path;
 
   QPtrListIterator< FigureViewBase > fv( figure_views_ );
 
@@ -652,7 +652,7 @@ void PageView::activateFigure ( FigureViewBase* figure_view )
   deactivateFigures();
 
   SelectedNames::iterator f =
-    activated_.insert( pair<GLfloat, vector<GLuint> >( 0., vector<GLuint>(1) ) );
+    activated_.insert( std::pair<GLfloat, std::vector<GLuint> >( 0., std::vector<GLuint>(1) ) );
   (*f).second[0] = figure_view->selectionName();
   
   figure_view->setActivated( true, selectionType().entity_, (*f).second );
@@ -666,9 +666,9 @@ void PageView::activateFigure ( FigureViewBase* figure_view )
 
 // Programmatically activate (pick, actually) the figure given by the GL path.
 
-void PageView::activateFigure ( const vector<GLuint>& selection_name )
+void PageView::activateFigure ( const std::vector<GLuint>& selection_name )
 {
-  activated_.insert( pair<GLfloat, vector<GLuint> >( 0., selection_name ) );
+  activated_.insert( std::pair<GLfloat, std::vector<GLuint> >( 0., selection_name ) );
 
   FigureViewBase* figure_view = figure_selection_names_[ selection_name[0] ];
   
@@ -691,7 +691,7 @@ void PageView::deactivateFigure ( GLuint figure, GLuint geometry )
 
   for ( ; f != activated_.end(); ++f ) {
     if ( (*f).second[0] == figure ) {
-      vector<GLuint>::const_iterator g = find( (*f).second.begin(),
+      std::vector<GLuint>::const_iterator g = find( (*f).second.begin(),
 					       (*f).second.end(), geometry );
       if ( g != (*f).second.end() ) {
 	figure_selection_names_[ (*f).second[0] ]->setActivated( false,
@@ -714,7 +714,7 @@ void PageView::deactivateFigure ( GLuint figure, GLuint geometry )
 
 // Turn off the given figure (geometry, etc...)
 
-void PageView::deactivateFigure ( const vector<GLuint>& selection_name )
+void PageView::deactivateFigure ( const std::vector<GLuint>& selection_name )
 {
   if ( selection_name.empty() ) return;
 

@@ -484,7 +484,11 @@ public:
       assembly_view_->view()->
 	setCursor( CursorFactory::instance().
 		   cursor( CursorFactory::ASSEMBLY_CONSTRAINTPLUS ) );
-    }
+    case ConstraintComplete:
+       break;
+    case PlacementComplete:
+       break;
+   }
   }
   /*!
    * When changing the current page remove the context dialog action and
@@ -572,6 +576,11 @@ public:
       return false;		// Pick another.
 
     case Invalid:
+      return false;		// Try again.
+
+    case ConstraintComplete:
+      return false;		// Try again.
+    case PlacementComplete:
       return false;		// Try again.
     }
 
@@ -795,6 +804,11 @@ public:
       assembly_view_->view()->
 	setCursor( CursorFactory::instance().
 		   cursor( CursorFactory::ASSEMBLY_CONSTRAINTPLUS ) );
+
+    case ConstraintComplete:
+      break;
+    case PlacementComplete:
+      break;
     }
   }
   /*!
@@ -885,6 +899,11 @@ public:
 
     case Invalid:
       return false;		// Try again.
+
+    case ConstraintComplete:
+      return false;		// Try again.
+    case PlacementComplete:
+       return false;		// Try again.
     }
 
     // Prompt for the size of the offset.
@@ -2041,7 +2060,7 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
   updateConstraintLabel();
 }
 
-  inline QString namePathToString ( const vector<GLuint>& ID )
+  inline QString namePathToString ( const std::vector<GLuint>& ID )
   {
     QString id_string;
 
