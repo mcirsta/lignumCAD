@@ -23,7 +23,7 @@
 #ifndef CURSORFACTORY_H
 #define CURSORFACTORY_H
 
-#include <qintdict.h>
+#include <QHash>
 #include <qcursor.h>
 
 /*!
@@ -36,7 +36,7 @@
  */
 
 class CursorFactory {
-  QIntDict< QCursor > cursors_;
+  QHash <int, QCursor> cursors_;
 
   static CursorFactory cursor_factory_;
 

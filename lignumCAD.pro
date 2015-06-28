@@ -7,6 +7,7 @@ unix {
   MOC_DIR = .moc
   OBJECTS_DIR = .obj
 }
+QT += widgets xml
 TRANSLATIONS = lignumCAD_en.ts lignumCAD_de.ts
 SUBDIRS = font
 DISTFILES += README COPYING COPYING.LIB AUTHORS INSTALL *.ui.h .ui/* images/* wine/*.h doc/en/graphics/* doc/en/HTML/*.html doc/en/HTML/*.css doc/en/HTML/SOHTML/*.html doc/en/HTML/SOHTML/generated/* doc/de/graphics/* doc/de/HTML/SOHTML/*.html doc/de/HTML/SOHTML/*.png *qm materials/*.xml materials/images/* cursors/*

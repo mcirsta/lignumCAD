@@ -25,10 +25,10 @@
 
 #include <GL/gl.h>
 
-#include <qstring.h>
-#include <qdragobject.h>
-#include <qmime.h>
-#include <qvaluevector.h>
+#include <QString>
+#include <QDrag>
+#include <QMimeData>
+#include <QVector>
 
 #include "ratio.h"
 

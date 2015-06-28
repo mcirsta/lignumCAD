@@ -24,7 +24,7 @@
 #define COMMAND_H
 
 #include <qobject.h>
-#include <qptrlist.h>
+#include <QList>
 #include <qdom.h>
 
 #include "dburl.h"
@@ -86,7 +86,7 @@ public:
 class CommandHistory : public QObject {
 Q_OBJECT
   int current_;
-  QPtrList< Command > history_;
+  QList< Command > history_;
   QFile* file_;
   QTextStream* stream_;
   QDomDocument* document_; 

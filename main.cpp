@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qapplication.h>
+#include <QApplication>
 #include <qtextcodec.h>
 #include <qstatusbar.h>
 #include <qlabel.h>
@@ -38,7 +38,7 @@
 #include "systemdependencies.h"
 #include "constants.h"
 #include "usersettings.h"
-#include "lignumcadmainwindow.h"
+#include "ui_lignumcadmainwindow.h"
 #include "cursorfactory.h"
 #include "command.h"
 
