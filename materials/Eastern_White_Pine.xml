@@ -1,0 +1,39 @@
+<!DOCTYPE lignumCAD>
+<material>
+ <common-name>Eastern White Pine</common-name>
+ <botanical-name>Pinus strobus</botanical-name>
+ <author>L.</author>
+ <language locale="en_US" >
+  <class>Wood</class>
+  <common-name>Eastern White Pine</common-name>
+  <other-names>white pine, northern white pine</other-names>
+ </language>
+ <language locale="de" >
+  <class>Holz</class>
+  <common-name>Kiefer</common-name>
+  <other-names>Weisskiefer</other-names>
+ </language>
+ <specific-gravity value="0.35" />
+ <compression-strength>
+  <fspl-parallel unit="PSI" value="3670" />
+  <mcs-parallel unit="PSI" value="4800" />
+  <fspl-perpendicular unit="PSI" value="440" />
+ </compression-strength>
+ <tension-strength>
+  <mts-perpendicular unit="PSI" value="310" />
+ </tension-strength>
+ <shear-strength>
+  <mss-parallel unit="PSI" value="900" />
+ </shear-strength>
+ <static-bending-strength>
+  <fspl unit="PSI" value="5700" />
+  <mr unit="PSI" value="8600" />
+  <e unit="10E6 PSI" value="1.49" />
+ </static-bending-strength>
+ <cosmetic>
+  <color value="#f1be83" />
+  <face-grain file="white_pine_face.png" />
+  <end-grain file="white_pine_end.png" />
+  <edge-grain file="white_pine_edge.png" />
+ </cosmetic>
+</material>

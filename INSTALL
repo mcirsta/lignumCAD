@@ -1,0 +1,134 @@
+INSTALLATION
+
+(This file is also available as ./docs/Download.html.)
+
+The lignumCAD software and documentation are available from the
+SourceForge site: http://sourceforge.net/projects/lignumcad. Binaries
+are available for Linux/i386 in RPM format.
+
+If you want to modify the code, the source is also available as an
+RPM. Read on to understand the requirements for building lignumCAD
+from scratch.
+
+Compiling
+
+Requirements
+
+In order to compile lignumCAD yourself, you will need the following
+libraries:
+
+Qt 3.0.4 or later.
+
+FreeType 2.0.9 or later.
+
+An OpenGL 1.2 implementation (your graphics board manufacturer should
+have supplied the driver and OpenGL headers; Mesa 4.0 works well,
+too).
+
+The SGI sample implementation of libGLU 1.3. (Also available in Mesa
+4.0.)
+
+If you are using lignumCAD on a Linux or other UNIX-like system, you
+will need XFree86 4.1 or later. Specifically you must have the Xft
+library (which probably requires that your X server support the RENDER
+extension, even though it is not directly used by lignumCAD).
+
+Building
+
+lignumCAD currently uses a Qt project file, lignumCAD.pro, to generate
+its Makefile. Depending on where the required libraries above are
+located, you may have to adjust the project file to suit your
+system. The following table describes the variables you may need to
+change. The variable OS means substitute the appropriate qmake prefix
+for your operating system.
+
+INCLUDEPATH
+
+The OS-independent version of this variable is probably OK as it
+is. It currently refers to several subdirectories of the source where
+various Qt Designer components live.
+
+OS:INCLUDEPATH
+
+The OS-dependent version of this variable should point to the
+directories which contain the FreeType, OpenGL and Xft headers on your
+system. If they can be accessed by the compiler without additional
+command line arguments, then this variable is probably not needed.
+
+LIBS
+
+The OS-independent version of this variable is handled by qmake. You
+may have to run through a compilation round once in order to figure
+out what additional libraries are required. See OS:LIBS below.
+
+OS:LIBS
+
+The OS-dependent version of this variable should contain the exact
+compiler flags required to link with, at least, the OpenGL GLU
+library. You may also need to specify the GL and FreeType libraries if
+the linker does not automatically include them.
+
+OS:QMAKE_LIB_QT_THREADS
+
+The distributed binary version of lignumCAD is statically linked
+against the Qt, FreeType, GLU, Xft, Xrender and C++ standard
+libraries. (These libraries are not specified in the Linux Standard
+Base.) It is necessary to alter the order of specification of these
+libraries from that ordinarily computed by qmake. 
+
+If you have installed shared object versions of these libraries, you
+can comment out this variable in the project file.
+
+Compiling lignumCAD is straight-forward.
+
+1.Define the environment variable QTDIR to point to your Qt
+  installation (if Qt is not already installed in the standard system
+  directories).
+
+2.Make sure $QTDIR/bin is in your PATH environment variable.
+
+3.Generate the Makefile with:
+
+$ qmake lignumCAD.pro
+
+4.Run the make:
+
+$ make
+
+Alternatively, you can use RPM to build an executable and install
+it. Follow steps 1 and 2 above and then 
+
+3.Install the RPM source file:
+
+$ rpm -i lignumCAD-0.1-1.src.rpm
+
+4.Compile and install the source:
+
+$ rpm -ba /path/to/specfile/lignumCAD.spec
+
+Modifying the Source
+
+The source code for lignumCAD is mostly in the top level directory of
+the source distribution. Expect a more logical organization in the
+future.
+
+Qt Designer is used to lay out the main window and most of the
+dialogs. The custom widgets used in lignumCAD are stored in
+subdirectories, generally with an lc prefix. If you want to edit the
+dialogs in Designer, then you have to take a couple of steps first:
+
+1.Set up your Qt environment as described above.
+
+2.Go into the plugins directory and do:
+
+$ qmake plugin.pro
+$ make
+
+This will install the custom widgets as plugins available in the Qt
+Designer menus. Note that you have to have write access to the
+$QTDIR/plugins directory for this to succeed. (Alternatively, you can
+use qtconfig to setup a private plugins directory.)
+
+3.You will have to obtain and install the QXCFI library. This is a Qt
+  image format plugin which reads native GIMP XCF files. Most of the
+  program's icons are stored in this format.

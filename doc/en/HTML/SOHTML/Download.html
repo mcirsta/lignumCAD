@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>Obtaining lignumCAD</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 6.0  (Linux)">
+	<META NAME="CREATED" CONTENT="20020618;14075200">
+	<META NAME="CHANGEDBY" CONTENT="Allen Barnett">
+	<META NAME="CHANGED" CONTENT="20021216;15465800">
+	<META NAME="CLASSIFICATION" CONTENT="Obtaining lignumCAD chapter of the lignumCAD manual">
+	<META NAME="DESCRIPTION" CONTENT="Copyright (C) 2002 lignum Computing, Inc.">
+	<META NAME="Info 1" CONTENT="&lt;link REL=&quot;SHORTCUT ICON&quot; HREF=&quot;favicon.ico&quot;&gt;">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin: 1in }
+		P { margin-bottom: 0.08in }
+		P.western { font-family: "Times", serif; font-weight: medium }
+		H1 { margin-bottom: 0.08in }
+		H1.western { font-family: "Arial", sans-serif; font-size: 16pt }
+		H1.cjk { font-size: 16pt }
+		H1.ctl { font-size: 16pt }
+		H2 { margin-bottom: 0.08in }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic }
+		H2.cjk { font-size: 14pt; font-style: italic }
+		H2.ctl { font-size: 14pt; font-style: italic }
+		H3 { margin-bottom: 0.08in }
+		H3.western { font-family: "Arial", sans-serif }
+		TD P { margin-bottom: 0.08in }
+		TD P.western { font-family: "Times", serif; font-weight: medium }
+		TH P { margin-bottom: 0.08in }
+		TH P.western { font-family: "Times", serif; font-style: italic }
+		TH P.cjk { font-style: italic }
+		TH P.ctl { font-style: italic }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<H1 CLASS="western">Downloading lignumCAD</H1>
+<P CLASS="western">The <VAR>lignumCAD</VAR> software and
+documentation are available from the SourceForge site:
+<A HREF="http://sourceforge.net/projects/lignumcad">http://sourceforge.net/projects/lignumcad</A>.
+A precompiled binary installation is available for Linux/i386 in RPM
+format.</P>
+<P CLASS="western">Note: As of Version 0.2, <VAR>lignumCAD</VAR> is
+installed in the directory <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">/opt/lignumCAD/vX.Y</SPAN></SPAN></SPAN></FONT></FONT>.
+The previous RPM files installed it in various directories in the
+<FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">/usr</SPAN></SPAN></SPAN></FONT></FONT>
+hierarchy. When you update your installation (for example, with the
+command &ldquo;<FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">rpm&nbsp;&shy;Uvh&nbsp;lignumCAD-0.2-3.i386.rpm</SPAN></SPAN></SPAN></FONT></FONT>&rdquo;),
+please manually remove the <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">/usr/share/lignumCAD</SPAN></SPAN></SPAN></FONT></FONT>
+directory.</P>
+<P CLASS="western">If you want to modify the code, the source is also
+available as an SRPM. Read on to understand the requirements for
+building <VAR>lignumCAD</VAR> from scratch.</P>
+<H2 CLASS="western">Compiling</H2>
+<H3 CLASS="western"><A NAME="Compilation Requirements"></A>Requirements</H3>
+<P CLASS="western">In order to compile <VAR>lignumCAD</VAR> yourself,
+you will need the following libraries:</P>
+<UL>
+	<LI><P CLASS="western"><A HREF="http://www.trolltech.com/">Qt 3.0.6
+	or later</A>.</P>
+	<LI><P CLASS="western"><A HREF="http://www.opencascade.org/">The
+	latest CVS version of OpenCASCADE 4</A>.  A <A HREF="http://sourceforge.net/projects/lignumcad">partial
+	set of compiled libraries</A> is also available from the <VAR>lignumCAD</VAR>
+	SourceForge site.</P>
+	<LI><P CLASS="western"><A HREF="http://www.freetype.org/">FreeType
+	2.1.3 or later</A>. Note: all versions of FreeType between 2.0.9 and
+	2.1.2 contain a bug which will cause <VAR>lignumCAD</VAR> to render
+	rotated text incorrectly.</P>
+	<LI><P CLASS="western">An OpenGL 1.2 implementation (your graphics
+	board manufacturer should have supplied the driver and OpenGL
+	headers); <A HREF="http://www.mesa3d.org/">Mesa 4.0 and later work
+	well, too</A>.</P>
+	<LI><P CLASS="western">The <A HREF="http://www.sgi.com/">SGI</A>
+	<A HREF="http://oss.sgi.com/projects/ogl-sample/">sample
+	implementation of libGLU 1.3</A>. (Also available in Mesa 4.0 and
+	later.)</P>
+</UL>
+<P CLASS="western">If you are using <VAR>lignumCAD</VAR> on a Linux
+or other UNIX-like system, you will need <A HREF="http://www.xfree86.org/">XFree86
+4.1 </A>or later. Specifically you must have the Xft library (which
+probably requires that your X server support the RENDER extension,
+even though it is not directly used by <VAR>lignumCAD</VAR>).</P>
+<H3 CLASS="western">Building</H3>
+<P CLASS="western"><VAR>lignumCAD</VAR> currently uses a Qt project
+file, <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">lignumCAD.pro</SPAN></SPAN></SPAN></FONT></FONT>,
+to generate its Makefile. Depending on where the required libraries
+above are located, you may have to adjust the project file to suit
+your system. The following table describes the variables you may need
+to change. The variable <VAR>OS</VAR> means substitute the
+appropriate <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">qmake</SPAN></SPAN></SPAN></FONT></FONT>
+prefix for your operating system.</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=128*>
+	<COL WIDTH=128*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=50%>
+				<P CLASS="western">Variable</P>
+			</TH>
+			<TH WIDTH=50%>
+				<P CLASS="western">Value</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=50%>
+				<P CLASS="western">INCLUDEPATH</P>
+			</TD>
+			<TD WIDTH=50%>
+				<P CLASS="western">The OS-independent version of this variable is
+				probably OK as it is. It currently refers to several
+				subdirectories of the source where various Qt Designer components
+				live.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=50%>
+				<P CLASS="western"><VAR>OS</VAR>:INCLUDEPATH</P>
+			</TD>
+			<TD WIDTH=50%>
+				<P CLASS="western">The OS-dependent version of this variable
+				should point to the directories which contain the FreeType,
+				OpenGL and Xft headers on your system. If they can be accessed by
+				the compiler without additional command line arguments, then this
+				variable is probably not needed.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=50%>
+				<P CLASS="western">LIBS</P>
+			</TD>
+			<TD WIDTH=50%>
+				<P CLASS="western">The OS-independent version of this variable is
+				handled by <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">qmake</SPAN></SPAN></SPAN></FONT></FONT>.
+				You may have to run through a compilation round once in order to
+				figure out what additional libraries are required. See <VAR>OS</VAR>:LIBS
+				below.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=50%>
+				<P CLASS="western"><VAR>OS</VAR>:LIBS</P>
+			</TD>
+			<TD WIDTH=50%>
+				<P CLASS="western">The OS-dependent version of this variable
+				should contain the exact compiler flags required to link with, at
+				least, the OpenGL GLU library. You may also need to specify the
+				GL and FreeType libraries if the linker does not automatically
+				include them.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=50%>
+				<P CLASS="western"><VAR>OS</VAR>:QMAKE_LIB_QT_THREADS</P>
+			</TD>
+			<TD WIDTH=50%>
+				<P CLASS="western">The distributed binary version of lignumCAD is
+				statically linked against the Qt, OpenCASCADE, FreeType, GLU,
+				Xft, Xrender, PNG and C++ standard libraries. (These libraries
+				are not specified in the Linux Standard Base.) It is necessary to
+				alter the order of specification of these libraries from that
+				ordinarily computed by <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">qmake</SPAN></SPAN></SPAN></FONT></FONT>.
+								</P>
+				<P CLASS="western">If you have installed shared object versions
+				of these libraries, you can comment out this variable in the
+				project file.</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P CLASS="western"><BR><BR>
+</P>
+<P CLASS="western">Compiling <VAR>lignumCAD</VAR> is (relatively)
+straight-forward as long as you set up your environment properly.</P>
+<OL>
+	<LI><P CLASS="western">Define the environment variable <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">QTDIR</SPAN></SPAN></SPAN></FONT></FONT>
+	to point to your Qt installation (if Qt is not already installed in
+	the standard system directories).</P>
+	<LI><P CLASS="western">Make sure <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">$QTDIR/bin</SPAN></SPAN></SPAN></FONT></FONT>
+	is in your <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">PATH</SPAN></SPAN></SPAN></FONT></FONT>
+	environment variable and <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">$QTDIR/lib</SPAN></SPAN></SPAN></FONT></FONT>
+	is in your <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">LD_LIBRARY_PATH</SPAN></SPAN></SPAN></FONT></FONT>
+	environment variable.</P>
+	<LI><P CLASS="western">Generate the Makefile with:</P>
+	<PRE><FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">$ qmake lignumCAD.pro</SPAN></SPAN></SPAN></FONT></FONT></PRE>
+	<LI><P CLASS="western">Run the make:</P>
+	<PRE><FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">$ make</SPAN></SPAN></SPAN></FONT></FONT></PRE>
+</OL>
+<P CLASS="western">Alternatively, you can use RPM to build an
+executable and install it. Follow steps 1 and 2 above and then 
+</P>
+<OL START=3>
+	<LI><P CLASS="western">Install the RPM source file:</P>
+	<PRE><FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">$ rpm -i lignumCAD-0.2-3.src.rpm</SPAN></SPAN></SPAN></FONT></FONT></PRE>
+	<LI><P CLASS="western">Compile and install the source:</P>
+	<PRE><FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">$ rpm -ba /path/to/specfile/lignumCAD.spec</SPAN></SPAN></SPAN></FONT></FONT></PRE><P CLASS="western">
+	Note that <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">/path/to/specfile</SPAN></SPAN></SPAN></FONT></FONT>
+	varies between Linux distributions.</P>
+</OL>
+<H3 CLASS="western">Modifying the Source</H3>
+<P CLASS="western">The source code for <VAR>lignumCAD</VAR> is mostly
+in the top level directory of the source distribution. Expect a more
+logical organization in the future.</P>
+<P CLASS="western">Qt Designer is used to lay out the main window and
+most of the dialogs. The custom widgets used in <VAR>lignumCAD</VAR>
+are stored in subdirectories, generally with an <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">lc</SPAN></SPAN></SPAN></FONT></FONT>
+prefix. If you want to edit the dialogs in Designer, then you have to
+take a couple of steps first:</P>
+<OL>
+	<LI><P CLASS="western">Set up your Qt environment as described
+	above.</P>
+	<LI><P CLASS="western">Go into the plugins directory and do:</P>
+	<PRE><FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">$ qmake plugin.pro</SPAN></SPAN></SPAN></FONT></FONT>
+<FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">$ make</SPAN></SPAN></SPAN></FONT></FONT></PRE><P CLASS="western">
+	This will install the custom widgets as plugins available in the Qt
+	Designer menus. Note that you have to have write access to the
+	<FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">$QTDIR/plugins</SPAN></SPAN></SPAN></FONT></FONT>
+	directory for this to succeed. (Alternatively, you can use <FONT FACE="Courier, monospace"><FONT SIZE=2 STYLE="font-size: 11pt"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">qtconfig</SPAN></SPAN></SPAN></FONT></FONT>
+	to setup a private plugins directory.)</P>
+</OL>
+</BODY>
+</HTML>

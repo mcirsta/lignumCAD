@@ -1,0 +1,529 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>Creating an Assembly in lignumCAD</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 6.0  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Allen Barnett">
+	<META NAME="CREATED" CONTENT="20021205;16420000">
+	<META NAME="CHANGEDBY" CONTENT="Allen Barnett">
+	<META NAME="CHANGED" CONTENT="20021212;11451100">
+	<META NAME="CLASSIFICATION" CONTENT="Assembly creation section">
+	<META NAME="DESCRIPTION" CONTENT="Copyright (C) 2002 lignum Computing, Inc.">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin: 1in }
+		P { margin-bottom: 0.08in }
+		P.western { font-family: "Times", serif; font-weight: medium }
+		H2 { margin-bottom: 0.08in }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic; font-weight: medium }
+		H2.cjk { font-size: 14pt; font-weight: medium }
+		H2.ctl { font-size: 14pt; font-weight: medium }
+		H3 { margin-bottom: 0.08in }
+		H3.western { font-family: "Arial", sans-serif }
+		P.sdfootnote-western { margin-left: 0.2in; text-indent: -0.2in; margin-bottom: 0in; font-family: "Times", serif; font-size: 10pt; font-weight: medium }
+		P.sdfootnote-cjk { margin-left: 0.2in; text-indent: -0.2in; margin-bottom: 0in; font-size: 10pt }
+		P.sdfootnote-ctl { margin-left: 0.2in; text-indent: -0.2in; margin-bottom: 0in; font-size: 10pt }
+		EM.cjk { font-style: normal }
+		EM.ctl { font-style: normal }
+		VAR.western { font-family: "Times", serif; font-weight: medium }
+		VAR.cjk { font-style: normal }
+		VAR.ctl { font-style: normal }
+		A.sdfootnoteanc { font-size: 57% }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<H2 CLASS="western">Create an Assembly</H2>
+<P CLASS="western">In the previous section, we created the individual
+parts of a table. Each part was created floating in space, without
+reference to the other parts of the table. Now we will begin to
+arrange the individual parts into their proper places with respect to
+each other. The goal of building the assembly of parts is two-fold:
+to see what the piece looks like when complete and to prepare to
+create the joints which will ultimately hold the parts together.</P>
+<H3 CLASS="western">The Table Top</H3>
+<P CLASS="western">The first assembly we will create will be the
+table top. The top consists of a field and two breadboard edges. In
+order to create an assembly, the parts which will comprise it must
+have already been created and included in the model which we are
+working on. So, open the model which you created in the previous
+section; it should contain a 15 &frac12;&rdquo; x 16&rdquo; Top field
+part and a 2&rdquo; x 6&rdquo; Breadboard edge part.</P>
+<P CLASS="western">Create a new assembly by selecting the
+<FONT FACE="Helvetica, sans-serif"><B>Insert|Assembly</B></FONT> menu
+option (or by selecting <FONT FACE="Helvetica, sans-serif"><B>Assembly</B></FONT>
+from the tab bar context menu or by clicking on the toolbar).
+<VAR CLASS="western">lignumCAD</VAR> will display the Create New
+Assembly dialog.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_assembly_start.png" NAME="Graphic1" ALT="Top Assembly start dialog" ALIGN=BOTTOM width=280 height=229 BORDER=0></P>
+<P CLASS="western">From this dialog, you must select a part to start
+the assembly with. Click on the part named <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Top
+field</SPAN></SPAN></FONT>. Also, navigate to the name type-in and
+enter <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Top</SPAN></SPAN></FONT>.
+Click <FONT FACE="Helvetica, sans-serif"><B>OK</B></FONT> (or press
+<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>
+or type <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+O</SPAN></B></FONT>)
+to accept the choices and create the assembly.</P>
+<P CLASS="western">Next, we want to add a breadboard edge to the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Top</SPAN></SPAN></FONT>
+assembly. Select the <FONT FACE="Helvetica, sans-serif"><B>Tools|Add
+Model</B></FONT> menu option. A dialog window similar to the Create
+New Assembly dialog will appear. Select the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Breadboard
+edge</SPAN></SPAN></FONT> part and click <FONT FACE="Helvetica, sans-serif"><B>OK</B></FONT>.
+Turn on solid mode (press the right mouse button and select <FONT FACE="Helvetica, sans-serif"><B>Solid</B></FONT>
+from the context menu) and rotate the view around (press the left
+mouse button and drag it up and down). You should see that both the
+field and the breadboard edge are now both shown in the display. You
+should see something like this.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_asm_step1.png" NAME="Graphic2" ALT="Top assembly step 1" ALIGN=BOTTOM width=404 height=344 BORDER=0></P>
+<P CLASS="western">Now, we need to define the relationship between
+the field and the breadboard edge. This is the purpose of the
+Constraint Definition window which appears when a part is added to an
+assembly.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/assembly_constraint_dialog.png" NAME="Graphic3" ALT="Assembly Constraint dialog" ALIGN=BOTTOM width=135 height=554 BORDER=0></P>
+<P CLASS="western">To understand how assembly constraints work is
+somewhat complicated, but it quickly becomes intuitive, perhaps even
+fun. Consider what you do when you physically assemble a top with a
+breadboard edge: you usually cut a long tongue on the edge of the
+field and a corresponding slot on the breadboard edge; the tongue is
+slightly smaller than the slot. When you slip the breadboard onto the
+tongue, the side of the breadboard with the slot will be <EM CLASS="western">flush</EM>
+against the base of the tongue. However, there will be a certain
+amount of play in the breadboard; you will still be able to move it a
+little bit forward and backwards along the tongue and a little bit up
+and down. Ultimately, when you drill the holes for the pins, you want
+to make sure that the top of the field and the top of the breadboard
+<EM CLASS="western">align</EM> and that the front of the field and
+the front of the breadboard <EM CLASS="western">align</EM>. The three
+faces of the breadboard which you try to line up with the field
+constitute the three constraints which you will create in <VAR CLASS="western">lignumCAD</VAR>.</P>
+<P CLASS="western">The constraint definition window has four
+constraints which you can apply: <FONT FACE="Helvetica, sans-serif"><B>Mate</B></FONT>,
+<FONT FACE="Helvetica, sans-serif"><B>Align</B></FONT>, <FONT FACE="Helvetica, sans-serif"><B>Mate
+Offset</B></FONT> and <FONT FACE="Helvetica, sans-serif"><B>Align
+Offset</B></FONT>. To summarize the basic actions: mate means that
+two surfaces are stuck together facing each other, align means two
+surfaces line up facing the same direction. The two offset
+constraints allow for the two surfaces to be separated by a given
+distance but otherwise obeying the same constraints on orientation.
+Before explaining the constraints more explicitly, let's complete
+placement of the first breadboard edge.</P>
+<P CLASS="western">As suggested by our mechanical procedure, we will
+first place the breadboard edge against the field. Click <FONT FACE="Helvetica, sans-serif"><B>Mate</B></FONT>
+(or type <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+M</SPAN></B></FONT>)
+and the cursor becomes the face selection cursor (<IMG SRC="../../graphics/create_asm_cursor.png" NAME="Graphic4" ALT="Assembly creation cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+In the main window, you will see that only faces of the breadboard
+will be highlighted as you move the mouse over the parts. Also,
+observe that only faces which actually face the front of the screen
+are highlighted (in other words, if you want to select a hidden face,
+you will have to rotate the view point). You want to click on one of
+the long, narrow faces of the breadboard edge, as show in the figure.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_asm_step2.png" NAME="Graphic5" ALT="Top assembly step 2" ALIGN=BOTTOM width=356 height=288 BORDER=0></P>
+<P CLASS="western">(You might notice that there are actually two such
+faces on the breadboard. Which should you pick? Since the breadboard
+is symmetric, it really doesn't matter. Later when we work with more
+complicated parts, though, there will be less choice.)</P>
+<P CLASS="western">After picking the edge of the breadboard, the
+cursor will change to the additional face selection cursor (<IMG SRC="../../graphics/create_asm_plus_cursor.png" NAME="Graphic6" ALT="Assembly creation plus cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+In the main window, now, you will only be able to select faces from
+the field. Highlight one of the end grain edges of the field. (These
+are the longer, 16&rdquo; edges. It might help to switch to Texture
+mode, since you will be able to see the direction of the grain.) 
+</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_asm_step3.png" NAME="Graphic7" ALT="Top assembly step 3" ALIGN=BOTTOM width=450 height=330 BORDER=0></P>
+<P CLASS="western"><VAR CLASS="western">lignumCAD</VAR> will now
+calculate a new position for the breadboard such that the two
+selected faces are mated. Your assembly should look like the figure
+below.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_asm_step4.png" NAME="Graphic8" ALT="Top assembly step 4" ALIGN=BOTTOM width=310 height=276 BORDER=0></P>
+<P CLASS="western">In the figure, it looks like the breadboard edge
+is now properly placed. It appears that the top of the breadboard and
+the top of the field align, as do the front of both parts. However,
+as far as the computer is concerned, the breadboard has not been
+completely constrained. This is indicated by program with the
+Constraint Definition window: as long as this window is still
+present, the part is not completely constrained. As with our real
+breadboard, it is still possible to move the breadboard back and
+forth, and up and down.</P>
+<P CLASS="western">To complete placement of the breadboard, select
+<FONT FACE="Helvetica, sans-serif"><B>Align</B></FONT> and select the
+top surface of the breadboard and the top surface of the field.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_asm_step5.png" NAME="Graphic9" ALT="Top assembly step 5" ALIGN=BOTTOM width=316 height=126 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>Select <FONT FACE="Helvetica, sans-serif"><B>Align</B></FONT>
+again and select the front surface of the breadboard and the front
+surface of the field. <VAR CLASS="western">lignumCAD</VAR> will now
+hide the constraint definition window, indicating that the breadboard
+has been fully constrained.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_asm_step6.png" NAME="Graphic10" ALT="Top assembly step 6" ALIGN=BOTTOM width=328 height=122 BORDER=0></P>
+<P CLASS="western">Finish the Top by adding another breadboard edge
+to the other side of the field. When complete, your Top should look
+like this.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_asm_step7.png" NAME="Graphic11" ALT="Completed top assembly" ALIGN=BOTTOM width=664 height=576 BORDER=0></P>
+<P CLASS="western">The following section describes the assembly
+constraint process in a little more technical detail. You can skip
+ahead to <A HREF="#The Table Base Section">the Table Base section</A>
+if you're not interested. 
+</P>
+<H3 CLASS="western">Some Assembly Constraint Details</H3>
+<P CLASS="western">This section attempts to describe some of the
+details of assembly constraints without too much in the way of
+mathematics. You should be able to use the program without completely
+understanding this material, but when things get complicated, it is
+always useful to understand exactly what is going on. The full
+mathematics of assembly constraints are described in the Technical
+Reference [<FONT COLOR="#ff0000">TBD</FONT>].</P>
+<P CLASS="western">First off, recall the two-dimensional XY
+<EM CLASS="western">coordinate system</EM> from algebra. A coordinate
+system describes a way in which to locate positions on a
+two-dimensional plane. The coordinate system consists of two number
+lines at right angles to each other. Any point can be defined by a
+pair of numbers, each of which denotes a position along one of the
+number lines.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Assembly_html_m49bae88d.png" NAME="Object1" ALIGN=BOTTOM width=245 height=215></P>
+<P CLASS="western">The proper name for a number line in a coordinate
+system is <EM CLASS="western">axis</EM>. The horizontal number line
+is usually called the X axis and the vertical line is usually called
+the Y axis. The point where the two axes meet is usually assumed to
+be the position corresponding to zero distance along each line; it is
+called the <EM CLASS="western">origin</EM> of the coordinate system.
+Such a coordinate system is usually called a <EM CLASS="western">Cartesian</EM>
+coordinate system in honor of Ren&eacute; Decartes (1596-1650). (To
+reiterate: The attributes which make this a Cartesian coordinate
+system are: 1) the surface on which the coordinate system is placed
+is a flat plane, 2) the axes are straight lines, 3) positions along
+the axes are uniformly spaced, and 4) the axes intersect at 90&ordm;.
+Many other arrangements of surface, axis curve, position spacing and
+intersection angle are possible; these alternate arrangements yield
+non-Cartesian coordinate systems.)</P>
+<P CLASS="western">It is especially fitting to mention this here,
+since Decartes' contribution to mathematics was to show how the
+theorems of geometry could be translated into algebraic equivalents.
+Geometry deals with abstract figures, such as points and lines.
+Although we have an intuitive understanding about how such objects
+relate to the real world, geometry itself does <EM CLASS="western">not</EM>
+provide an explicit meaning for them<A CLASS="sdfootnoteanc" NAME="sdfootnote1anc" HREF="#sdfootnote1sym"><SUP>1</SUP></A>.
+Descartes showed how such abstract entities can be described by sets
+of numbers and algebraic equations; which in turn allows them to be
+manipulated by a computer. Thus, <VAR CLASS="western">lignumCAD</VAR>,
+itself, is an expression of geometry through algebra.</P>
+<P CLASS="western">The next step to understanding the constraint
+system of <VAR CLASS="western">lignumCAD</VAR> is to look at
+<EM CLASS="western">coordinate system transformation</EM>. Suppose
+that, instead of a simple point being specified in a coordinate
+system, you were specifying the origin of another coordinate system.
+Consider this figure.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Assembly_html_m5dedfc4c.png" NAME="Object2" ALIGN=BOTTOM width=245 height=215></P>
+<P CLASS="western">We now have two coordinate systems, conventionally
+called the XY and X'Y' (pronounced &ldquo;X-prime, Y-prime&rdquo;)
+coordinate systems. For concreteness, let the origin of the X'Y'
+coordinate system be at the point [2&nbsp;&frac12; ,2] in the XY
+coordinate system. Suppose that you had a point, A, in the X'Y'
+coordinate system at [3,2]. The question to ask is: What is the
+position of A in the XY coordinate system? It's simple enough to take
+a ruler and measure the distance of A from the origin of the XY
+coordinate system. It would turn out to be [5&nbsp;&frac12; ,4]. It
+should also be clear that any point in the X'Y' coordinate system can
+be converted to a point in the XY coordinate system simply by adding
+the position of the X'Y' origin to it. Similarly, to convert a point
+in the XY coordinate system to one in the X'Y' coordinate system, you
+would simply subtract the position of the X'Y' origin.</P>
+<P CLASS="western">Similarly to points, it is also possible to
+consider that figures can be drawn with respect to a coordinate
+system. Here is a figure of a rectangle which is drawn with respect
+to a coordinate system displaced from the origin by [3,2].</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Assembly_html_m53229ede.png" NAME="Object3" ALIGN=BOTTOM width=245 height=215></P>
+<P CLASS="western">How is this germane to <VAR CLASS="western">lignumCAD</VAR>?
+Each part that you create in <VAR CLASS="western">lignumCAD</VAR> has
+a coordinate system. In fact, each part has its own, personal (the
+technical term is <EM CLASS="western">local</EM>) coordinate system.
+You can imagine that each part is stuck to its local coordinate
+system; where ever the coordinate system goes, the part must go to.</P>
+<P CLASS="western">When you create an assembly, you somehow have to
+merge the local coordinate systems of each part together. Here is a
+simple figure which illustrates the process.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Assembly_html_1ba39de3.png" NAME="Object4" width=392 height=222></P>
+<P CLASS="western">Each of the two rectangles in the figure have a
+local coordinate system. The origin of the left rectangle's local
+coordinate system is at [-5,2]; the origin of the right rectangle is
+at [4,2]. When we choose to mate two parts together in an assembly,
+this essentially means that we want to know where to move the origin
+of the right rectangle (for example) such that the right edge of the
+left rectangle (labeled A in the figure) coincides with the left edge
+of the right rectangle (labeled B). For our example, algebra tells us
+that the edge A is 4 units to the left from edge B. Therefore, if we
+move the origin of the right rectangle's coordinate system 4 units to
+the left, then the two edges will coincide. The operation of moving
+the origin of a coordinate system is called <EM CLASS="western">translation</EM>.</P>
+<P CLASS="western">There is another aspect of assembly constraints to
+understand from our example mate operation: the translation of the
+right rectangle's origin only moved it the direction of the X axis.
+It did not determine if there should have been a translation in the Y
+axis direction. The reason for this is the nature of the entity which
+determined the translation: the line segments A and B. The edges of
+the rectangles are composed of line segments; where lines are
+one-dimensional objects which continue without a definite beginning
+or end, line segments are generally a finite section of a line with
+definite boundary points. It is straight forward to compute the
+distance between two lines (as long as they are parallel, of course)
+and translate them so that they coincide. However, how do you line up
+the ends of the line segments? A single constraint is not sufficient
+to completely determine the relationship between line segments. Thus,
+you would need an additional constraint  to, for example, align both
+top edges of the rectangles: This would give you a translation in the
+Y direction and complete the constraint.</P>
+<P CLASS="western">In addition to translation, another form of
+coordinate system transformation is <EM CLASS="western">rotation</EM>.
+The figure shows a coordinate system, X'Y' , which is rotated about
+its own origin (which is, itself, translated from the origin of the
+XY coordinate system). Again, it is possible to write an equation
+which converts a point in the X'Y' coordinate system into a
+corresponding point in the XY coordinate system. The equations
+involved are more complicated than in the case of translation, but
+ultimately, there is a straight-forward way to represent both
+operations.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Assembly_html_7d161853.png" NAME="Object5" ALIGN=BOTTOM width=255 height=215></P>
+<P CLASS="western">How do rotations arise in <VAR CLASS="western">lignumCAD</VAR>?
+The figure below shows the initial step of an assembly of a table
+skirt and a table leg. As you can see, the orientation of the table
+leg is not initially correct. If the first operation is to mate the
+right side of the skirt to the flat on the side of the table leg,
+then the coordinate system of the table leg will need to be rotated
+90&ordm; before the appropriate faces can be translated to coincide.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Assembly_html_m4d2209e3.png" NAME="Object9" ALIGN=MIDDLE width=393 height=187></P>
+<P CLASS="western"><VAR CLASS="western">lignumCAD</VAR>, of course,
+works in three dimensions. A three-dimensional coordinate system is
+shown in the figure below. There are three axes, X, Y and Z, and each
+makes a right angle with the other two. In addition, the Z axis obeys
+the &ldquo;Right Hand Rule&rdquo; (i.e., if you point the figures of
+your right hand along the X axis and curl them in toward the Y axis,
+your thumb will point in the Z axis direction). Such a coordinate
+system is usually called a right-handed coordinate system.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Assembly_html_m705f05f5.png" NAME="Object6" ALIGN=BOTTOM width=255 height=215></P>
+<P CLASS="western">The same arguments which apply to transforming
+line segments to coincide also apply to faces of solids in three
+dimensions. In particular, the bounded planes which make up the most
+common faces behave almost identically to line segments. However,
+since plane faces are two-dimensional instead of one-dimensional, a
+third constraint is needed to fully specify the location of assembled
+part. Let's consider an example and pick up some more jargon along
+the way: Suppose that you have two square blocks, one which has 2&rdquo;
+edges and another which has 1&rdquo; edges. The goal is to completely
+constrain the 1&rdquo; block with respect to the 2&rdquo; block.</P>
+<P CLASS="western">The first question to answer is: How am I allowed
+to move the 1&rdquo; block, or, more precisely, how am I allowed to
+move the coordinate system of the 1&rdquo; block? This question is
+difficult to answer precisely without mathematics, but we'll give it
+a try. The first concept to tackle goes by the name of <EM CLASS="western">linear
+independence</EM>. In this context, linear independence means that
+there is only one way to move an object in a given direction. For
+example, if you want to move an object along the X axis of the global
+coordinate system, this can only be accomplished by translating its
+local coordinate system along the X axis. It could not be
+accomplished by translating its coordinate system just along the Y
+axis or just along the Z axis or <EM CLASS="western">any combination
+of translations</EM> along the Y and Z axis. In other words,
+translations in the X direction are independent of translations in
+the Y and Z directions. The same thing holds true for translations
+along either the Y or Z axes as well.</P>
+<P CLASS="western">Suppose you want to translate the block 1 &frac12;&rdquo;
+along a 45&ordm; line between the X and Y axes? Such a translation
+would consist of a combination of translations along both axes. A
+subtle consequence of linear independence, however, insures that this
+combination is unique. That is, there is only  one possible
+combination of translations which can move the coordinate system to
+the desired position.</P>
+<P CLASS="western">Some more jargon: The fact that, in
+three-dimensional geometry, there are three linearly independent
+directions means that the system has three <EM CLASS="western">degrees
+of freedom</EM>. But, there is more to it. Just like the rotation
+operation in two dimensions, you can rotate a coordinate system in
+three dimensions as well. In three dimensions, however, there are
+three &ldquo;directions&rdquo; in which a coordinate system may be
+rotated. In the figure below, a second three-dimensional coordinate
+system is shown. The best way to think of rotating a
+three-dimensional coordinate system is to imagine the Z axis piercing
+a sphere centered around the origin of the transformed coordinate
+system.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Assembly_html_4665f4bd.png" NAME="Object8" ALIGN=BOTTOM width=255 height=215></P>
+<P CLASS="western" ALIGN=LEFT>Just like the coordinates of latitude
+and longitude are used to locate a point on the surface of the Earth,
+you need two coordinates to define the direction of the Z axis.
+Additionally, you can now imagine another rotation of the system
+shown above: that of twisting the X'Y' axes around the Z' axis (which
+is exactly equivalent to the rotation of the two-dimensional
+coordinate system). Therefore, in addition to the three degrees of
+translational freedom, a three-dimensional coordinate system also has
+three degrees of rotational freedom.</P>
+<P CLASS="western">So, getting back to the block example, pick a face
+on the 1&rdquo; block and a face on the 2&rdquo; block and place them
+touching each other. This is equivalent to the mate constraint in
+<VAR CLASS="western">lignumCAD</VAR>. Now, how can you move the 1&rdquo;
+block so that the two faces remain touching? You can move the 1&rdquo;
+block up and down, and forwards and backwards; you can also twist the
+block around. Therefore, the mate operation has specified three of
+our six degrees of freedom, namely one translational direction and
+two of the rotational directions.</P>
+<P CLASS="western">The next constraint to apply is to say that the
+front faces of both blocks will be flush with one another. So, twist
+the 1&rdquo; block around until its front face is pointing in the
+same direction as the 2&rdquo; block's front face and slide it so
+that the two faces line up. Now, how can you move the 1&rdquo; block
+so that it still meets both of the constraints we've created? Its
+left face must remain in contact with the right face of the 2&rdquo;
+block and its front face must remain aligned with the front face of
+the 2&rdquo; block. The only remaining degree of freedom for the 1&rdquo;
+block is to slide up and down; the align constraint has specified one
+more translational and the remaining rotational degree of freedom.</P>
+<P CLASS="western">The last constraint is aligning the top of the 1&rdquo;
+block with the top of the 2&rdquo; block. This consumes the last
+degree of translational freedom and thus fully constrains the
+position of the 1&rdquo; block.</P>
+<P CLASS="western">You might ask why the mate and align operations
+are chosen as they are. You can imagine different methods of evolving
+constraints, some probably easier than this scheme. The answer is
+that this system <EM CLASS="western">is</EM> wholly arbitrary. If you
+want to suggest improvements, we're always willing to listen.</P>
+<H3 CLASS="western"><A NAME="The Table Base Section"></A>The Table
+Base</H3>
+<P CLASS="western">Constructing the table base is essentially the
+same as assembling the top. It is somewhat more complicated because
+there are more parts and the parts themselves are slightly more
+complicated. Start by creating a new assembly named <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Base</SPAN></SPAN></FONT>
+using the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Front
+Skirt</SPAN></SPAN></FONT> part. Now you want to add a <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Leg</SPAN></SPAN></FONT>
+part to the assembly. The constraint dialog will activate and you
+should see something like this.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/base_asm_step1.png" NAME="Graphic12" ALT="Base assembly step 1" ALIGN=BOTTOM width=308 height=306 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>Note that the leg is tapered on two
+sides. This is an aesthetic consideration and you could certainly
+make a leg however you'd like. As of version 0.2 of <VAR CLASS="western">lignumCAD</VAR>,
+though, you're stuck with this kind of leg. In addition to the two
+sided taper, it is conventional to put the tapered edge on the inside
+of the piece. Notice, then, that there are two faces of the leg which
+form small rectangles at the top of the leg. In order to make the
+table base, you will need to mate these faces to the edges of the
+skirts. Assuming that we're starting with the right, front leg of the
+table, select the <FONT FACE="Helvetica, sans-serif"><B>Mate</B></FONT>
+operation and pick the face of the leg shown below.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/base_asm_step2.png" NAME="Graphic13" ALT="Base assembly step 2" ALIGN=BOTTOM width=274 height=282 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>Note that I have spun the window around
+to the back side so that the two leg flats are facing out from the
+screen. In this orientation, you want to select the flat on the right
+side of the leg. Next, pick the closer edge of the skirt.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/base_asm_step3.png" NAME="Graphic14" ALT="Base assembly step 4" ALIGN=BOTTOM width=298 height=314 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>After you select the skirt edge,
+<VAR CLASS="western">lignumCAD</VAR> will apply the constraint and
+compute the new position of the leg. It will actually look kind of
+strange,</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/base_asm_step4.png" NAME="Graphic15" ALT="Base assembly step 4" ALIGN=BOTTOM width=250 height=216 BORDER=0>,</P>
+<P CLASS="western" ALIGN=LEFT>but remember, we still have a
+rotational degree of freedom left. The next step, then, is to align
+the top of the leg with the stop of the skirt.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/base_asm_step5.png" NAME="Graphic16" ALT="Base assembly step 5" ALIGN=BOTTOM width=690 height=312 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>The final touch is to align the front
+of the leg with the front of the skirt. Again, an aesthetic
+consideration is that the leg should not be flush with the skirt;
+rather, it should be slightly proud of the skirt in order to make a
+more interesting shadow line. To accomplish this, we will make an
+Align Offset constraint of the part fronts. So select Align Offset
+and select the faces shown below.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/base_asm_step6.png" NAME="Graphic17" ALT="Base assembly step 6" ALIGN=BOTTOM width=472 height=366 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>After you select the front face of the
+skirt, the offset dialog will be shown. Enter a value of 1/8&rdquo;.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/base_asm_step7.png" NAME="Graphic18" ALT="Base assembly step 7 (offset dialog)" ALIGN=BOTTOM width=280 height=149 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>The leg is now completely constrained
+and the constraint dialog should hide itself. If you click on the
+leg, it will be activated and you will see a dimension for the align
+offset. If you want to change the offset, you can double click on the
+dimension and the offset dialog will be displayed.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/base_asm_step8.png" NAME="Graphic19" ALT="Base assembly step 8" ALIGN=BOTTOM width=282 height=290 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>The next step is up to you. You can
+either add a leg to the other side of the front skirt or add the side
+skirt to the right front leg. The procedure is the same as before:
+add the part, mate the part to the assembly, align the top with the
+assembly and add an align offset to set the skirt back. When
+complete, your table base should look like the figure below.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/base_asm_stepL.png" NAME="Graphic20" ALT="Final base assembly" ALIGN=BOTTOM width=282 height=398 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT><IMG SRC="generated/Assembly_html_m314e4293.png" NAME="Graphic21" ALT="A light bulb" ALIGN=BOTTOM width=22 height=26 BORDER=0>When
+you add a skirt to the assembly, you will mate it to a leg, align it
+to the top of the leg and the align offset the skirt from the leg.
+Because the skirt is recessed relative to the leg, when the offset
+dialog appears, enter <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">-1/8&rdquo;</SPAN></SPAN></FONT>.</P>
+<H3 CLASS="western">The Grand Assembly</H3>
+<P CLASS="western">Besides gluing parts together in an assembly, you
+can also assemble Assemblies. So, to complete the table we are going
+to put together the top and base. Create a new assembly named <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Table</SPAN></SPAN></FONT>
+and start it with the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Table
+Base</SPAN></SPAN></FONT> assembly. Then add the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Top</SPAN></SPAN></FONT>
+assembly. Your table assembly should look like the figure below.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/table_asm_step1.png" NAME="Graphic22" ALT="Table assembly step 1" ALIGN=BOTTOM width=390 height=346 BORDER=0></P>
+<P CLASS="western">Mate the bottom of the top to one of the top
+surfaces of the base. Note that there is a lot of ambiguity in these
+directions. For example, the bottom of the top could refer to any of
+six faces in the top assembly: the top or bottom of the field or the
+top or bottom of either of the two breadboard edges. Since they are
+all in the same plane, the top will be in the same final position
+regardless of the selection. However, you want to think about what it
+means to mate the top to the base, which will generally mean the
+bottom of the field will rest on the base. Similarly, the top of the
+base could be represented by any of the either top faces in the base
+assembly: the tops of the four legs or the tops of the four skirts.
+The choice is less clear here; the top of the front skirt is probably
+the best choice.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/table_asm_step2.png" NAME="Graphic23" ALT="Table assembly step 2" ALIGN=BOTTOM width=388 height=322 BORDER=0></P>
+<P CLASS="western">Now we need to center the top on the base. The
+correct way to do this would be to use the centerline we created on
+our original sketch of the table. However, the version 0.2 of
+<VAR CLASS="western">lignumCAD</VAR> does not yet allow propagation
+of dimensions between pages, so we have to compute the correct values
+ourselves. Recall that the top section of the legs are 1 &frac12;&rdquo;
+thick and the side skirts are 9 &frac12;&rdquo; long. Therefore, the
+depth of the base between the from and rear legs is
+2&nbsp;*&nbsp;1.5&rdquo;&nbsp;+&nbsp;9.5&rdquo;&nbsp;=&nbsp;12.5&rdquo;.
+Also, the front and rear skirts are set back by 1/8&rdquo; from the
+face of each leg, so the distance between the outer faces of the
+front and rear skirts is 12.5&rdquo;&nbsp;-2&nbsp;*&nbsp;1/8&rdquo;&nbsp;=&nbsp;12
+&frac14;&rdquo;. The top is 16&rdquo; deep, to the front edge of the
+top must be offset by (16&rdquo;&nbsp;-12&nbsp;&frac14;&rdquo;)&nbsp;/&nbsp;2&nbsp;=1&nbsp;7/8&rdquo;.
+Create an align offset constraint and select the front edge of the
+top assembly and the front face of the front skirt. The figure below
+shows one possible set of choices. Enter <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">1&nbsp;7/8&rdquo;</SPAN></SPAN></FONT>
+in the offset dialog.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/table_asm_step3.png" NAME="Graphic25" ALT="Table assembly step 3" ALIGN=BOTTOM width=460 height=386 BORDER=0></P>
+<P CLASS="western">The front and rear skirts of the base are 13&rdquo;
+wide, so the width of the base is 2&nbsp;*&nbsp;1.5&rdquo;&nbsp;+&nbsp;13&rdquo;&nbsp;=&nbsp;16&rdquo;.
+Again, the skirts are set back from the leg faces by 1/8&rdquo; so
+the distance between the outer faces of the side skirts is
+16&rdquo;&nbsp;-&nbsp;2&nbsp;*&nbsp;1/8&rdquo;&nbsp;=&nbsp;15&nbsp;&frac34;&rdquo;.
+The top is 19&nbsp;&frac12;&rdquo; wide (the 15&nbsp;&frac12;&rdquo;
+field plus two 2&rdquo; wide breadboard edges), so the the side edge
+of the top should be offset from the side skirt by
+(19&nbsp;&frac12;&rdquo;&nbsp;-&nbsp;15&nbsp;&frac34;&rdquo;)&nbsp;/&nbsp;2&nbsp;=&nbsp;1&nbsp;7/8&rdquo;.
+Create another offset align constraint and select either edge of the
+top assembly and one of the side skirts to complete the top
+placement. The figure below shows one possible set of choices. Enter
+<FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">1&nbsp;7/8&rdquo;</SPAN></SPAN></FONT>
+in the offset dialog. (Note that while these calculations are simple,
+the whole point of the computer is to eliminate this kind of tedium.
+Hopefully, a future version of <VAR CLASS="western">lignumCAD</VAR>
+will be able to do all this for you.)</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/table_asm_step4.png" NAME="Graphic26" ALT="Table assembly step 4" ALIGN=BOTTOM width=450 height=394 BORDER=0></P>
+<P CLASS="western">The final table assembly should look like the
+figure below.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/table_asm_final.png" NAME="Graphic24" ALT="Final table assembly" ALIGN=BOTTOM width=438 height=592 BORDER=0></P>
+<DIV ID="sdfootnote1">
+	<P CLASS="sdfootnote-western"><A CLASS="sdfootnotesym" NAME="sdfootnote1sym" HREF="#sdfootnote1anc">1</A>It
+	may be worth noting that the abstract nature of geometry is a
+	relatively modern idea. The inventors of geometry believed that it
+	was truly about concrete, real world objects; the word geometry
+	itself means measurement of the Earth. It was only in the 19<SUP>th</SUP>
+	century that mathematicians began to understand that geometry could
+	be expressed as a system of arbitrary axioms and logical operations
+	and that different systems of geometry could be derived based on
+	different sets of starting axioms. This is a fascinating subject and
+	I commend <EM CLASS="western">Euclidian and Non-Euclidean
+	Geometries: Development and History, 3<SUP>rd</SUP> Ed.</EM>, Marvin
+	Jay Greenberg, 1993, W. H Freeman and Co, to you.</P>
+</DIV>
+</BODY>
+</HTML>

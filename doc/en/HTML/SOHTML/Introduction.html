@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>Introduction to lignumCAD</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 6.0  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Allen Barnett">
+	<META NAME="CREATED" CONTENT="20010827;13011700">
+	<META NAME="CHANGEDBY" CONTENT="Allen Barnett">
+	<META NAME="CHANGED" CONTENT="20021216;16380900">
+	<META NAME="CLASSIFICATION" CONTENT="Introduction chapter for lignumCAD manual">
+	<META NAME="DESCRIPTION" CONTENT="Copyright (C) 2002 lignum Computing, Inc.">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin: 1in }
+		P { margin-bottom: 0.08in }
+		P.western { font-family: "Times", serif; font-weight: medium }
+		H1 { margin-bottom: 0.08in }
+		H1.western { font-family: "Helvetica", sans-serif; font-size: 16pt }
+		H1.cjk { font-size: 12pt; font-weight: medium }
+		H1.ctl { font-size: 12pt; font-weight: medium }
+		H2 { margin-bottom: 0.08in }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic }
+		H2.cjk { font-size: 12pt; font-weight: medium }
+		H2.ctl { font-size: 12pt; font-weight: medium }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<H1 CLASS="western">Introduction</H1>
+<P CLASS="western"><VAR>lignumCAD</VAR> is a tool for designing
+furniture. Its primary features will be:</P>
+<UL>
+	<LI><P CLASS="western">A notebook metaphor where each page is a view
+	of an aspect of the design.</P>
+	<LI><P CLASS="western">A sketching mode which allows rapid
+	development of different views of a design.</P>
+	<LI><P CLASS="western">2D and 3D representations can be created from
+	a single solid geometry model.</P>
+	<LI><P CLASS="western">Parametric relations between dimensions allow
+	changes to be propagated from either the 3D solid model, 2D drawing
+	representations or sketch views.</P>
+	<LI><P CLASS="western">Joint Wizard for easily creating joints based
+	on standard woodworking techniques.</P>
+	<LI><P CLASS="western">Extensive library of easily applied molding
+	and edge treatments.</P>
+	<LI><P CLASS="western">Visualization of final design using realistic
+	material and environment details.</P>
+	<LI><P CLASS="western">Optimal layout of bill of materials on
+	existing or recommended stock.</P>
+	<LI><P CLASS="western">Full API access via a scripting language to
+	the geometry engine and graphical user interface.</P>
+	<LI><P CLASS="western">All source code available under either the
+	GNU General Public License or the GNU Lesser General Public License.</P>
+	<LI><P CLASS="western">Cross-platform compatibility based on Qt,
+	OpenCASCADE, and OpenGL.</P>
+</UL>
+<P CLASS="western">The following sections describe each of the major
+features of <VAR>lignumCAD</VAR> in more detail.</P>
+<P CLASS="western"><IMG SRC="generated/Introduction_html_m314e4293.png" NAME="Graphic7" ALIGN=BOTTOM width=24 height=28 BORDER=0>As
+of <EM>lignumCAD</EM> Version 0.2, the Sketch, Part and Assembly
+capabilities have been partially implemented.</P>
+<H2 CLASS="western"><IMG SRC="../../graphics/sketch.png" NAME="Graphic1" ALIGN=BOTTOM width=19 height=17 BORDER=0>Sketches</H2>
+<P CLASS="western">When you start a piece of furniture from scratch,
+the best place to begin is by making some simple sketches. Sketches
+let you define the major dimensions of the model in a series of 2D
+views. My usual approach is to consider where the furniture is going
+to be placed and use the dimensions of the space to determine the
+overall size of the piece. Alternatively, you may have found a plan
+in a magazine and want to modify its dimensions for a particular
+application. The sketchbook can be used as a simple mechanical
+drawing aid to resize the design.</P>
+<P CLASS="western">A sketch is a simple 2D drawing. It supports
+functions like most drawing programs, but with an emphasis on
+engineering drawing, including automatic dimension lines, reference
+lines, centerlines, and text annotation. You can define as many
+sketches as desired to represent multiple views of the geometry.</P>
+<H2 CLASS="western"><IMG SRC="../../graphics/part.png" NAME="Graphic2" ALIGN=BOTTOM width=17 height=17 BORDER=0>Parts</H2>
+<P CLASS="western">After laying out the major dimensions of the
+model, you must construct solid geometry for each of the separate
+parts, for example a leg or drawer front. In general, a part is
+anything which can be milled from a single piece of stock. The
+collection of parts which make up a model is usually called the <EM>bill
+of materials</EM>, so we want to make a solid model for each item in
+the bill of materials.</P>
+<P CLASS="western">When you create a part, <VAR>lignumCAD</VAR> will
+offer you a library of predefined solids. You can either select a
+blank (such as a board or a turning) or you can select a
+prefabricated shape (such as a turned knob or a tapered leg). You can
+then adjust the overall size of the part to suit your model. You can
+either type in the dimensions or you can import dimensions from your
+sketches. Importing dimensions from the sketches reveals the power of
+parametric modeling. If you are consistent in your definitions of
+dimensions, then you will be able to modify the shape of the model
+from any view of it; for example, change the height of a leg on a
+sketch and the solid model will be recompute the size and shape of
+the solid part. Conversely, if you change the length of the leg in
+the solid part view, the sketch will adjust itself accordingly.</P>
+<P CLASS="western">After creating the basic shape of the part, you
+can apply typical woodworking &quot;milling&quot; operations to it:
+taper a leg, drill a hole, or make a freehand cut. There will also be
+a library of standard edge treatments which can be applied:
+round-overs, chamfers, ogees.</P>
+<P CLASS="western">Finally, you can assign a material to the part.
+Various woods and other synthetic materials will be available. With
+respect to wood, you can even assign a grain direction to the part.
+In general, the material assignment is cosmetic; the program will not
+do anything other display a reasonable approximation of the material
+texture.</P>
+<H2 CLASS="western"><IMG SRC="../../graphics/assembly.png" NAME="Graphic3" ALIGN=BOTTOM width=16 height=20 BORDER=0>Assemblies</H2>
+<P CLASS="western">Once you have constructed all the parts in the
+bill of materials, the next step is to collect all the parts into an
+assembly. For example, if you've constructed the front, sides, back
+and bottom of a drawer, you can assemble them into the 3D
+representation of the drawer. You then might take the (single) leg
+you've defined and replicate it three times and connect them with
+skirts to form another assembly. You could then collect the drawer,
+the leg assembly and the top together to form the complete table
+assembly. (The drawer and leg assemblies would then be properly
+called sub-assemblies.)</P>
+<P CLASS="western">The next step in <VAR>lignumCAD</VAR> is one that
+I expect to be most useful: the Joint Wizard. Say you've created your
+drawer model by simply abutting the front, sides and back. When you
+build the drawer, however, you intend to use half-blind dovetails for
+the front and through dovetails for the back. The joint wizard will
+let you select two (adjacent) parts and define the joint which
+connects them in a general way. For example, you might say, &quot;I
+want a half-blind dovetail with three tails at 9&deg;.&quot;
+<VAR>lignumCAD</VAR> will compute the layout of the dovetails and
+automatically &quot;remove&quot; the material from the parts (i.e.,
+it will recompute the solid geometry such that the parts'
+mathematical representations are similar to the final jointed
+pieces).</P>
+<H2 CLASS="western"><IMG SRC="../../graphics/drawing.png" NAME="Graphic4" ALIGN=BOTTOM width=17 height=16 BORDER=0>Drawings</H2>
+<P CLASS="western">After the assembly is defined, you have a complete
+three-dimensional solid geometry model of the piece of furniture. The
+next step is to create construction drawings. A construction drawing
+usually consists of three orthographic (two-dimensional) views of
+each part in the bill of materials with sufficient dimensions to
+construct the object.</P>
+<P CLASS="western">Construction drawings will look similar to the
+sketches you created initially, except for the following differences:</P>
+<UL>
+	<LI><P CLASS="western">The relationships between parts are usually
+	not shown. Each drawing is of a single part (of course, <VAR>lignumCAD</VAR>
+	will let you show whatever you want).</P>
+	<LI><P CLASS="western">In sketch mode, you cannot create redundant
+	dimensions: for example, in a typical table design, you cannot
+	define all three of the following simultaneously: the length of a
+	leg, the thickness of the top and the overall height of the table.
+	In the construction drawing, you can display each of these
+	dimensions, however, one will be purely cosmetic.</P>
+	<LI><P CLASS="western">The drawing will display details of the
+	geometry which are not defined in the sketch. For example, if you
+	have a table skirt and a leg connected by a mortise and tenon joint,
+	the actual width of the skirt part will be longer (by the length of
+	the two tenons, obviously) than was shown in the sketch.</P>
+</UL>
+<H2 CLASS="western"><IMG SRC="../../graphics/layout.png" NAME="Graphic5" ALIGN=BOTTOM width=17 height=18 BORDER=0>Layout</H2>
+<P CLASS="western">Another useful feature of <VAR>lignumCAD</VAR>
+will be the ability to layout the parts from the bill of materials on
+a given set of stock. In theory, it can use existing stock or it can
+generate an optimal set of requirements. Needless-to-say, real lumber
+(and real life) are rarely so neat.</P>
+<H2 CLASS="western"><IMG SRC="../../graphics/render.png" NAME="Graphic6" ALIGN=BOTTOM width=18 height=21 BORDER=0>Environment
+Rendering</H2>
+<P CLASS="western">Sometimes it's helpful to understand the
+interaction of an object with its surroundings. <VAR>lignumCAD</VAR>
+will provide the ability to do high-quality three-dimensional
+rendering of models and their surroundings. You can image taking a
+digital photograph of the intended location of the piece and using
+the images to create a &ldquo;virtual reality&rdquo; image of the
+piece in place.</P>
+</BODY>
+</HTML>

@@ -1,0 +1,671 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>Creating a Sketch with lignumCAD</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 6.0  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Allen Barnett">
+	<META NAME="CREATED" CONTENT="20021204;15060300">
+	<META NAME="CHANGEDBY" CONTENT="Allen Barnett">
+	<META NAME="CHANGED" CONTENT="20030103;10395200">
+	<META NAME="CLASSIFICATION" CONTENT="Sketch creation section">
+	<META NAME="DESCRIPTION" CONTENT="Copyright (C) 2002 lignum Computing, Inc.">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin: 1in }
+		P { margin-bottom: 0.08in }
+		P.western { font-family: "Times", serif; font-weight: medium }
+		H2 { margin-bottom: 0.08in }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic; font-weight: medium }
+		H2.cjk { font-size: 14pt; font-weight: medium }
+		H2.ctl { font-size: 14pt; font-weight: medium }
+		TD P { margin-bottom: 0.08in }
+		TD P.western { font-family: "Times", serif; font-weight: medium }
+		TH P { margin-bottom: 0.08in }
+		TH P.western { font-family: "Times", serif; font-style: italic }
+		TH P.cjk { font-style: italic }
+		TH P.ctl { font-style: italic }
+		P.sdfootnote-western { margin-left: 0.2in; text-indent: -0.2in; margin-bottom: 0in; font-size: 10pt }
+		P.sdfootnote-cjk { margin-left: 0.2in; text-indent: -0.2in; margin-bottom: 0in }
+		P.sdfootnote-ctl { margin-left: 0.2in; text-indent: -0.2in; margin-bottom: 0in }
+		EM.cjk { font-style: normal }
+		EM.ctl { font-style: normal }
+		VAR.western { font-family: "Times", serif; font-weight: medium }
+		VAR.cjk { font-style: normal }
+		VAR.ctl { font-style: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<H2 CLASS="western">Creating a Sketch</H2>
+<P CLASS="western">The first sketch we're going to make of the table
+is its <VAR CLASS="western">plan</VAR> view. A plan view is usually
+made as though we were looking down on the object from above. Of
+course, terms like &quot;down&quot; and &quot;above&quot; are totally
+arbitrary in mechanical drawing. In general they mean what you'd
+expect them to, but to give them a more concrete definition, a plan
+view (also called the <VAR CLASS="western">top</VAR> view) is the
+view of an object in the first octant of a three-dimensional
+Cartesian coordinate system as seen when looking in the direction of
+the negative Z axis. Additionally, the direction of gravitational
+attraction is taken be in the negative Z axis direction. The figure
+below shows the projection of the top of the object on the sketch
+plane.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Sketch_html_m69d82071.png" NAME="Object1" ALIGN=MIDDLE width=347 height=328></P>
+<P CLASS="western">Our plan view is going to be very simple. We're
+only going to draw the outline of the top of the table. To do this,
+go to the <FONT FACE="Helvetica, sans-serif"><B>Tools</B></FONT> menu
+and select <FONT FACE="Helvetica, sans-serif"><B>Rectangle</B></FONT>.
+When you move the mouse cursor into the main graphics display window,
+you'll see that it has an indication that we're in rectangle creation
+mode (<IMG SRC="../../graphics/create_rect_cursor.png" NAME="Graphic7" ALT="Create rectangle cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Create the rectangle by pressing the left mouse button when the mouse
+is in the main graphics display window and dragging the mouse (with
+the button held down) until the rectangle is <EM CLASS="western">approximately</EM>
+20&quot; by 20&quot; square and then release the left mouse button.
+You should have something similar to the figure below.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/rectangle.png" NAME="Graphic4" ALT="Rectangle sketch" ALIGN=BOTTOM width=498 height=534 BORDER=0></P>
+<P CLASS="western">Although this operation is simple, there a few
+things to observe:</P>
+<UL>
+	<LI><P CLASS="western">When you enter rectangle creation mode, the
+	user interface status area of the status line indicates the mode
+	with the text &quot;Construct Rectangle&quot;. Both the cursor and
+	the user interface status area return to normal after the rectangle
+	is complete.</P>
+	<LI><P CLASS="western">As you drag out the rectangle, dimension
+	lines are drawn to indicate its current size. Do not be concerned
+	about creating a rectangle which is exactly 20&quot; by 20&quot;. It
+	is very easy to adjust the size of a rectangle after it is created.
+	Similarly, do not be concerned about the grid lines on the sketch.
+	The actual position of the rectangle on the page is unimportant.
+	(The grid lines will be more useful when there are objects other
+	than rectangles to create.)</P>
+	<LI><P CLASS="western">After releasing the mouse button, the
+	rectangle is activated. In this state, the rectangle is drawn with
+	highlighted edges and eight resize handles. (They're supposed to
+	look like little blocks of wood.) Hover the mouse cursor over each
+	block and the cursor will change to indicate the direction in which
+	the rectangle can be resized. Press and hold the left mouse button
+	over a resize handle and you can reshape the rectangle. Clicking
+	(away from a resize handle) and dragging an edge will cause the
+	rectangle to move. If you click somewhere in the window but not on
+	the rectangle itself, the rectangle will be deactivated. Here is a
+	short table of cursor types and their meaning.</P>
+</UL>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=62*>
+	<COL WIDTH=194*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=24%>
+				<P CLASS="western">Cursor</P>
+			</TH>
+			<TH WIDTH=76%>
+				<P CLASS="western">Meaning</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR>
+			<TD WIDTH=24%>
+				<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/all_cursor.png" NAME="Graphic11" ALT="Resize all ways cursor" ALIGN=BOTTOM width=16 height=16 BORDER=0></P>
+			</TD>
+			<TD WIDTH=76% VALIGN=TOP>
+				<P CLASS="western">When hovering over an edge, dragging will move
+				the entity.</P>
+				<P CLASS="western">When over the background of the page, dragging
+				will pan the page.</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=24%>
+				<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/horizontal_cursor.png" NAME="Graphic12" ALT="Horizontal resize cursor" ALIGN=BOTTOM width=16 height=16 BORDER=0></P>
+			</TD>
+			<TD WIDTH=76% VALIGN=TOP>
+				<P CLASS="western">Resize horizontal edge vertically.</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=24%>
+				<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/vertical_cursor.png" NAME="Graphic13" ALT="Vertical resize cursor" ALIGN=BOTTOM width=16 height=16 BORDER=0></P>
+			</TD>
+			<TD WIDTH=76% VALIGN=TOP>
+				<P CLASS="western">Resize vertical edge horizontally.</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=24%>
+				<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/bdiag_cursor.png" NAME="Graphic14" ALT="BDiag cursor" ALIGN=BOTTOM width=16 height=16 BORDER=0></P>
+			</TD>
+			<TD WIDTH=76% VALIGN=TOP>
+				<P CLASS="western">Resize adjacent vertical and horizontal edges
+				diagonally up and to the right or down and to the left.</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=24%>
+				<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/fdiag_cursor.png" NAME="Graphic15" ALT="FDiag cursor" ALIGN=BOTTOM width=16 height=16 BORDER=0></P>
+			</TD>
+			<TD WIDTH=76% VALIGN=TOP>
+				<P CLASS="western">Resize adjacent vertical and horizontal edges
+				diagonally up and to the left or down and to the right.</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<UL>
+	<P CLASS="western"></P>
+	<LI><P CLASS="western">Notice that one corner of the rectangle has
+	an X under it. This is the origin of the rectangle. Ordinarily, the
+	origin is not of interest to the user; however, certain resizing
+	operations on the whole rectangle will move the corner opposite of
+	the origin.</P>
+	<LI><P CLASS="western">If you botched the rectangle by releasing the
+	mouse button too soon and ended up with a 0&quot; by 0&quot;
+	rectangle, you can simply undo the rectangle creation command. You
+	can either choose the menu option <FONT FACE="Helvetica, sans-serif"><B>Edit|Undo</B></FONT>,
+	click the <FONT FACE="Helvetica, sans-serif"><B>Undo</B></FONT> tool
+	bar button, or press <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0"><SPAN LANG="en-US">Ctrl</SPAN>+Z</SPAN></B></FONT>.
+	Alternatively, if the rectangle is still activated, you can delete
+	it with the menu option <FONT FACE="Helvetica, sans-serif"><B>Edit|Cut</B></FONT>,
+	or by clicking the <FONT FACE="Helvetica, sans-serif"><B>Cut</B></FONT>
+	tool or by pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Ctrl+X</SPAN></B></FONT>.
+	Finally, if you picked the wrong <FONT FACE="Helvetica, sans-serif"><B>Tools</B></FONT>
+	menu option altogether, you can press <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Escape</SPAN></B></FONT>
+	to cancel the operation. <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Escape</SPAN></B></FONT>
+	works both before you press the left mouse button to start the drag
+	and during the drag.</P>
+	<LI><P CLASS="western">There are no (theoretical) limits on the size
+	of the page. You can pan (scroll) the page by pressing and dragging
+	the left mouse button. You can also zoom in and out by using the
+	mouse wheel. There are also equivalent keyboard inputs.</P>
+</UL>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 STYLE="page-break-before: always">
+	<COL WIDTH=85*>
+	<COL WIDTH=85*>
+	<COL WIDTH=85*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=33%>
+				<P CLASS="western">View Action</P>
+			</TH>
+			<TH WIDTH=33%>
+				<P CLASS="western">Mouse</P>
+			</TH>
+			<TH WIDTH=33%>
+				<P CLASS="western">Keyboard</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P CLASS="western">Pan left</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western">Left button drag left</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Left</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P CLASS="western">Pan right</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western">Left button drag right</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Right</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P CLASS="western">Pan up</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western">Left button drag up</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Up</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P CLASS="western">Pan down 
+				</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western">Left button drag down</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Down</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P CLASS="western">Zoom out</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western">Wheel up</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Page
+				Up</SPAN></B></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P CLASS="western">Zoom in</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western">Wheel down</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Page
+				Down</SPAN></B></FONT></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<UL>
+	<P CLASS="western">(Note that these commands are for the
+	two-dimensional pages. The three-dimensional pages have different
+	bindings.)</P>
+	<P CLASS="western">To return to the default view orientation, press
+	and hold the right mouse button in the main window. This will bring
+	up the <VAR CLASS="western">context menu</VAR> for the current page.
+	Select <FONT FACE="Helvetica, sans-serif"><B>Restore View</B></FONT>
+	to return to the default view. The context menu for a Sketch page is
+	show below.</P>
+	<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/sketch_context_menu.png" NAME="Graphic1" ALT="Sketch Context menu" ALIGN=BOTTOM width=123 height=98 BORDER=0></P>
+	<LI><P CLASS="western" ALIGN=LEFT>Note that there are three other
+	toggle buttons in the Sketch context menu: <FONT FACE="Helvetica, sans-serif"><B>Wireframe</B></FONT>,
+	<FONT FACE="Helvetica, sans-serif"><B>Solid</B></FONT> and <FONT FACE="Helvetica, sans-serif"><B>Texture</B></FONT>.
+	These choices select the default drawing style for geometry on the
+	current page. The default mode is wireframe, equivalent to drawing
+	the outline of an object. Solid draws geometry as filled polygons
+	using the same color as the wireframe. Texture is just a simple
+	gloss on solid which draws filled polygons using a default texture
+	map. (No attempt at realism is made in this case.)</P>
+</UL>
+<P CLASS="western">The final size of our top is actually 19&nbsp;&frac12;&quot;
+by 16&quot;. Point the mouse at the dimension value on the width
+dimension at the top of the rectangle. You will notice that the
+dimension value, the dimension's  arrows and its extension lines will
+be highlighted. Additionally, two square, translucent resize handles
+will be highlighted. Because the dimension has not been activated
+yet, the resize handles are not active yet. Double click on the
+dimension; this will bring up the dimension information dialog.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_dimension_dialog.png" NAME="Graphic2" ALT="Top Dimension dialog" ALIGN=BOTTOM width=313 height=363 BORDER=0></P>
+<P CLASS="western">This dialog shows us all the detail of the
+dimension. Its name is <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">x1</SPAN></SPAN></FONT>;
+that is, it is the dimension between the two edges of the rectangle,
+<FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">x0</SPAN></SPAN></FONT>
+and <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">x1</SPAN></SPAN></FONT>.
+It has a specified size of 20&nbsp;1/4&quot;. It is <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Above</SPAN></SPAN></FONT>
+its reference edge (i.e., above the top edge of the rectangle). It
+has a horizontal orientation.</P>
+<P CLASS="sdfootnote-western">[There are a number of shortcomings
+exposed by this dialog. Chiefly, <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">x1</SPAN></SPAN></FONT>
+is not the name of the dimension. Dimensions actually don't have
+names. If you change this name, you will change the name of the
+corresponding edge of the rectangle. Also, the Imported dimension
+size is currently not available, so each dimension is a stand-alone
+entity. In other words, you can't make parametric relations between
+dimension's yet. A later version of <VAR CLASS="western">lignumCAD</VAR>
+will incorporate a better distinction between dimensions (and
+constraints, in general) and the objects which refer to them.]</P>
+<P CLASS="western">Adjust the specified offset to 19&nbsp;&frac12;&quot;.
+You can do this by clicking the arrow buttons in the <FONT FACE="Helvetica, sans-serif"><B>Specified</B></FONT>
+spin box or by typing in the input field. Note that to type this
+dimension, you must type <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">19b1/2</SPAN></SPAN></FONT>
+(that is, literally, &quot;<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">1</SPAN></B></FONT>&quot;
+&quot;<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">9</SPAN></B></FONT>&quot;
+&quot;<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Space</SPAN></B></FONT>&quot;
+&quot;<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">1</SPAN></B></FONT>&quot;
+&quot;<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">/</SPAN></B></FONT>&quot;
+&quot;<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">2</SPAN></B></FONT>&quot;;
+<VAR CLASS="western">lignumCAD</VAR> will take care of the units
+abbreviation). (Note that it is also OK to type <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">19.5</SPAN></SPAN></FONT>.)
+Apply your change by pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>
+(or clicking <FONT FACE="Helvetica, sans-serif"><B>OK</B></FONT>).</P>
+<P CLASS="western">Modify the height dimension to 16&quot; in the
+same way.</P>
+<P CLASS="western">Next, double click on the rectangle itself. This
+will bring up the rectangle's information dialog.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/top_rectangle_dialog.png" NAME="Graphic3" ALT="Top Rectangle dialog" ALIGN=BOTTOM width=509 height=544 BORDER=0></P>
+<P CLASS="western">There is a lot to see here (and a rectangle seems
+so simple!). You can see the dimension values which we changed
+earlier. You can also see where the origin of the rectangle is
+located (in this case at the Cartesian coordinate (12&nbsp;5/8&quot;,
+23&nbsp;1/8&quot;)). The dimensions are on the Above/Right sides of
+the rectangle and the rectangle is drawn in the default style. For
+now, we just want to change the name of the rectangle to <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Top</SPAN></SPAN></FONT>.
+So, navigate to the <FONT FACE="Helvetica, sans-serif"><B>Name</B></FONT>
+field (try pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+N</SPAN></B></FONT>),
+type in <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Top</SPAN></SPAN></FONT>
+and press <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>
+(or click <FONT FACE="Helvetica, sans-serif"><B>OK</B></FONT>) to
+apply the change.</P>
+<P CLASS="western">Next, we want to add a text message to the page to
+serve as a reminder of what this object is. Select the
+<FONT FACE="Helvetica, sans-serif"><B>Tools|Annotation</B></FONT>
+menu option. The mouse cursor will become the create annotation
+cursor (<IMG SRC="../../graphics/create_annotation_cursor.png" NAME="Graphic29" ALT="Annotation creation cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Click and drag out a small box below the top's rectangle. When you
+release the mouse, the annotation information dialog will appear.
+Navigate to the main text box and enter <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Top</SPAN></SPAN></FONT>.
+The annotation information dialog will let you modify the style of
+the text if you choose.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/annotation_dialog.png" NAME="Graphic5" ALT="Annotation dialog" ALIGN=BOTTOM width=280 height=223 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>Applying the text styles works in the
+usual way. If you select some text and then change the property
+widgets (e.g., click <FONT FACE="Helvetica, sans-serif"><B>Bold</B></FONT>),
+the new properties will be assigned to the text. If no text is
+selected and you change a property, then any subsequent typed text
+will have that property. To complete the annotation, click <FONT FACE="Helvetica, sans-serif"><B>OK</B></FONT>
+or press <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+O</SPAN></B></FONT>
+(this is one of the places where just pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>
+will not dismiss the dialog). If you made your annotation box too
+small, you can resize it with the resize handles. You can also click
+anywhere inside the annotation to drag it around.</P>
+<P CLASS="western">So, we've completed the creation of the plan view
+of our table. Now would be a good time to save the model. You can
+either select the <FONT FACE="Helvetica, sans-serif"><B>File|Save</B></FONT>
+menu option, click the <FONT FACE="Helvetica, sans-serif"><B>Save</B></FONT>
+tool button, or press <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Ctrl+S</SPAN></B></FONT>.</P>
+<P CLASS="western">Next, we want to work on the front view of the
+table. This is usually called an <EM CLASS="western">elevation</EM>.
+To create a new Sketch, you can can do one of three things:</P>
+<OL>
+	<LI><P CLASS="western">Select the menu option <FONT FACE="Helvetica, sans-serif"><B>Insert|Sketch</B></FONT>.
+	I'd call this the <EM CLASS="western">usual way</EM>.</P>
+	<LI><P CLASS="western">Use the <FONT FACE="Helvetica, sans-serif"><B>Insert
+	Sketch</B></FONT> button on the toolbar: 
+	<IMG SRC="../../graphics/insert_sketch_toolbar.png" NAME="Graphic8" ALT="Insert Sketch toolbar" ALIGN=ABSMIDDLE width=162 height=60 BORDER=0>.</P>
+	<LI><P CLASS="western">Use the context menu on the tab bar (press
+	and hold the right mouse button anywhere on the page tab bar) and
+	select <FONT FACE="Helvetica, sans-serif"><B>Sketch</B></FONT>. The
+	tab bar context menu is shown below.</P>
+	<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/tabbar_context_menu.png" NAME="Graphic6" ALT="Tabbar Context menu" ALIGN=BOTTOM width=139 height=160 BORDER=0></P>
+</OL>
+<P CLASS="western" ALIGN=LEFT>Note that from the menu tab bar context
+menu, you can create a new page of any type. You can also rename the
+page and delete a page. Note that both the <FONT FACE="Helvetica, sans-serif"><B>Rename
+Page</B></FONT> and the <FONT FACE="Helvetica, sans-serif"><B>Delete
+Page</B></FONT> options apply to the currently displayed page, <EM CLASS="western">not</EM>
+the one whose tab might have happened to be under mouse when the menu
+was invoked. These options are also available from the <FONT FACE="Helvetica, sans-serif"><B>Edit</B></FONT>
+menu.</P>
+<P CLASS="western">After you create the new Sketch, name it <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Front
+Elevation</SPAN></SPAN></FONT>.</P>
+<P CLASS="western">On the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Front
+Elevation</SPAN></SPAN></FONT> page, create a rectangle near the top
+of the window and set its size to 19&nbsp;&frac12;&rdquo; by &frac34;&rdquo;
+and set its name to <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Top</SPAN></SPAN></FONT>.
+The is the side view of the table top. <FONT COLOR="#ff0000">[In a
+later version of </FONT><VAR CLASS="western"><FONT COLOR="#ff0000">lignumCAD</FONT></VAR><FONT COLOR="#ff0000">,
+you will be able to reference the width of the </FONT><FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent"><FONT COLOR="#ff0000">Top</FONT></SPAN></SPAN></FONT><FONT COLOR="#ff0000">
+figure on the </FONT><FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent"><FONT COLOR="#ff0000">Plan</FONT></SPAN></SPAN></FONT><FONT COLOR="#ff0000">
+sketch; for now, you have to enter the width again.]</FONT></P>
+<P CLASS="western">Next, we want to create a rectangle for the left
+leg for the table. In creating the rectangle, we want to take several
+criteria into account. First, the top of the leg should be flush with
+the bottom edge of the top. Second, we want the left edge of the left
+leg to be offset from the left edge of the top. These requirements
+are called <VAR CLASS="western">constraints</VAR> in <VAR CLASS="western">lignumCAD</VAR>.
+The program can describe both of these constraints. To create such a
+constrained rectangle, activate the Rectangle tool and position the
+mouse cursor along the bottom edge of the top and near the left side.
+The bottom edge of the top should be highlighted: it will be colored
+a brighter color than the rest of the rectangle and translucent
+resize handles will appear at the ends of the edge.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/leg_start_rectangle.png" NAME="Graphic16" ALT="Leg rectangle start constraint" ALIGN=BOTTOM width=170 height=196 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>Press the left mouse button and drag
+out the rectangle. <VAR CLASS="western">lignumCAD</VAR> will now
+create three dimensions for the rectangle: the width, the height and
+the offset from the left edge.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Sketch_html_m64fb0704.png" NAME="Object3" width=653 height=533></P>
+<P CLASS="western" ALIGN=LEFT>Again, very simple, but there are a few
+observations to make:</P>
+<UL>
+	<LI><P CLASS="western" ALIGN=LEFT>The top edge of the leg is now
+	<VAR CLASS="western">coincident</VAR> with the bottom edge of the
+	top. This is indicated by the row of green and magenta arrows. The
+	magenta arrows point to the primary edge (that is, the edge which is
+	constrained; namely, the top edge of the leg); the green arrows
+	point to the secondary edge (that is, the edge to which the primary
+	edge is constrained; namely, the bottom edge of the top). This
+	constraint has the effect that what ever position the bottom edge of
+	the top has, so too will the top edge of the leg.</P>
+	<LI><P CLASS="western" ALIGN=LEFT>The left edge of the leg is now
+	<VAR CLASS="western">offset</VAR> from the left edge of the top. (In
+	the program, this is called an offset constraint.) If you hover the
+	mouse over the dimension, you will see that it, too, has a magenta
+	arrow and a green arrow. As in the coincident constraint, the
+	magenta arrow points to the primary edge and the green arrow points
+	to the secondary edge. In this case, if the left edge of the top is
+	moved, the left edge of the leg will move along with, always
+	separated by the dimensioned offset.</P>
+	<LI><P CLASS="western" ALIGN=LEFT>There are no resize handles along
+	the top edge of the leg. Once an edge is made coincident, it is not
+	possible to move it independently of its secondary reference. (Note
+	that there is an option to delete constraints if necessary.)</P>
+</UL>
+<P CLASS="western" ALIGN=LEFT>When you created the left leg, you
+probably ended up with some overlap between the offset dimension and
+the width dimension. You can modify the position of the dimension
+line by activating the dimension, and then dragging it. In the case
+of the figure above, the 2&rdquo; width dimension was adjusted to a
+higher position than it initially had. You also have some additional
+control over the dimension positioning. In the dimension information
+and rectangle information dialogs, you can choose the side of the
+reference on which the dimension is to appear. In the case of
+rectangles, the width dimension can appear above or below the
+rectangle and the height dimension can appear either to the left or
+to the right of the rectangle. An individual dimension can also
+appear above or below its references.</P>
+<P CLASS="western" ALIGN=LEFT>Complete the left leg by bringing up
+the rectangle information dialog and naming the rectangle <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Left
+Leg</SPAN></SPAN></FONT>, setting its size to 1&nbsp;&frac12;&rdquo;
+by 26&rdquo;and shifting the width dimension to the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Below</SPAN></SPAN></FONT>
+position. Double click on the offset dimension and set its size to
+1&nbsp;&frac34;&rdquo; and the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Below</SPAN></SPAN></FONT>
+position.</P>
+<P CLASS="western" ALIGN=LEFT>To create the right leg, we could
+follow the same procedure, but instead, we'll take a slightly
+different tack. First, create a rectangle in roughly the position of
+the right leg. Don't try to create the coincident constraint when you
+create the rectangle; that is, make sure the bottom edge of the top
+is <EM CLASS="western">not</EM> highlighted when you press the mouse
+button to start the rectangle. Next, we will create the coincident
+constraint by grabbing the top resize handle of the right leg (i.e.,
+position the mouse cursor over the handle so that it becomes the
+vertical resize shape and pressing the left mouse button). Holding
+down the mouse button, move the mouse until the cursor is over the
+bottom edge of the top. The bottom edge of the top will highlight
+when the mouse is in the right place. As you drag the mouse, the
+right leg rectangle will resize itself; however, when you release the
+mouse button, the right leg rectangle will snap to the bottom edge of
+the top and a coincident constraint will be created. Note the order
+of this operation: the dragged edge becomes the primary constraint
+object and the highlighted edge becomes the secondary constraint
+object.</P>
+<P CLASS="western" ALIGN=LEFT>To create the offset from the right
+edge of the top, select the menu option <FONT FACE="Helvetica, sans-serif"><B>Tools|Dimension</B></FONT>.
+The mouse cursor will become the create dimension shape (<IMG SRC="../../graphics/create_dimension_cursor.png" NAME="Graphic17" ALT="Create Dimension cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Start by highlighting and clicking on the right edge of the right leg
+rectangle. The cursor will then become the &ldquo;add another edge&rdquo;
+shape, (<IMG SRC="../../graphics/create_dimension_plus_cursor.png" NAME="Graphic18" ALT="Dimension constraint add cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Now highlight and click on the right edge of the top.</P>
+<P CLASS="western" ALIGN=LEFT>Complete the right leg by bringing up
+the rectangle information dialog and naming the rectangle <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Right
+Leg</SPAN></SPAN></FONT>, setting its size to 1&nbsp;&frac12;&rdquo;
+by 26&rdquo; and shifting the width dimension to the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Below</SPAN></SPAN></FONT>
+position. Double click on the offset dimension and set its size to
+1&nbsp;&frac34;&rdquo; and the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Below</SPAN></SPAN></FONT>
+position.</P>
+<P CLASS="western" ALIGN=LEFT>The last piece of geometry we will add
+to our elevation view is a skirt. What are the criteria for the
+skirt? It should be flush with the bottom of the top and the inside
+edges of both legs. We could make the appropriate constraints as the
+rectangle is constructed or by dragging its edges afterwards;
+however, we take another slightly different tack again. Create a
+rectangle under the top and between the left and right leg but
+without coincident constraints. Pick the menu option <FONT FACE="Helvetica, sans-serif"><B>Tools|Alignment</B></FONT>;
+the mouse cursor will become the create alignment shape (<IMG SRC="../../graphics/create_alignment_cursor.png" NAME="Graphic19" ALT="Alignment constraint cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Highlight the left edge of the skirt and click the mouse button. The
+cursor will become the &ldquo;add another edge&rdquo; shape (<IMG SRC="../../graphics/create_alignment_plus_cursor.png" NAME="Graphic20" ALT="Alignment constraint add cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Click on the right edge of the left leg and <VAR CLASS="western">lignumCAD</VAR>
+will create a coincident constraint between the left edge of the
+skirt and the right edge of the left leg. Do similar actions to
+constrain the top edge of the skirt to the bottom edge of the top and
+the right edge of the skirt to the left edge of the right leg. Open
+the rectangle information dialog for the skirt rectangle and name it
+<FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Skirt</SPAN></SPAN></FONT>
+and set its height to 5&nbsp;&frac12;&rdquo;. Also, adjust the height
+dimension so that it is &ldquo;inside&rdquo; the skirt. Your
+elevation view should now look like the figure below (with the skirt
+activated).</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/table_elevation_1.png" NAME="Graphic21" ALT="First cut at table elevation" ALIGN=BOTTOM width=608 height=696 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>This could complete our work on the
+table sketches, however, there are a few aspects which are not
+optimal. For example, ordinarily, we would expect both table legs to
+be the same length. As we created the legs, we explicitly assigned
+the same length to both leg rectangles. However, if we wanted to
+change the height of the table, we would have to remember to change
+the height of both legs. While this is obvious for this simple model,
+its easy to create a model where it's not so clear. As a first
+attempt to repair this deficiency, could simply align the bottom of
+one leg to the other. So, for example, activate the right leg, grab
+the resize handle in the middle of the bottom edge and move the mouse
+so that the cursor highlights the bottom edge of the left leg. Note
+that nothing will change (substantially) on the right leg until you
+release the mouse. At that point, the height dimension of the right
+leg will disappear and the bottom edge will be made coincident with
+the bottom of the left leg.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/leg_constaint_1.png" NAME="Graphic22" ALT="First cut at leg constraints" ALIGN=BOTTOM width=564 height=138 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>Now there is only one dimension which
+controls the length of the legs. For example, change the height of
+the left leg to 23&rdquo; and both legs will be shortened.</P>
+<P CLASS="western" ALIGN=LEFT>While this arrangement is more
+convenient, it is still not exactly what we want. What is really of
+interest is the height of the table itself, not the length of the
+legs. Thus, what we need is an indirect way to specify the length of
+the legs relative to the overall height of the table. This is purpose
+of reference lines.</P>
+<P CLASS="western">To introduce reference lines, we will create a
+&ldquo;floor&rdquo; for the sketch. Select the <FONT FACE="Helvetica, sans-serif"><B>Tools|Reference
+Line</B></FONT> menu option. The cursor will become the create
+reference line cursor (<IMG SRC="../../graphics/create_refline_cursor.png" NAME="Graphic23" ALT="Reference line creation cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Move the mouse to just below the bottom edge of the legs and press
+the mouse button but don't release it just yet.  If you drag the
+mouse a short distance, you will see that it becomes the rotation
+cursor (<IMG SRC="../../graphics/rotate_line_cursor.png" NAME="Graphic24" ALT="Rotate line cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Reference lines can be either horizontal or vertical; drag the mouse
+up and down and left and right to see the different orientations of
+the reference line. Release the mouse button when the reference line
+is horizontal. (The default is to create horizontal reference lines,
+so really all you have to do is click and release the left mouse
+button.) Double click on the reference line to bring up its
+information dialog and rename the reference line to <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Floor</SPAN></SPAN></FONT>.</P>
+<P CLASS="western">Before we create the constraints from the legs to
+the &ldquo;floor,&rdquo; we need to delete the coincident constraint
+between the bottom of the right leg and the bottom of the left leg.
+Select the <FONT FACE="Helvetica, sans-serif"><B>Tools|Delete
+Constraint</B></FONT> menu option; the cursor becomes the delete
+constraint cursor (<IMG SRC="../../graphics/delete_constraint_cursor.png" NAME="Graphic25" ALT="Delete constaint cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Highlight the bottom edge of the right leg and click the left mouse
+button. The coincident constraint will be removed.</P>
+<P CLASS="western">Next, drag the bottom edges of both legs to be
+coincident with the &ldquo;floor.&rdquo; Then, create a dimension
+<EM CLASS="western">from</EM> the top edge of the top <EM CLASS="western">to</EM>
+the floor (i.e., select <FONT FACE="Helvetica, sans-serif"><B>Tools|Dimension</B></FONT>,
+and then pick the top edge of the top and then pick the reference
+line). Set the height of the table to 27&rdquo;. Our front elevation
+should now look like the following figure.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/table_elevation_2.png" NAME="Graphic26" ALT="Second cut at table elevation" ALIGN=BOTTOM width=648 height=705 BORDER=0></P>
+<P CLASS="sdfootnote-western">[You might wonder now how helpful this
+version of our sketch is. After all, when you go to mill the legs,
+you do have to know their true length. Later, when we create
+construction drawings, we'll be able to recover the exact dimensions
+of the legs. (In fact, if you bring up the rectangle information
+dialog for the legs, you'll see that they have a height of 26 &frac14;&rdquo;.)
+In general, the goal of Sketch pages should be to create the
+important dimensions and relations of the parts of the model. The
+details will be worked out on later pages.]</P>
+<P CLASS="western">Consider that aesthetics generally favors symmetry
+in a design (as a counter-example, perhaps, see
+<A HREF="http://www.nakashimafoundation.org/">www.nakashimafoundation.org</A>).
+In order to describe symmetry, <VAR CLASS="western">lignumCAD</VAR>
+supports a <VAR CLASS="western">centerline</VAR> notation. 
+</P>
+<P CLASS="western">Select the <FONT FACE="Helvetica, sans-serif"><B>Tools|Centerline</B></FONT>
+menu option and the mouse cursor becomes the centerline cursor (<IMG SRC="../../graphics/create_ctrline_cursor.png" NAME="Graphic27" ALT="Centerline creation cursor" ALIGN=MIDDLE width=32 height=32 BORDER=0>).
+Click somewhere between the vertical edges of the top to create a
+vertical centerline. (Note that you can rotate a centerline like a
+reference line if you want a horizontal centerline.) Next you want to
+create a <VAR CLASS="western">centered</VAR> constraint. You do this
+by selecting <FONT FACE="Helvetica, sans-serif"><B>Tools|Dimension</B></FONT>
+and clicking first on the centerline. Now you need to select two
+edges to be centered about the centerline. Select the two vertical
+edges of the top. Your page should now look like the figure below. 
+</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/table_elevation_3.png" NAME="Graphic28" ALT="Third cut at table elevation" ALIGN=BOTTOM width=634 height=712 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>(When you create a centered constraint,
+the dimension lines tend to be jumbled somewhat together. If you grab
+a dimension by its value (i.e., by the number text), you can drag the
+value from side to side as well as up and down.)</P>
+<P CLASS="western" ALIGN=LEFT>Now, you can adjust either the width or
+the half-width of the top and the entire table will remain centered
+on the centerline. Note that this is not especially meaningful for
+such a simple model; however, centerlines do become more useful in
+complicated models.</P>
+<P CLASS="western">As the last step of creating the Sketches, we want
+to print our work. Indeed, if the project is very simple, this may be
+all that we really need to do. Before printing, however, we need to
+set up some configuration information. Select the menu option
+<FONT FACE="Helvetica, sans-serif"><B>Edit|Preferences</B></FONT>;
+this will invoke the application default preferences dialog.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/preferences_dialog.png" NAME="Graphic9" ALT="Preferences dialog" ALIGN=BOTTOM width=618 height=496 BORDER=0></P>
+<P CLASS="western">Under the <FONT FACE="Helvetica, sans-serif"><B>Identification</B></FONT>
+tab, fill in the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Name</SPAN></SPAN></FONT>
+and <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Location</SPAN></SPAN></FONT>
+fields with suitable values for yourself. Note that for the logo,
+which is optional, you can use either a raster image file or a
+Scalable Vector Graphics (SVG) file as the logo. Both types of files
+will be scaled to fit in a box along with the name and location
+information. Click <FONT FACE="Helvetica, sans-serif"><B>OK</B></FONT>
+to apply the changes and exit the dialog.</P>
+<P CLASS="sdfootnote-western"><FONT COLOR="#ff0000">[Note: as of
+</FONT><VAR CLASS="western"><FONT COLOR="#ff0000">lignumCAD</FONT></VAR><FONT COLOR="#ff0000">
+version 0.2, only very simple SVG files can be printed. 
+<IMG SRC="generated/Sketch_html_m314e4293.png" NAME="Graphic30" ALIGN=BOTTOM width=11 height=14 BORDER=0>StarOffice
+6/OpenOffice can output reasonable SVG files, however, you might need
+to edit the width, height and viewBox attributes of the svg tag to
+increase the precision. For example, I made the tree above as 1&rdquo;
+by 1&rdquo; Drawing but SO wrote the size in the SVG file as 25mm
+instead of 25.4mm and the viewBox dimension as 2500 instead of 2540.]</FONT></P>
+<P CLASS="western">Next, select the <FONT FACE="Helvetica, sans-serif"><B>File|Print</B></FONT>
+menu option. The exact dialog that appears is system dependent, but
+you can usually select the printer and paper size. Note that your
+pages are printed exactly at the scale and position each page has in
+the user interface. In particular, the absolute spatial position of
+the lower left corner of the screen is the position of the lower left
+corner of the printed image. [Eventually there will be a print
+preview so you can see exactly what will be printed and where.]</P>
+<P CLASS="western">Here is an example of the second page our
+notebook.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Sketch_html_37a7251c.png" NAME="Graphic10" ALT="Page two of the notebook exported to EMF" ALIGN=BOTTOM width=665 height=477 BORDER=0></P>
+<P CLASS="western">(Note that this image is actually from the
+Enhanced MetaFile (EMF) generated from the <FONT FACE="Helvetica, sans-serif"><B>File|Export</B></FONT>
+menu option.)</P>
+</BODY>
+</HTML>

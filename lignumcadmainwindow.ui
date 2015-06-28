@@ -1,0 +1,1404 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>lignumCADMainWindow</class>
+<widget class="QMainWindow">
+    <property name="name">
+        <cstring>lignumCADMainWindow</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>957</width>
+            <height>792</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>lignumCAD</string>
+    </property>
+    <property name="icon">
+        <pixmap>lignumCAD.png</pixmap>
+    </property>
+    <property name="iconText">
+        <string>lignumCAD</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>0</number>
+        </property>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>mainPixmapLabel</cstring>
+            </property>
+            <property name="paletteBackgroundColor">
+                <color>
+                    <red>0</red>
+                    <green>63</green>
+                    <blue>64</blue>
+                </color>
+            </property>
+            <property name="frameShape">
+                <enum>NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Raised</enum>
+            </property>
+            <property name="pixmap">
+                <pixmap>splash.png</pixmap>
+            </property>
+            <property name="scaledContents">
+                <bool>false</bool>
+            </property>
+            <property name="alignment">
+                <set>AlignBottom|AlignHCenter</set>
+            </property>
+        </widget>
+        <widget class="QLabel" row="1" column="0">
+            <property name="name">
+                <cstring>titleLabel</cstring>
+            </property>
+            <property name="paletteForegroundColor">
+                <color>
+                    <red>255</red>
+                    <green>255</green>
+                    <blue>0</blue>
+                </color>
+            </property>
+            <property name="paletteBackgroundColor">
+                <color>
+                    <red>0</red>
+                    <green>63</green>
+                    <blue>64</blue>
+                </color>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>10</pointsize>
+                    <bold>1</bold>
+                </font>
+            </property>
+            <property name="text">
+                <string>
+lignumCAD Version x.y</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignTop|AlignHCenter</set>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<menubar>
+    <property name="name">
+        <cstring>menubar</cstring>
+    </property>
+    <item text="&amp;File" name="fileMenu">
+        <action name="fileNewAction"/>
+        <separator/>
+        <action name="fileOpenAction"/>
+        <action name="fileSaveAction"/>
+        <action name="fileSaveAsAction"/>
+        <action name="exportPageAction"/>
+        <separator/>
+        <action name="modelInfoAction"/>
+        <separator/>
+        <action name="filePrintAction"/>
+        <separator/>
+        <action name="fileExitAction"/>
+    </item>
+    <item text="&amp;Edit" name="editMenu">
+        <action name="editUndoAction"/>
+        <action name="editRedoAction"/>
+        <separator/>
+        <action name="editCutAction"/>
+        <action name="editCopyAction"/>
+        <action name="editPasteAction"/>
+        <separator/>
+        <action name="renamePageAction"/>
+        <action name="deletePageAction"/>
+        <action name="editFindAction"/>
+        <separator/>
+        <action name="editPreferencesAction"/>
+    </item>
+    <item text="&amp;View" name="PopupMenu">
+        <action name="viewRestoreAction"/>
+        <separator/>
+        <action name="zoomInAction"/>
+        <action name="zoomOutAction"/>
+    </item>
+    <item text="&amp;Insert" name="insertMenu">
+    </item>
+    <item text="&amp;Tools" name="toolMenu">
+    </item>
+    <item text="&amp;Help" name="helpMenu">
+        <action name="helpContentsAction"/>
+        <separator/>
+        <action name="helpAboutAction"/>
+        <separator/>
+        <action name="whatsThisAction"/>
+    </item>
+</menubar>
+<toolbars>
+    <toolbar dock="2">
+        <property name="name">
+            <cstring>toolBar</cstring>
+        </property>
+        <property name="label">
+            <string>Tools</string>
+        </property>
+        <action name="fileNewAction"/>
+        <action name="fileOpenAction"/>
+        <action name="fileSaveAction"/>
+        <action name="filePrintAction"/>
+        <separator/>
+        <action name="editUndoAction"/>
+        <action name="editRedoAction"/>
+        <separator/>
+        <action name="editCutAction"/>
+        <action name="editCopyAction"/>
+        <action name="editPasteAction"/>
+        <separator/>
+        <action name="helpContentsAction"/>
+    </toolbar>
+    <toolbar dock="2">
+        <property name="name">
+            <cstring>insertToolbar</cstring>
+        </property>
+        <property name="label">
+            <string>Insert</string>
+        </property>
+    </toolbar>
+</toolbars>
+<actions>
+    <action>
+        <property name="name">
+            <cstring>fileNewAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_file.png</iconset>
+        </property>
+        <property name="text">
+            <string>New</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;New</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;File|New&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+N&lt;/b&gt;) to create a new model.&lt;/p&gt;&lt;p&gt;The current model will be cleared from memory&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194382</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileOpenAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>open_file.png</iconset>
+        </property>
+        <property name="text">
+            <string>Open</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Open...</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;File|Open&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+O&lt;/b&gt;) to load an existing file.&lt;/p&gt;&lt;p&gt;The current model is cleared from memory.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194383</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileSaveAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>save_file.png</iconset>
+        </property>
+        <property name="text">
+            <string>Save</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Save</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;File|Save&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+S&lt;/b&gt;) to save the current model to disk. If the model has not been assigned a file, you will be prompted for a file name with the 'Save As' file requestor.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194387</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileSaveAsAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>saveas_file.png</iconset>
+        </property>
+        <property name="text">
+            <string>Save As</string>
+        </property>
+        <property name="menuText">
+            <string>Save &amp;As...</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;File|Save As&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to save the model under a new file name.&lt;/p&gt;&lt;p&gt;Note: you might want to change the model's name in the &lt;b&gt;File|Model Information&lt;/b&gt; dialog.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>0</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>filePrintAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>print.png</iconset>
+        </property>
+        <property name="text">
+            <string>Print</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Print...</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;File|Print&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+P&lt;/b&gt;)  to print the model. The print dialog will appear to allow you to specify the destination printer and its attributes.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194384</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileExitAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>exit.png</iconset>
+        </property>
+        <property name="text">
+            <string>Exit</string>
+        </property>
+        <property name="menuText">
+            <string>E&amp;xit</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;File|Exit&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to exit &lt;i&gt;lignumCAD&lt;/i&gt;. If there are any unsaved changes to the model, you will be prompted whether to discard the changes or save the model (or cancel exiting).&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>0</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>editUndoAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>undo.png</iconset>
+        </property>
+        <property name="text">
+            <string>Undo</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Undo</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Edit|Undo&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+Z&lt;/b&gt;) to undo the last user action. A brief statement of the action to be undone is given in the menu choice text or in the tool button's ToolTip.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194394</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>editRedoAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>redo.png</iconset>
+        </property>
+        <property name="text">
+            <string>Redo</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Redo</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Edit|Redo&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+Y&lt;/b&gt;) to redo the last user action. A brief statement of the action to be redone is given in the menu choice text or in the tool button's ToolTip.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194393</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>editCutAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>edit_cut.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cut</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Cut</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Edit|Cut&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+X&lt;/b&gt;) to delete the activated object and copy it to the clipboard.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194392</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>editCopyAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>edit_copy.png</iconset>
+        </property>
+        <property name="text">
+            <string>Copy</string>
+        </property>
+        <property name="menuText">
+            <string>C&amp;opy</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Edit|Copy&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+C&lt;/b&gt;) to copy the activated object to the clipboard.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194371</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>editPasteAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>edit_paste.png</iconset>
+        </property>
+        <property name="text">
+            <string>Paste</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Paste</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Edit|Paste&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+V&lt;/b&gt;) to insert the item (if any) in the clipboard into the current page.&lt;/p&gt;&lt;p&gt;Note that not all potential clipboard items can be pasted into &lt;i&gt;lignumCAD&lt;/i&gt;. For example 2D figures cannot generally be pasted into 3D pages.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194390</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>editFindAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>find.png</iconset>
+        </property>
+        <property name="text">
+            <string>Find</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Find...</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Edit|Find&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;Ctrl+F&lt;/b&gt;) in order to find an geometry item.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4194374</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>helpContentsAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>help_contents.png</iconset>
+        </property>
+        <property name="text">
+            <string>Contents</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Contents...</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Help|Contents&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;F1&lt;/b&gt;) to invoke the on-line manual for the current context.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4144</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>helpAboutAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>lignumCAD.png</iconset>
+        </property>
+        <property name="text">
+            <string>About lignumCAD</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;About lignumCAD...</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Help|About lignumCAD&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to see the "About &lt;i&gt;lignumCAD&lt;/i&gt;" dialog which gives the version number and licensing information.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>0</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>insertSketchAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_sketch.png</iconset>
+        </property>
+        <property name="text">
+            <string>&amp;Sketch...</string>
+        </property>
+        <property name="toolTip">
+            <string>Insert a new Sketch</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Insert|Sketch&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to insert a new page on which you can sketch the general two-dimensional outlines of the model.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>insertPartAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_part.png</iconset>
+        </property>
+        <property name="text">
+            <string>&amp;Part...</string>
+        </property>
+        <property name="toolTip">
+            <string>Insert a new Part</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Insert|Part&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a new part. You will be prompted to specify the basic size of the stock from which a single piece of the model will be "milled".&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>insertAssemblyAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_assembly.png</iconset>
+        </property>
+        <property name="text">
+            <string>&amp;Assembly...</string>
+        </property>
+        <property name="toolTip">
+            <string>Insert a new Assembly</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Insert|Assembly&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a new assembly. An assembly is a collection of parts and subassemblies which can be manipulated as a group.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>insertDrawingAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_drawing.png</iconset>
+        </property>
+        <property name="text">
+            <string>&amp;Drawing...</string>
+        </property>
+        <property name="toolTip">
+            <string>Insert a new Drawing</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Insert|Drawing&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a new drawing. The drawing will contain the final dimensions needed to fabricate a part. (More than one part can also appear on a drawing.)&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolRectangleAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_rectangle.png</iconset>
+        </property>
+        <property name="text">
+            <string>Rectangle...</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Rectangle...</string>
+        </property>
+        <property name="toolTip">
+            <string>Create a new Rectangle</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Rectangle&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a rectangle.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolDimensionAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_dimension.png</iconset>
+        </property>
+        <property name="text">
+            <string>Dimension...</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Dimension...</string>
+        </property>
+        <property name="toolTip">
+            <string>Create a new Dimension</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Dimension&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a dimension. Generally, you will pick two geometry items to relate with an offset constraint. However, if the first object picked is a centerline, then the next two geometries will be centered about the centerline.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolReferenceLineAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_reference_line.png</iconset>
+        </property>
+        <property name="text">
+            <string>Reference Line...</string>
+        </property>
+        <property name="menuText">
+            <string>Reference &amp;Line...</string>
+        </property>
+        <property name="toolTip">
+            <string>Create a new Reference Line</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Reference Line&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a reference line&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolCenterlineAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_centerline.png</iconset>
+        </property>
+        <property name="text">
+            <string>Centerline...</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Centerline...</string>
+        </property>
+        <property name="toolTip">
+            <string>Create a new Centerline</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Centerline&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a centerline&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>deletePageAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>delete_page.png</iconset>
+        </property>
+        <property name="text">
+            <string>Delete Page</string>
+        </property>
+        <property name="toolTip">
+            <string>Delete the current Page</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Delete Page&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to delete the &lt;i&gt;current&lt;/i&gt; page.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>renamePageAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>rename_page.png</iconset>
+        </property>
+        <property name="text">
+            <string>Rename Page...</string>
+        </property>
+        <property name="menuText">
+            <string>Re&amp;name Page...</string>
+        </property>
+        <property name="toolTip">
+            <string>Rename the current Page</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Rename Page&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to rename the &lt;i&gt;current&lt;/i&gt; page.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolStraightCutAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_straight_cut.png</iconset>
+        </property>
+        <property name="text">
+            <string>Straight Cut...</string>
+        </property>
+        <property name="toolTip">
+            <string>Create a Straight Cut</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Straight Cut&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a straight cut. The cut can be either &lt;b&gt;through&lt;/b&gt; (i.e., all the way through the part) or &lt;b&gt;blind&lt;/b&gt; (i.e., of fixed depth).&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolHoleAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_hole.png</iconset>
+        </property>
+        <property name="text">
+            <string>Hole...</string>
+        </property>
+        <property name="toolTip">
+            <string>Create a Circular Hole</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Circular Hole&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a circular hole. The hole can either be &lt;b&gt;through&lt;/b&gt; (i.e. all the way through the part) or &lt;b&gt;blind&lt;/b&gt; (i.e., of fixed depth).&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolFreeCutAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_free_cut.png</iconset>
+        </property>
+        <property name="text">
+            <string>Free Cut...</string>
+        </property>
+        <property name="toolTip">
+            <string>Create a Free Cut</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Free Cut&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a freehand cut. The cut can either be &lt;b&gt;through&lt;/b&gt; (i.e., all the way through the part) or &lt;b&gt;blind&lt;/b&gt; (i.e., of fixed depth).&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolAddModelAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>add_model.png</iconset>
+        </property>
+        <property name="text">
+            <string>&amp;Add Model...</string>
+        </property>
+        <property name="toolTip">
+            <string>Add Model (Part or Subassembly) to Assembly</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Add Model&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to add a part or subassembly to this assembly. You will be prompted to select a defined part or subassembly.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolViewAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>add_view.png</iconset>
+        </property>
+        <property name="text">
+            <string>Add View...</string>
+        </property>
+        <property name="toolTip">
+            <string>Add a View of a Model (Part or Assembly)</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Add View&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to add part or subassembly to this drawing. You will be prompted to specify a defined part or subassembly.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>exportPageAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>export_page.png</iconset>
+        </property>
+        <property name="text">
+            <string>&amp;Export...</string>
+        </property>
+        <property name="toolTip">
+            <string>Export Page as an Interface file</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;File|Export&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to export the &lt;i&gt;current&lt;/i&gt; page in a form suitable for use in another application. You can specify the type of the exported file by selecting the appropriate file name extension in the export dialog.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>modelInfoAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>model_info.png</iconset>
+        </property>
+        <property name="text">
+            <string>Model &amp;Information...</string>
+        </property>
+        <property name="toolTip">
+            <string>View and Edit the Model Information</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;File|Model Information&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to display the model information dialog. Here, you can change the name of the model, its version and revision and add any explanatory text.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolEdgeTreatmentAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_edge_treatment.png</iconset>
+        </property>
+        <property name="text">
+            <string>Edge Treatment...</string>
+        </property>
+        <property name="toolTip">
+            <string>Add an Edge Treatment </string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Edge Treatment&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to add an edge treatment to an edge of the part.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolMaterialAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_material.png</iconset>
+        </property>
+        <property name="text">
+            <string>Material...</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Material...</string>
+        </property>
+        <property name="toolTip">
+            <string>Set the Material of the Part</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Material&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to set the material of the part. You will be presented the Material dialog.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolJointAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_joint.png</iconset>
+        </property>
+        <property name="text">
+            <string>&amp;Joint...</string>
+        </property>
+        <property name="toolTip">
+            <string>Add a Joint between two parts</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Add Joint&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a joint between two adjacent parts. You will be presented with the &lt;b&gt;Joint Wizard(TM)&lt;/b&gt; from which to choose a joint.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewRestoreAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>restore_view2.png</iconset>
+        </property>
+        <property name="text">
+            <string>Restore view</string>
+        </property>
+        <property name="toolTip">
+            <string>Restore the view to its default scale and position</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Restore View&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to restore the view to its default position and scale.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>editPreferencesAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>edit_properties.png</iconset>
+        </property>
+        <property name="text">
+            <string>Pr&amp;eferences...</string>
+        </property>
+        <property name="toolTip">
+            <string>Edit the visible interface attributes</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Edit|Preferences&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to edit the application defaults for &lt;i&gt;lignumCAD&lt;/i&gt;.&lt;/p&gt;&lt;p&gt;Defaults include:&lt;ul&gt;&lt;li&gt;Business information&lt;/li&gt;&lt;li&gt;Presentation units&lt;/li&gt;&lt;li&gt;Page color scheme&lt;/li&gt;&lt;li&gt;Rendering attributes&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolAlignmentAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_alignment.png</iconset>
+        </property>
+        <property name="text">
+            <string>Alignment...</string>
+        </property>
+        <property name="menuText">
+            <string>Al&amp;ignment...</string>
+        </property>
+        <property name="toolTip">
+            <string>Create an Alignment</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Alignment&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create a coincident constraint between two geometry items.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>cancelReferenceLineAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>cancel_reference_line.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cancel Reference Line Creation</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Cancel Reference Line Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this reference line.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>cancelRectangleAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>cancel_rectangle.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cancel Rectangle Creation</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Cancel Rectangle Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this rectangle.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>cancelCenterlineAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>cancel_centerline.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cancel Centerline Creation</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Cancel Centerline Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this centerline.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>cancelDimensionAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>cancel_dimension.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cancel Dimension Creation</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Cancel Dimension Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this offset constraint.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>cancelAlignmentAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>cancel_alignment.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cancel Alignment Creation</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Cancel Alignment Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this coincident constraint.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolAnnotationAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>new_annotation.png</iconset>
+        </property>
+        <property name="text">
+            <string>Annotation...</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Annotation...</string>
+        </property>
+        <property name="toolTip">
+            <string>Create a new Annotation</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Annotation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to create an annotation.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>cancelAnnotationAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>cancel_annotation.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cancel Annotation</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Cancel Annotation Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this annotation.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolConstraintDeleteAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>delete_constraint.png</iconset>
+        </property>
+        <property name="text">
+            <string>D&amp;elete Constraint...</string>
+        </property>
+        <property name="toolTip">
+            <string>Delete a Constraint (Dimension or Alignment)</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Tools|Delete Constraint&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button to delete a constraint. Use the cursor to pick the geometry from which to remove the constraint.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>cancelConstraintDeleteAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>delete_constraint.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cancel Constraint Deletion</string>
+        </property>
+        <property name="toolTip">
+            <string>Cancel Deletion of Constraint</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Cancel Constraint Deletion&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the deletion of a constraint.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>whatsThisAction</cstring>
+        </property>
+        <property name="text">
+            <string>What's This?</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;What's This?</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Help|What's This?&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Clicking this button invokes "What's This?" mode, indicated by a question mark attached to the cursor. Clicking on a user interface element will cause a popup box to appear with more information about that feature.&lt;/p&gt;&lt;p&gt;Also, even if this button is not available, you can still press &lt;b&gt;Shift+F1&lt;/b&gt; to get the "What's This?" message for a widget which has the keyboard focus.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>2101296</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewLeftAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>false</bool>
+        </property>
+        <property name="iconSet">
+            <iconset>view_left2.png</iconset>
+        </property>
+        <property name="text">
+            <string>View Left</string>
+        </property>
+        <property name="statusTip">
+            <string>View the model from the left side</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewRightAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>false</bool>
+        </property>
+        <property name="iconSet">
+            <iconset>view_right2.png</iconset>
+        </property>
+        <property name="text">
+            <string>View Right</string>
+        </property>
+        <property name="statusTip">
+            <string>View the model from the right side</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewFrontAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>false</bool>
+        </property>
+        <property name="iconSet">
+            <iconset>view_front2.png</iconset>
+        </property>
+        <property name="text">
+            <string>View Front</string>
+        </property>
+        <property name="statusTip">
+            <string>View the model from the front</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewBackAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>false</bool>
+        </property>
+        <property name="iconSet">
+            <iconset>view_back2.png</iconset>
+        </property>
+        <property name="text">
+            <string>View Back</string>
+        </property>
+        <property name="statusTip">
+            <string>View the model from behind</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewBottomAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>false</bool>
+        </property>
+        <property name="iconSet">
+            <iconset>view_bottom2.png</iconset>
+        </property>
+        <property name="text">
+            <string>View Bottom</string>
+        </property>
+        <property name="statusTip">
+            <string>View the model from below</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewTopAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>false</bool>
+        </property>
+        <property name="iconSet">
+            <iconset>view_top2.png</iconset>
+        </property>
+        <property name="text">
+            <string>View Top</string>
+        </property>
+        <property name="statusTip">
+            <string>View the model from above</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toggleCSysAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="on">
+            <bool>true</bool>
+        </property>
+        <property name="text">
+            <string>Show Origin CSys</string>
+        </property>
+        <property name="statusTip">
+            <string>Toggle the display of the origin coordinate system.</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>cancelAddModelAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>cancel_add_model.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cancel Model Addition</string>
+        </property>
+        <property name="toolTip">
+            <string>Cancel Adding Model to Assembly</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>cancelAssemblyConstraintAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>cancel_assembly_constraint.png</iconset>
+        </property>
+        <property name="text">
+            <string>Cancel constraint</string>
+        </property>
+        <property name="toolTip">
+            <string>Cancel adding assembly constraint</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolDeleteModelAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>cancel_add_model.png</iconset>
+        </property>
+        <property name="text">
+            <string>Delete Model</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Delete Model...</string>
+        </property>
+        <property name="toolTip">
+            <string>Select a model to delete from the assembly</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Delete Model&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click on a model (subassembly) to delete it from the assembly. This does not delete the model from the project; it only removes its placement in this assembly. However, if other subassemblies depend on the selected assembly, then the subassembly will not be removed from the assembly.&lt;/p&gt;</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>zoomInAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>zoom_in4.png</iconset>
+        </property>
+        <property name="text">
+            <string>Zoom In</string>
+        </property>
+        <property name="menuText">
+            <string>Zoom &amp;In</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Zoom In&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Increase the scale by a step&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4119</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>zoomOutAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>zoom_out4.png</iconset>
+        </property>
+        <property name="text">
+            <string>Zoom Out</string>
+        </property>
+        <property name="menuText">
+            <string>Zoom &amp;Out</string>
+        </property>
+        <property name="whatsThis">
+            <string>&lt;p&gt;&lt;b&gt;Zoom Out&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Decrease the scale by a step.&lt;/p&gt;</string>
+        </property>
+        <property name="accel">
+            <number>4118</number>
+        </property>
+    </action>
+</actions>
+<connections>
+    <connection>
+        <sender>fileNewAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>fileNew()</slot>
+    </connection>
+    <connection>
+        <sender>fileOpenAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>fileOpen()</slot>
+    </connection>
+    <connection>
+        <sender>fileSaveAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>fileSave()</slot>
+    </connection>
+    <connection>
+        <sender>fileSaveAsAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>fileSaveAs()</slot>
+    </connection>
+    <connection>
+        <sender>filePrintAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>filePrint()</slot>
+    </connection>
+    <connection>
+        <sender>fileExitAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>fileExit()</slot>
+    </connection>
+    <connection>
+        <sender>editUndoAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>editUndo()</slot>
+    </connection>
+    <connection>
+        <sender>editRedoAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>editRedo()</slot>
+    </connection>
+    <connection>
+        <sender>editCutAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>editCut()</slot>
+    </connection>
+    <connection>
+        <sender>editCopyAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>editCopy()</slot>
+    </connection>
+    <connection>
+        <sender>editPasteAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>editPaste()</slot>
+    </connection>
+    <connection>
+        <sender>editFindAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>editFind()</slot>
+    </connection>
+    <connection>
+        <sender>helpContentsAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>helpContents()</slot>
+    </connection>
+    <connection>
+        <sender>helpAboutAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>helpAbout()</slot>
+    </connection>
+    <connection>
+        <sender>exportPageAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>fileExport()</slot>
+    </connection>
+    <connection>
+        <sender>modelInfoAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>fileModelInfo()</slot>
+    </connection>
+    <connection>
+        <sender>whatsThisAction</sender>
+        <signal>activated()</signal>
+        <receiver>lignumCADMainWindow</receiver>
+        <slot>whatsThis()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="global" impldecl="in declaration">qdir.h</include>
+    <include location="local" impldecl="in declaration">ratio.h</include>
+    <include location="global" impldecl="in implementation">stdlib.h</include>
+    <include location="local" impldecl="in implementation">systemdependencies.h</include>
+    <include location="global" impldecl="in implementation">qtoolbutton.h</include>
+    <include location="global" impldecl="in implementation">qtextstream.h</include>
+    <include location="global" impldecl="in implementation">qlistview.h</include>
+    <include location="global" impldecl="in implementation">qstatusbar.h</include>
+    <include location="global" impldecl="in implementation">qmessagebox.h</include>
+    <include location="local" impldecl="in implementation">aboutdialog.h</include>
+    <include location="local" impldecl="in implementation">designbookview.h</include>
+    <include location="global" impldecl="in implementation">qapplication.h</include>
+    <include location="global" impldecl="in implementation">qfileinfo.h</include>
+    <include location="global" impldecl="in implementation">qfiledialog.h</include>
+    <include location="global" impldecl="in implementation">qdockwindow.h</include>
+    <include location="global" impldecl="in implementation">qsettings.h</include>
+    <include location="global" impldecl="in implementation">qwhatsthis.h</include>
+    <include location="local" impldecl="in implementation">usersettings.h</include>
+    <include location="local" impldecl="in implementation">configuration.h</include>
+    <include location="local" impldecl="in implementation">lignumcadmainwindow.ui.h</include>
+</includes>
+<forwards>
+    <forward>class QListView;</forward>
+    <forward>class DesignBookView;</forward>
+    <forward>class aboutDialog;</forward>
+</forwards>
+<variables>
+    <variable>QDir home_dir_;</variable>
+    <variable>QDockWindow* model_hierarchy_view_;</variable>
+    <variable>QLabel* page_label_;</variable>
+    <variable>QLabel* scale_label_;</variable>
+    <variable>static aboutDialog* about_dialog_;</variable>
+    <variable>DesignBookView* design_book_view_;</variable>
+    <variable>QLabel* message_label_;</variable>
+    <variable>QLabel* information_label_;</variable>
+    <variable>QListView* model_hierarchy_list_;</variable>
+</variables>
+<slots>
+    <slot>init()</slot>
+    <slot>fileNew()</slot>
+    <slot>fileOpen()</slot>
+    <slot>fileSave()</slot>
+    <slot>fileSaveAs()</slot>
+    <slot>filePrint()</slot>
+    <slot>fileExit()</slot>
+    <slot>editUndo()</slot>
+    <slot>editRedo()</slot>
+    <slot>editCut()</slot>
+    <slot>editCopy()</slot>
+    <slot>editPaste()</slot>
+    <slot>editFind()</slot>
+    <slot>helpIndex()</slot>
+    <slot>helpContents()</slot>
+    <slot>helpAbout()</slot>
+    <slot>fileExport()</slot>
+    <slot>showView( const char * file_name )</slot>
+    <slot>fileModelInfo()</slot>
+    <slot>closeEvent( QCloseEvent * ce )</slot>
+    <slot>scaleChanged( const Ratio &amp; scale )</slot>
+    <slot>pageChanged( const QString &amp; name )</slot>
+    <slot>updateInformation( const QString &amp; information )</slot>
+    <slot returnType="QListView *">modelHierarchyList()</slot>
+    <slot>showView()</slot>
+    <slot specifier="non virtual">setHomeDir( QDir &amp; home_dir )</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

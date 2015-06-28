@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>Interacting with lignumCAD</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 6.0  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Allen Barnett">
+	<META NAME="CREATED" CONTENT="20021204;13014100">
+	<META NAME="CHANGEDBY" CONTENT="Allen Barnett">
+	<META NAME="CHANGED" CONTENT="20021217;9243800">
+	<META NAME="CLASSIFICATION" CONTENT="How to interact with lignumCAD">
+	<META NAME="DESCRIPTION" CONTENT="Copyright (C) 2002 lignum Computing, Inc.">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin: 1in }
+		P { margin-bottom: 0.08in }
+		P.western { font-family: "Times", serif; font-weight: medium }
+		H2 { margin-bottom: 0.08in }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic; font-weight: medium }
+		H2.cjk { font-size: 14pt; font-weight: medium }
+		H2.ctl { font-size: 14pt; font-weight: medium }
+		VAR.western { font-family: "Times", serif; font-weight: medium }
+		VAR.cjk { font-style: normal }
+		VAR.ctl { font-style: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<H2 CLASS="western">Interacting with lignumCAD</H2>
+<P CLASS="western">Before beginning to use <VAR CLASS="western">lignumCAD</VAR>,
+we'll take a few moments to understand the user interface. The
+widgets are the usual type found in a modern graphical application.
+You can operate most of the user interface with either the mouse or
+the keyboard. Of course, you can activate buttons by clicking on them
+with the mouse. If you hover the mouse over most user interface
+elements, a small <SPAN LANG="en-US">tool tip</SPAN> box will appear
+with a brief description of the element's function.</P>
+<P CLASS="western">In addition to the mouse, you also have a couple
+of choices for using the keyboard:</P>
+<OL>
+	<LI><P CLASS="western">Most widgets have the concept of <VAR CLASS="western">keyboard
+	focus</VAR>. In general, if a widget has a dashed line around it or
+	one of its <SPAN LANG="en-US">subelements</SPAN>, then that widget
+	has the keyboard focus. With two exceptions, you move the keyboard
+	focus from widget to widget (called <VAR CLASS="western">navigation</VAR>)
+	using the <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Tab</SPAN></B></FONT>
+	key. The exceptions are the <VAR CLASS="western">multiple line text
+	entry widget</VAR> and sets of <VAR CLASS="western">radio buttons</VAR>.
+	Once the keyboard focus is in a multiple line text entry widget,
+	pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Tab</SPAN></B></FONT>
+	simply inserts a tab character. You can use <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Shift+Tab</SPAN></B></FONT>
+	to navigate out of a multiple line text entry widget. Also, if the
+	focus enters a group of radio buttons, you must use the arrow keys
+	to navigate between the different options. This also has the side
+	effect of activating the radio button, so be a little careful with
+	this.</P>
+	<P CLASS="western">Keyboard focus serves two purposes in <VAR CLASS="western">lignumCAD</VAR>:
+	you can operate the widget (for example, if a button has keyboard
+	focus, pressing the <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Space</SPAN></B></FONT>
+	bar will activate the button; similarly, if a spin box has the
+	keyboard focus, you can increase or decrease the value by using the
+	<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Up</SPAN></B></FONT>
+	and <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Down</SPAN></B></FONT>
+	arrows), or you can ask for &quot;What's This?&quot; help. To bring
+	up the &quot;What's This?&quot; help for the focused widget, you
+	press the <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Shift+F1</SPAN></B></FONT>
+	key.</P>
+	<LI><P CLASS="western">If the text in or near a widget has an
+	underlined letter, then pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+<I>underlined-letter</I></SPAN></B></FONT>
+	will either activate that widget or move the keyboard focus to an
+	adjacent widget. For example, on the first page of the New Model
+	Wizard, pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+M</SPAN></B></FONT>,
+	<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+F</SPAN></B></FONT>,
+	<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+V</SPAN></B></FONT>,
+	<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+V</SPAN></B></FONT>,
+	<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+R</SPAN></B></FONT>
+	and <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+D</SPAN></B></FONT>
+	will move the keyboard focus between the various data input fields,
+	whereas pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+C</SPAN></B></FONT>
+	will exit the dialog window, <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+N</SPAN></B></FONT>
+	will go to the next page, and <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+H</SPAN></B></FONT>
+	will bring up the help for the dialog.</P>
+	<LI><P CLASS="western">[<FONT COLOR="#808080"><SPAN STYLE="font-weight: medium">Note:
+	this used to work, but not any more? An additional keyboard feature
+	is supported by the Qt library. If you highlight a menu option,
+	either with the mouse or by using the keyboard arrow keys, you can
+	supply an accelerator key for that menu option. For example, on a
+	Sketch page, you will create a number of rectangles. If you
+	highlight the Tools|Rectangle menu option (by either dragging the
+	mouse over it or by pressing Alt+T and then using the arrow keys to
+	highlight it), you can then simply press the key you want to
+	immediately activate this menu option. In this case, Ctrl+R is a
+	good choice.</SPAN></FONT>]</P>
+	<LI><P CLASS="western">If you have a key which looks like this: 
+	<IMG SRC="../../graphics/menu_key.png" NAME="Graphic1" ALIGN=MIDDLE width=21 height=26 BORDER=0>
+	(and it is configured as the X Menu key, of course), you can
+	activate the context menu for the user interface element which
+	currently has the keyboard focus.</P>
+</OL>
+<P CLASS="western">Dialogs in <VAR CLASS="western">lignumCAD</VAR>
+typically have two additional, common keyboard actions: pressing the
+<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Escape</SPAN></B></FONT>
+key will cancel the dialog (that is, any changes that have been made
+in the dialog will be forgotten and the model will not be modified)
+and pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>
+will cause the default action to be taken. What's the default action?
+It depends on the dialog; in general, there will be a button which
+has a pronounced border (as <FONT FACE="Helvetica, sans-serif"><B>Next</B></FONT>
+does in the figure above). This border indicates the default action.
+Note that depending on the style of the Qt interface, the default
+action border can be either a solid line or deep recess. (As a final
+aside, you can select a user interface style for <VAR CLASS="western">lignumCAD</VAR>
+either by passing it the <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">-style</SPAN></SPAN></FONT>
+option on the command line, e.g., <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">lignumCAD
+-style sgi</SPAN></SPAN></FONT> , or by using Qt's <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">qtconfig</SPAN></SPAN></FONT>
+command.)</P>
+<P CLASS="western">In the less standardized parts of <VAR CLASS="western"><SPAN LANG="en-US">lignumCAD's</SPAN></VAR>
+user interface, e.g., the geometry construction windows, the program
+(generally) follows a Select Operation/Select Target pattern. For
+example, to create a rectangle, you first select the <FONT FACE="Helvetica, sans-serif"><B>Tools|Rectangle</B></FONT>
+menu option. In the main window, the cursor will change shape to
+indicate that you are in rectangle creation mode. You then complete
+the creation of the rectangle by dragging it out to the desired size.
+Similarly, to create a dimension constraint between two edges, you
+select the <FONT FACE="Helvetica, sans-serif"><B>Tools|Dimension</B></FONT>
+menu option and then click on the two edges you want to relate. And,
+of course, since no rule is complete without an exception, to delete
+an object, you first select it and then execute the <FONT FACE="Helvetica, sans-serif"><B>Cut</B></FONT>
+command.</P>
+</BODY>
+</HTML>

@@ -1,0 +1,39 @@
+<!DOCTYPE lignumCAD>
+<material>
+ <common-name>Black Cherry</common-name>
+ <botanical-name>Prunus serotina</botanical-name>
+ <author>Ehrh.</author>
+ <language locale="en_US" >
+  <class>Wood</class>
+  <common-name>Black Cherry</common-name>
+  <other-names>wild cherry, rum cherry</other-names>
+ </language>
+ <language locale="de" >
+  <class>Holz</class>
+  <common-name>Amerikanischer Kirschbaum</common-name>
+  <other-names>Black Cherry, Schwarzkirsche</other-names>
+ </language>
+ <specific-gravity value="0.5" />
+ <compression-strength>
+  <fspl-parallel unit="PSI" value="5960" />
+  <mcs-parallel unit="PSI" value="7110" />
+  <fspl-perpendicular unit="PSI" value="850" />
+ </compression-strength>
+ <tension-strength>
+  <mts-perpendicular unit="PSI" value="560" />
+ </tension-strength>
+ <shear-strength>
+  <mss-parallel unit="PSI" value="1700" />
+ </shear-strength>
+ <static-bending-strength>
+  <fspl unit="PSI" value="9000" />
+  <mr unit="PSI" value="12300" />
+  <e unit="10E6 PSI" value="1.24" />
+ </static-bending-strength>
+ <cosmetic>
+  <color value="#d89267" />
+  <face-grain file="black_cherry_face.png" />
+  <end-grain file="black_cherry_end.png" />
+  <edge-grain file="black_cherry_edge.png" />
+ </cosmetic>
+</material>

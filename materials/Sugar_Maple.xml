@@ -1,0 +1,39 @@
+<!DOCTYPE lignumCAD>
+<material>
+ <common-name>Sugar Maple</common-name>
+ <botanical-name>Acer saccharum</botanical-name>
+ <author>Marsh.</author>
+ <language locale="en_US" >
+  <class>Wood</class>
+  <common-name>Sugar Maple</common-name>
+  <other-names>hard maple, rock maple</other-names>
+ </language>
+ <language locale="de" >
+  <class>Holz</class>
+  <common-name>Zuckerahorn</common-name>
+  <other-names>Vogelaugenahorn</other-names>
+ </language>
+ <specific-gravity value="0.63" />
+ <compression-strength>
+  <fspl-parallel unit="PSI" value="5390" />
+  <mcs-parallel unit="PSI" value="7830" />
+  <fspl-perpendicular unit="PSI" value="1810" />
+ </compression-strength>
+ <tension-strength>
+  <mts-perpendicular unit="PSI" value="0" />
+ </tension-strength>
+ <shear-strength>
+  <mss-parallel unit="PSI" value="2330" />
+ </shear-strength>
+ <static-bending-strength>
+  <fspl unit="PSI" value="9500" />
+  <mr unit="PSI" value="15800" />
+  <e unit="10E6 PSI" value="1.83" />
+ </static-bending-strength>
+ <cosmetic>
+  <color value="#e2ba93" />
+  <face-grain file="sugar_maple_face.png" />
+  <end-grain file="sugar_maple_end.png" />
+  <edge-grain file="sugar_maple_edge.png" />
+ </cosmetic>
+</material>

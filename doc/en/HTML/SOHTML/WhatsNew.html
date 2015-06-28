@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>What's New</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 6.0  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Allen Barnett">
+	<META NAME="CREATED" CONTENT="20020917;17205800">
+	<META NAME="CHANGEDBY" CONTENT="Allen Barnett">
+	<META NAME="CHANGED" CONTENT="20021216;15461200">
+	<META NAME="CLASSIFICATION" CONTENT="New features section">
+	<META NAME="DESCRIPTION" CONTENT="Copyright (C) 2002 lignum Computing, Inc.">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin: 1in }
+		P { margin-bottom: 0.08in }
+		P.western { font-family: "Times", serif; font-weight: medium }
+		H1 { margin-bottom: 0.08in }
+		H1.western { font-family: "Arial", sans-serif; font-size: 16pt }
+		H1.cjk { font-size: 16pt }
+		H1.ctl { font-size: 16pt }
+		H2 { margin-bottom: 0.08in }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic }
+		H2.cjk { font-size: 14pt; font-style: italic }
+		H2.ctl { font-size: 14pt; font-style: italic }
+		H3 { margin-bottom: 0.08in }
+		H3.western { font-family: "Arial", sans-serif }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<H1 CLASS="western">What's New</H1>
+<H2 CLASS="western">Version 0.2</H2>
+<P CLASS="western">Version 0.2 of <VAR>lignumCAD</VAR> includes the
+following updates.</P>
+<H3 CLASS="western">New Features</H3>
+<UL>
+	<LI><P CLASS="western">The primary new feature of Version 0.2 is
+	Assembly mode. You can now construct reasonably complete models of
+	simple pieces. See the Assembly documentation for a tutorial
+	example.</P>
+	<LI><P CLASS="western">Many thanks to Christoph Eckert for
+	contributing a German translation of the primary user interface text
+	and for pointing out many (if not all) of the problems with
+	<VAR>lignumCAD</VAR>'s internationalization. Also, more complete
+	credits have been added to the &ldquo;About lignumCAD&rdquo; dialog.</P>
+</UL>
+<H3 CLASS="western">Bug Fixes</H3>
+<UL>
+	<LI><P CLASS="western">Saving a model while a Sketch tool was active
+	would cause a segmentation fault.</P>
+	<LI><P CLASS="western">Using special characters (like &ldquo;/&rdquo;
+	or &ldquo;&amp;&rdquo;) in page names would cause a segmentation
+	fault on model reload. Any character can now be used safely.</P>
+	<LI><P CLASS="western">It was possible to name two objects of the
+	same type with the same name through the model hierarchy view.</P>
+</UL>
+<H3 CLASS="western">Warnings</H3>
+<UL>
+	<LI><P CLASS="western">The format of the .lcad file is changed in
+	this version. It is not backwards compatible and there is no
+	provision in the code to read the old format. A converter program
+	would be possible, but until the code reaches a more mature state,
+	maintaining backwards compatibility is not a high priority.</P>
+	<LI><P CLASS="western">Starting with this release, the <VAR>lignumCAD</VAR>
+	RPM will install itself in a directory named /opt/lignumCAD/v<VAR>x</VAR>.<VAR>y</VAR>
+	(where x and y are the major and minor version numbers) rather than
+	scattered around in /usr as in previous releases. This will allow
+	you to have more than one installation of <VAR>lignumCAD</VAR>
+	installed at a time (though, there probably aren't too many people
+	who <EM>really</EM> want to do that). If you upgrade your <VAR>lignumCAD</VAR>
+	installation in the usual way:</P>
+	<PRE>$ rpm -Uvh lignumCAD-0.2-2.i386.rpm</PRE><P CLASS="western">
+	the old /usr/share/lignumCAD directory will not be removed. Please
+	execute a:</P>
+	<PRE>$ rm -r /usr/share/lignumCAD</PRE><P CLASS="western">
+	in order to clean up after the old RPMs.</P>
+</UL>
+<H2 CLASS="western">Version 0.1</H2>
+<P CLASS="western">Version 0.1 of <VAR>lignumCAD</VAR> includes the
+following updates.</P>
+<H3 CLASS="western">Bug Fixes</H3>
+<P CLASS="western">Activating some menu actions after loading a model
+from a file would cause a segmentation fault.</P>
+<P CLASS="western">There was a left-over debug statement which
+(intentionally) caused a segmentation fault when undoing a dimension
+relocation.</P>
+<H3 CLASS="western">New Features</H3>
+<P CLASS="western">You can enter numeric values in decimal notation
+even if the default precision is FRACTIONAL.</P>
+<P CLASS="western"><VAR>lignumCAD</VAR> now uses OpenCASCADE for most
+of its solid modeling capabilities.</P>
+<P CLASS="western">You can now create simple solid parts and assign a
+material to them. (The next version will allow you to create
+assemblies of parts, resulting in a substantially more useful
+program.)</P>
+</BODY>
+</HTML>

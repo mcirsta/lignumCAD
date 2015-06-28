@@ -1,0 +1,479 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>DimensionInfoDialog</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>DimensionInfoDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>333</width>
+            <height>389</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Dimension Information</string>
+    </property>
+    <property name="icon">
+        <pixmap>image0</pixmap>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>nameLabel</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>MShape</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>MShadow</enum>
+            </property>
+            <property name="text">
+                <string>&amp;Name:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>nameEdit</cstring>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget" row="3" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>Layout1</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonHelp</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Help</string>
+                    </property>
+                    <property name="accel">
+                        <number>276824136</number>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>Horizontal Spacing2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonOk</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;OK</string>
+                    </property>
+                    <property name="accel">
+                        <number>276824143</number>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                    <property name="default">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonCancel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Cancel</string>
+                    </property>
+                    <property name="accel">
+                        <number>276824131</number>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QGroupBox" row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>GroupBox1</cstring>
+            </property>
+            <property name="title">
+                <string>Annotation Side</string>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Select the annotation side.</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLayoutWidget" row="0" column="0">
+                    <property name="name">
+                        <cstring>Layout2</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QRadioButton" row="2" column="1">
+                            <property name="name">
+                                <cstring>belowButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Below</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Dimension will be drawn below references.</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton" row="1" column="2">
+                            <property name="name">
+                                <cstring>rightButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Right</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Dimension will be drawn to the right of the references.</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton" row="1" column="0">
+                            <property name="name">
+                                <cstring>leftButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Left</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Dimension will be drawn to the left of the references.</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton" row="0" column="1">
+                            <property name="name">
+                                <cstring>aboveButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Above</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Dimension will be drawn above references.</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QButtonGroup" row="2" column="2">
+            <property name="name">
+                <cstring>orientationGroup</cstring>
+            </property>
+            <property name="enabled">
+                <bool>true</bool>
+            </property>
+            <property name="title">
+                <string>Orientation</string>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Orientation of dimension line.</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QRadioButton" row="0" column="0">
+                    <property name="name">
+                        <cstring>horizontalButton</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Horizontal</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="1" column="0">
+                    <property name="name">
+                        <cstring>verticalButton</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Vertical</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="2" column="0">
+                    <property name="name">
+                        <cstring>otherButton</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Other</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QGroupBox" row="1" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>referencesGroupBox</cstring>
+            </property>
+            <property name="title">
+                <string>References</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>toReferenceLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>To:</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>toReferenceLineEdit</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Primary dimension reference.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;To Reference&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;This widget shows the geometry item which is the primary reference for the dimension. This value is not editable in this dialog; you must use the regular interface to adjust constraint references.&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>fromReferenceLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>From:</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="1" column="1">
+                    <property name="name">
+                        <cstring>fromReferenceLineEdit</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Secondary reference.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;From Reference&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;This widget shows the geometry item which the primary reference is offset from (i.e., the secondary reference). This value is not editable in this dialog; you must use the regular interface to adjust constraint references.&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QButtonGroup" row="2" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>offsetButtonGroup</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Offset</string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>11</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QRadioButton" row="0" column="0">
+                            <property name="name">
+                                <cstring>specifiedRadioButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Specified</string>
+                            </property>
+                            <property name="checked">
+                                <bool>true</bool>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Use a specified offset.</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>&lt;p&gt;&lt;b&gt;Specified Offset&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Select this option if you want the dimension to have an independent, specified offset.&lt;/p&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="lCDefaultLengthSpinBox" row="0" column="1">
+                            <property name="name">
+                                <cstring>offsetLengthSpinBox</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Enter the offset.</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>&lt;p&gt;&lt;b&gt;Specified Offset&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Enter the offset of the dimension (from the From Reference to the To Reference). The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).&lt;/p&gt;
+&lt;p&gt;If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1.234&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1&lt;/code&gt; (equals 1.0)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1/2&lt;/code&gt; (equals 0.5)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1 1/2&lt;/code&gt; (equals 1.5, note the blank separating the whole number and the fraction)&lt;/p&gt;
+&lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="Line" row="1" column="0" rowspan="1" colspan="2">
+                            <property name="name">
+                                <cstring>Line1</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>HLine</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton" row="2" column="0">
+                            <property name="name">
+                                <cstring>importedRadioButton</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string>Imported</string>
+                            </property>
+                        </widget>
+                        <widget class="lCConstraintChooser" row="2" column="1">
+                            <property name="name">
+                                <cstring>constraintChooser</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QLineEdit" row="0" column="1" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>nameEdit</cstring>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Edit the dimension's name.</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;p&gt;&lt;b&gt;Name&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Edit the name of the dimension. The dimension's name will be updated when the dialog is accepted.&lt;/p&gt;</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<images>
+    <image name="image0">
+        <data format="XPM.GZ" length="3198">789c559659537a4710c5dffd1494fd66a5facf5db9b752795071655750349587b90b8282a0202ea97cf7f474f74c2a8594fe383d67cef4cc5cf975d4980e7b8da35f07db9dd92dca463937ef8da3ea63b5fafef3af3ffe3e380cc306fd0451d0080f7f3b381ced1a65a3bf7ead2dc08800a23ccc8226f3bbe538889aca5f9e33e616b38932e5b1e524f4bc572e850d321bc7d0731c8a7f5b386e2ad7965313ab8e3de156901ae6d8722b723a6c8413373ef19c73fd97b01fdf574e84e1c5712b629e29e7ca6fcc058de7e6c150d9d59f7a2ed8ff5bd98dfff0cc3a7c2a57a2e3b367d19b96b3c8d777959d7ee238137f239c05aa2f1c8b8e3fca2edfbd631d7fc94cf36b3fd6c25e7ff42ce35f9473d52bcf32ff52d9e503cfa29f0be781f2d6721e67ae9fc7ca5a8f5361578fc78ef398b954d67c3077ac3ae7c9cb3c178695e792b9af5c69fd8967d1c5bf348132efaf895b749db8fe41d8d56322eceab1726cc47fa59c08c38fb2517dc05c7afd55d9e98f9e25cf8572ad7aed59e61f0a17a1329fd722f67a2aecf557c785f8b59553e5b5b251e6f35a545e9f293b7de4b9e2bcf7cab5ea4f9e458f84cb5099ef47996455c4f71902c7b1f4ff4cd88f4761371e6f1c9709f3463915869cb9ca03f1c78963f1875839511e08fbf1d79e65fe42d9e87c63cfa23f38ae443f57ae55bf732c3af0fe5409cd2fcfaf3761578fd78ed5af255c85aacf1dab1e28a7c286ef6755e7da4f633ccbf3e04cd8043aff85b01b0fa167fe7f82efca6e7db79e45bf54ae953b96ebd468bf71e159e6db29ebfae1c671c2cf630c85bd5f265c87c2f0e4b84e59df2aa7c2c0f9eadaf3ceb3f85d291be55cb956e6e7fb2c2d42cd9739967c30514e95af844ba3cfa38eb0f78b1ccf242f9f87d9ccfb4f1debfa4139d57e158e55ef7a16dd281bd53f3d8bbe57ae85473b043468e87741bf4bacb0c6193ee11c17f613ababa6f3d35ff27ec6175ce20a5f718d1b7cc377dce20e3f542d702f79c8ff13bff01b7ff0184ff014db7886e77881977845af6bec605732a83f600ffb54ff42690638c411de501aeb7e85b738269ae09d4da5fe0555f7f11ea7f8808fd8a4ece7186048d511fd35268eb133da69bdadeeb1fb12134c29cd0db6c837c39c125d03620a6067f0fe941d0cb92fa933941d0aca7ecbd9e7d61d4aa8a0a6954b7eca0e33ce9e50fd883b19c013556fa97a834398e33d2ce019bbf2fd84ea0d2c6105afe43ea21a9b664bd903ce3e20f7353ec306250f7712e650ba4ec21bbcc31676dc993629b6fa03f6b8107ff8a4f52cc93d25b70dcee10bbe697ddc49f88163ca7202a7d08633f9fe44e9ce31810b72e74ec2253cc3158ee11ad7b0e2ec1f54bfd7faff4ec1ccba53dfb7d02177dbc91a00d6d0e5fa9ed677700a7deee4137532a07de55300039aed84b377610823a8e146f68bfa35a0ec23f2a35300d479b0b9a893749e5c9a314e6022f70517dcc91977f2d29e1ab8a3f4f7b4a6b556933b2edcfec294dc677cc6ec298828ff83ed241ec323ed4c93d71a60e1cf8fa1357027354d48ee1156b44f0b971dedaddafbfb55400c899e02e9645b3b3922ef1a523acfffbf5f05cd31219f5c4e01bc92fb085a18d3b9e940c6b7c4f91774bf0c7ed23a7690c306f674e5f6b49f35edf28e3eb5f70fec4d567fbecbfce279e0cc00bd0dd5667c5b2581bd5ffffc7ef02fbec4de29</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>buttonOk</sender>
+        <signal>clicked()</signal>
+        <receiver>DimensionInfoDialog</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>buttonCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>DimensionInfoDialog</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>buttonHelp</sender>
+        <signal>clicked()</signal>
+        <receiver>DimensionInfoDialog</receiver>
+        <slot>buttonHelp_clicked()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>nameEdit</tabstop>
+    <tabstop>specifiedRadioButton</tabstop>
+    <tabstop>offsetLengthSpinBox</tabstop>
+    <tabstop>importedRadioButton</tabstop>
+    <tabstop>constraintChooser</tabstop>
+    <tabstop>aboveButton</tabstop>
+    <tabstop>rightButton</tabstop>
+    <tabstop>belowButton</tabstop>
+    <tabstop>leftButton</tabstop>
+    <tabstop>horizontalButton</tabstop>
+    <tabstop>verticalButton</tabstop>
+    <tabstop>otherButton</tabstop>
+    <tabstop>buttonOk</tabstop>
+    <tabstop>buttonHelp</tabstop>
+    <tabstop>buttonCancel</tabstop>
+    <tabstop>toReferenceLineEdit</tabstop>
+    <tabstop>fromReferenceLineEdit</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">dimensioninfodialog.ui.h</include>
+</includes>
+<slots>
+    <slot>buttonHelp_clicked()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

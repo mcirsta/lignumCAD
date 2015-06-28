@@ -1,0 +1,39 @@
+<!DOCTYPE lignumCAD>
+<material>
+ <common-name>Particle Board</common-name>
+ <botanical-name>-</botanical-name>
+ <author></author>
+ <language locale="en_US" >
+  <class>Composite</class>
+  <common-name>Particle Board</common-name>
+  <other-names>chip board</other-names>
+ </language>
+ <language locale="de" >
+  <class>Plattenwerkstoffe</class>
+  <common-name>Faserplatten</common-name>
+  <other-names>Spanplatten, FPY</other-names>
+ </language>
+ <specific-gravity value="1" />
+ <compression-strength>
+  <fspl-parallel unit="PSI" value="0" />
+  <mcs-parallel unit="PSI" value="0" />
+  <fspl-perpendicular unit="PSI" value="0" />
+ </compression-strength>
+ <tension-strength>
+  <mts-perpendicular unit="PSI" value="0" />
+ </tension-strength>
+ <shear-strength>
+  <mss-parallel unit="PSI" value="0" />
+ </shear-strength>
+ <static-bending-strength>
+  <fspl unit="PSI" value="0" />
+  <mr unit="PSI" value="0" />
+  <e unit="10E6 PSI" value="0" />
+ </static-bending-strength>
+ <cosmetic>
+  <color value="#b48b60" />
+  <face-grain file="particle_board_face.png" />
+  <end-grain file="particle_board_face.png" />
+  <edge-grain file="particle_board_face.png" />
+ </cosmetic>
+</material>

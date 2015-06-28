@@ -1,0 +1,248 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>AssemblyConstraintForm</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>AssemblyConstraintForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>126</width>
+            <height>448</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Assembly Constraints</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>TextLabel1</cstring>
+            </property>
+            <property name="text">
+                <string>Available
+Constraints</string>
+            </property>
+            <property name="alignment">
+                <set>AlignCenter</set>
+            </property>
+        </widget>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>constraintButtonGroup</cstring>
+            </property>
+            <property name="lineWidth">
+                <number>0</number>
+            </property>
+            <property name="title">
+                <string></string>
+            </property>
+            <property name="exclusive">
+                <bool>true</bool>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>3</number>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>matePushButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Mate</string>
+                    </property>
+                    <property name="toggleButton">
+                        <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Create a mate constraint.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Mate&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;This constraint causes two surfaces to touch while facing one another. For example, imagine holding two blocks together:&lt;/p&gt;
+&lt;img src="mate_example2.png"&gt;
+&lt;p&gt;Once this constraint is activated, pick one surface from the new model and one surface from the assembly. &lt;i&gt;lignumCAD&lt;/i&gt; will calculate a new position (and orientation) of the new model.&lt;/p&gt;
+&lt;p&gt;You can cancel creating this constraint before it is complete by simply selecting a new constraint, selecting &lt;b&gt;Cancel constraint&lt;/b&gt; from the context menu or by typing &lt;b&gt;ESC&lt;/b&gt;.&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>alignPushButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Align</string>
+                    </property>
+                    <property name="toggleButton">
+                        <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Create an align constraint.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Align&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;This constraint causes two surfaces to touch while facing in the same direction. For example, imagine lining up two blocks together:&lt;/p&gt;
+&lt;img src="align_example.png"&gt;
+&lt;p&gt;Once this constraint is activated, pick one surface from the new model and one surface from the assembly. &lt;i&gt;lignumCAD&lt;/i&gt; will calculate a new position (and orientation) of the new model.&lt;/p&gt;
+&lt;p&gt;You can cancel creating this constraint before it is complete by simply selecting a new constraint, selecting &lt;b&gt;Cancel constraint&lt;/b&gt; from the context menu or by typing &lt;b&gt;ESC&lt;/b&gt;.&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>mateOffsetPushButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Mate &amp;Offset</string>
+                    </property>
+                    <property name="toggleButton">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>alignOffsetPushButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Align Off&amp;set</string>
+                    </property>
+                    <property name="toggleButton">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="Line">
+            <property name="name">
+                <cstring>Line1</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>helpPushButton</cstring>
+            </property>
+            <property name="text">
+                <string>He&amp;lp</string>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>See the short help message for this dialog.</string>
+            </property>
+        </widget>
+        <widget class="Line">
+            <property name="name">
+                <cstring>Line2</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>cancelPushButton</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Cancel</string>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Cancel the addition of the new model to the assembly.</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Clicking this button (or typing &lt;b&gt;Alt-C&lt;/b&gt;) will cancel the addition of the new model to the assembly.</string>
+            </property>
+        </widget>
+        <widget class="Line">
+            <property name="name">
+                <cstring>Line3</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>constraintsTextLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Defined
+Constraints</string>
+            </property>
+            <property name="alignment">
+                <set>AlignCenter</set>
+            </property>
+        </widget>
+        <widget class="QTextBrowser">
+            <property name="name">
+                <cstring>constraintListBrowser</cstring>
+            </property>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>Spacer4</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>0</width>
+                    <height>30</height>
+                </size>
+            </property>
+        </spacer>
+    </vbox>
+</widget>
+<connections>
+    <connection>
+        <sender>helpPushButton</sender>
+        <signal>clicked()</signal>
+        <receiver>AssemblyConstraintForm</receiver>
+        <slot>helpPushButton_clicked()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">assemblyconstraintform.ui.h</include>
+</includes>
+<slots>
+    <slot>helpPushButton_clicked()</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,501 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>Creating a Part with lignumCAD</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 6.0  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Allen Barnett">
+	<META NAME="CREATED" CONTENT="20021205;11584600">
+	<META NAME="CHANGEDBY" CONTENT="Allen Barnett">
+	<META NAME="CHANGED" CONTENT="20030103;10474900">
+	<META NAME="CLASSIFICATION" CONTENT="Part creation section">
+	<META NAME="DESCRIPTION" CONTENT="Copyright (C) 2002 lignum Computing, Inc.">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin: 1in }
+		P { margin-bottom: 0.08in }
+		P.western { font-family: "Times", serif; font-weight: medium }
+		H2 { margin-bottom: 0.08in }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic; font-weight: medium }
+		H2.cjk { font-size: 14pt; font-weight: medium }
+		H2.ctl { font-size: 14pt; font-weight: medium }
+		TD P { margin-bottom: 0.08in }
+		TD P.western { font-family: "Times", serif; font-weight: medium }
+		TH P { margin-bottom: 0.08in }
+		TH P.western { font-family: "Times", serif; font-style: italic }
+		TH P.cjk { font-style: italic }
+		TH P.ctl { font-style: italic }
+		EM.cjk { font-style: normal }
+		EM.ctl { font-style: normal }
+		VAR.western { font-family: "Times", serif; font-weight: medium }
+		VAR.cjk { font-style: normal }
+		VAR.ctl { font-style: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<H2 CLASS="western">Creating a Part</H2>
+<P CLASS="western">After you have created enough Sketches to define
+the general size and shape of the table, it is time to start building
+the models of the parts which will comprise the solid geometry. 
+Since our table top is going to have breadboard edges, we'll start by
+constructing the parts which comprise the table top; call this the
+bill of materials for the table top:</P>
+<CENTER>
+	<TABLE WIDTH=537 BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+		<COL WIDTH=110>
+		<COL WIDTH=210>
+		<COL WIDTH=44>
+		<COL WIDTH=69>
+		<COL WIDTH=61>
+		<THEAD>
+			<TR VALIGN=TOP>
+				<TH WIDTH=110>
+					<P CLASS="western">Name</P>
+				</TH>
+				<TH WIDTH=210>
+					<P CLASS="western">Length (in the grain direction)</P>
+				</TH>
+				<TH WIDTH=44>
+					<P CLASS="western">Width</P>
+				</TH>
+				<TH WIDTH=69>
+					<P CLASS="western">Thickness</P>
+				</TH>
+				<TH WIDTH=61>
+					<P CLASS="western">Quantity</P>
+				</TH>
+			</TR>
+		</THEAD>
+		<TBODY>
+			<TR>
+				<TD WIDTH=110 VALIGN=TOP>
+					<P CLASS="western">Field</P>
+				</TD>
+				<TD WIDTH=210 VALIGN=TOP>
+					<P CLASS="western">15 &frac12;&rdquo;</P>
+				</TD>
+				<TD WIDTH=44 VALIGN=TOP>
+					<P CLASS="western">16&rdquo;</P>
+				</TD>
+				<TD WIDTH=69 VALIGN=TOP>
+					<P CLASS="western">&frac34;&rdquo;</P>
+				</TD>
+				<TD WIDTH=61 VALIGN=BOTTOM SDVAL="1" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>1</P>
+				</TD>
+			</TR>
+			<TR>
+				<TD WIDTH=110 VALIGN=TOP>
+					<P CLASS="western">Breadboard edge</P>
+				</TD>
+				<TD WIDTH=210 VALIGN=TOP>
+					<P CLASS="western">16&rdquo;</P>
+				</TD>
+				<TD WIDTH=44 VALIGN=TOP>
+					<P CLASS="western" ALIGN=LEFT>2&rdquo;</P>
+				</TD>
+				<TD WIDTH=69 VALIGN=TOP>
+					<P CLASS="western">&frac34;&rdquo;</P>
+				</TD>
+				<TD WIDTH=61 VALIGN=BOTTOM SDVAL="2" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>2</P>
+				</TD>
+			</TR>
+		</TBODY>
+	</TABLE>
+</CENTER>
+<P CLASS="western">Create a new Part page (either select the
+<FONT FACE="Helvetica, sans-serif"><B>Insert|Part</B></FONT> menu
+option, click on the toolbar button, or use the context menu on the
+tab bar and select <FONT FACE="Helvetica, sans-serif"><B>Part</B></FONT>).
+This will bring up the Part Wizard.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/part_templates_dialog.png" NAME="Graphic1" ALT="Part templates dialog" ALIGN=BOTTOM width=551 height=402 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>The Part Wizard shows the available
+template forms from the Part Library. There are the two general
+purpose blanks: a plain rectangular board and a circular cylinder for
+turning. There are additional, more complicated, forms which, in
+effect, represent the blanks after a few milling operations. These
+shapes are predefined in the program and cannot be altered (except
+for their general parameters).</P>
+<P CLASS="western" ALIGN=LEFT>The field of our table top is a simple
+rectangular board, so select the <FONT FACE="Helvetica, sans-serif"><B>Board</B></FONT>.
+Note that you can navigate the list of part templates in a number of
+ways: you can just click the mouse on the line of interest, you can
+use the cursor keys to move up and down in the list, or you can type
+the first letter of the name in the <FONT FACE="Helvetica, sans-serif"><B>Parts</B></FONT>
+column. In the latter case, if there is more than one entry with the
+same first letter, repeatedly typing the letter will cycle through
+all the choices. Change the name of the Part to <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Field</SPAN></SPAN></FONT>
+(try pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+A</SPAN></B></FONT>
+to navigate to the <FONT FACE="Helvetica, sans-serif"><B>Name</B></FONT>
+field). Press <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">ENTER</SPAN></B></FONT>
+(or type <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+N</SPAN></B></FONT>)
+or click on <FONT FACE="Helvetica, sans-serif"><B>Next</B></FONT> to
+go to the next page.</P>
+<P CLASS="western" ALIGN=LEFT>Each of the template parts have a
+number of parameters which you can specify before the part is
+created. In the case of the <FONT FACE="Helvetica, sans-serif"><B>Board</B></FONT>,
+you can specify the length (in the direction of the grain), the width
+and the thickness. This is shown on the second page of the Part
+Wizard.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/board_parameters.png" NAME="Graphic2" ALT="Board parameters dialog" ALIGN=BOTTOM width=551 height=402 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>Enter the values from the bill of
+materials table for the field: Length 15 &frac12;&rdquo;, Width 16&rdquo;,
+and Thickness &frac34;&rdquo;. If the values you have entered are
+valid (i.e., the meet the criteria for a correctly defined board),
+the <FONT FACE="Helvetica, sans-serif"><B>Finish</B></FONT> button
+will be activated.</P>
+<P CLASS="western" ALIGN=LEFT><IMG SRC="generated/Part_html_m314e4293.png" NAME="Graphic45" ALT="A light bulb" ALIGN=BOTTOM width=24 height=26 BORDER=0>A
+Tip: How do you know if the value entered in a type-in field is
+acceptable? This is dependent on Qt to a certain extent. If you  move
+the keyboard focus to a type-in by clicking in it with the mouse <EM CLASS="western">and</EM>
+leave the mouse over the type-in while you enter the text of the
+value, the text will be validated as soon as you move the mouse out
+of the region of the type-in widget (for example, moving the mouse to
+click on a new widget). Alternatively, regardless of how the type-in
+got the focus, pressing the <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Tab</SPAN></B></FONT>
+will both move the focus to a new widget and validate the text. You
+can tell if a value has been validated because the type-in will
+rewrite your input in the correct format; in general, this means that
+the units abbreviation will appear. For example, if you typed <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">15
+&frac12;</SPAN></SPAN></FONT> in the <FONT FACE="Helvetica, sans-serif"><B>Length</B></FONT>
+field and then pressed <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Tab</SPAN></B></FONT>,
+the field would be rewritten to contain <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">15
+&frac12;&rdquo;</SPAN></SPAN></FONT>.</P>
+<P CLASS="western" ALIGN=LEFT>When you complete specification of the
+board and select <FONT FACE="Helvetica, sans-serif"><B>Finish</B></FONT>,
+<VAR CLASS="western">lignumCAD</VAR> will create the part page and
+the solid.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/part_field.png" NAME="Graphic5" ALT="Field part" ALIGN=BOTTOM width=402 height=444 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>Here, we're looking at the top of the
+solid in wireframe mode. You can use the either the mouse or the
+keyboard to adjust the view of the solid. Here's a table of actions.</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0 STYLE="page-break-before: always">
+	<COL WIDTH=95*>
+	<COL WIDTH=75*>
+	<COL WIDTH=85*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=37%>
+				<P CLASS="western">View Action</P>
+			</TH>
+			<TH WIDTH=29%>
+				<P CLASS="western">Mouse</P>
+			</TH>
+			<TH WIDTH=33%>
+				<P CLASS="western">Keyboard</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Spin counter-clockwise about vertical axis</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Left button drag left</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Ctrl+Left</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Spin clockwise about vertical axis</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Left button drag right</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Ctrl+Right</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Spin counter-clockwise about horizontal axis</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Left button drag up</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Ctrl+Up</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Spin clockwise about horizontal axis</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Left button drag down</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Ctrl+Down</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Pan left</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Middle button drag left</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Left</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Pan right</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Middle button drag right</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Right</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Pan up</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Middle button drag up</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Up</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Pan down 
+				</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Middle button drag down</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Down</SPAN></B></FONT>
+				arrow key</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Zoom out</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Wheel up</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Page
+				Up</SPAN></B></FONT></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=37%>
+				<P CLASS="western">Zoom in</P>
+			</TD>
+			<TD WIDTH=29%>
+				<P CLASS="western">Wheel down</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western"><FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Page
+				Down</SPAN></B></FONT></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P CLASS="western">The object in the middle of the screen represents
+the origin of the coordinate system in which the solid is defined.
+Some details to understand about it are described in the figure.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/Part_html_m2b940d67.png" NAME="Object4" ALIGN=MIDDLE width=558 height=272></P>
+<P CLASS="western" ALIGN=LEFT>On a Part page, the context menu now
+has a few additional options.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/part_context_menu.png" NAME="Graphic3" ALT="Part context menu" ALIGN=BOTTOM width=262 height=190 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>In addition to the <FONT FACE="Helvetica, sans-serif"><B>Restore
+view</B></FONT> choice, you can also select from several predefined
+orientations in <FONT FACE="Helvetica, sans-serif"><B>Quick Views</B></FONT>.
+Note that picking a quick view only changes the orientation of the
+view, not the scale. You can also toggle display of the origin
+coordinate system. Finally, there is an addition display option:
+<FONT FACE="Helvetica, sans-serif"><B>Hidden Line</B></FONT>. Here is
+a set of images of the board in the various display options.</P>
+<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=85*>
+	<COL WIDTH=85*>
+	<COL WIDTH=85*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TD WIDTH=33%>
+				<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/part_outline.png" NAME="Graphic6" ALT="Outline view of part" ALIGN=MIDDLE width=212 height=330 BORDER=0></P>
+				<P CLASS="western" ALIGN=CENTER>Outline</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/part_hidden.png" NAME="Graphic7" ALT="Hidden line view of part" ALIGN=MIDDLE width=212 height=330 BORDER=0></P>
+				<P CLASS="western" ALIGN=CENTER>Hidden Line</P>
+			</TD>
+			<TD WIDTH=33%>
+				<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/part_solid.png" NAME="Graphic8" ALT="Solid view of part" ALIGN=MIDDLE width=212 height=330 BORDER=0></P>
+				<P CLASS="western" ALIGN=CENTER>Solid</P>
+			</TD>
+		</TR>
+	</THEAD>
+</TABLE>
+<P CLASS="western" ALIGN=LEFT>The field of the top is simple, so
+there are no further milling operations which need to be performed on
+it. However, we do need to assign a material to the part. Bring up
+the Material dialog through the <FONT FACE="Helvetica, sans-serif"><B>Tools|Material</B></FONT>
+menu option and select <FONT FACE="Helvetica, sans-serif"><B>Eastern
+White Pine</B></FONT> as the material.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/part_material_dialog.png" NAME="Graphic4" ALT="Part Material dialog" ALIGN=BOTTOM width=418 height=437 BORDER=0></P>
+<P CLASS="western">The menu presents the common name, the botanical
+name and some assorted attributes of the material. It also shows the
+cosmetic attributes which will be applied to the solid. When the part
+is shown in <FONT FACE="Helvetica, sans-serif"><B>Solid</B></FONT>
+mode, the solid will be drawn with the <FONT FACE="Helvetica, sans-serif"><B>Solid
+Color</B></FONT>. In <FONT FACE="Helvetica, sans-serif"><B>Texture</B></FONT>
+mode, the program attempts to use OpenGL texture mapping to make the
+image more realistic.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/part_textured.png" NAME="Graphic9" ALT="Textured view of part" ALIGN=BOTTOM width=274 height=312 BORDER=0></P>
+<P CLASS="western" ALIGN=LEFT>Once the part is created, it possible
+to resize it similarly to rectangles in a sketch. If you click on
+(i.e., activate) the solid, it will show both resize handles and
+dimensions which can be manipulated. The dimensions shown are the
+same as the parameters in the part wizard. Here's an example of the
+top field part in activated mode.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/part_activated.png" NAME="Graphic10" ALT="Part activated" ALIGN=BOTTOM width=424 height=474 BORDER=0></P>
+<P CLASS="western">Clicking on the handles and dragging them will
+resize the solid. Double click on the dimension to bring up its
+editor.</P>
+<P CLASS="western">To finish this tutorial section, create the
+remaining parts in the table's bill of materials.</P>
+<CENTER>
+	<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+		<COL WIDTH=36*>
+		<COL WIDTH=33*>
+		<COL WIDTH=148*>
+		<COL WIDTH=40*>
+		<THEAD>
+			<TR VALIGN=TOP>
+				<TH WIDTH=14%>
+					<P CLASS="western">Part</P>
+				</TH>
+				<TH WIDTH=13%>
+					<P CLASS="western">Template</P>
+				</TH>
+				<TH WIDTH=58%>
+					<P CLASS="western">Parameters</P>
+				</TH>
+				<TH WIDTH=16%>
+					<P CLASS="western">Quantity</P>
+				</TH>
+			</TR>
+		</THEAD>
+		<TBODY>
+			<TR>
+				<TD WIDTH=14% VALIGN=TOP>
+					<P CLASS="western">Top field</P>
+				</TD>
+				<TD WIDTH=13% VALIGN=TOP>
+					<P CLASS="western">Board</P>
+				</TD>
+				<TD WIDTH=58% VALIGN=TOP>
+					<P CLASS="western">Length 15 &frac12;&rdquo;, Width 16&rdquo;,
+					Thickness &frac34;&rdquo;</P>
+				</TD>
+				<TD WIDTH=16% VALIGN=BOTTOM SDVAL="1" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>1</P>
+				</TD>
+			</TR>
+			<TR>
+				<TD WIDTH=14% VALIGN=TOP>
+					<P CLASS="western">Breadboard edge</P>
+				</TD>
+				<TD WIDTH=13% VALIGN=TOP>
+					<P CLASS="western">Board</P>
+				</TD>
+				<TD WIDTH=58% VALIGN=TOP>
+					<P CLASS="western">Length 16&rdquo;, Width 2&rdquo;, Thickness
+					&frac34;&rdquo;</P>
+				</TD>
+				<TD WIDTH=16% VALIGN=BOTTOM SDVAL="2" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>2</P>
+				</TD>
+			</TR>
+			<TR>
+				<TD WIDTH=14% VALIGN=TOP>
+					<P CLASS="western">Front skirt</P>
+				</TD>
+				<TD WIDTH=13% VALIGN=TOP>
+					<P CLASS="western">Board</P>
+				</TD>
+				<TD WIDTH=58% VALIGN=TOP>
+					<P CLASS="western">Length 13, Width 5 &frac12;&rdquo;,
+					Thickness: &frac34;&rdquo;</P>
+				</TD>
+				<TD WIDTH=16% VALIGN=BOTTOM SDVAL="2" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>2</P>
+				</TD>
+			</TR>
+			<TR>
+				<TD WIDTH=14% VALIGN=TOP>
+					<P CLASS="western">Rear skirt</P>
+				</TD>
+				<TD WIDTH=13% VALIGN=TOP>
+					<P CLASS="western">Board</P>
+				</TD>
+				<TD WIDTH=58% VALIGN=TOP>
+					<P CLASS="western">Length 13&rdquo;, Width 5 &frac12;&rdquo;,
+					Thickness &frac34;&rdquo;</P>
+				</TD>
+				<TD WIDTH=16% VALIGN=BOTTOM SDVAL="1" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>1</P>
+				</TD>
+			</TR>
+			<TR>
+				<TD WIDTH=14% VALIGN=TOP>
+					<P CLASS="western">Side skirt</P>
+				</TD>
+				<TD WIDTH=13% VALIGN=TOP>
+					<P CLASS="western">Board</P>
+				</TD>
+				<TD WIDTH=58% VALIGN=TOP>
+					<P CLASS="western">Length 9 &frac12;&rdquo;, Width 5 &frac12;&rdquo;,
+					Thickness &frac34;&rdquo;</P>
+				</TD>
+				<TD WIDTH=16% VALIGN=BOTTOM SDVAL="2" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>2</P>
+				</TD>
+			</TR>
+			<TR>
+				<TD WIDTH=14% VALIGN=TOP>
+					<P CLASS="western">Leg</P>
+				</TD>
+				<TD WIDTH=13% VALIGN=TOP>
+					<P CLASS="western">Tapered Leg</P>
+				</TD>
+				<TD WIDTH=58% VALIGN=TOP>
+					<P CLASS="western">Length 26 &frac14;&rdquo;, Top length 7&rdquo;,
+					Top width 1 &frac12;&rdquo;, Bottom width &frac34;&rdquo;</P>
+				</TD>
+				<TD WIDTH=16% VALIGN=BOTTOM SDVAL="4" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>4</P>
+				</TD>
+			</TR>
+		</TBODY>
+	</TABLE>
+</CENTER>
+<P CLASS="western" ALIGN=LEFT><FONT COLOR="#ff0000">Note: as of
+</FONT><VAR CLASS="western"><FONT COLOR="#ff0000">lignumCAD </FONT></VAR><FONT COLOR="#ff0000">version
+0.2, you cannot modify a part in any way other than by changing its
+predefined parameters. lignum Computing, Inc. would appreciate any
+suggestions for additional functionality.</FONT></P>
+</BODY>
+</HTML>

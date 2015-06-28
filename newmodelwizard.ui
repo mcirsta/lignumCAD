@@ -1,0 +1,481 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>NewModelWizard</class>
+<widget class="QWizard">
+    <property name="name">
+        <cstring>NewModelWizard</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>581</width>
+            <height>402</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>New Model Wizard</string>
+    </property>
+    <property name="icon">
+        <pixmap>lignumCAD.png</pixmap>
+    </property>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>NewModelPage</cstring>
+        </property>
+        <attribute name="title">
+            <string>Enter the Information about the New Model</string>
+        </attribute>
+        <grid>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>11</number>
+            </property>
+            <property name="spacing">
+                <number>6</number>
+            </property>
+            <widget class="QLineEdit" row="0" column="2">
+                <property name="name">
+                    <cstring>modelNameEdit</cstring>
+                </property>
+                <property name="whatsThis" stdset="0">
+                    <string>&lt;p&gt;&lt;b&gt;Model Name&lt;/b&gt;&lt;/p&gt;
+Enter a name for the model.</string>
+                </property>
+            </widget>
+            <widget class="QLabel" row="1" column="1">
+                <property name="name">
+                    <cstring>fileNameLabel</cstring>
+                </property>
+                <property name="text">
+                    <string>&amp;File Name:</string>
+                </property>
+                <property name="buddy" stdset="0">
+                    <cstring>modelFileChooser</cstring>
+                </property>
+            </widget>
+            <widget class="QLabel" row="0" column="3">
+                <property name="name">
+                    <cstring>versionLabel</cstring>
+                </property>
+                <property name="text">
+                    <string>&amp;Version:</string>
+                </property>
+                <property name="buddy" stdset="0">
+                    <cstring>versionSpinBox</cstring>
+                </property>
+            </widget>
+            <widget class="QSpinBox" row="0" column="4">
+                <property name="name">
+                    <cstring>versionSpinBox</cstring>
+                </property>
+                <property name="maxValue">
+                    <number>1000</number>
+                </property>
+                <property name="minValue">
+                    <number>1</number>
+                </property>
+                <property name="whatsThis" stdset="0">
+                    <string>&lt;p&gt;&lt;b&gt;Version Number&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;A change in version number is usually used to represent major changes to the model. For example, if Version 1 proved too impractical to construct and you decided to simplify the model, it might become Version 2.&lt;/p&gt;</string>
+                </property>
+            </widget>
+            <widget class="QLabel" row="4" column="1">
+                <property name="name">
+                    <cstring>modificationLabel</cstring>
+                </property>
+                <property name="text">
+                    <string>Modification Time:</string>
+                </property>
+            </widget>
+            <widget class="QLabel" row="2" column="1">
+                <property name="name">
+                    <cstring>descriptionLabel</cstring>
+                </property>
+                <property name="text">
+                    <string>&amp;Description:</string>
+                </property>
+                <property name="alignment">
+                    <set>AlignTop</set>
+                </property>
+                <property name="buddy" stdset="0">
+                    <cstring>descriptionEdit</cstring>
+                </property>
+            </widget>
+            <widget class="QTextEdit" row="2" column="2" rowspan="1" colspan="3">
+                <property name="name">
+                    <cstring>descriptionEdit</cstring>
+                </property>
+                <property name="whatsThis" stdset="0">
+                    <string>&lt;p&gt;&lt;b&gt;Description&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Enter a brief description of the model which is being constructed. This information is not used anywhere in &lt;i&gt;lignumCAD&lt;/i&gt;; it is purely to aid you in identifying the model.&lt;/p&gt;</string>
+                </property>
+            </widget>
+            <widget class="QLabel" row="1" column="3">
+                <property name="name">
+                    <cstring>revisionLabel</cstring>
+                </property>
+                <property name="text">
+                    <string>&amp;Revision:</string>
+                </property>
+                <property name="buddy" stdset="0">
+                    <cstring>revisionSpinBox</cstring>
+                </property>
+            </widget>
+            <widget class="lCFileChooser" row="1" column="2">
+                <property name="name">
+                    <cstring>modelFileChooser</cstring>
+                </property>
+                <property name="sizePolicy">
+                    <sizepolicy>
+                        <hsizetype>5</hsizetype>
+                        <vsizetype>1</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+                <property name="whatsThis" stdset="0">
+                    <string>&lt;p&gt;&lt;b&gt;File Name&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Enter the name of the file in which to store
+the model. Normally, this is automatically completed
+when you enter the model name.&lt;/p&gt;
+&lt;p&gt;You can also click the &lt;b&gt;...&lt;/b&gt; button to bring up a
+standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</string>
+                </property>
+            </widget>
+            <widget class="QSpinBox" row="1" column="4">
+                <property name="name">
+                    <cstring>revisionSpinBox</cstring>
+                </property>
+                <property name="whatsThis" stdset="0">
+                    <string>&lt;p&gt;&lt;b&gt;Revision Number&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;A change in revision number is usually used to represent minor changes to the model. For example, if you need to change a few dimensions, you might increment the revision number.&lt;/p&gt;</string>
+                </property>
+            </widget>
+            <widget class="QLabel" row="3" column="1">
+                <property name="name">
+                    <cstring>creationLabel</cstring>
+                </property>
+                <property name="text">
+                    <string>Creation Time:</string>
+                </property>
+            </widget>
+            <widget class="QLayoutWidget" row="0" column="0" rowspan="5" colspan="1">
+                <property name="name">
+                    <cstring>Layout4</cstring>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>0</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                    <spacer>
+                        <property name="name">
+                            <cstring>Spacer35</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>newWizardPixmap</cstring>
+                        </property>
+                        <property name="pixmap">
+                            <pixmap>shop.png</pixmap>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>true</bool>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string>The author struggles with gluing edge banding on a piece of oak plywood.</string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>The author struggles with gluing edge banding on a piece of oak plywood.</string>
+                        </property>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>Spacer36</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>0</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </vbox>
+            </widget>
+            <widget class="QLabel" row="0" column="1">
+                <property name="name">
+                    <cstring>modelNameLabel</cstring>
+                </property>
+                <property name="text">
+                    <string>&amp;Model Name:</string>
+                </property>
+                <property name="buddy" stdset="0">
+                    <cstring>modelNameEdit</cstring>
+                </property>
+            </widget>
+            <widget class="QLabel" row="3" column="2" rowspan="1" colspan="3">
+                <property name="name">
+                    <cstring>creationDateLabel</cstring>
+                </property>
+                <property name="frameShape">
+                    <enum>Box</enum>
+                </property>
+                <property name="frameShadow">
+                    <enum>Sunken</enum>
+                </property>
+                <property name="text">
+                    <string>TextLabel2</string>
+                </property>
+            </widget>
+            <widget class="QLabel" row="4" column="2" rowspan="1" colspan="3">
+                <property name="name">
+                    <cstring>modificationDateLabel</cstring>
+                </property>
+                <property name="frameShape">
+                    <enum>Box</enum>
+                </property>
+                <property name="frameShadow">
+                    <enum>Sunken</enum>
+                </property>
+                <property name="text">
+                    <string>TextLabel2</string>
+                </property>
+            </widget>
+        </grid>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>InitialPagePage</cstring>
+        </property>
+        <attribute name="title">
+            <string>Select an Initial Page for Model</string>
+        </attribute>
+        <grid>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>11</number>
+            </property>
+            <property name="spacing">
+                <number>6</number>
+            </property>
+            <spacer row="0" column="0">
+                <property name="name">
+                    <cstring>Spacer33</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Vertical</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>0</width>
+                        <height>20</height>
+                    </size>
+                </property>
+            </spacer>
+            <widget class="QLabel" row="1" column="0" rowspan="3" colspan="1">
+                <property name="name">
+                    <cstring>newWizardPixmap_2</cstring>
+                </property>
+                <property name="pixmap">
+                    <pixmap>shop.png</pixmap>
+                </property>
+                <property name="scaledContents">
+                    <bool>true</bool>
+                </property>
+                <property name="toolTip" stdset="0">
+                    <string>The author struggles with gluing edge banding on a piece of oak plywood.</string>
+                </property>
+            </widget>
+            <spacer row="4" column="0">
+                <property name="name">
+                    <cstring>Spacer34</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Vertical</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>0</width>
+                        <height>20</height>
+                    </size>
+                </property>
+            </spacer>
+            <spacer row="2" column="1">
+                <property name="name">
+                    <cstring>Spacer29</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>20</width>
+                        <height>0</height>
+                    </size>
+                </property>
+            </spacer>
+            <spacer row="2" column="3">
+                <property name="name">
+                    <cstring>Spacer32</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>20</width>
+                        <height>0</height>
+                    </size>
+                </property>
+            </spacer>
+            <spacer row="0" column="2" rowspan="2" colspan="1">
+                <property name="name">
+                    <cstring>Spacer30</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Vertical</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>0</width>
+                        <height>20</height>
+                    </size>
+                </property>
+            </spacer>
+            <spacer row="3" column="2" rowspan="2" colspan="1">
+                <property name="name">
+                    <cstring>Spacer31</cstring>
+                </property>
+                <property name="orientation">
+                    <enum>Vertical</enum>
+                </property>
+                <property name="sizeType">
+                    <enum>Expanding</enum>
+                </property>
+                <property name="sizeHint">
+                    <size>
+                        <width>0</width>
+                        <height>20</height>
+                    </size>
+                </property>
+            </spacer>
+            <widget class="QGroupBox" row="2" column="2">
+                <property name="name">
+                    <cstring>initialPageGroupBox</cstring>
+                </property>
+                <property name="title">
+                    <string>Page Types</string>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>6</number>
+                    </property>
+                </vbox>
+            </widget>
+        </grid>
+    </widget>
+</widget>
+<connections>
+    <connection>
+        <sender>modelNameEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>NewModelWizard</receiver>
+        <slot>modelNameEdit_textChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>NewModelWizard</sender>
+        <signal>selected(const QString&amp;)</signal>
+        <receiver>NewModelWizard</receiver>
+        <slot>NewModelWizard_selected(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>NewModelWizard</sender>
+        <signal>helpClicked()</signal>
+        <receiver>NewModelWizard</receiver>
+        <slot>NewModelWizard_helpClicked()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>modelNameEdit</tabstop>
+    <tabstop>versionSpinBox</tabstop>
+    <tabstop>modelFileChooser</tabstop>
+    <tabstop>revisionSpinBox</tabstop>
+    <tabstop>descriptionEdit</tabstop>
+</tabstops>
+<includes>
+    <include location="global" impldecl="in implementation">qapplication.h</include>
+    <include location="global" impldecl="in implementation">qvaluevector.h</include>
+    <include location="global" impldecl="in implementation">qradiobutton.h</include>
+    <include location="local" impldecl="in implementation">pagefactory.h</include>
+    <include location="global" impldecl="in implementation">qbuttongroup.h</include>
+    <include location="local" impldecl="in implementation">newmodelwizard.ui.h</include>
+</includes>
+<forwards>
+    <forward>class QRadioButton;</forward>
+    <forward>class QButtonGroup;</forward>
+</forwards>
+<variables>
+    <variable>QButtonGroup* initialPageButtonGroup;</variable>
+    <variable>QPtrList&lt;QRadioButton&gt; initialPageRadioButtons;</variable>
+</variables>
+<slots>
+    <slot>init()</slot>
+    <slot access="private" specifier="non virtual">modelNameEdit_textChanged( const QString &amp; text )</slot>
+    <slot access="private" specifier="non virtual">initialPageSelected( void )</slot>
+    <slot access="private" specifier="non virtual">NewModelWizard_selected( const QString &amp; )</slot>
+    <slot>NewModelWizard_helpClicked()</slot>
+    <slot specifier="non virtual">selectedPage( uint &amp; type )</slot>
+    <slot specifier="non virtual">unsetInitialPages( void )</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

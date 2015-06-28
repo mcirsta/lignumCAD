@@ -1,0 +1,859 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>lignumCAD Technical Reference</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 6.0  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Allen Barnett">
+	<META NAME="CREATED" CONTENT="20020920;21314600">
+	<META NAME="CHANGEDBY" CONTENT="Allen Barnett">
+	<META NAME="CHANGED" CONTENT="20021217;8534400">
+	<META NAME="CLASSIFICATION" CONTENT="Technical reference">
+	<META NAME="DESCRIPTION" CONTENT="Copyright (C) 2002 lignum Computing, Inc.">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin: 1in }
+		P { margin-bottom: 0.08in; page-break-before: auto }
+		P.western { font-family: "Times", serif; font-weight: medium }
+		H1 { margin-bottom: 0.08in }
+		H1.western { font-family: "Arial", sans-serif; font-size: 16pt }
+		H1.cjk { font-size: 14pt; font-weight: medium }
+		H1.ctl { font-size: 14pt; font-weight: medium }
+		H2 { margin-bottom: 0.08in }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic }
+		H2.cjk { font-size: 14pt; font-weight: medium }
+		H2.ctl { font-size: 14pt; font-weight: medium }
+		H3 { margin-bottom: 0.08in }
+		H3.western { font-family: "Arial", sans-serif }
+		H3.cjk { font-weight: medium }
+		H3.ctl { font-weight: medium }
+		TD P { margin-bottom: 0.08in; page-break-before: auto }
+		TD P.western { font-family: "Times", serif; font-weight: medium }
+		H4 { margin-bottom: 0.08in }
+		H4.western { font-family: "Albany", sans-serif; font-size: 11pt; font-style: italic }
+		H4.cjk { font-size: 11pt; font-style: italic }
+		H4.ctl { font-size: 11pt; font-style: italic }
+		TH P { margin-bottom: 0.08in; page-break-before: auto }
+		TH P.western { font-family: "Times", serif; font-style: italic }
+		TH P.cjk { font-style: italic }
+		TH P.ctl { font-style: italic }
+		VAR.cjk { font-style: normal }
+		VAR.ctl { font-style: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<H1 CLASS="western">Technical Reference</H1>
+<P CLASS="western">This section describes the mathematical and
+program design bases of <VAR CLASS="western">lignumCAD</VAR>.</P>
+<H2 CLASS="western">Mathematical Basis</H2>
+<P CLASS="western"><VAR CLASS="western">lignumCAD</VAR> uses three
+different types of mathematics: geometry, topology and affine spaces.
+This section gives a brief overview of each of these. The details are
+developed more fully in later sections. Most of this material is
+described very well in <EM>Computer Graphics: Principles and
+Practice</EM>, James D. Foley, Andries van Dam, Steven K. Feiner and
+John F. Hughes, Addison-Wesley, 1996. <VAR CLASS="western">lignumCAD</VAR>
+uses the geometry and topology facilities of OpenCASCADE; its
+<A HREF="http://www.opencascade.org/devversion/doc.php">documentation</A>
+is very good. Affine spaces are at the heart of OpenGL, which also
+has excellent <A HREF="http://www.opengl.org/developers/documentation/index.html">documentation</A>.</P>
+<H3 CLASS="western">Geometry</H3>
+<P CLASS="western">The first type of mathematics used in <VAR CLASS="western">lignumCAD</VAR>
+is geometry. Geometry is used to represent the real world surfaces
+which comprise the computer's model of a piece of furniture. It is
+easy to represent the results of operations like cross-cutting and
+ripping on a table saw with a plane (that's the two-dimensional,
+geometric plane, not the hand plane: Already we're running into
+difficulties of vocabulary). Geometry in <VAR CLASS="western">lignumCAD</VAR>
+consists of familiar, one- and two-dimensional objects such as lines,
+circles, planes, cylinders and cones and more complicated types such
+as splines and b-spline surfaces. In general, geometric objects are
+indefinite in size. For example, a plane is essentially infinite in
+both dimensions. A cylinder is bounded in one dimension (the
+round-and-round) dimension, but it is infinite in the axial
+dimension.</P>
+<H3 CLASS="western">Topology</H3>
+<P CLASS="western">The second type of mathematics used in <VAR CLASS="western">lignumCAD</VAR>
+goes by the name of <EM>topology</EM>. Topology describes how
+geometric objects are connected in order to form solids. In this
+sense, topology is more like a type of logic than what we would
+traditionally consider mathematics. For example, the blank board is
+represented in the program as a rectangular parallelepiped, an RPP.
+RPP's are composed of six planes with given positions in space.
+However, as we noted above, planes are infinite entities while the
+RPP is a finite solid. It is the topology of the RPP which makes it
+so. Topological solids have these attributes:</P>
+<UL>
+	<LI><P CLASS="western">A solid is composed of a set of <EM>faces</EM>
+	which enclose a finite volume of three-dimensional space. A face is
+	a bounded section of an otherwise indefinite supporting geometric
+	surface. In the RPP, each face is based on (i.e., supported by) a
+	plane.</P>
+	<LI><P CLASS="western">Each face contains a <EM>wire</EM> which
+	defines the boundary of the face on the supporting geometric
+	surface. In the RPP, the wire on each face is a rectangle.</P>
+	<LI><P CLASS="western">A wire is composed of a connected series of
+	<EM>edges</EM>. An edge is a one-dimensional curve which is generate
+	by the intersection of the face's surface with its neighboring
+	faces' surfaces. In the RPP, there are four edges in each face's
+	wire. Note that an edge is always shared by exactly two faces.</P>
+	<LI><P CLASS="western">There is a <EM>vertex</EM> at the
+	intersection of each edge. A vertex is always shared by at least
+	three faces.</P>
+</UL>
+<P CLASS="western">This figure shows the various topological elements
+for the RPP.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_m54ba252f.png" NAME="Object107" ALIGN=BOTTOM width=294 height=324></P>
+<P CLASS="western">This representation of solid geometry is usually
+called a <EM>boundary surface representation</EM> (BSP).</P>
+<H3 CLASS="western">Affine Spaces</H3>
+<P CLASS="western">Together, geometry and topology define the
+computer's mathematical representation of solid objects. How solids
+are displayed on the screen is described by the mathematics of affine
+spaces. The name <EM>affine</EM> evidently comes from the French word
+<EM>affin</EM>, meaning &ldquo;akin to&rdquo;. A <EM>space</EM> in
+mathematics is a collection of objects (a <EM>set</EM>) whose
+properties all meet a given list of requirements (called the <EM>axioms</EM>
+of the system). In an affine space, the objects which comprise the
+set are called <EM>points</EM>. The definition of an affine space is:</P>
+<OL>
+	<LI><P CLASS="western">There is an associated <EM>vector space</EM>.</P>
+	<LI><P CLASS="western">There is an operation between two points
+	called <EM>difference</EM>. The difference between two points is an
+	element of the vector space.</P>
+	<LI><P CLASS="western">There is an operation between a point and a
+	vector called <EM>addition</EM>. Adding a vector to a point yields
+	another point.</P>
+</OL>
+<P CLASS="western">So, what's a vector space? A vector space is a set
+of objects called vectors, also with two associated operations:</P>
+<OL>
+	<LI><P CLASS="western">Addition of a vector to another vector.</P>
+	<LI><P CLASS="western">Multiplication of a vector by a scalar.</P>
+</OL>
+<P CLASS="western">These operations must meet some additional
+criteria (here, lowercase letters represent vectors and uppercase
+letters represent scalars):</P>
+<OL>
+	<LI><P CLASS="western">For addition:</P>
+	<OL>
+		<LI><P CLASS="western">It is commutative (i.e., a + b = b + a)</P>
+		<LI><P CLASS="western">Associative (i.e., a + (b + c) = (a + b) +
+		c)</P>
+		<LI><P CLASS="western">There must exist an identity vector, i, such
+		that a + i = a.</P>
+		<LI><P CLASS="western">There must exist an inverse for each vector
+		such that a + b = i. This can also be written as: b = -a.</P>
+	</OL>
+	<LI><P CLASS="western">For multiplication by a scalar:</P>
+	<OL>
+		<LI><P CLASS="western">(A B) a = A (B a), where A and B are
+		scalars.</P>
+		<LI><P CLASS="western">1 a = a.</P>
+		<LI><P CLASS="western">(A + B) a = A a + B a</P>
+		<LI><P CLASS="western">A (a + b) = A a + A b</P>
+	</OL>
+</OL>
+<P CLASS="western">Note that so far, we have said nothing about what
+the points and vectors actually are. To borrow a quote from the
+mathematician <A HREF="http://www-gap.dcs.st-and.ac.uk/~history/Mathematicians/Hilbert.html">David
+Hilbert (1862-1943)</A>: &ldquo;One must be able to say at all times
+&ndash; instead of points, lines and planes &ndash; tables, chairs
+and beer mugs.&rdquo; So, as long as we can find some collection of
+objects which meet these criteria, we have a genuine affine space.</P>
+<P CLASS="western">In <VAR CLASS="western">lignumCAD</VAR>, we use
+vector spaces based on 
+<IMG SRC="generated/TechnicalReference_html_m4d41f48a.png" NAME="Object108" ALIGN=ABSMIDDLE width=26 height=31>,
+the set of all ordered <EM>n</EM>-tuples of real numbers. In
+particular, we use 
+<IMG SRC="generated/TechnicalReference_html_m6b029faa.png" NAME="Object109" ALIGN=ABSMIDDLE width=26 height=30>,
+<IMG SRC="generated/TechnicalReference_html_73e0c6c1.png" NAME="Object110" ALIGN=ABSMIDDLE width=26 height=30>
+and 
+<IMG SRC="generated/TechnicalReference_html_m54dc4219.png" NAME="Object111" ALIGN=ABSMIDDLE width=26 height=30>.
+For example, a element of 
+<IMG SRC="generated/TechnicalReference_html_m6b029faa.png" NAME="Object113" ALIGN=ABSMIDDLE width=26 height=30>
+is [0, 42], an element of 
+<IMG SRC="generated/TechnicalReference_html_73e0c6c1.png" NAME="Object112" ALIGN=ABSMIDDLE width=26 height=30>
+is [1,2,-3 &frac12;], and an element of 
+<IMG SRC="generated/TechnicalReference_html_m54dc4219.png" NAME="Object114" ALIGN=ABSMIDDLE width=26 height=30>
+is [-2,0,3,1].</P>
+<P CLASS="western">What does this have to do with displaying
+graphics? The basic problem with working with solid geometry on a
+computer (or paper, for that matter) is that the screen is two
+dimensional. By defining certain operations on points and vectors,
+called <EM>projection transformations</EM>, we can compute the
+two-dimensional analog of looking at a three-dimensional object.</P>
+<H3 CLASS="western">Notation</H3>
+<H4 CLASS="western">Coordinate Systems</H4>
+<P CLASS="western">The vector space 
+<IMG SRC="generated/TechnicalReference_html_m4d41f48a.png" NAME="Object190" ALIGN=ABSMIDDLE width=26 height=31>
+(the set of all ordered <I>n</I>-tuples of real numbers) is too
+abstract a concept for our purposes: We must supply a physical
+meaning (even if the computer doesn't care). We will assume that each
+triple represents a location in physical space. In order for this to
+have meaning, though, we have to specify a <EM>metric</EM> on which
+these locations are based. The metric for <VAR CLASS="western">lignumCAD</VAR>
+is based on Euclidean geometry (which, to the best of our knowledge,
+is <A HREF="http://lanl.arXiv.org/abs/astro-ph/?0005124">the true
+shape of space</A>). This is also called Cartesian geometry. The
+fundamental representation of this metric space is the coordinate
+system. For example, for 
+<IMG SRC="generated/TechnicalReference_html_m6b029faa.png" NAME="Object191" ALIGN=ABSMIDDLE width=26 height=30>,
+we have a two-dimensional coordinate system.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_m6987e86b.png" NAME="Object192" ALIGN=BOTTOM width=245 height=215></P>
+<P CLASS="western" ALIGN=LEFT>The directed lines which define the
+locations on the plane are called the x axis and the y axis. The
+location [0,0] is called the origin.</P>
+<P CLASS="western" ALIGN=LEFT>In three dimensions, the coordinate
+system looks like this figure.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_m5ee76bb0.png" NAME="Object193" ALIGN=BOTTOM width=255 height=215></P>
+<P CLASS="western" ALIGN=LEFT>Note that the two-dimensional
+coordinate system is just the three-dimensional coordinate system for
+<IMG SRC="generated/TechnicalReference_html_6f285226.png" NAME="Object194" ALIGN=ABSMIDDLE width=39 height=27>.</P>
+<H4 CLASS="western">Point</H4>
+<P CLASS="western">As discussed above, a point in an affine space is
+defined as a ordered set of two, three or four values. In <VAR CLASS="western">lignumCAD</VAR>,
+a point is explicitly a position in a two-dimensional or
+three-dimensional Cartesian coordinate system. The coordinate axes
+are labeled <VAR CLASS="western">x</VAR>, <VAR CLASS="western">y</VAR>
+and <VAR CLASS="western">z </VAR>(this was Decartes idea). A point is
+represented by an uppercase letter with a arrow symbol over it, e.g.
+a point in three dimensions would be  
+<IMG SRC="generated/TechnicalReference_html_m749c0c08.png" NAME="Object48" ALIGN=ABSMIDDLE width=112 height=31>.
+What can you do with a point? Basically, the only operations on
+points which are allowed are taking the difference between two
+points, which yields a vector, and adding a vector to a point, which
+yields a point.</P>
+<H4 CLASS="western">Vector</H4>
+<P CLASS="western">Although they are in some sense subsidiary to
+points, vectors are substantially more interesting. A vector is
+represented by a lower case letter with an arrow symbol over it, e.g.
+<IMG SRC="generated/TechnicalReference_html_m25c5add4.png" NAME="Object106" ALIGN=ABSMIDDLE width=17 height=27>.
+As discussed above, a vector is defined as the difference between two
+points. In the Cartesian coordinate system interpretation of our
+affine space, the difference operation means the component-wise
+difference of the two points. For example, given two points, 
+<IMG SRC="generated/TechnicalReference_html_300ab776.png" NAME="Object49" ALIGN=ABSMIDDLE width=25 height=32>
+and 
+<IMG SRC="generated/TechnicalReference_html_7be41277.png" NAME="Object93" ALIGN=ABSMIDDLE width=26 height=32>,
+one possible vector is given by 
+<IMG SRC="generated/TechnicalReference_html_m58817246.png" NAME="Object50" ALIGN=ABSMIDDLE width=268 height=36>.
+In this case, the vector has one component for each coordinate system
+axis, so it can be represented as 
+<IMG SRC="generated/TechnicalReference_html_583790ac.png" NAME="Object115" ALIGN=ABSMIDDLE width=102 height=31>.</P>
+<P CLASS="western">The scalar length of a vector is given by its
+Cartesian size: 
+<IMG SRC="generated/TechnicalReference_html_2a8fbba4.png" NAME="Object51" ALIGN=ABSMIDDLE width=167 height=34>.
+In <VAR CLASS="western">lignumCAD</VAR>, vectors are frequently
+normalized such that they have unit length. Unit vectors are denoted
+with a hat instead of a vector, e.g. 
+<IMG SRC="generated/TechnicalReference_html_m2a50ab06.png" NAME="Object52" ALIGN=ABSMIDDLE width=51 height=56>.
+Multiplication or division of a vector by a scalar is defined as
+component-wise multiplication or division by the scalar.</P>
+<P CLASS="western">The scalar dot product of two vectors, 
+<IMG SRC="generated/TechnicalReference_html_ee47ad2.png" NAME="Object53" ALIGN=ABSMIDDLE width=22 height=27>and
+<IMG SRC="generated/TechnicalReference_html_16bdba3d.png" NAME="Object94" ALIGN=ABSMIDDLE width=22 height=27>,
+is given by 
+<IMG SRC="generated/TechnicalReference_html_m5c4da700.png" NAME="Object54" ALIGN=ABSMIDDLE width=190 height=31>.
+It is a well known result that the scalar dot product of two unit
+vectors is equivalent to the cosine of the angle between them. Also,
+the length of a vector is given by the square root of its dot product
+with itself.</P>
+<P CLASS="western">The vector cross product of two vectors, 
+<IMG SRC="generated/TechnicalReference_html_ee47ad2.png" NAME="Object55" ALIGN=ABSMIDDLE width=22 height=27>
+and 
+<IMG SRC="generated/TechnicalReference_html_16bdba3d.png" NAME="Object95" ALIGN=ABSMIDDLE width=22 height=27>,
+is given by 
+<IMG SRC="generated/TechnicalReference_html_76629672.png" NAME="Object56" ALIGN=ABSMIDDLE width=350 height=31>.</P>
+<H4 CLASS="western">Line</H4>
+<P CLASS="western">A (straight) line is defined by an origin, 
+<IMG SRC="generated/TechnicalReference_html_m51e5ca14.png" NAME="Object32" ALIGN=ABSMIDDLE width=24 height=27>,
+and a normalized direction vector, 
+<IMG SRC="generated/TechnicalReference_html_314256c1.png" NAME="Object33" ALIGN=ABSMIDDLE width=14 height=27>.
+Any point on the line is parameterized by the distance from the
+line's origin: 
+<IMG SRC="generated/TechnicalReference_html_m3ea2a865.png" NAME="Object34" ALIGN=ABSMIDDLE width=103 height=27>
+(note how this definition combines everything we know about points
+and vectors: 
+<IMG SRC="generated/TechnicalReference_html_36e4bacd.png" NAME="Object116" ALIGN=ABSMIDDLE width=19 height=27>
+is defined as the sum of a point and a vector, and the vector is
+multiplied by a scalar). The tangent vector of a line is just 
+<IMG SRC="generated/TechnicalReference_html_314256c1.png" NAME="Object42" ALIGN=ABSMIDDLE width=14 height=27>.
+You can find the parameter for a point on the line by 
+<IMG SRC="generated/TechnicalReference_html_39677300.png" NAME="Object92" ALIGN=ABSMIDDLE width=97 height=27>.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_m7e3b18c1.png" NAME="Object117" ALIGN=BOTTOM width=197 height=217></P>
+<H4 CLASS="western">Plane</H4>
+<P CLASS="western" ALIGN=LEFT>A plane is defined by an origin, 
+<IMG SRC="generated/TechnicalReference_html_77556c89.png" NAME="Object35" ALIGN=ABSMIDDLE width=21 height=27>,
+and a normalized normal vector, 
+<IMG SRC="generated/TechnicalReference_html_32d6f0fd.png" NAME="Object36" ALIGN=ABSMIDDLE width=17 height=27>.
+Any point, 
+<IMG SRC="generated/TechnicalReference_html_36e4bacd.png" NAME="Object37" ALIGN=ABSMIDDLE width=19 height=27>,
+on the plane satisfies the equation: 
+<IMG SRC="generated/TechnicalReference_html_m664a11c6.png" NAME="Object38" ALIGN=ABSMIDDLE width=95 height=27>.
+Points on the plane are parameterized by the two coordinates 
+<IMG SRC="generated/TechnicalReference_html_m4be6f424.png" NAME="Object39" ALIGN=ABSMIDDLE width=17 height=27>
+and 
+<IMG SRC="generated/TechnicalReference_html_d0f259a.png" NAME="Object96" ALIGN=ABSMIDDLE width=16 height=27>.
+In order for these parameters to yield unique positions, an
+arbitrary, but fixed, two-dimensional coordinate system must be
+defined on the plane. The plane coordinate system is defined by the
+orthogonal vectors 
+<IMG SRC="generated/TechnicalReference_html_287e9f58.png" NAME="Object40" ALIGN=ABSMIDDLE width=21 height=32>
+and 
+<IMG SRC="generated/TechnicalReference_html_df3f833.png" NAME="Object97" ALIGN=ABSMIDDLE width=21 height=27>.
+Therefore, any point on the plane may be parameterized by: 
+<IMG SRC="generated/TechnicalReference_html_m54b7308d.png" NAME="Object41" ALIGN=ABSMIDDLE width=157 height=32>.
+The figure shows a typical plane:</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_73588a79.png" NAME="Object118" ALIGN=BOTTOM width=197 height=217></P>
+<P CLASS="western">Also, given a point 
+<IMG SRC="generated/TechnicalReference_html_36e4bacd.png" NAME="Object44" ALIGN=ABSMIDDLE width=19 height=27>
+on the plane, the 
+<IMG SRC="generated/TechnicalReference_html_m4be6f424.png" NAME="Object45" ALIGN=ABSMIDDLE width=17 height=27>
+and 
+<IMG SRC="generated/TechnicalReference_html_d0f259a.png" NAME="Object98" ALIGN=ABSMIDDLE width=16 height=27>
+coordinates are determined by: 
+<IMG SRC="generated/TechnicalReference_html_m31b1b532.png" NAME="Object46" ALIGN=ABSMIDDLE width=102 height=27>
+and 
+<IMG SRC="generated/TechnicalReference_html_65ebeeb2.png" NAME="Object47" ALIGN=ABSMIDDLE width=101 height=27>.</P>
+<H3 CLASS="western">Distance of a point to a plane in a given
+direction</H3>
+<P CLASS="western" ALIGN=LEFT>Consider:</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_213daa0a.png" NAME="Object14" ALIGN=BOTTOM width=197 height=217></P>
+<P CLASS="western">A plane is defined by an origin, 
+<IMG SRC="generated/TechnicalReference_html_m3d6ad2bc.png" NAME="Object15" ALIGN=ABSMIDDLE width=22 height=24>,
+and a normal, 
+<IMG SRC="generated/TechnicalReference_html_32d6f0fd.png" NAME="Object16" ALIGN=ABSMIDDLE width=17 height=27>.
+Consider a point, 
+<IMG SRC="generated/TechnicalReference_html_36e4bacd.png" NAME="Object17" ALIGN=ABSMIDDLE width=19 height=27>,
+and a vector, 
+<IMG SRC="generated/TechnicalReference_html_314256c1.png" NAME="Object18" ALIGN=ABSMIDDLE width=14 height=27>.
+What is the distance, 
+<IMG SRC="generated/TechnicalReference_html_m6a909cd.png" NAME="Object21" ALIGN=ABSMIDDLE width=17 height=27>,
+from 
+<IMG SRC="generated/TechnicalReference_html_36e4bacd.png" NAME="Object19" ALIGN=ABSMIDDLE width=19 height=27>
+to the plane in the direction 
+<IMG SRC="generated/TechnicalReference_html_314256c1.png" NAME="Object20" ALIGN=ABSMIDDLE width=14 height=27>?
+Observe that a point, 
+<IMG SRC="generated/TechnicalReference_html_m480f3804.png" NAME="Object22" ALIGN=ABSMIDDLE width=21 height=27>,
+lies on the plane if it satisfies the equation: 
+<IMG SRC="generated/TechnicalReference_html_49ed6e9e.png" NAME="Object23" ALIGN=ABSMIDDLE width=95 height=27>.
+The line through 
+<IMG SRC="generated/TechnicalReference_html_36e4bacd.png" NAME="Object24" ALIGN=ABSMIDDLE width=19 height=27>
+in the direction 
+<IMG SRC="generated/TechnicalReference_html_314256c1.png" NAME="Object25" ALIGN=ABSMIDDLE width=14 height=27>
+can be written as a parametric equation in terms of distance from 
+<IMG SRC="generated/TechnicalReference_html_36e4bacd.png" NAME="Object26" ALIGN=ABSMIDDLE width=19 height=27>:
+<IMG SRC="generated/TechnicalReference_html_m451d2c98.png" NAME="Object27" ALIGN=ABSMIDDLE width=50 height=27>.
+So, substitute this expression for 
+<IMG SRC="generated/TechnicalReference_html_m480f3804.png" NAME="Object28" ALIGN=ABSMIDDLE width=21 height=27>
+in the plane equation and solve for 
+<IMG SRC="generated/TechnicalReference_html_m6a909cd.png" NAME="Object29" ALIGN=ABSMIDDLE width=17 height=27>.
+This yields: 
+<IMG SRC="generated/TechnicalReference_html_m37b8b44c.png" NAME="Object30" ALIGN=ABSMIDDLE width=123 height=27>
+and the point of intersection is: 
+<IMG SRC="generated/TechnicalReference_html_m4c3d8a87.png" NAME="Object31" ALIGN=ABSMIDDLE width=133 height=56>.
+Note how this expression fails if 
+<IMG SRC="generated/TechnicalReference_html_314256c1.png" NAME="Object119" ALIGN=ABSMIDDLE width=14 height=27>
+is perpendicular to 
+<IMG SRC="generated/TechnicalReference_html_32d6f0fd.png" NAME="Object43" ALIGN=ABSMIDDLE width=17 height=27>
+(i.e., 
+<IMG SRC="generated/TechnicalReference_html_m5f1c6b13.png" NAME="Object120" ALIGN=ABSMIDDLE width=53 height=27>).
+Of course, if 
+<IMG SRC="generated/TechnicalReference_html_314256c1.png" NAME="Object121" ALIGN=ABSMIDDLE width=14 height=27>
+is perpendicular to 
+<IMG SRC="generated/TechnicalReference_html_32d6f0fd.png" NAME="Object122" ALIGN=ABSMIDDLE width=17 height=27>,
+then the line 
+<IMG SRC="generated/TechnicalReference_html_m451d2c98.png" NAME="Object123" ALIGN=ABSMIDDLE width=50 height=27>
+never intersects the plane.</P>
+<H3 CLASS="western">Intersection of two planes</H3>
+<P CLASS="western" ALIGN=LEFT>Consider:</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_2ba6db85.png" NAME="Object1" ALIGN=BOTTOM width=197 height=217></P>
+<P CLASS="western">Two planes, 
+<IMG SRC="generated/TechnicalReference_html_971f468.png" NAME="Object11" ALIGN=ABSMIDDLE width=25 height=27>
+and 
+<IMG SRC="generated/TechnicalReference_html_603a10c.png" NAME="Object99" ALIGN=ABSMIDDLE width=25 height=27>,
+are defined by a pair of origins, 
+<IMG SRC="generated/TechnicalReference_html_6d483da7.png" NAME="Object2" ALIGN=ABSMIDDLE width=28 height=33>,
+and normals, 
+<IMG SRC="generated/TechnicalReference_html_m2d35bc5b.png" NAME="Object3" ALIGN=ABSMIDDLE width=25 height=33>.
+Find a parametric representation of the line of intersection. The
+direction of the intersection line is simply: 
+<IMG SRC="generated/TechnicalReference_html_6c0ad69c.png" NAME="Object4" ALIGN=ABSMIDDLE width=74 height=27>.
+To find a point to use as the origin of the line, we next compute a
+vector which is normal to both 
+<IMG SRC="generated/TechnicalReference_html_314256c1.png" NAME="Object6" ALIGN=ABSMIDDLE width=14 height=27>
+and one of the plane normals, say 
+<IMG SRC="generated/TechnicalReference_html_m25dc9625.png" NAME="Object5" ALIGN=ABSMIDDLE width=22 height=27>.
+This is simply: 
+<IMG SRC="generated/TechnicalReference_html_m7835d8ae.png" NAME="Object7" ALIGN=ABSMIDDLE width=69 height=27>.</P>
+<P CLASS="western">Now compute 
+<IMG SRC="generated/TechnicalReference_html_40e7e4ed.png" NAME="Object8" ALIGN=ABSMIDDLE width=18 height=27>
+as the projection of 
+<IMG SRC="generated/TechnicalReference_html_2d52799a.png" NAME="Object9" ALIGN=ABSMIDDLE width=26 height=27>
+onto 
+<IMG SRC="generated/TechnicalReference_html_603a10c.png" NAME="Object12" ALIGN=ABSMIDDLE width=25 height=27>
+in the direction 
+<IMG SRC="generated/TechnicalReference_html_50afeb94.png" NAME="Object10" ALIGN=ABSMIDDLE width=16 height=27>:
+<IMG SRC="generated/TechnicalReference_html_123271b8.png" NAME="Object13" ALIGN=ABSMIDDLE width=167 height=56>.</P>
+<H3 CLASS="western">Intersection of Two Lines</H3>
+<P CLASS="western" ALIGN=LEFT>Although it is a trivial algebraic
+problem, the intersection of two lines is much more interesting to
+construct geometrically. Suppose we have two parametric lines, 
+<IMG SRC="generated/TechnicalReference_html_m45fa697c.png" NAME="Object58" ALIGN=ABSMIDDLE width=24 height=27>
+and 
+<IMG SRC="generated/TechnicalReference_html_76c9cca3.png" NAME="Object100" ALIGN=ABSMIDDLE width=24 height=27>:</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_709a715e.png" NAME="Object57" ALIGN=BOTTOM width=197 height=217></P>
+<P CLASS="western">In order for the lines to intersect, two
+conditions have to hold: 1) they must be coplanar and 2) they must
+not be parallel. The latter condition simply requires that 
+<IMG SRC="generated/TechnicalReference_html_m43ed3aba.png" NAME="Object59" ALIGN=ABSMIDDLE width=65 height=32>.
+The coplanarity condition is slightly more complicated. In
+two-dimensions, coplanarity is guaranteed; in three-dimensions, the
+lines must meet the following criterion: 
+<IMG SRC="generated/TechnicalReference_html_5147f102.png" NAME="Object60" ALIGN=ABSMIDDLE width=141 height=32>.
+In words, a vector drawn between the two origins of the lines must be
+normal to the same vector to which both direction vectors are normal.
+Two specific cases are trivial: 1) if the origin points are
+coincident, then obviously the two lines intersect, and 2) in two
+dimensions, the cross product will produce a vector with only a
+single non-zero component and this component will be zero by
+definition in the origin points.</P>
+<P CLASS="western">To find the point 
+<IMG SRC="generated/TechnicalReference_html_36e4bacd.png" NAME="Object61" ALIGN=ABSMIDDLE width=19 height=27>,
+we want to find the distance, 
+<IMG SRC="generated/TechnicalReference_html_1e1cd604.png" NAME="Object64" ALIGN=ABSMIDDLE width=21 height=27>,
+from 
+<IMG SRC="generated/TechnicalReference_html_6f4844bd.png" NAME="Object62" ALIGN=ABSMIDDLE width=23 height=26>
+to 
+<IMG SRC="generated/TechnicalReference_html_m2ba9b139.png" NAME="Object63" ALIGN=ABSMIDDLE width=19 height=23>.
+Consider this revision to the figure above:</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_19208332.png" NAME="Object65" ALIGN=BOTTOM width=197 height=217></P>
+<P CLASS="western">We want to construct the perpendicular from 
+<IMG SRC="generated/TechnicalReference_html_m1b64a5b3.png" NAME="Object66" ALIGN=ABSMIDDLE width=24 height=23>
+through 
+<IMG SRC="generated/TechnicalReference_html_m67020f4d.png" NAME="Object67" ALIGN=ABSMIDDLE width=23 height=26>,
+so we need to find the normal 
+<IMG SRC="generated/TechnicalReference_html_1b396cdd.png" NAME="Object68" ALIGN=ABSMIDDLE width=17 height=20>.
+Since 
+<IMG SRC="generated/TechnicalReference_html_m130b1e6e.png" NAME="Object69" ALIGN=ABSMIDDLE width=18 height=26>
+is not parallel to 
+<IMG SRC="generated/TechnicalReference_html_m4e334746.png" NAME="Object70" ALIGN=ABSMIDDLE width=19 height=26>,
+we can form 
+<IMG SRC="generated/TechnicalReference_html_1b396cdd.png" NAME="Object71" ALIGN=ABSMIDDLE width=17 height=20>
+as the linear combination of the two direction vectors: 
+<IMG SRC="generated/TechnicalReference_html_m218d00c.png" NAME="Object72" ALIGN=ABSMIDDLE width=87 height=26>.
+Since 
+<IMG SRC="generated/TechnicalReference_html_1b396cdd.png" NAME="Object73" ALIGN=ABSMIDDLE width=17 height=20>
+is defined as perpendicular to 
+<IMG SRC="generated/TechnicalReference_html_m4e334746.png" NAME="Object74" ALIGN=ABSMIDDLE width=19 height=26>,
+we also have 
+<IMG SRC="generated/TechnicalReference_html_1ba85d8e.png" NAME="Object75" ALIGN=ABSMIDDLE width=54 height=26>.
+Therefore 
+<IMG SRC="generated/TechnicalReference_html_70daf9c9.png" NAME="Object76" ALIGN=ABSMIDDLE width=218 height=26>.
+Because both direction vectors are unit vectors 
+<IMG SRC="generated/TechnicalReference_html_f5bcaa2.png" NAME="Object77" ALIGN=ABSMIDDLE width=94 height=26>,
+and 
+<IMG SRC="generated/TechnicalReference_html_m2a5ff6c8.png" NAME="Object78" ALIGN=ABSMIDDLE width=78 height=26>.
+So, we have 
+<IMG SRC="generated/TechnicalReference_html_m7d115d0c.png" NAME="Object79" ALIGN=ABSMIDDLE width=210 height=27>
+and our perpendicular is 
+<IMG SRC="generated/TechnicalReference_html_m10787c82.png" NAME="Object80" ALIGN=ABSMIDDLE width=121 height=26>.
+We find 
+<IMG SRC="generated/TechnicalReference_html_m7086c815.png" NAME="Object81" ALIGN=ABSMIDDLE width=20 height=27>
+by normalizing 
+<IMG SRC="generated/TechnicalReference_html_1b396cdd.png" NAME="Object82" ALIGN=ABSMIDDLE width=17 height=20>.
+Let 
+<IMG SRC="generated/TechnicalReference_html_m3aedda25.png" NAME="Object83" ALIGN=ABSMIDDLE width=66 height=24>,
+so we have 
+<IMG SRC="generated/TechnicalReference_html_m67950f7a.png" NAME="Object84" ALIGN=ABSMIDDLE width=224 height=26>
+and 
+<IMG SRC="generated/TechnicalReference_html_m38ba1104.png" NAME="Object85" ALIGN=ABSMIDDLE width=390 height=26>.
+With our substitutions from above we find then 
+<IMG SRC="generated/TechnicalReference_html_m341ff3d4.png" NAME="Object86" ALIGN=ABSMIDDLE width=309 height=25>.
+So finally, 
+<IMG SRC="generated/TechnicalReference_html_71f330d.png" NAME="Object87" ALIGN=ABSMIDDLE width=101 height=52>.
+The length of the perpendicular from 
+<IMG SRC="generated/TechnicalReference_html_11876ead.png" NAME="Object88" ALIGN=ABSMIDDLE width=23 height=23>
+through 
+<IMG SRC="generated/TechnicalReference_html_1a7f4ba.png" NAME="Object89" ALIGN=ABSMIDDLE width=24 height=26>
+is 
+<IMG SRC="generated/TechnicalReference_html_m14029880.png" NAME="Object90" ALIGN=ABSMIDDLE width=76 height=26>
+and since it is part of a right triangle, from the definition of the
+sine, we have 
+<IMG SRC="generated/TechnicalReference_html_m84b2d74.png" NAME="Object91" ALIGN=ABSMIDDLE width=260 height=52>.</P>
+<H3 CLASS="western">Affine Transformations</H3>
+<P CLASS="western">Most of <VAR CLASS="western">lignumCAD</VAR>'s
+direct use of affine spaces is confined to OpenGL viewing operations.
+However, since there is substantial overlap of visualization and
+geometric modeling mathematics, we will cover some of the basics
+here.</P>
+<P CLASS="western">A transformation (also called a <EM>map</EM>) is
+an operation which changes some attributes of an object while leaving
+other attributes intact. The set of attributes which may change (or
+not change) can be the empty set. We're interested in linear
+transformations of vectors, i.e., those transformations which
+preserve linear combinations of vectors. For example, if 
+<IMG SRC="generated/TechnicalReference_html_m6e7e5bb6.png" NAME="Object101" ALIGN=ABSMIDDLE width=18 height=21>
+is a linear transformation (of an unspecified nature for now), then
+operating with 
+<IMG SRC="generated/TechnicalReference_html_m6e7e5bb6.png" NAME="Object102" ALIGN=ABSMIDDLE width=18 height=21>
+on a linear combination of vectors is the same as the linear
+combination of 
+<IMG SRC="generated/TechnicalReference_html_m6e7e5bb6.png" NAME="Object103" ALIGN=ABSMIDDLE width=18 height=21>
+operating on each vector individually. Mathematically, then, we have:</P>
+<P CLASS="western" STYLE="margin-bottom: 0in; font-weight: medium; page-break-before: auto">
+<IMG SRC="generated/TechnicalReference_html_m308a1c5b.png" NAME="Object104" ALIGN=ABSMIDDLE width=437 height=33></P>
+<P CLASS="western">An affine transformation is a type of linear
+transformation which preserves the affine combination of two points:
+<IMG SRC="generated/TechnicalReference_html_458faf53.png" NAME="Object105" ALIGN=ABSMIDDLE width=280 height=25>.
+We can also define the same map on vectors by setting 
+<IMG SRC="generated/TechnicalReference_html_416dd9f5.png" NAME="Object124" ALIGN=ABSMIDDLE width=136 height=24>,
+where 
+<IMG SRC="generated/TechnicalReference_html_mb5630ad.png" NAME="Object125" ALIGN=ABSMIDDLE width=66 height=23>.</P>
+<P CLASS="western">We now introduce one of the stranger concepts in
+this section: In order to represent points in three-dimensional,
+affine space, it is conventional to use four values. For example, 
+<IMG SRC="generated/TechnicalReference_html_e722a1e.png" NAME="Object126" ALIGN=ABSMIDDLE width=133 height=24>.
+The obvious question is: Which dimension is <EM>w</EM>? <EM>w</EM>
+doesn't really have a dimension; it is more like a scale factor.
+Indeed, 
+<IMG SRC="generated/TechnicalReference_html_m2ba9b139.png" NAME="Object129" ALIGN=ABSMIDDLE width=19 height=23>
+is not usable as a geometric point until the <EM>x</EM>, <EM>y</EM>,
+<EM>z</EM> values are divided through by the <EM>w</EM> component.
+However, for reasons we will see, it is very convenient to keep this
+component around until we actually need the geometric value.
+Furthermore, <EM>w</EM> is almost always unity so it has no real
+effect on anything anyway. Indeed, we will assume that <EM>w</EM> is
+unity for the rest of this section.</P>
+<P CLASS="western">Armed now with our 
+<IMG SRC="generated/TechnicalReference_html_377a4f63.png" NAME="Object132" ALIGN=ABSMIDDLE width=25 height=23>
+affine points, we can now look at some useful examples of
+transformations. The first transformation we'll consider is the
+<EM>translation</EM>. A translation basically moves a point from one
+place to another. It is exactly equivalent to adding a vector to a
+point. The difference here, though, is that instead of writing the
+translation as a component-wise sum, the translation is expressed as
+a matrix operation. For example, suppose we have a translation vector
+<IMG SRC="generated/TechnicalReference_html_1b3576dc.png" NAME="Object133" ALIGN=ABSMIDDLE width=23 height=23>.
+We want to translate the point 
+<IMG SRC="generated/TechnicalReference_html_m2ba9b139.png" NAME="Object134" ALIGN=ABSMIDDLE width=19 height=23>.
+By our definitions above, we could write this as:<IMG SRC="generated/TechnicalReference_html_m2c548a34.png" NAME="Object135" ALIGN=ABSMIDDLE width=234 height=26>
+. (Note that in the vector space which corresponds to
+three-dimensional affine space only has 3 components. Or, to put it
+another way, the <EM>w</EM> component of a vector is always zero.)</P>
+<P CLASS="western">A completely identical way to express this
+operation is by using a matrix to represent the translation. For our
+example, we would have the matrix multiplication:</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_3bf61e9f.png" NAME="Object137" ALIGN=ABSMIDDLE width=219 height=109></P>
+<P CLASS="western">It is somewhat more clear why the <EM>w</EM>
+component is necessary. In order to make this multiplication work
+like vector addition, you need the extra component.</P>
+<P CLASS="western">This representation of translation may seem
+extravagant; after all, we're replacing three additions by twelve
+multiplications and twelve additions. However, with this
+representation, it is very simple to compose an arbitrary sequence of
+translations. For example, to translate a point first by 
+<IMG SRC="generated/TechnicalReference_html_m49815a5.png" NAME="Object138" ALIGN=ABSMIDDLE width=23 height=25>
+and then by 
+<IMG SRC="generated/TechnicalReference_html_m2224f10f.png" NAME="Object139" ALIGN=ABSMIDDLE width=23 height=25>,
+it is only necessary to multiply the two matrices together:</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_m2050c35b.png" NAME="Object140" ALIGN=ABSMIDDLE width=571 height=110></P>
+<P CLASS="western">The other transformation which is used in
+<VAR CLASS="western">lignumCAD</VAR> is the <EM>rotation</EM>. A
+rotation is performed by picking a vector as a reference direction
+and then twisting the affine space around that direction. Let's
+consider a two-dimensional example first. Consider this figure where
+a point is rotated from [4,1] to [1,4]. This is approximately 61.9&deg;
+about the z axis (which points out of the screen).</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_me103f76.png" NAME="Object153" ALIGN=BOTTOM width=197 height=217></P>
+<P CLASS="western" ALIGN=LEFT>The first thing to observe is that we
+can express the two points in polar notation. Each point has a radius
+vector of 
+<IMG SRC="generated/TechnicalReference_html_m41722b2f.png" NAME="Object154" ALIGN=ABSMIDDLE width=122 height=25>
+and angles (measured from the x axis) of 
+<IMG SRC="generated/TechnicalReference_html_3b52cac5.png" NAME="Object155" ALIGN=ABSMIDDLE width=141 height=26>
+and 
+<IMG SRC="generated/TechnicalReference_html_m66064d60.png" NAME="Object156" ALIGN=ABSMIDDLE width=142 height=26>.
+Also, recall that conversion from polar to Cartesian coordinates is
+given by 
+<IMG SRC="generated/TechnicalReference_html_f042e16.png" NAME="Object157" ALIGN=ABSMIDDLE width=163 height=24>.</P>
+<P CLASS="western" ALIGN=LEFT>Rotating a point given in polar
+coordinates is very simple; you just add the angle of rotation to the
+angle of the point. So, rotating 
+<IMG SRC="generated/TechnicalReference_html_m37bee9b3.png" NAME="Object158" ALIGN=ABSMIDDLE width=24 height=26>
+into 
+<IMG SRC="generated/TechnicalReference_html_1b91afd0.png" NAME="Object159" ALIGN=ABSMIDDLE width=25 height=26>
+is simply: 
+<IMG SRC="generated/TechnicalReference_html_750e1dd4.png" NAME="Object160" ALIGN=ABSMIDDLE width=249 height=26>.
+However, the goal here is to compute the rotation of 
+<IMG SRC="generated/TechnicalReference_html_m37bee9b3.png" NAME="Object161" ALIGN=ABSMIDDLE width=24 height=26>
+without having to compute its polar form. So, we need to write the
+rotation in terms of 
+<IMG SRC="generated/TechnicalReference_html_m37bee9b3.png" NAME="Object162" ALIGN=ABSMIDDLE width=24 height=26>
+itself and the angle of rotation. Recall the angle addition formulas
+for sine and cosine:</P>
+<P CLASS="western" ALIGN=LEFT><IMG SRC="generated/TechnicalReference_html_m7d63ed7d.png" NAME="Object163" ALIGN=ABSMIDDLE width=227 height=41></P>
+<P CLASS="western" ALIGN=LEFT>So, we can write 
+<IMG SRC="generated/TechnicalReference_html_1b91afd0.png" NAME="Object164" ALIGN=ABSMIDDLE width=25 height=26>
+as:</P>
+<P CLASS="western" ALIGN=LEFT><IMG SRC="generated/TechnicalReference_html_mb919f7d.png" NAME="Object165" ALIGN=ABSMIDDLE width=510 height=26></P>
+<P CLASS="western" ALIGN=LEFT>which we can write in matrix terms as:</P>
+<P CLASS="western" ALIGN=LEFT><IMG SRC="generated/TechnicalReference_html_75198048.png" NAME="Object166" ALIGN=ABSMIDDLE width=458 height=55></P>
+<P CLASS="western">In its most general form, the rotation matrix is
+given by these elements:</P>
+<OL>
+	<LI><P CLASS="western">A normalized direction vector 
+	<IMG SRC="generated/TechnicalReference_html_m4e81f05a.png" NAME="Object141" ALIGN=ABSMIDDLE width=112 height=25>.</P>
+	<LI><P CLASS="western">An angle 
+	<IMG SRC="generated/TechnicalReference_html_70aa4a5d.png" NAME="Object142" ALIGN=ABSMIDDLE width=17 height=24>.</P>
+	<LI><P CLASS="western">A matrix 
+	<IMG SRC="generated/TechnicalReference_html_m1dcaa584.png" NAME="Object143" ALIGN=ABSMIDDLE width=161 height=85></P>
+	<LI><P CLASS="western">Another matrix 
+	<IMG SRC="generated/TechnicalReference_html_503638a6.png" NAME="Object144" ALIGN=ABSMIDDLE width=258 height=25>.
+	Note that 
+	<IMG SRC="generated/TechnicalReference_html_13c28090.png" NAME="Object145" ALIGN=ABSMIDDLE width=42 height=25>,
+	that is 
+	<IMG SRC="generated/TechnicalReference_html_m3ad9a2cf.png" NAME="Object146" ALIGN=ABSMIDDLE width=24 height=22>
+	times its own transpose, is the dense matrix:</P>
+	<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_m43312733.png" NAME="Object147" ALIGN=ABSMIDDLE width=201 height=85></P>
+	<LI><P CLASS="western">The general rotation matrix is then:</P>
+	<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_f9b1671.png" NAME="Object148" ALIGN=ABSMIDDLE width=693 height=293></P>
+</OL>
+<P CLASS="western">Just as example, consider a rotation around the z
+axis. In this case 
+<IMG SRC="generated/TechnicalReference_html_2e169fe8.png" NAME="Object149" ALIGN=ABSMIDDLE width=86 height=33>
+and the rotation matrix is:</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_m19f209bc.png" NAME="Object150" ALIGN=ABSMIDDLE width=193 height=122></P>
+<P CLASS="western">as expected.</P>
+<P CLASS="western">Naturally, if you have a sequence of translations
+and rotations, you can simply compose all the matrices together and
+apply the whole sequence with a single matrix multiply.</P>
+<H3 CLASS="western">Constraint Transformations</H3>
+<P CLASS="western">Most of the value in <VAR CLASS="western">lignumCAD</VAR>
+is in the ability to construct assemblies of parts based on
+constraining the surfaces of parts. This section describes how
+transformations are computed for each type of constraint.</P>
+<H4 CLASS="western">Planes</H4>
+<P CLASS="western">(<VAR CLASS="western">lignumCAD</VAR> version 0.2
+only knows about constraining planes, so this section treats them as
+if they were the only type of surface available.)</P>
+<P CLASS="western">Constraining two subassemblies (either parts or
+assemblies) with planar faces requires the creation of three
+constraints. (In the code, these are called <EM>phases</EM>.) Each
+successive constraint reduces the number of degrees of freedom of the
+constrained subassembly. The first constraint computes one
+translational and two rotational degrees of freedom; the second
+constraint computes one translational and one rotational degree of
+freedom; the third constraint completes the last translation degree
+of freedom.</P>
+<P CLASS="western">Each constraint phase consists of three steps:</P>
+<OL>
+	<LI><P CLASS="western">Selection of a face on the new subassembly.
+	The supporting surface is compared to the characteristic coordinate
+	system of the previous constraint to determine if this surface is
+	valid.</P>
+	<LI><P CLASS="western">Selection of a face on the existing assembly.
+	The supporting surface is compared to the surface of the first face
+	to determine if it is compatible.</P>
+	<LI><P CLASS="western">Compute a transformation of the new
+	subassembly's coordinate system which implements the constraint.</P>
+</OL>
+<P CLASS="western">The details of the characteristic coordinate
+system and the transformation are different for each phase. The table
+below describes each.</P>
+<CENTER>
+	<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+		<COL WIDTH=24*>
+		<COL WIDTH=53*>
+		<COL WIDTH=53*>
+		<COL WIDTH=126*>
+		<THEAD>
+			<TR VALIGN=TOP>
+				<TH WIDTH=9%>
+					<P CLASS="western">Phase</P>
+				</TH>
+				<TH WIDTH=21%>
+					<P CLASS="western">Characteristic Comparison</P>
+				</TH>
+				<TH WIDTH=21%>
+					<P CLASS="western">Second Face Criterion</P>
+				</TH>
+				<TH WIDTH=49%>
+					<P CLASS="western">Transformation</P>
+				</TH>
+			</TR>
+		</THEAD>
+		<TBODY>
+			<TR>
+				<TD WIDTH=9% SDVAL="1" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>1</P>
+				</TD>
+				<TD WIDTH=21% VALIGN=TOP>
+					<P CLASS="western">None &ndash; any plane is acceptable</P>
+				</TD>
+				<TD WIDTH=21% VALIGN=TOP>
+					<P CLASS="western">None &ndash; any plane is acceptable</P>
+				</TD>
+				<TD WIDTH=49% VALIGN=TOP>
+					<OL>
+						<LI><P CLASS="western">Compute an direction perpendicular to
+						both plane normals: 
+						<IMG SRC="generated/TechnicalReference_html_m37b6788.png" NAME="Object167" ALIGN=ABSMIDDLE width=72 height=26>.</P>
+						<LI><P CLASS="western">Compute the angle between both plane
+						normals: 
+						<IMG SRC="generated/TechnicalReference_html_m736a8411.png" NAME="Object169" ALIGN=ABSMIDDLE width=99 height=26>.</P>
+						<LI><P CLASS="western">Rotate the coordinate system of the new
+						subassembly around 
+						<IMG SRC="generated/TechnicalReference_html_4cb00d2e.png" NAME="Object168" ALIGN=ABSMIDDLE width=17 height=23>
+						by 
+						<IMG SRC="generated/TechnicalReference_html_70aa4a5d.png" NAME="Object170" ALIGN=ABSMIDDLE width=17 height=24>.</P>
+						<LI><P CLASS="western">Compute the vector between the origin of
+						both planes: 
+						<IMG SRC="generated/TechnicalReference_html_m46b57744.png" NAME="Object171" ALIGN=ABSMIDDLE width=81 height=32>.</P>
+						<LI><P CLASS="western">Translate the coordinate system of the
+						new assembly by the projection of 
+						<IMG SRC="generated/TechnicalReference_html_m25c5add4.png" NAME="Object172" ALIGN=ABSMIDDLE width=17 height=27>
+						onto the normal of the assembly surface:<IMG SRC="generated/TechnicalReference_html_m77b39f88.png" NAME="Object173" ALIGN=ABSMIDDLE width=96 height=33></P>
+					</OL>
+				</TD>
+			</TR>
+			<TR>
+				<TD WIDTH=9% SDVAL="2" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>2</P>
+				</TD>
+				<TD WIDTH=21% VALIGN=TOP>
+					<P CLASS="western">The new subassembly's plane normal <EM>must
+					not be parallel</EM> to the phase 1 characteristic direction
+					(which is just the normal of the first assembly surface, 
+					<IMG SRC="generated/TechnicalReference_html_6cc23e8b.png" NAME="Object189" ALIGN=ABSMIDDLE width=21 height=32>)</P>
+				</TD>
+				<TD WIDTH=21% VALIGN=TOP>
+					<P CLASS="western">The normal of the selected face <EM>must make
+					the same angle</EM> with the phase 1 characteristic direction as
+					the new subassembly's plane normal.</P>
+				</TD>
+				<TD WIDTH=49% VALIGN=TOP>
+					<OL>
+						<LI><P CLASS="western">Compute the projections of 
+						<IMG SRC="generated/TechnicalReference_html_3419ffd5.png" NAME="Object174" ALIGN=ABSMIDDLE width=22 height=32>
+						and 
+						<IMG SRC="generated/TechnicalReference_html_5d5e54be.png" NAME="Object175" ALIGN=ABSMIDDLE width=23 height=32>
+						onto the plane of the characteristic, named 
+						<IMG SRC="generated/TechnicalReference_html_230de6c8.png" NAME="Object178" ALIGN=ABSMIDDLE width=29 height=32>
+						and 
+						<IMG SRC="generated/TechnicalReference_html_m50183a65.png" NAME="Object179" ALIGN=ABSMIDDLE width=29 height=32>,
+						respectively.</P>
+						<LI><P CLASS="western">Compute the angle between the two
+						projected vectors: 
+						<IMG SRC="generated/TechnicalReference_html_m3f1286fe.png" NAME="Object180" ALIGN=ABSMIDDLE width=116 height=36>.</P>
+						<LI><P CLASS="western">Compute a direction perpendicular to
+						both projected normals: 
+						<IMG SRC="generated/TechnicalReference_html_b00ad76.png" NAME="Object181" ALIGN=ABSMIDDLE width=88 height=32>.</P>
+						<LI><P CLASS="western">Rotate the coordinate system of the new
+						subassembly around 
+						<IMG SRC="generated/TechnicalReference_html_m48e93c19.png" NAME="Object176" ALIGN=ABSMIDDLE width=17 height=27>
+						by 
+						<IMG SRC="generated/TechnicalReference_html_m74b245ec.png" NAME="Object177" ALIGN=ABSMIDDLE width=19 height=27>.</P>
+						<LI><P CLASS="western">Compute a direction which is both normal
+						to the assembly face and which also lies in the plane of the
+						characteristic:<IMG SRC="generated/TechnicalReference_html_m421ee0a5.png" NAME="Object182" ALIGN=ABSMIDDLE width=100 height=32>.</P>
+					</OL>
+					<OL START=6>
+						<LI><P CLASS="western">Compute the distance from the origin of
+						the new subassembly's plane to the assembly  plane's origin in
+						the direction 
+						<IMG SRC="generated/TechnicalReference_html_m58010730.png" NAME="Object186" ALIGN=ABSMIDDLE width=16 height=27>:
+												<IMG SRC="generated/TechnicalReference_html_4c946f04.png" NAME="Object185" ALIGN=ABSMIDDLE width=104 height=65>.</P>
+						<LI><P CLASS="western">Translate the coordinate system of the
+						new subassembly by  
+						<IMG SRC="generated/TechnicalReference_html_m430313bf.png" NAME="Object183" ALIGN=ABSMIDDLE width=59 height=33>.</P>
+					</OL>
+				</TD>
+			</TR>
+			<TR>
+				<TD WIDTH=9% SDVAL="3" SDNUM="1033;">
+					<P CLASS="western" ALIGN=RIGHT>3</P>
+				</TD>
+				<TD WIDTH=21% VALIGN=TOP>
+					<P CLASS="western">The new subassembly's plane normal <EM>must
+					not be normal</EM> to the phase 2 characteristic direction
+					(which is just the normal of the second assembly surface).</P>
+				</TD>
+				<TD WIDTH=21% VALIGN=TOP>
+					<P CLASS="western">The normal of the selected face <EM>must be
+					parallel</EM> with the new subassembly's plane normal.</P>
+				</TD>
+				<TD WIDTH=49% VALIGN=TOP>
+					<OL>
+						<LI><P CLASS="western">Compute the distance from the origin of
+						the new subassembly's plane to the assembly plane's origin in
+						the direction of the phase 2 characteristic, 
+						<IMG SRC="generated/TechnicalReference_html_m2a57b39d.png" NAME="Object184" ALIGN=ABSMIDDLE width=22 height=32>:
+												<IMG SRC="generated/TechnicalReference_html_md0821d9.png" NAME="Object187" ALIGN=ABSMIDDLE width=104 height=65>.</P>
+						<LI><P CLASS="western">Translate the coordinate system of the
+						new subassembly by  
+						<IMG SRC="generated/TechnicalReference_html_m21a33812.png" NAME="Object188" ALIGN=ABSMIDDLE width=65 height=33>.</P>
+					</OL>
+				</TD>
+			</TR>
+		</TBODY>
+	</TABLE>
+</CENTER>
+<P CLASS="western"><BR><BR>
+</P>
+<H2 CLASS="western">Program Design</H2>
+<H3 CLASS="western">Requirements</H3>
+<P CLASS="western"><VAR CLASS="western">lignumCAD</VAR> depends on
+several external packages. See the specific requirements in the
+<A HREF="../Obtaining.html">Compilation</A> directions.</P>
+<H3 CLASS="western">Design</H3>
+<P CLASS="western">The basic programming approach of <VAR CLASS="western">lignumCAD</VAR>
+is the Model-View-Controller paradigm. Each C++ class in the program
+can generally be considered to fall within one of these areas. (And,
+as with any rule, there are classes which overlap areas and classes
+which don't really belong to any of them.) The primary classes are
+those which describe the geometry model. A model consists of a class
+named Model which collects the set of pages you create. Each page
+inherits from an abstract class named PageBase. Each page collects a
+set of figures. Each figure inherits from the an abstract class named
+FigureBase. The details of figures are less uniform but generally
+include one or more geometry objects. A simple class diagram for the
+Model classes is shown below.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_m7c8a2ea1.png" NAME="Object151" width=295 height=160></P>
+<P CLASS="western">In parallel to the model classes are the View
+classes. The View classes are responsible for displaying the
+associated model object. The primary view class is DesignBookView. It
+contains the list of references to the views for each page, which
+inherit from the abstract PageView class. Each page view contains a
+list of views of the various figures on the page, which inherit from
+the abstract FigureView class. DesignBookView largely handles the UI
+interface and its actions (a prime example of overlap between View
+and Controller). PageView largely deals with the user's input in the
+main window. FigureViews generally use OpenGL commands to draw the
+objects they are viewing. 
+</P>
+<P CLASS="western">A somewhat more complete class hierarchy is shown
+below. The concrete classes Sketch and Part inherit from PageBase.
+PartView is a concrete PageView. OCSolid is a concrete Figure and
+OCSolidView is a concrete FigureView. TopoDS_Solid is the OpenCASCADE
+representation of solid geometry.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="generated/TechnicalReference_html_m2a56bfec.png" NAME="Object152" ALIGN=BOTTOM width=392 height=330></P>
+<P CLASS="western">The Controller classes inherit from the class
+InputObject. When the user creates or manipulates an object on the
+screen, a PageView class will install the proper InputObject to
+handle the user's interaction with that object.</P>
+<P CLASS="western">The classes that don't fall somewhere in the MVC
+paradigm are generally those which act like global variables. This
+includes most of the configuration and external information
+databases. For example, material information (which is read from
+files when the program starts up) is saved in the MaterialDatabase
+class. This class follows the Singleton pattern described in the
+well-known Design Patterns book. Most of the database-like classes
+follow this pattern.</P>
+<H3 CLASS="western">Programming</H3>
+<P CLASS="western" ALIGN=LEFT><FONT COLOR="#ff0000">[link to Doxygen
+output]</FONT></P>
+</BODY>
+</HTML>

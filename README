@@ -1,0 +1,34 @@
+lignumCAD Version 0.2
+
+lignumCAD is a Computer-Aided Design (CAD) program geared specifically
+to aid the woodworker in designing custom furniture and other
+hand-made objects. It supports both two-dimensional and
+three-dimensional representations of the design with full parametric
+interrelations.  Additional features include optimized layout of the
+bill of materials on custom stock and photo-realistic rendering of the
+final design.
+
+This is version 0.2; there is still a long way to go. Currently, the
+two-dimensional sketching mode is useful. You can also make simple
+solids from the template library and assemble them into
+assemblies. However, don't try to do serious work with it
+yet. Never-the-less, all feedback is welcome. Please send all comments
+and suggestions to lignumcad@lignumcomputing.com.
+
+The software is available from http://sourceforge.net/project/lignumcad.
+
+The documentation starts at ./doc/index.html (or, if you've installed
+the binary, you can access the Help|Contents menu option).
+
+For support, contact lignum Computing, Inc. at
+lignumcad@lignumcomputing.com.
+
+---------------------------------------------------------------------
+lignum Computing, Inc., November, 2002
+www.lignumcomputing.com
+E-mail: lignumcad@lignumcomputing.com
+
+
+;;;Local variables: ***
+;;;mode: text ***
+;;;End: ***

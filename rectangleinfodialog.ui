@@ -1,0 +1,940 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>RectangleInfoDialog</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>RectangleInfoDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>567</width>
+            <height>568</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Rectangle Information</string>
+    </property>
+    <property name="icon">
+        <pixmap>lignumCAD.png</pixmap>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>nameLabel</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>MShape</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>MShadow</enum>
+            </property>
+            <property name="text">
+                <string>&amp;Name:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>nameEdit</cstring>
+            </property>
+        </widget>
+        <widget class="QGroupBox" row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>xOriginGroupBox</cstring>
+            </property>
+            <property name="title">
+                <string>X Origin</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>xOriginReferenceLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Reference:</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>xOriginReferenceLineEdit</cstring>
+                    </property>
+                    <property name="readOnly">
+                        <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>X origin offset reference.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;X Origin Offset Reference&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;This widget shows the geometry item which the X0 edge of the rectangle is offset from. This value is not editable in this dialog; you must use the regular interface to adjust constraint references.&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>xOriginButtonGroup</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Offset</string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>11</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QRadioButton" row="0" column="0">
+                            <property name="name">
+                                <cstring>xOriginSpecifiedRadioButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Specified</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Use a specified x origin offset.</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>&lt;p&gt;&lt;b&gt;Specified X Origin Offset&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Select this option if you want the rectangle to have an independent, specified X origin offset.&lt;/p&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="lCDefaultLengthSpinBox" row="0" column="1">
+                            <property name="name">
+                                <cstring>xOriginOffsetLengthSpinBox</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Enter the x origin offset.</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>&lt;p&gt;&lt;b&gt;Specified X Origin Offset&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Enter the offset of the X origin of the rectangle (from the X origin reference). The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).&lt;/p&gt;
+&lt;p&gt;If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1.234&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1&lt;/code&gt; (equals 1.0)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1/2&lt;/code&gt; (equals 0.5)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1 1/2&lt;/code&gt; (equals 1.5, note the blank separating the whole number and the fraction)&lt;/p&gt;
+&lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="Line" row="1" column="0" rowspan="1" colspan="2">
+                            <property name="name">
+                                <cstring>Line1_3</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>HLine</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton" row="2" column="0">
+                            <property name="name">
+                                <cstring>xOriginImportedRadioButton</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string>Imported</string>
+                            </property>
+                        </widget>
+                        <widget class="lCConstraintChooser" row="2" column="1">
+                            <property name="name">
+                                <cstring>xOriginConstraintChooser</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QGroupBox" row="2" column="2" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>yOriginGroupBox</cstring>
+            </property>
+            <property name="title">
+                <string>Y Origin</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>yOriginReferenceLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Reference:</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>yOriginReferenceLineEdit</cstring>
+                    </property>
+                    <property name="readOnly">
+                        <bool>true</bool>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Y origin offset reference.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Y Origin Offset Reference&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;This widget shows the geometry item which the Y0 edge of the rectangle is offset from. This value is not editable in this dialog; you must use the regular interface to adjust constraint references.&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>yOriginButtonGroup</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Offset</string>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>11</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QRadioButton" row="0" column="0">
+                            <property name="name">
+                                <cstring>yOriginSpecifiedRadioButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Specified</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Use a specified y origin offset.</string>
+                            </property>
+                        </widget>
+                        <widget class="lCDefaultLengthSpinBox" row="0" column="1">
+                            <property name="name">
+                                <cstring>yOriginOffsetLengthSpinBox</cstring>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Enter the y origin offset</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>&lt;p&gt;&lt;b&gt;Specified X Origin Offset&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Enter the offset of the X origin of the rectangle (from the X origin reference). The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).&lt;/p&gt;
+&lt;p&gt;If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1.234&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1&lt;/code&gt; (equals 1.0)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1/2&lt;/code&gt; (equals 0.5)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1 1/2&lt;/code&gt; (equals 1.5, note the blank separating the whole number and the fraction)&lt;/p&gt;
+&lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="Line" row="1" column="0" rowspan="1" colspan="2">
+                            <property name="name">
+                                <cstring>Line1_3_2</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>HLine</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton" row="2" column="0">
+                            <property name="name">
+                                <cstring>yOriginImportedRadioButton</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string>Imported</string>
+                            </property>
+                        </widget>
+                        <widget class="lCConstraintChooser" row="2" column="1">
+                            <property name="name">
+                                <cstring>yOriginConstraintChooser</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QButtonGroup" row="1" column="2" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>heightButtonGroup</cstring>
+            </property>
+            <property name="title">
+                <string>Height</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QRadioButton" row="0" column="0">
+                    <property name="name">
+                        <cstring>heightSpecifiedRadioButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Specified</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Use a specified height.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Specified Height&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Select this option if you want the rectangle to have an independent, specified height.&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="lCDefaultLengthSpinBox" row="0" column="1">
+                    <property name="name">
+                        <cstring>heightLengthSpinBox</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Enter the height.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Specified Height&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Enter the height of the rectangle. The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).&lt;/p&gt;
+&lt;p&gt;If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1.234&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1&lt;/code&gt; (equals 1.0)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1/2&lt;/code&gt; (equals 0.5)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1 1/2&lt;/code&gt; (equals 1.5, note the blank separating the whole number and the fraction)&lt;/p&gt;
+&lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="Line" row="1" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>Line1_2</cstring>
+                    </property>
+                    <property name="frameShape">
+                        <enum>HLine</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Sunken</enum>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="2" column="0">
+                    <property name="name">
+                        <cstring>heightImportedRadioButton</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Imported</string>
+                    </property>
+                </widget>
+                <widget class="lCConstraintChooser" row="2" column="1">
+                    <property name="name">
+                        <cstring>heightConstraintChooser</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QLineEdit" row="0" column="1">
+            <property name="name">
+                <cstring>nameEdit</cstring>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>Edit the rectangle's name.</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;p&gt;&lt;b&gt;Name&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Edit the name of the rectangle. The rectangle's name will be updated when the dialog is accepted. If there is already a rectangle on this page which has the same name, the name change will be rejected.&lt;/p&gt;</string>
+            </property>
+        </widget>
+        <widget class="QGroupBox" row="3" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>dimDisplaySideGroupBox</cstring>
+            </property>
+            <property name="title">
+                <string>Dimension Display Side</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLayoutWidget" row="0" column="0">
+                    <property name="name">
+                        <cstring>Layout2</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QRadioButton" row="2" column="1">
+                            <property name="name">
+                                <cstring>belowButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Below</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Display width dimension below rectangle.</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>&lt;p&gt;&lt;b&gt;Display Width Dimension Below Rectangle&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;If the rectangle has a valid width dimension, then it will be displayed relative to the bottom edge of the rectangle. The side of the bottom edge on which the dimension appears is controlled by an attribute of the dimension itself.&lt;/p&gt;
+&lt;p&gt;When might a rectangle &lt;i&gt;not&lt;/i&gt; have a valid width dimension? If both X edges of the rectangle are constrained to outside figures, then the width of the rectangle is not controlled by a single parameter.&lt;/p&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton" row="1" column="2">
+                            <property name="name">
+                                <cstring>rightButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Right</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Display height dimension to right of rectangle.</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>&lt;p&gt;&lt;b&gt;Display Height Dimension to the Right of the Rectangle&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;If the rectangle has a valid height dimension, then it will be displayed relative to the right edge of the rectangle. The side of the right edge on which the dimension appears is controlled by an attribute of the dimension itself.&lt;/p&gt;
+&lt;p&gt;When might a rectangle &lt;i&gt;not&lt;/i&gt; have a valid height dimension? If both Y edges of the rectangle are constrained to outside figures, then the height of the rectangle is not controlled by a single parameter.&lt;/p&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton" row="1" column="0">
+                            <property name="name">
+                                <cstring>leftButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Left</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Display height dimension to left of rectangle.</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>&lt;p&gt;&lt;b&gt;Display Height Dimension to the Left of the Rectangle&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;If the rectangle has a valid height dimension, then it will be displayed relative to the left edge of the rectangle. The side of the left edge on which the dimension appears is controlled by an attribute of the dimension itself.&lt;/p&gt;
+&lt;p&gt;When might a rectangle &lt;i&gt;not&lt;/i&gt; have a valid height dimension? If both Y edges of the rectangle are constrained to outside figures, then the height of the rectangle is not controlled by a single parameter.&lt;/p&gt;</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton" row="0" column="1">
+                            <property name="name">
+                                <cstring>aboveButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Above</string>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>Display width dimension above rectangle.</string>
+                            </property>
+                            <property name="whatsThis" stdset="0">
+                                <string>&lt;p&gt;&lt;b&gt;Display Width Dimension Above Rectangle&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;If the rectangle has a valid width dimension, then it will be displayed relative to the top edge of the rectangle. The side of the top edge on which the dimension appears is controlled by an attribute of the dimension itself.&lt;/p&gt;
+&lt;p&gt;When might a rectangle &lt;i&gt;not&lt;/i&gt; have a valid width dimension? If both X edges of the rectangle are constrained to outside figures, then the width of the rectangle is not controlled by a single parameter.&lt;/p&gt;</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+            </grid>
+        </widget>
+        <spacer row="4" column="1">
+            <property name="name">
+                <cstring>Spacer2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>0</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QPushButton" row="5" column="3">
+            <property name="name">
+                <cstring>buttonOk</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;OK</string>
+            </property>
+            <property name="accel">
+                <number>276824143</number>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+            <property name="default">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="5" column="4">
+            <property name="name">
+                <cstring>buttonCancel</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Cancel</string>
+            </property>
+            <property name="accel">
+                <number>276824131</number>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QButtonGroup" row="1" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>widthButtonGroup</cstring>
+            </property>
+            <property name="title">
+                <string>Width</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QRadioButton" row="0" column="0">
+                    <property name="name">
+                        <cstring>widthSpecifiedRadioButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Specified</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Use a specified width.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Specified Width&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Select this option if you want the rectangle to have an independent, specified width.&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="lCDefaultLengthSpinBox" row="0" column="1">
+                    <property name="name">
+                        <cstring>widthLengthSpinBox</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Enter the width.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Specified Width&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Enter the width of the rectangle. The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).&lt;/p&gt;
+&lt;p&gt;If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1.234&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1&lt;/code&gt; (equals 1.0)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1/2&lt;/code&gt; (equals 0.5)&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;1 1/2&lt;/code&gt; (equals 1.5, note the blank separating the whole number and the fraction)&lt;/p&gt;
+&lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="Line" row="1" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>Line1</cstring>
+                    </property>
+                    <property name="frameShape">
+                        <enum>HLine</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Sunken</enum>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                </widget>
+                <widget class="QRadioButton" row="2" column="0">
+                    <property name="name">
+                        <cstring>widthImportedRadioButton</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Imported</string>
+                    </property>
+                </widget>
+                <widget class="lCConstraintChooser" row="2" column="1">
+                    <property name="name">
+                        <cstring>widthConstraintChooser</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QGroupBox" row="3" column="2" rowspan="2" colspan="3">
+            <property name="name">
+                <cstring>rectangleStyleGroupBox</cstring>
+            </property>
+            <property name="title">
+                <string>Style</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>11</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel" row="0" column="1" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>defaultStyleLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Default (use Page attributes)</string>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Default (use page attributes).</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="2" column="1">
+                    <property name="name">
+                        <cstring>wireframeStyleLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Wireframe</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignBottom</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>wireframeStyleColorChooser</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Wireframe color.</string>
+                    </property>
+                </widget>
+                <widget class="lCColorChooser" row="2" column="2">
+                    <property name="name">
+                        <cstring>wireframeStyleColorChooser</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Choose wireframe color.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Wireframe Color&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;By default, rectangles are drawn using the default geometry color from the application Preferences. If you want to use a different color, you can choose one here.&lt;/p&gt;
+&lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="lCDefaultComboBox" row="1" column="2">
+                    <property name="name">
+                        <cstring>edgeStyleComboBox</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Choose an edge stipple.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Edge Stipple&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;By default, rectangles are drawn with a solid line. If you want to emulate a rectangle with hidden edges in a sketch, you can set the edge stipple to one of the broken line types, e.g. dashed.&lt;/p&gt;
+&lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="1">
+                    <property name="name">
+                        <cstring>edgeStyleLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Edge</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignBottom</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>edgeStyleComboBox</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Edge stipple.</string>
+                    </property>
+                </widget>
+                <widget class="QSlider" row="0" column="0" rowspan="6" colspan="1">
+                    <property name="name">
+                        <cstring>rectangleStyleSlider</cstring>
+                    </property>
+                    <property name="maxValue">
+                        <number>5</number>
+                    </property>
+                    <property name="pageStep">
+                        <number>1</number>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Select rectangle style.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Select Rectangle Style&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;The rectangle style slider lets you set an increasingly complicated style for the rectangle. See the "What's This?" help for each of the individual options for more detail.&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="lCDefaultSpinBox" row="3" column="2">
+                    <property name="name">
+                        <cstring>hiddenStyleSpinBox</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="maxValue">
+                        <number>100</number>
+                    </property>
+                    <property name="defaultValue">
+                        <number>50</number>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Hidden line removal is not applicable to 2D entities</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="3" column="1">
+                    <property name="name">
+                        <cstring>hiddenStyleLabel</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Hidden</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignBottom</set>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Hidden line removal is not applicable to 2D entities</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="4" column="1">
+                    <property name="name">
+                        <cstring>solidStyleLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Solid</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignBottom</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>solidStyleColorChooser</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Solid color.</string>
+                    </property>
+                </widget>
+                <widget class="lCColorChooser" row="4" column="2">
+                    <property name="name">
+                        <cstring>solidStyleColorChooser</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Choose solid color.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Solid Color&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;By default, rectangles are drawn in wireframe. If you choose this style, then the rectangle will be drawn as a solid rectangle in the chosen color.&lt;/p&gt;
+&lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="5" column="1">
+                    <property name="name">
+                        <cstring>textureStyleLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Texture</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignBottom</set>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>textureStyleFileChooser</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Texture pattern file.</string>
+                    </property>
+                </widget>
+                <widget class="lCDefaultFileChooser" row="5" column="2">
+                    <property name="name">
+                        <cstring>textureStyleFileChooser</cstring>
+                    </property>
+                    <property name="toolTip" stdset="0">
+                        <string>Choose texture pattern file.</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;p&gt;&lt;b&gt;Texture Pattern File&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;By default, rectangles are drawn in wireframe. If you choose this style, then the rectangle will be drawn as a solid, textured rectangle using the image from the given file.&lt;/p&gt;
+&lt;p&gt;The image must meet certain properties in order to be useful as a texture. &lt;i&gt;lignumCAD&lt;/i&gt; will adjust the image size to meet the requirements of OpenGL textures, but choosing a very large image may yield an impractical texture. Also, the best resolution to use is one which is close to the ratio between the display and the default scale of &lt;i&gt;lignumCAD&lt;/i&gt;. Currently, an image scanned at about 20 dots per inch and approximately 256 pixels x 256 pixels is the optimal size.&lt;/p&gt;
+&lt;p&gt;If you modify the value, you can always go back to the default value when the dialog was opened by clicking the &lt;img src="default_active.png"&gt; button&lt;/p&gt;</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QPushButton" row="5" column="0">
+            <property name="name">
+                <cstring>buttonHelp</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Help</string>
+            </property>
+            <property name="accel">
+                <number>276824136</number>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <spacer row="5" column="1" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>Horizontal Spacing2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>0</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>buttonOk</sender>
+        <signal>clicked()</signal>
+        <receiver>RectangleInfoDialog</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>buttonCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>RectangleInfoDialog</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>rectangleStyleSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>RectangleInfoDialog</receiver>
+        <slot>rectangleStyleSlider_valueChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>buttonHelp</sender>
+        <signal>clicked()</signal>
+        <receiver>RectangleInfoDialog</receiver>
+        <slot>buttonHelp_clicked()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>nameEdit</tabstop>
+    <tabstop>widthSpecifiedRadioButton</tabstop>
+    <tabstop>widthLengthSpinBox</tabstop>
+    <tabstop>heightSpecifiedRadioButton</tabstop>
+    <tabstop>heightLengthSpinBox</tabstop>
+    <tabstop>xOriginSpecifiedRadioButton</tabstop>
+    <tabstop>xOriginOffsetLengthSpinBox</tabstop>
+    <tabstop>yOriginSpecifiedRadioButton</tabstop>
+    <tabstop>yOriginOffsetLengthSpinBox</tabstop>
+    <tabstop>aboveButton</tabstop>
+    <tabstop>belowButton</tabstop>
+    <tabstop>leftButton</tabstop>
+    <tabstop>rightButton</tabstop>
+    <tabstop>rectangleStyleSlider</tabstop>
+    <tabstop>edgeStyleComboBox</tabstop>
+    <tabstop>wireframeStyleColorChooser</tabstop>
+    <tabstop>hiddenStyleSpinBox</tabstop>
+    <tabstop>solidStyleColorChooser</tabstop>
+    <tabstop>buttonOk</tabstop>
+    <tabstop>buttonCancel</tabstop>
+    <tabstop>buttonHelp</tabstop>
+    <tabstop>widthImportedRadioButton</tabstop>
+    <tabstop>widthConstraintChooser</tabstop>
+    <tabstop>xOriginReferenceLineEdit</tabstop>
+    <tabstop>xOriginImportedRadioButton</tabstop>
+    <tabstop>xOriginConstraintChooser</tabstop>
+    <tabstop>yOriginReferenceLineEdit</tabstop>
+    <tabstop>yOriginImportedRadioButton</tabstop>
+    <tabstop>yOriginConstraintChooser</tabstop>
+    <tabstop>heightImportedRadioButton</tabstop>
+    <tabstop>heightConstraintChooser</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">constants.h</include>
+    <include location="local" impldecl="in implementation">rectangleinfodialog.ui.h</include>
+</includes>
+<slots>
+    <slot>init()</slot>
+    <slot>rectangleStyleSlider_valueChanged( int style )</slot>
+    <slot>buttonHelp_clicked()</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

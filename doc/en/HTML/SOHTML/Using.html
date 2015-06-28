@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+	<TITLE>Using lignumCAD</TITLE>
+	<META NAME="GENERATOR" CONTENT="StarOffice 6.0  (Linux)">
+	<META NAME="AUTHOR" CONTENT="Allen Barnett">
+	<META NAME="CREATED" CONTENT="20021204;12541700">
+	<META NAME="CHANGEDBY" CONTENT="Allen Barnett">
+	<META NAME="CHANGED" CONTENT="20021216;16124900">
+	<META NAME="CLASSIFICATION" CONTENT="Getting started using lignumCAD">
+	<META NAME="DESCRIPTION" CONTENT="Copyright (C) 2002 lignum Computing, Inc.">
+	<STYLE>
+	<!--
+		@page { size: 8.5in 11in; margin: 1in }
+		P { margin-bottom: 0.08in }
+		P.western { font-family: "Times", serif; font-weight: medium }
+		H1 { margin-bottom: 0.08in }
+		H1.western { font-family: "Arial", sans-serif; font-size: 16pt }
+		H1.cjk { font-size: 14pt; font-weight: medium }
+		H1.ctl { font-size: 14pt; font-weight: medium }
+		H2 { margin-bottom: 0.08in }
+		H2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-style: italic; font-weight: medium }
+		H2.cjk { font-size: 14pt; font-weight: medium }
+		H2.ctl { font-size: 14pt; font-weight: medium }
+		VAR.western { font-family: "Times", serif; font-weight: medium }
+		VAR.cjk { font-style: normal }
+		VAR.ctl { font-style: normal }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US">
+<H1 CLASS="western">Using <VAR CLASS="western"><FONT FACE="Helvetica, sans-serif">lignumCAD</FONT></VAR></H1>
+<P CLASS="western">This section of the manual discusses a typical use
+of <VAR CLASS="western">lignumCAD</VAR>. In it, we'll design a very
+simple, Shaker-style table. In the terminology of <VAR CLASS="western">lignumCAD</VAR>,
+a design is called a <VAR CLASS="western">model</VAR>.</P>
+<H2 CLASS="western">Getting Started</H2>
+<P CLASS="western">Start <VAR CLASS="western"><SPAN LANG="en-US">lignumCAD</SPAN></VAR>
+using the method appropriate to your operating system. You should see
+a brief splash screen showing copyright and contact information for
+lignum Computing, Inc.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/splash_v0.2.png" NAME="Graphic1" ALT="lignumCAD Logo and Splash Screen" ALIGN=BOTTOM width=330 height=386 BORDER=0></P>
+<P CLASS="western">Within a second or two, the New Model Wizard will
+appear.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/new_model.png" NAME="Graphic2" ALT="New Model Wizard dialog" ALIGN=BOTTOM width=464 height=336 BORDER=0></P>
+<H2 CLASS="western">Starting a New Model</H2>
+<P CLASS="western">When the New Model Wizard opens, all of the
+required fields are already filled in. However, <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">unnamed</SPAN></SPAN></FONT>
+is probably not the best name for our model. Type a new name into the
+<FONT FACE="Helvetica, sans-serif"><B>Model Name</B></FONT> field,
+e.g. <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Shaker
+Table</SPAN></SPAN></FONT>. Notice that the filename field also
+updates as you enter the model name. This is not a required
+relationship in <VAR CLASS="western">lignumCAD</VAR>, it is purely
+for convenience. You should also enter a description: try pressing
+<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+D</SPAN></B></FONT>
+to move the focus to the <FONT FACE="Helvetica, sans-serif"><B>Description</B></FONT>
+field and then enter the text: &quot;Design of a pine, Shaker-style
+table.&quot;.</P>
+<P CLASS="western">Since this is the first version of our table, it
+is not necessary to modify the version and revision fields, but for
+the sake of exercise, try pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+V</SPAN></B></FONT>
+and using the up-and down-arrow keys to change the version number of
+the model. Note that you cannot enter a version number smaller than
+one (if you look closely, the down button will be disabled when the
+version is '1'). You can also type in a value for the version. Note,
+however, that a typed-in value is not validated until the keyboard
+focus leaves widget. If you were to enter a value of 1001 and then
+exit this page of the wizard, you would not see the value silently
+changed to 1000, which is the largest allowed version number.</P>
+<P CLASS="western">Finally, test out the What's This? help. With the
+keyboard focus in the <FONT FACE="Helvetica, sans-serif"><B>Version</B></FONT>
+widget, press  <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Shift+F1</SPAN></B></FONT>.
+You should see a message along the lines of:</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/version_tooltip.png" NAME="Graphic3" ALT="Version Number widget tooltip" ALIGN=BOTTOM width=246 height=134 BORDER=0></P>
+<P CLASS="western">This message will remain on the screen until you
+click a mouse button or type a key. Similarly, if you click on the
+<FONT FACE="Helvetica, sans-serif"><B>Help</B></FONT> button, or
+press <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+H</SPAN></B></FONT>,
+you get a lengthier explanation of the dialog. This help message will
+also remain on the screen until you click a mouse button or type a
+key.</P>
+<P CLASS="western">Go to the next page of the New Model Wizard by
+either: clicking the <FONT FACE="Helvetica, sans-serif"><B>Next</B></FONT>
+button, pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+N</SPAN></B></FONT>
+or pressing <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>.
+Note that if the keyboard focus happens to be in the <FONT FACE="Helvetica, sans-serif"><B>Description</B></FONT>
+widget, <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>
+will actually just enter a new line in the description. So, either
+use <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+N,</SPAN></B></FONT>
+or use <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Shift+Tab</SPAN></B></FONT>
+to move the keyboard focus to a different widget and then press 
+<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/initial_page.png" NAME="Graphic4" ALT="Initial Page dialog" ALIGN=BOTTOM width=464 height=336 BORDER=0></P>
+<P CLASS="western">As mentioned in the introduction, <VAR CLASS="western">lignumCAD</VAR>
+is laid out like a notebook. The metaphor is that you are creating a
+book with a number of pages which represent various aspects of the
+model. To get started, then, you need to pick an initial type of page
+for the model. The choice of initial page is arbitrary; <VAR CLASS="western">lignumCAD</VAR>
+will let you start anywhere in your design. However, when starting
+from scratch, the best place to start is with some general sketches
+of the overall size and shape of the piece of furniture. So, pick
+<FONT FACE="Helvetica, sans-serif"><B>Sketch</B></FONT> and press
+<FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>
+(or click <FONT FACE="Helvetica, sans-serif"><B>Finish</B></FONT> or
+press <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Alt+F</SPAN></B></FONT>).
+Note that <FONT FACE="Helvetica, sans-serif"><B>Finish</B></FONT> is
+not available until you have picked an initial page.</P>
+<P CLASS="western">The next dialog which appears prompts for a name
+for the initial page.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/name_sketch.png" NAME="Graphic5" ALT="Rename Sketch dialog" ALIGN=BOTTOM width=280 height=75 BORDER=0></P>
+<P CLASS="western">We're going to start with a top view of our table;
+such a view is usually called a <EM>plan</EM> view. The keyboard
+focus should already be in the <FONT FACE="Helvetica, sans-serif"><B>Name</B></FONT>
+widget, so type <FONT FACE="Helvetica, sans-serif"><SPAN STYLE="font-weight: medium"><SPAN STYLE="background: transparent">Plan</SPAN></SPAN></FONT>
+into the input field and press <FONT FACE="Helmet, monospace"><B><SPAN STYLE="background: #c0c0c0">Enter</SPAN></B></FONT>.
+<VAR CLASS="western">lignumCAD</VAR> will create the new page and
+present the full user interface. A somewhat reduced image of the full
+user interface is shown below.</P>
+<P CLASS="western" ALIGN=CENTER><IMG SRC="../../graphics/main_window.png" NAME="Graphic6" ALT="Main Window" ALIGN=BOTTOM width=459 height=408 BORDER=0></P>
+<P CLASS="western">The <VAR CLASS="western">lignumCAD</VAR> main
+window contains the usual user interface elements. Briefly, at the
+top is a menu bar. Below the menu bar is a <SPAN LANG="en-US">dockable</SPAN>
+tool bar. The tool bar can be part of the application window, or you
+can grab the handle and drag it outside the main window to have a
+separate window. Below the (initial) tool bar area is the main
+graphics display window. For a Sketch, the window shows a grid,
+similar to graph paper. Below the graphics display window is the page
+tab bar. Each page will have a tab in the page tab bar. Clicking the
+tab will cause the graphics display window to show that page. Below
+the page tab bar is the model hierarchy window. Each page and its
+contents are summarized in this window. Below the model hierarchy
+window is the status window. The components of the status window are
+(from left to right): the general message area, the current action
+area, the current page name, and the page's scale.</P>
+<P CLASS="western" ALIGN=LEFT>Rather than explain the whole user
+interface, we'll try to introduce the features are they become
+relevant to this tutorial. You can always check out the details in
+the reference section of this manual.</P>
+</BODY>
+</HTML>

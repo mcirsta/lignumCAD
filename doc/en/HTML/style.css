@@ -1,0 +1,10 @@
+BODY { background-color: #003c40; color: yellow }
+A:link { color: #ffff00; text-decoration: none }
+A:active { color: yellow }
+A:visited { color: white; text-decoration: none }
+A:hover { color: yellow; text-decoration: underline }
+TH { font-size: 12pt; font-family: arial, helvetica, sans-serif }
+TD { color: yellow; font-size: 10pt; font-family: arial, helvetica, sans-serif }
+P { font-size: 10pt; font-family: arial, helvetica, sans-serif }
+BLOCKQUOTE { font-size: 8pt; font-family: arial, helvetica, sans-serif; margin: 12pt }
+H2 { font-size: 12pt; font-family: arial, helvetica, sans-serif }

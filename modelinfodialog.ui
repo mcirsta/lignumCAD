@@ -1,0 +1,353 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>ModelInfoDialog</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>ModelInfoDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>367</width>
+            <height>294</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Model Information</string>
+    </property>
+    <property name="icon">
+        <pixmap>lignumCAD.png</pixmap>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>false</bool>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QLayoutWidget" row="5" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>Layout1</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonHelp</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Help</string>
+                    </property>
+                    <property name="accel">
+                        <number>276824136</number>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>Horizontal Spacing2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonOk</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;OK</string>
+                    </property>
+                    <property name="accel">
+                        <number>276824143</number>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                    <property name="default">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonCancel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Cancel</string>
+                    </property>
+                    <property name="accel">
+                        <number>276824131</number>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLineEdit" row="0" column="1">
+            <property name="name">
+                <cstring>modelNameEdit</cstring>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;p&gt;&lt;b&gt;Model Name&lt;/b&gt;&lt;/p&gt;
+Enter a name for the model.</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="2">
+            <property name="name">
+                <cstring>versionLabel</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Version:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>versionSpinBox</cstring>
+            </property>
+        </widget>
+        <spacer row="3" column="2" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>Spacer2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>0</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QSpinBox" row="1" column="3">
+            <property name="name">
+                <cstring>revisionSpinBox</cstring>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;p&gt;&lt;b&gt;Revision Number&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;A change in revision number is usually used to represent minor changes to the model. For example, if you need to change a few dimensions, you might increment the revision number.&lt;/p&gt;</string>
+            </property>
+        </widget>
+        <spacer row="4" column="2" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>Spacer2_2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>0</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLabel" row="1" column="0">
+            <property name="name">
+                <cstring>fileNameLabel</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;File Name:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>modelFileChooser</cstring>
+            </property>
+        </widget>
+        <widget class="QSpinBox" row="0" column="3">
+            <property name="name">
+                <cstring>versionSpinBox</cstring>
+            </property>
+            <property name="maxValue">
+                <number>1000</number>
+            </property>
+            <property name="minValue">
+                <number>1</number>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;p&gt;&lt;b&gt;Version Number&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;A change in version number is usually used to represent major changes to the model. For example, if Version 1 proved too impractical to construct and you decided to simplify the model, it might become Version 2.&lt;/p&gt;</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="3" column="1">
+            <property name="name">
+                <cstring>creationDateLabel</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>Box</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="text">
+                <string>TextLabel2</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="4" column="0">
+            <property name="name">
+                <cstring>modificationLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Modification Time:</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="4" column="1">
+            <property name="name">
+                <cstring>modificationDateLabel</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>Box</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="text">
+                <string>TextLabel2</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>modelNameLabel</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Model Name:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>modelNameEdit</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="3" column="0">
+            <property name="name">
+                <cstring>creationLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Creation Time:</string>
+            </property>
+        </widget>
+        <widget class="QTextEdit" row="2" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>descriptionEdit</cstring>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;p&gt;&lt;b&gt;Description&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Enter a brief description of the model which is being constructed. This information is not used anywhere in &lt;i&gt;lignumCAD&lt;/i&gt;; it is purely to aid you in identifying the model.&lt;/p&gt;</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="0">
+            <property name="name">
+                <cstring>descriptionLabel</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Description:</string>
+            </property>
+            <property name="alignment">
+                <set>AlignTop</set>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>descriptionEdit</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="1" column="2">
+            <property name="name">
+                <cstring>revisionLabel</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Revision:</string>
+            </property>
+            <property name="buddy" stdset="0">
+                <cstring>revisionSpinBox</cstring>
+            </property>
+        </widget>
+        <widget class="lCFileChooser" row="1" column="1">
+            <property name="name">
+                <cstring>modelFileChooser</cstring>
+            </property>
+            <property name="lineWidth">
+                <number>2</number>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;p&gt;&lt;b&gt;File Name&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Enter the name of the file in which to store
+the model. Normally, this is automatically completed
+when you enter the model name.&lt;/p&gt;
+&lt;p&gt;You can also click the &lt;b&gt;...&lt;/b&gt; button to bring up a
+standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>buttonOk</sender>
+        <signal>clicked()</signal>
+        <receiver>ModelInfoDialog</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>buttonCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>ModelInfoDialog</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>modelNameEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>ModelInfoDialog</receiver>
+        <slot>modelNameEdit_textChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>buttonHelp</sender>
+        <signal>clicked()</signal>
+        <receiver>ModelInfoDialog</receiver>
+        <slot>buttonHelp_clicked()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>modelNameEdit</tabstop>
+    <tabstop>versionSpinBox</tabstop>
+    <tabstop>modelFileChooser</tabstop>
+    <tabstop>revisionSpinBox</tabstop>
+    <tabstop>descriptionEdit</tabstop>
+    <tabstop>buttonHelp</tabstop>
+    <tabstop>buttonOk</tabstop>
+    <tabstop>buttonCancel</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">modelinfodialog.ui.h</include>
+</includes>
+<slots>
+    <slot access="private" specifier="non virtual">modelNameEdit_textChanged( const QString &amp; text )</slot>
+    <slot>buttonHelp_clicked()</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
