@@ -29,7 +29,8 @@ namespace lC {
     const QString LIGNUMCOMPUTINGURL = "www.lignumcomputing.com";
     const QString LIGNUMCOMPUTINGEMAIL = "lignumcad@lignumcomputing.com";
     
-    const QString LIGNUMCAD = QT_TRANSLATE_NOOP( "Constants", "lignumCAD" );
+    const char cLIGNUMCAD[] = "lignumCAD";
+    const QString LIGNUMCAD = QT_TRANSLATE_NOOP( "Constants", cLIGNUMCAD );
     const QString VERSION_MAJOR = "0";
     const QString VERSION_MINOR = "2";
     const QString COPYRIGHT_DATES = "2002";

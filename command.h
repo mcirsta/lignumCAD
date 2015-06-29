@@ -23,6 +23,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include <memory>
 #include <qobject.h>
 #include <QList>
 #include <qdom.h>
@@ -86,7 +87,7 @@ public:
 class CommandHistory : public QObject {
 Q_OBJECT
   int current_;
-  QList< Command > history_;
+  QList< std::shared_ptr<Command> > history_;
   QFile* file_;
   QTextStream* stream_;
   QDomDocument* document_; 
@@ -219,7 +220,7 @@ class MoveLinesCommand : public Command {
     {}
   };
   //! List of lines which were moved by this command.
-  QPtrList< MoveLine > lines_;
+  QList< MoveLine > lines_;
   //! (Optional) XML document containing the details of any reconstraints
   //! which were caused by the creation of coincindent constraints.
   QDomDocument* xml_rep_;
