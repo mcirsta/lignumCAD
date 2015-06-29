@@ -26,13 +26,13 @@
 #include <vector>
 
 #include <qobject.h>
-#include <qptrlist.h>
-#include <qptrdict.h>
-#include <qvbox.h>
+#include <QList>
 #include <qpalette.h>
 
 #include "constants.h"
 #include "view.h"
+
+#include "ui_newmodelwizard.h"
 
 class QDomElement;
 class QLabel;
@@ -49,7 +49,7 @@ class TabBarContext;
 class lignumCADMainWindow;
 class PageView;
 class NewModelWizard;
-class ModelInfoDialog;
+class Ui::ModelInfoDialog;
 class PageInfoDialog;
 class PreferencesDialog;
 class Model;

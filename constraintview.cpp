@@ -22,7 +22,7 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qevent.h>
 #include <qcursor.h>
 #include <qwhatsthis.h>

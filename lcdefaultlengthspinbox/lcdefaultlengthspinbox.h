@@ -24,7 +24,6 @@
 #define LCDEFAULTLENGTHSPINBOX_H
 
 #include <qspinbox.h>
-#include <qhbox.h>
 
 #include "units.h"
 

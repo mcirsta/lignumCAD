@@ -24,7 +24,6 @@
 #ifndef OPENGLVIEW_H
 #define OPENGLVIEW_H
 
-#include <qpaintdevicemetrics.h>
 #include <qcursor.h>
 
 #include "graphics.h"
@@ -55,9 +54,6 @@ private:
 
   // These data items can be used by subclasses.
 protected:
-  //! This Qt object tracks the size of the window as well as
-  //! containing the DPI and other Display values.
-  QPaintDeviceMetrics pdm_;
   //! The page view to display and deliver input events to.
   PageView* page_view_;
   //! All the info necessary to reconstruct a page's view.
@@ -109,8 +105,6 @@ public:
   OpenGLView ( DesignBookView* parent, const char* name, lignumCADMainWindow* lCMW,
 	       QGLWidget* share_widget );
   ~OpenGLView ( void );
-
-  QPaintDeviceMetrics pdm ( void ) const { return pdm_; }
 
   //! \return the context menu for this view.
   QPopupMenu* contextMenu ( void ) const { return context_menu_; }

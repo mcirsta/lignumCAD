@@ -23,8 +23,6 @@
 #ifndef LCFILECHOOSER_H
 #define LCFILECHOOSER_H
 
-#include <qhbox.h>
-
 class QLineEdit;
 class QPushButton;
 

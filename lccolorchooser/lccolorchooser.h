@@ -23,7 +23,6 @@
 #ifndef LCCOLORCHOOSER_H
 #define LCCOLORCHOOSER_H
 
-#include <qhbox.h>
 #include <qcolor.h>
 
 class QLabel;

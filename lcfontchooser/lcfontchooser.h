@@ -23,7 +23,6 @@
 #ifndef LCFONTCHOOSER_H
 #define LCFONTCHOOSER_H
 
-#include <qhbox.h>
 #include <qfont.h>
 
 class QLineEdit;

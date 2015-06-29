@@ -25,9 +25,7 @@
 
 #include <iostream>
 
-#include <qptrlist.h>
-#include <qintdict.h>
-#include <qvaluevector.h>
+#include <QList>
 #include <qmap.h>
 
 #include "constants.h"
@@ -36,6 +34,8 @@
 #include "selectednames.h"
 #include "figureview.h"
 #include "view.h"
+
+#include <memory>
 
 class QTab;
 class QAction;
@@ -62,7 +62,7 @@ class PageView : public InputObject, public GraphicsObject, public View {
   Q_OBJECT
   DesignBookView* parent_;
 
-  QPtrList< FigureViewBase > figure_views_;
+  QList< std::shared_ptr<FigureViewBase> > figure_views_;
 
   InputObject* input_object_;
 
@@ -78,7 +78,7 @@ class PageView : public InputObject, public GraphicsObject, public View {
   //! This is a mapping from OpenGL selection names (GLuints) to
   //! Figure views so that when the select() method is run, we can
   //! figure out just which Figure's were selected.
-  QIntDict< FigureViewBase > figure_selection_names_;
+  QHash<int, std::shared_ptr<FigureViewBase> > figure_selection_names_;
 
   //! Figures which are highlighted because the mouse is hovering over them
   SelectedNames highlighted_;
@@ -123,15 +123,15 @@ public:
   lC::Render::Style renderStyle ( void ) const { return render_style_; }
   void setRenderStyle ( lC::Render::Style render_style );
 
-  QPtrListIterator< FigureViewBase > figureViews ( void ) const;
-  const QIntDict< FigureViewBase >& figureSelectionNames ( void ) const;
+  QList< std::shared_ptr<FigureViewBase> > figureViews ( void ) const;
+  const QHash<int, FigureViewBase >& figureSelectionNames ( void ) const;
 
   InputObject* inputObject( void ) const { return input_object_; }
   void setInputObject( InputObject* input_object );
 
   void addFigureView ( FigureViewBase* figure_view );
   void removeFigureView ( FigureViewBase* figure_view );
-  FigureViewBase* lastFigureView ( void ) { return figure_views_.last(); }
+  FigureViewBase* lastFigureView ( void ) { return figure_views_.last().get(); }
   void clearFigureViews ( void );
 
   void cut ( void );

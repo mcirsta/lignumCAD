@@ -23,7 +23,7 @@
 #include <qapplication.h>
 #include <qmainwindow.h>
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qlineedit.h>
 #include <qfiledialog.h>
 #include <qmessagebox.h>
@@ -41,21 +41,16 @@
 #include <qdom.h>
 #include <qpainter.h>
 #include <qpicture.h>
-#include <qlistbox.h>
 #include <qslider.h>
 #include <qlayout.h>
-#include <qsimplerichtext.h>
+
 
 #include "configuration.h"
-#include "newmodelwizard.h"
-#include "modelinfodialog.h"
-#include "pageinfodialog.h"
-#include "preferencesdialog.h"
 #include "openglview.h"
 #include "openglexample.h"
 #include "openglprinter.h"
 #include "tabbarcontext.h"
-#include "lignumcadmainwindow.h"
+#include "ui_lignumcadmainwindow.h"
 #include "pagefactory.h"
 #include "pageview.h"
 #include "model.h"
@@ -109,7 +104,7 @@ void CreatePage::createPage ( void )
 // Should this class be a singleton? Are we ever going to have a
 // MDI version of lignumCAD?
 
-DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
+DesignBookView::DesignBookView ( Ui::lignumCADMainWindow* lCMW )
   : QVBox( lCMW, "designbookview" ), lCMW_( lCMW ), gui_visible_( false ),
     model_( 0 ), printing_( false )
 {

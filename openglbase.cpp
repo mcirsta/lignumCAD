@@ -589,7 +589,7 @@ QStringList OpenGLGlobals::schemeStrings ( void ) const
 {
   QStringList strings;
 
-  QPtrListIterator< PageColorScheme > cs( color_schemes_ );
+  QList< PageColorScheme > cs( color_schemes_ );
 
   for ( ; cs.current() != 0; ++cs )
     strings.append( cs.current()->name() );
@@ -607,7 +607,7 @@ PageColorScheme& OpenGLGlobals::scheme ( int index ) const
   // For some reason, QPtrList doesn't have a direct access method
   // which does not change the current item, but we can do this
   // with an iterator:
-  QPtrListIterator< PageColorScheme > pcs( color_schemes_ );
+  QList< PageColorScheme > pcs( color_schemes_ );
 
   pcs += index;
 

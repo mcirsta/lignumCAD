@@ -23,8 +23,6 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include <Standard_Type.hxx>
-
 #include <qstringlist.h>
 
 #include "modelitem.h"

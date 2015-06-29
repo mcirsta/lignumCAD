@@ -23,8 +23,6 @@
 #ifndef LCDEFAULTFILECHOOSER_H
 #define LCDEFAULTFILECHOOSER_H
 
-#include <qhbox.h>
-
 class QLineEdit;
 class QPushButton;
 class QToolButton;

@@ -34,6 +34,7 @@
 #include <cmath>
 #include <qstringlist.h>
 #include <qobject.h>
+#include <memory>
 
 //! Unfortunately, there are profound differences between the
 //! *presentation* of length as English or Metric units.
@@ -122,7 +123,7 @@ class PrecisionTable {
 
 protected:
   //! List of available precisions.
-  QPtrList< lCPrecision > precisions_;
+  QList< std::shared_ptr<lCPrecision> > precisions_;
 
 public:
   /*!
@@ -132,7 +133,6 @@ public:
   PrecisionTable ( const QString& name )
     : name_( name )
   {
-    precisions_.setAutoDelete( true );
   }
 
   //! Clean-up handled by list autodelete
@@ -156,9 +156,8 @@ public:
    */
   lCPrecision* precision ( int index ) const
   {
-    QPtrListIterator< lCPrecision > p( precisions_ );
-    p += index;
-    return p.current();
+    QList< std::shared_ptr<lCPrecision> > p( precisions_ );
+    return (p.value(index)).get();
   }
 
   /*!
@@ -173,10 +172,10 @@ public:
   {
     QStringList labels;
 
-    QPtrListIterator< lCPrecision > p( precisions_ );
+    QList< std::shared_ptr<lCPrecision> > p( precisions_ );
 
-    for ( ; p.current() != 0; ++p )
-      labels << p.current()->label();
+    for (int i=0;i<p.count();i++)
+      labels << p[i]->label();
 
     return labels;
   }
@@ -443,7 +442,7 @@ class UnitsBasis : public QObject {
   Q_OBJECT
 
   //! The list of available length unit representations.
-  QPtrList< LengthUnit > length_units_;
+  QList< std::shared_ptr<LengthUnit> > length_units_;
 
   //! Used in the Unit information dialog to select a length display unit.
   QStringList length_unit_strings_;
@@ -482,7 +481,7 @@ public:
   /*!
    * \return the index of the current length unit representation.
    */
-  int at ( void ) const { return length_units_.at(); }
+  //int at ( void ) const { return length_units_.at(); }
 
   /*!
    * Retrieve the precision index of the current length unit representation.
@@ -498,30 +497,25 @@ public:
    * \return whether or not a fractional representation makes sense for the
    * current unit.
    */
-  bool canBeFraction ( void ) const {
-    return length_units_.current()->canBeFraction();
-  }
+//  bool canBeFraction ( void ) const {
+//    return length_units_.current()->canBeFraction();
+//  }
 
   /*!
    * \return the full name of the current length unit.
    */
-  QString name ( void ) const { return length_units_.current()->name(); }
+  QString name ( int i ) const { return length_units_[i]->name(); }
 
   /*!
    * \return the abbreviation of the current length unit.
    */
-  QString abbreviation ( void ) const
-  { return length_units_.current()->abbreviation(); }
+  QString abbreviation ( int i ) const
+  { return length_units_[i]->abbreviation(); }
 
   /*!
    * \return the format of the current length unit.
    */
   enum UnitFormat format ( void ) const { return format_; }
-
-  /*!
-   * \return the current length unit object.
-   */
-  LengthUnit* lengthUnit ( void ) const { return length_units_.current(); }
 
   /*!
    * Get the index-th length unit. Does not update the current length

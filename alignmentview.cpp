@@ -22,13 +22,13 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qevent.h>
 #include <qcursor.h>
 #include <qwhatsthis.h>
 
 #include "command.h"
-#include "lignumcadmainwindow.h"
+#include "ui_lignumcadmainwindow.h"
 #include "cursorfactory.h"
 #include "openglview.h"
 #include "pageview.h"

@@ -23,13 +23,13 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <Standard_Type.hxx>
-
 #include <qdatetime.h>
 #include <qmap.h>
 
 #include "modelitem.h"
 #include "page.h"
+
+#include <memory>
 
 class QDomDocument;
 class QDomElement;
@@ -193,7 +193,7 @@ public:
    * the given item.
    * \param db_url path to page.
    */
-  QPtrList<PageBase> whereUsed( const DBURL& db_url ) const;
+  QList<std::shared_ptr<PageBase>> whereUsed( const DBURL& db_url ) const;
 
   void addDelayedResolution ( ModelItem* item, const QString db_path );
   void resolveNow ( void );
@@ -233,7 +233,7 @@ private:
   static const VERSION_NO INITIAL_REVISION = 0;
 
   //! Transient list of items which need delayed resolution of references
-  QPtrList< DelayedResolution > delay_resolutions_;
+  QList< std::shared_ptr<DelayedResolution> > delay_resolutions_;
 };
 
 #endif // MODEL_H

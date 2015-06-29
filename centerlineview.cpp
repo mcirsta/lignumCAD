@@ -22,7 +22,7 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qlineedit.h>
 #include <qradiobutton.h>
 #include <qlabel.h>
@@ -32,7 +32,7 @@
 
 #include "units.h"
 #include "command.h"
-#include "lignumcadmainwindow.h"
+#include "ui_lignumcadmainwindow.h"
 #include "cursorfactory.h"
 #include "line.h"
 #include "page.h"
@@ -48,7 +48,7 @@
 #include "lcdefaultlengthspinbox.h"
 #include "lcconstraintchooser.h"
 #include "centerline.h"
-#include "centerlineinfodialog.h"
+#include "ui_centerlineinfodialog.h"
 #include "centerlineview.h"
 
 namespace Space2D {

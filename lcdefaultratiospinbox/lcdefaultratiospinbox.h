@@ -24,7 +24,6 @@
 #define LCDEFAULTRATIOSPINBOX_H
 
 #include <qspinbox.h>
-#include <qhbox.h>
 
 #include "ratio.h"
 

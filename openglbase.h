@@ -493,7 +493,7 @@ class OpenGLGlobals : public QObject {
   OpenGLAttributes default_;
 
   //! Available display schemes.
-  QPtrList< PageColorScheme > color_schemes_;
+  QList< PageColorScheme > color_schemes_;
 
   //! Has the user selected a predefined scheme or customized it?
   bool predefined_scheme_;
@@ -595,7 +595,7 @@ public:
    * the defaults.
    * \return index of the current default scheme.
    */
-  int at ( void ) const { return color_schemes_.at(); }
+  //int at ( void ) const { return color_schemes_.at(); }
 
   /*!
    * Retrieve the i-th predefined scheme without modifying the current

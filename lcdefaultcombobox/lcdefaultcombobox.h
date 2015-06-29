@@ -23,7 +23,6 @@
 #ifndef LCDEFAULTCOMBOBOX_H
 #define LCDEFAULTCOMBOBOX_H
 
-#include <qhbox.h>
 
 class QComboBox;
 class QToolButton;
