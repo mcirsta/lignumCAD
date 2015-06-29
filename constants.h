@@ -363,29 +363,13 @@ namespace lC {
   // Look up the images which are loaded at compile time
   inline QPixmap lookupPixmap ( const QString name )
   {
-    const QMimeSource* mime_source =
-      QMimeSourceFactory::defaultFactory()->data( name );
-
-    if ( mime_source == 0 )
-      return QPixmap();
-
-    QPixmap pixmap;
-    QImageDrag::decode( mime_source, pixmap );
-    return pixmap;
+    return QPixmap(":/images/" + name);
   }
 
   // Look up the images which are loaded at compile time
   inline QImage lookupImage ( const QString name )
   {
-    const QMimeSource* mime_source =
-      QMimeSourceFactory::defaultFactory()->data( name );
-
-    if ( mime_source == 0 )
-      return QImage();
-
-    QImage image;
-    QImageDrag::decode( mime_source, image );
-    return image;
+    return QImage(":/images/" + name);
   }
 
   // The columns of the Model Hierarchy View (why use a single digit

@@ -53,8 +53,16 @@ public:
    * \param url some rooted part of the URL (like just the protocol).
    * \param relURL rest of the URL, relative to first argument.
    */
-  DBURL ( const QString& url, const QString& relURL ) : QUrl( url, relURL )
-  {}
+  DBURL ( const QString& url, const QString& relURL )
+  {
+      QUrl rURL(relURL);
+      if(rURL.isRelative()) {
+          QUrl(url + relURL);
+      }
+      else {
+          QUrl(relURL);
+      }
+  }
   /*!
    * \return the object-name (without the type).
    */

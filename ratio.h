@@ -85,7 +85,7 @@ public:
     }
   }
 
-  operator const double ( void ) const { return (double)numerator_/denominator_; }
+  operator double ( void ) const { return (double)numerator_/denominator_; }
 
   Ratio& operator++ ( void ) {
     if ( denominator_ == 2 ) numerator_++;
