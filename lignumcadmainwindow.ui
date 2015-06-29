@@ -4,7 +4,7 @@
   <comment></comment>
   <exportmacro></exportmacro>
   <class>lignumCADMainWindow</class>
-  <widget class="Q3MainWindow" name="lignumCADMainWindow">
+  <widget class="QMainWindow" name="lignumCADMainWindow">
     <property name="geometry">
       <rect>
         <x>0</x>
@@ -74,7 +74,7 @@ lignumCAD Version x.y</string>
         </item>
       </layout>
     </widget>
-    <widget class="Q3ToolBar" name="toolBar">
+    <widget class="QToolBar" name="toolBar">
       <property name="label">
         <string>Tools</string>
       </property>
@@ -92,7 +92,7 @@ lignumCAD Version x.y</string>
       <addaction name="separator"/>
       <addaction name="helpContentsAction"/>
     </widget>
-    <widget class="Q3ToolBar" name="insertToolbar">
+    <widget class="QToolBar" name="insertToolbar">
       <property name="label">
         <string>Insert</string>
       </property>

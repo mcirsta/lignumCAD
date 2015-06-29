@@ -439,7 +439,7 @@ namespace lC {
     QString formatted_name;
 
     // This is pretty complicated.
-    for ( uint i = 0; i < name.length(); ) {
+    for ( int i = 0; i < name.length(); ) {
       // The quoting character (thanks to the definition of the URI) is
       // the '%'. Let's look at each case:
       if ( name[i] == '%' ) {
@@ -471,7 +471,7 @@ namespace lC {
     QString formatted_name;
 
     // Unquote %xx values and double up &'s.
-    for ( uint i = 0; i < name.length(); ) {
+    for ( int i = 0; i < name.length(); ) {
       if ( name[i] == '%' ) {
 	if ( ( i + 2 ) < name.length() ) {
 	  i++;
@@ -502,7 +502,7 @@ namespace lC {
    * Convert an ID array into a string.
    * \param ID Full id path of object.
    */
-  inline QString idToString ( const QValueVector<uint>& ID )
+  inline QString idToString ( const QVector<uint>& ID )
   {
     QString id_string;
 
@@ -510,7 +510,7 @@ namespace lC {
 
     id_string = QString::number( ID[0] );
 
-    for ( uint i = 1; i < ID.size(); ++i )
+    for ( int i = 1; i < ID.size(); ++i )
       id_string += QString( " : %1" ).arg( ID[i] );
 
     return id_string;
