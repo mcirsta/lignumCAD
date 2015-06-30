@@ -58,7 +58,8 @@ protected:
   int mapTextToValue ( bool* ok );
 };
 
-class lCDefaultLengthSpinBox : public QHBox
+//TODO horiz layout
+class lCDefaultLengthSpinBox : public QWidget
 {
   Q_OBJECT
 

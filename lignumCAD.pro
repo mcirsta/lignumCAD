@@ -41,7 +41,7 @@ TEMPLATE	=app
 CONFIG	+= qt warn_on debug thread c++11
 DEFINES	+= OGLFT_NO_SOLID GL2PS_USE_QT GL2PS_USE_EMF
 INCLUDEPATH	+= lcfilechooser lcfontchooser lccolorchooser lcdefaultfilechooser lcdefaultcombobox lcdefaultlengthspinbox lcdefaultratiospinbox lcconstraintchooser lcdefaultspinbox lcdefaultlengthconstraint ./
-unix:INCLUDEPATH	+= /usr/local/include/freetype2 /usr/local/src/Mesa/include /usr/include/X11/Xft /usr/local/include/OpenCASCADE
+unix:INCLUDEPATH	+= /usr/local/include/freetype2 /usr/local/src/Mesa/include /usr/include/X11/Xft /usr/lib/opencascade/inc
 unix:LIBS	+= -L/usr/local/lib -lfreetype -L/usr/local/src/Mesa/lib -lGLU -lTKHLR
 
 RESOURCES += \

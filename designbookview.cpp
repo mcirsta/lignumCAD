@@ -73,7 +73,7 @@
 
 //#define LAYOUT_COMPREHENSION
 
-PreferencesDialog* DesignBookView::preferences_dialog_ = 0;
+Ui::PreferencesDialog* DesignBookView::preferences_dialog_ = 0;
 OpenGLExample* DesignBookView::preferences_example_ = 0;
 Printer* DesignBookView::printer_ = 0;
 OpenGLPrinter* DesignBookView::opengl_printer_ = 0;
@@ -105,7 +105,7 @@ void CreatePage::createPage ( void )
 // MDI version of lignumCAD?
 
 DesignBookView::DesignBookView ( Ui::lignumCADMainWindow* lCMW )
-  : QVBox( lCMW, "designbookview" ), lCMW_( lCMW ), gui_visible_( false ),
+  : QWidget( lCMW, "designbookview" ), lCMW_( lCMW ), gui_visible_( false ),
     model_( 0 ), printing_( false )
 {
   init();

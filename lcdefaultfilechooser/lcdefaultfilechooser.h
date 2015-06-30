@@ -27,7 +27,8 @@ class QLineEdit;
 class QPushButton;
 class QToolButton;
 
-class lCDefaultFileChooser : public QHBox
+//TODO horiz layout
+class lCDefaultFileChooser : public QWidget
 {
   Q_OBJECT
 

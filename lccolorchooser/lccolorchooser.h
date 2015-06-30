@@ -29,7 +29,8 @@ class QLabel;
 class QPushButton;
 class QToolButton;
 
-class lCColorChooser : public QHBox
+//TODO horiz layout
+class lCColorChooser : public QWidget
 {
   Q_OBJECT
 

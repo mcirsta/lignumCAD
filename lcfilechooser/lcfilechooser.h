@@ -26,7 +26,8 @@
 class QLineEdit;
 class QPushButton;
 
-class lCFileChooser : public QHBox
+//TODO make Horiz layout for widget
+class lCFileChooser : public QWidget
 {
     Q_OBJECT
 

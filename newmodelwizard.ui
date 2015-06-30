@@ -19,7 +19,7 @@
     <property name="windowIcon">
       <pixmap>lignumCAD.png</pixmap>
     </property>
-    <widget class="QWidget" name="NewModelPage">
+    <widget class="QWizardPage" name="NewModelPage">
       <attribute name="title">
         <string>Enter the Information about the New Model</string>
       </attribute>
@@ -271,7 +271,7 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
         </item>
       </layout>
     </widget>
-    <widget class="QWidget" name="InitialPagePage">
+    <widget class="QWizardPage" name="InitialPagePage">
       <attribute name="title">
         <string>Select an Initial Page for Model</string>
       </attribute>

@@ -27,7 +27,8 @@
 class QComboBox;
 class QToolButton;
 
-class lCDefaultComboBox : public QHBox
+//TODO horiz layout
+class lCDefaultComboBox : public QWidget
 {
   Q_OBJECT
 

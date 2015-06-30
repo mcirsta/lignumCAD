@@ -130,11 +130,11 @@ inline ostream& operator<< ( ostream& o, const TopAbs_ShapeEnum& shape_type )
 }
 #endif // _TopAbs_ShapeEnum_HeaderFile
 
-inline std::ostream& operator<< ( std::ostream& o, const QValueVector<uint>& id_path )
+inline std::ostream& operator<< ( std::ostream& o, const QVector<uint>& id_path )
 {
   if ( id_path.size() > 0 ) {
     o << id_path[0];
-    for ( uint i = 1; i < id_path.size(); i++ )
+    for ( int i = 1; i < id_path.size(); i++ )
       o << " : " << id_path[i];
   }
   return o;

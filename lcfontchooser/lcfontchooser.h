@@ -29,7 +29,8 @@ class QLineEdit;
 class QPushButton;
 class QToolButton;
 
-class lCFontChooser : public QHBox
+//TODO horiz layout
+class lCFontChooser : public QWidget
 {
   Q_OBJECT
 

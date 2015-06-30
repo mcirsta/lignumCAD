@@ -98,7 +98,7 @@
         </layout>
       </item>
       <item row="1" column="0">
-        <widget class="Q3GroupBox" name="exampleBox">
+        <widget class="QGroupBox" name="exampleBox">
           <property name="title">
             <string>Example</string>
           </property>
@@ -110,7 +110,7 @@
               <number>6</number>
             </property>
             <item row="0" column="0">
-              <widget class="Q3Frame" name="exampleFrame">
+              <widget class="QFrame" name="exampleFrame">
                 <property name="sizePolicy">
                   <sizepolicy>
                     <hsizetype>7</hsizetype>
@@ -208,7 +208,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                 </widget>
               </item>
               <item row="2" column="0" rowspan="1" colspan="2">
-                <widget class="Q3GroupBox" name="GroupBox10">
+                <widget class="QGroupBox" name="GroupBox10">
                   <property name="enabled">
                     <bool>true</bool>
                   </property>
@@ -223,7 +223,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                       <number>6</number>
                     </property>
                     <item row="0" column="1" rowspan="3" colspan="1">
-                      <widget class="Q3Frame" name="logoFrame">
+                      <widget class="QFrame" name="logoFrame">
                         <property name="minimumSize">
                           <size>
                             <width>170</width>
@@ -353,12 +353,9 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                     <number>6</number>
                   </property>
                   <item>
-                    <widget class="Q3ButtonGroup" name="formatButtonGroup">
+                    <widget class="QGroupBox" name="formatButtonGroup">
                       <property name="title">
                         <string>Format</string>
-                      </property>
-                      <property name="exclusive">
-                        <bool>true</bool>
                       </property>
                       <layout class="QGridLayout">
                         <property name="margin">
@@ -444,7 +441,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                 </layout>
               </item>
               <item row="0" column="0" rowspan="2" colspan="1">
-                <widget class="Q3GroupBox" name="UnitsBox">
+                <widget class="QGroupBox" name="UnitsBox">
                   <property name="title">
                     <string>Length Units [Abbreviation]</string>
                   </property>
@@ -456,7 +453,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                       <number>6</number>
                     </property>
                     <item row="0" column="0">
-                      <widget class="Q3ListBox" name="unitsListBox">
+                      <widget class="QListWidget" name="unitsListBox">
                         <property name="toolTip" stdset="0">
                           <string>Length units and their abbreviations.</string>
                         </property>
@@ -537,7 +534,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                     </widget>
                   </item>
                   <item>
-                    <widget class="Q3ListBox" name="colorSchemeListBox">
+                    <widget class="QListWidget" name="colorSchemeListBox">
                       <property name="sizePolicy">
                         <sizepolicy>
                           <hsizetype>1</hsizetype>
@@ -566,7 +563,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                     <number>6</number>
                   </property>
                   <item>
-                    <widget class="Q3GroupBox" name="foregroundGroupBox">
+                    <widget class="QGroupBox" name="foregroundGroupBox">
                       <property name="title">
                         <string>Foreground</string>
                       </property>
@@ -669,7 +666,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                           </widget>
                         </item>
                         <item row="3" column="0" rowspan="1" colspan="2">
-                          <widget class="Q3GroupBox" name="constraintColorGroupBox">
+                          <widget class="QGroupBox" name="constraintColorGroupBox">
                             <property name="title">
                               <string>Constraint Colors</string>
                             </property>
@@ -756,7 +753,7 @@ In the width example, the fixed edge is the secondary member.
                     </widget>
                   </item>
                   <item>
-                    <widget class="Q3GroupBox" name="backgroundGroupBox">
+                    <widget class="QGroupBox" name="backgroundGroupBox">
                       <property name="title">
                         <string>Background</string>
                       </property>
@@ -906,7 +903,7 @@ In the width example, the fixed edge is the secondary member.
                 <number>6</number>
               </property>
               <item row="0" column="0" rowspan="2" colspan="1">
-                <widget class="Q3GroupBox" name="dimensionGroupBox">
+                <widget class="QGroupBox" name="dimensionGroupBox">
                   <property name="title">
                     <string>Dimension Properties</string>
                   </property>
@@ -1123,7 +1120,7 @@ Note that the clearance length specified here is in &lt;i&gt;paper&lt;/i&gt; uni
                     <number>6</number>
                   </property>
                   <item>
-                    <widget class="Q3GroupBox" name="annotationGroupBox">
+                    <widget class="QGroupBox" name="annotationGroupBox">
                       <property name="title">
                         <string>Annotation Properties</string>
                       </property>
@@ -1165,7 +1162,7 @@ Note that the clearance length specified here is in &lt;i&gt;paper&lt;/i&gt; uni
                     </widget>
                   </item>
                   <item>
-                    <widget class="Q3GroupBox" name="handleGroupBox">
+                    <widget class="QGroupBox" name="handleGroupBox">
                       <property name="title">
                         <string>Resize Handle Properties</string>
                       </property>
@@ -1245,7 +1242,6 @@ Note that the clearance length specified here is in &lt;i&gt;paper&lt;/i&gt; uni
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <customwidgets>
     <customwidget>
       <class>lCDefaultComboBox</class>
@@ -1310,9 +1306,9 @@ Note that the clearance length specified here is in &lt;i&gt;paper&lt;/i&gt; uni
     </connection>
     <connection>
       <sender>unitsListBox</sender>
-      <signal>currentChanged(Q3ListBoxItem*)</signal>
+      <signal>currentItemChanged(QListWidgetItem * current, QListWidgetItem * previous)</signal>
       <receiver>PreferencesDialog</receiver>
-      <slot>unitsListBox_currentChanged(Q3ListBoxItem*)</slot>
+      <slot>unitsListBox_currentChanged(QListWidgetItem * current, QListWidgetItem * previous)</slot>
     </connection>
     <connection>
       <sender>formatButtonGroup</sender>

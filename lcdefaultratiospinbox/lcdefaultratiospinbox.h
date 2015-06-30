@@ -44,7 +44,8 @@ protected:
   int mapTextToValue ( bool* ok );
 };
 
-class lCDefaultRatioSpinBox : public QHBox
+//TODO horiz layout
+class lCDefaultRatioSpinBox : public QWidget
 {
   Q_OBJECT
 

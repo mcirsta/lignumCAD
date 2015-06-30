@@ -32,7 +32,12 @@
 #include "constants.h"
 #include "view.h"
 
+#include <memory>
+
 #include "ui_newmodelwizard.h"
+#include "ui_modelinfodialog.h"
+#include "ui_pageinfodialog.h"
+#include "ui_preferencesdialog.h"
 
 class QDomElement;
 class QLabel;
@@ -48,10 +53,6 @@ class OpenGLPrinter;
 class TabBarContext;
 class lignumCADMainWindow;
 class PageView;
-class NewModelWizard;
-class Ui::ModelInfoDialog;
-class PageInfoDialog;
-class PreferencesDialog;
 class Model;
 class Ratio;
 class Printer;
@@ -61,21 +62,21 @@ class Printer;
  * interface of lignumCAD. This is Q_OBJECT so it can receive the signals from
  * it's GUI children.
  */
-class DesignBookView : public QVBox, public View {
+class DesignBookView : public QWidget, public View {
 Q_OBJECT
   lignumCADMainWindow* lCMW_;
 
-  QColorGroup app_palette_;
+  QPalette app_palette_;
 
   OpenGLView* opengl_view_;
   TabBarContext* page_tabbar_;
 
-  QPtrList< PageView > page_views_;
-  QPtrDict< PageView > page_tabs_;
+  QList< std::shared_ptr<PageView> > page_views_;
+  QHash< int, std::shared_ptr<PageView> > page_tabs_;
 
-  NewModelWizard* new_model_wizard_;
-  ModelInfoDialog* model_info_dialog_;
-  PageInfoDialog* page_info_dialog_;
+  Ui::NewModelWizard* new_model_wizard_;
+  Ui::ModelInfoDialog* model_info_dialog_;
+  Ui::PageInfoDialog* page_info_dialog_;
 
   QWidget* old_central_widget_;
   bool gui_visible_;
@@ -88,12 +89,12 @@ Q_OBJECT
   static Printer* printer_;
   static OpenGLPrinter* opengl_printer_;
 
-  static PreferencesDialog* preferences_dialog_;
+  static Ui::PreferencesDialog* preferences_dialog_;
   static OpenGLExample* preferences_example_;
 
 public:
-  DesignBookView ( lignumCADMainWindow* lCMW );
-  DesignBookView ( lignumCADMainWindow* lCMW, const QString file_name );
+  DesignBookView ( Ui::lignumCADMainWindow* lCMW );
+  DesignBookView ( Ui::lignumCADMainWindow* lCMW, const QString file_name );
   ~DesignBookView ( );
 
   OpenGLView* view ( void ) const;
@@ -102,7 +103,7 @@ public:
 
   ListViewItem* modelListItem ( void ) const { return model_list_item_; }
 
-  QColorGroup appPalette ( void ) const { return app_palette_; }
+  QPalette appPalette ( void ) const { return app_palette_; }
 
   bool aboutToExit ( void );
 

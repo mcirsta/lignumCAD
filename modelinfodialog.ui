@@ -251,7 +251,7 @@ Enter a name for the model.</string>
         </widget>
       </item>
       <item row="2" column="1" rowspan="1" colspan="3">
-        <widget class="Q3TextEdit" name="descriptionEdit">
+        <widget class="QTextEdit" name="descriptionEdit">
           <property name="whatsThis" stdset="0">
             <string>&lt;p&gt;&lt;b&gt;Description&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;Enter a brief description of the model which is being constructed. This information is not used anywhere in &lt;i&gt;lignumCAD&lt;/i&gt;; it is purely to aid you in identifying the model.&lt;/p&gt;</string>
@@ -289,9 +289,6 @@ Enter a name for the model.</string>
       </item>
       <item row="1" column="1">
         <widget class="lCFileChooser" name="modelFileChooser">
-          <property name="lineWidth">
-            <number>2</number>
-          </property>
           <property name="whatsThis" stdset="0">
             <string>&lt;p&gt;&lt;b&gt;File Name&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;Enter the name of the file in which to store
@@ -305,7 +302,6 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>modelNameEdit</tabstop>
     <tabstop>versionSpinBox</tabstop>
