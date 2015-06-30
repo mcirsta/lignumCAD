@@ -4,7 +4,7 @@
   <comment></comment>
   <exportmacro></exportmacro>
   <class>NewModelWizard</class>
-  <widget class="Q3Wizard" name="NewModelWizard">
+  <widget class="QWizard" name="NewModelWizard">
     <property name="geometry">
       <rect>
         <x>0</x>
@@ -105,7 +105,7 @@ Enter a name for the model.</string>
           </widget>
         </item>
         <item row="2" column="2" rowspan="1" colspan="3">
-          <widget class="Q3TextEdit" name="descriptionEdit">
+          <widget class="QTextEdit" name="descriptionEdit">
             <property name="whatsThis" stdset="0">
               <string>&lt;p&gt;&lt;b&gt;Description&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;Enter a brief description of the model which is being constructed. This information is not used anywhere in &lt;i&gt;lignumCAD&lt;/i&gt;; it is purely to aid you in identifying the model.&lt;/p&gt;</string>
@@ -395,7 +395,7 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
           </spacer>
         </item>
         <item row="2" column="2">
-          <widget class="Q3GroupBox" name="initialPageGroupBox">
+          <widget class="QGroupBox" name="initialPageGroupBox">
             <property name="title">
               <string>Page Types</string>
             </property>
@@ -413,7 +413,6 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
     </widget>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>modelNameEdit</tabstop>
     <tabstop>versionSpinBox</tabstop>

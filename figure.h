@@ -23,6 +23,8 @@
 #ifndef FIGURE_H
 #define FIGURE_H
 
+#include <Standard_Type.hxx>
+
 #include "modelitem.h"
 #include "vectoralgebra.h"
 
