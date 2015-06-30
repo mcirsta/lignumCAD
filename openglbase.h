@@ -595,7 +595,9 @@ public:
    * the defaults.
    * \return index of the current default scheme.
    */
-  //int at ( void ) const { return color_schemes_.at(); }
+
+  //TODO getDefaultScheme instead of 0
+  int at () const { return  0; }
 
   /*!
    * Retrieve the i-th predefined scheme without modifying the current

@@ -29,7 +29,7 @@
 #include <qpainter.h>
 #include <qrect.h>
 
-#include "ui_lignumcadmainwindow.h"
+#include "lignumcadmainwindow.h"
 #include "command.h"
 #include "cursorfactory.h"
 #include "page.h"

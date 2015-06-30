@@ -28,7 +28,7 @@
 #include <qwhatsthis.h>
 
 #include "command.h"
-#include "ui_lignumcadmainwindow.h"
+#include "lignumcadmainwindow.h"
 #include "cursorfactory.h"
 #include "openglview.h"
 #include "pageview.h"

@@ -39,7 +39,7 @@
 #include "systemdependencies.h"
 #include "constants.h"
 #include "usersettings.h"
-#include "ui_lignumcadmainwindow.h"
+#include "lignumcadmainwindow.h"
 #include "cursorfactory.h"
 #include "command.h"
 
@@ -66,6 +66,8 @@ int main( int argc, char ** argv )
     QCoreApplication::setOrganizationDomain("lignumcomputing.com");
     QCoreApplication::setApplicationName("LignumCAD");
     QSettings settings;
+
+    lignumCADMainWindow *lCMW = new lignumCADMainWindow();
 
     /*
   QDir home_dir( QString( "%1%2v%3.%4" ).arg(home).arg(QDir::separator()).
@@ -109,7 +111,7 @@ int main( int argc, char ** argv )
 
     if ( ! QString(  QLocale::system().name() ).startsWith( "en" ) ) {
         if ( !qt_translator.load(QLocale::system().name() ) ) {
-            QMessageBox::warning((QWidget*)&app,
+            QMessageBox::warning(lCMW,
                                  lC::STR::cLIGNUMCAD,
                                  noTranslationsFound);
         }
@@ -120,25 +122,21 @@ int main( int argc, char ** argv )
     // Must be able to write the history file into the current directory.
 
     if ( ! CommandHistory::instance().ready() ) {
-        QMessageBox::critical((QWidget*)&app,
+        QMessageBox::critical(lCMW,
                               app.translate( "Constants", lC::STR::cLIGNUMCAD ),
                               app.translate( "Messages",
                                              "lignumCAD cannot write the command history file\n"
                                              "in the current directory. Please make sure that\n"
                                              "you have write permission to the current directory\n"
                                              "and that no old history.xml exists." ));
+        delete lCMW;
         return 1;
     }
-
-    Ui::lignumCADMainWindow lCMW;
-    QMainWindow* ligMainW = new QMainWindow((QWidget *)&app);
-
-    lCMW.setupUi(ligMainW);
 
     // Make sure that we can actually work. In particular, the
     // default application font must be a Type1 or TrueType font.
 
-  /*
+    /*
     QString file;
     double point_size;
     if ( !System::findFontFile( app.font().toString(), file, point_size ) ) {
@@ -160,14 +158,14 @@ int main( int argc, char ** argv )
     // screen for a few seconds
 
     if ( argc == 1 )
-        QTimer::singleShot( 1000, ligMainW, SLOT( showView() ) );
+        QTimer::singleShot( 1000, lCMW, SLOT( showView() ) );
 
     // Otherwise, load the given model and get going
 
     else
-        ligMainW->show();
+        lCMW->show();
 
-    QObject::connect( &app, SIGNAL( lastWindowClosed() ), ligMainW , SLOT( fileExit() ) );
+    QObject::connect( &app, SIGNAL( lastWindowClosed() ), lCMW , SLOT( fileExit() ) );
 
 #if defined(Q_OS_UNIX)
     // Kind of a last resort thing:
@@ -186,6 +184,6 @@ int main( int argc, char ** argv )
     int ret_code = app.exec();
 
     CursorFactory::instance().clear();
-    delete ligMainW;
+    delete lCMW;
     return ret_code;
 }

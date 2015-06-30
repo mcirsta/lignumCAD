@@ -142,7 +142,7 @@ public:
 
   void addPageMetadata ( uint id, PageMetadata* page_data );
 
-  QValueVector<uint> pageIDs ( void ) const;
+  QVector<uint> pageIDs ( void ) const;
 
   QString type ( uint i ) const { return page_data_[i]->type(); }
   QString icon ( uint i ) const { return page_data_[i]->icon(); }

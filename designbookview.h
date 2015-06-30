@@ -34,10 +34,11 @@
 
 #include <memory>
 
-#include "ui_newmodelwizard.h"
-#include "ui_modelinfodialog.h"
-#include "ui_pageinfodialog.h"
-#include "ui_preferencesdialog.h"
+#include "newmodelwizard.h"
+#include "modelinfodialog.h"
+#include "pageinfodialog.h"
+#include "preferencesdialog.h"
+#include "lignumcadmainwindow.h"
 
 class QDomElement;
 class QLabel;
@@ -51,7 +52,6 @@ class OpenGLView;
 class OpenGLExample;
 class OpenGLPrinter;
 class TabBarContext;
-class lignumCADMainWindow;
 class PageView;
 class Model;
 class Ratio;
@@ -74,9 +74,9 @@ Q_OBJECT
   QList< std::shared_ptr<PageView> > page_views_;
   QHash< int, std::shared_ptr<PageView> > page_tabs_;
 
-  Ui::NewModelWizard* new_model_wizard_;
-  Ui::ModelInfoDialog* model_info_dialog_;
-  Ui::PageInfoDialog* page_info_dialog_;
+  NewModelWizard* new_model_wizard_;
+  ModelInfoDialog* model_info_dialog_;
+  PageInfoDialog* page_info_dialog_;
 
   QWidget* old_central_widget_;
   bool gui_visible_;
@@ -89,12 +89,12 @@ Q_OBJECT
   static Printer* printer_;
   static OpenGLPrinter* opengl_printer_;
 
-  static Ui::PreferencesDialog* preferences_dialog_;
+  static PreferencesDialog* preferences_dialog_;
   static OpenGLExample* preferences_example_;
 
 public:
-  DesignBookView ( Ui::lignumCADMainWindow* lCMW );
-  DesignBookView ( Ui::lignumCADMainWindow* lCMW, const QString file_name );
+  DesignBookView ( lignumCADMainWindow* lCMW );
+  DesignBookView ( lignumCADMainWindow* lCMW, const QString file_name );
   ~DesignBookView ( );
 
   OpenGLView* view ( void ) const;

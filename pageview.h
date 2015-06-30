@@ -104,7 +104,7 @@ public:
 
   DesignBookView* parent ( void ) const { return parent_; }
 
-  virtual QTab* tab ( void ) const = 0;
+  virtual int tabIdx ( void ) const = 0;
   virtual ListViewItem* listViewItem ( void ) const = 0;
 
   OpenGLView* view ( void ) const;

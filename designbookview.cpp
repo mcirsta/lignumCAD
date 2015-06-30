@@ -44,13 +44,15 @@
 #include <qslider.h>
 #include <qlayout.h>
 
+#include <QDesktopWidget>
+
 
 #include "configuration.h"
 #include "openglview.h"
 #include "openglexample.h"
 #include "openglprinter.h"
 #include "tabbarcontext.h"
-#include "ui_lignumcadmainwindow.h"
+#include "lignumcadmainwindow.h"
 #include "pagefactory.h"
 #include "pageview.h"
 #include "model.h"
@@ -73,7 +75,7 @@
 
 //#define LAYOUT_COMPREHENSION
 
-Ui::PreferencesDialog* DesignBookView::preferences_dialog_ = 0;
+PreferencesDialog* DesignBookView::preferences_dialog_ = 0;
 OpenGLExample* DesignBookView::preferences_example_ = 0;
 Printer* DesignBookView::printer_ = 0;
 OpenGLPrinter* DesignBookView::opengl_printer_ = 0;
@@ -104,10 +106,11 @@ void CreatePage::createPage ( void )
 // Should this class be a singleton? Are we ever going to have a
 // MDI version of lignumCAD?
 
-DesignBookView::DesignBookView ( Ui::lignumCADMainWindow* lCMW )
-  : QWidget( lCMW, "designbookview" ), lCMW_( lCMW ), gui_visible_( false ),
+DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
+  : QWidget( lCMW ), lCMW_( lCMW ), gui_visible_( false ),
     model_( 0 ), printing_( false )
 {
+  setObjectName("designbookview");
   init();
 
   // Can't really display the OpenGL and Tabbar views until there is
@@ -145,7 +148,7 @@ DesignBookView::DesignBookView ( Ui::lignumCADMainWindow* lCMW )
     addCommand( new CreateCommand( QString( "create %1" ).arg( page_view->type() ),
 				   page_view->memento() ) );
 
-  page_tabbar_->setCurrentTab( page_view->tab() );
+  page_tabbar_->setCurrentIndex(page_view->tabIdx() );
   page_tabbar_->update();
   page_view->show();
   opengl_view_->setPageView( page_view );
@@ -154,9 +157,10 @@ DesignBookView::DesignBookView ( Ui::lignumCADMainWindow* lCMW )
 }
 
 DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW, const QString file_name )
-  : QVBox( lCMW, "designbookview" ), lCMW_( lCMW ), gui_visible_( false ),
+  : QWidget( lCMW ), lCMW_( lCMW ), gui_visible_( false ),
     model_( 0 ), printing_( false )
 {
+  setObjectName( "designbookview" );
   init();
 
   if ( !read( file_name ) ) return;
@@ -177,46 +181,49 @@ DesignBookView::~DesignBookView ()
 
 void DesignBookView::init ( void )
 {
-  app_palette_ = qApp->desktop()->colorGroup();
-
-  page_views_.setAutoDelete( true );
+  app_palette_ = qApp->desktop()->palette();
 
   // Recover the user's default settings.
   QSettings settings;
   bool ok;
 
+  Ui::lignumCADMainWindow* lCMW_Ui = lCMW_->getUi();
+
+ //TODO check if value exist, otherwise write
+
+
   QString business_name =
-    settings.readEntry( lC::Setting::Business::NAME, QString::null, &ok );
+    settings.value( lC::Setting::Business::NAME ).toString();
 
   if ( ok )
     BusinessInfo::instance().setName( business_name );
 
   QString business_location =
-    settings.readEntry( lC::Setting::Business::LOCATION, QString::null, &ok );
+    settings.value( lC::Setting::Business::LOCATION ).toString();
 
   if ( ok )
     BusinessInfo::instance().setLocation( business_location );
 
   QString business_logo =
-    settings.readEntry( lC::Setting::Business::LOGO, QString::null, &ok );
+    settings.value( lC::Setting::Business::LOGO ).toString();
 
   if ( ok )
     BusinessInfo::instance().setLogo( business_logo );
 
   QStringList length_unit =
-    settings.readListEntry( lC::Setting::LENGTH_UNIT, ',', &ok );
+    settings.value ( lC::Setting::LENGTH_UNIT, ',').toStringList();
 
   if ( ok )
     UnitsBasis::instance()->setLengthUnit( length_unit );
 
   QString scheme =
-    settings.readEntry( lC::Setting::ColorScheme::BASE );
+    settings.value ( lC::Setting::ColorScheme::BASE ).toString();
 
   if ( !scheme.isEmpty() )
     OpenGLGlobals::instance()->setDefaultScheme( scheme );
 
   bool custom =
-    settings.readBoolEntry( lC::Setting::ColorScheme::CUSTOM, false, &ok );
+    settings.value( lC::Setting::ColorScheme::CUSTOM, false ).toBool();
 
   if ( ok ) {
     if ( !custom ) {
@@ -229,7 +236,7 @@ void DesignBookView::init ( void )
       QString color_name;
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::GEOMETRY, QString::null, &ok );
+    value( lC::Setting::ColorScheme::GEOMETRY ).toString();
 
       if ( ok ) {
 	QColor color( color_name );
@@ -237,7 +244,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::ANNOTATION, QString::null, &ok );
+    value( lC::Setting::ColorScheme::ANNOTATION ).toString();
 
       if ( ok ) {
 	QColor color( color_name );
@@ -245,7 +252,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::GRID, QString::null, &ok );
+    value( lC::Setting::ColorScheme::GRID ).toString();
 
       if ( ok ) {
 	QColor color( color_name );
@@ -253,7 +260,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::CONSTRAINT_PRIMARY, QString::null,&ok);
+    value( lC::Setting::ColorScheme::CONSTRAINT_PRIMARY ).toString();
 
       if ( ok ) {
 	QColor color( color_name );
@@ -261,7 +268,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry(lC::Setting::ColorScheme::CONSTRAINT_SECONDARY,QString::null,&ok);
+    value(lC::Setting::ColorScheme::CONSTRAINT_SECONDARY ).toString();
 
       if ( ok ) {
 	QColor color( color_name );
@@ -269,14 +276,14 @@ void DesignBookView::init ( void )
       }
 
       QString style = settings.
-        readEntry( lC::Setting::ColorScheme::BACKGROUND_STYLE, QString::null, &ok );
+        value( lC::Setting::ColorScheme::BACKGROUND_STYLE ).toString();
 
       if ( ok )
 	OpenGLGlobals::instance()->
 	  setBackgroundStyle( lC::Background::backgroundStyle( style ) );
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::BACKGROUND, QString::null, &ok );
+    value( lC::Setting::ColorScheme::BACKGROUND ).toString();
 
       if ( ok ) {
 	QColor color( color_name );
@@ -284,7 +291,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::GRADIENT, QString::null, &ok );
+    value( lC::Setting::ColorScheme::GRADIENT ).toString();
 
       if ( ok ) {
 	QColor color( color_name );
@@ -292,7 +299,7 @@ void DesignBookView::init ( void )
       }
 
       QString pattern_file = settings.
-	readEntry( lC::Setting::ColorScheme::PATTERN_FILE, QString::null, &ok );
+    value( lC::Setting::ColorScheme::PATTERN_FILE ).toString();
 
       if ( ok )
 	OpenGLGlobals::instance()->setPatternFile( pattern_file );
@@ -300,57 +307,57 @@ void DesignBookView::init ( void )
   }
 
   QString dimension_font =
-    settings.readEntry( lC::Setting::Dimension::FONT );
+    settings.value( lC::Setting::Dimension::FONT ).toString();
 
   if ( !dimension_font.isEmpty() )
     OpenGLGlobals::instance()->setDimensionFont( dimension_font );
 
   double arrow_head_length =
-    settings.readDoubleEntry( lC::Setting::Dimension::ARROW_HEAD_LENGTH, 0, &ok );
+    settings.value( lC::Setting::Dimension::ARROW_HEAD_LENGTH, 0 ).toDouble();
 
   if ( ok )
     OpenGLGlobals::instance()->setArrowHeadLength( arrow_head_length );
 
   int arrow_head_width_ratio =
-    settings.readNumEntry( lC::Setting::Dimension::ARROW_HEAD_WIDTH_RATIO, 0, &ok );
+    settings.value( lC::Setting::Dimension::ARROW_HEAD_WIDTH_RATIO, 0 ).toInt();
 
   if ( ok )
     OpenGLGlobals::instance()->
       setArrowHeadWidthRatio( Ratio( arrow_head_width_ratio ) );
 
   QString arrow_head_style =
-    settings.readEntry( lC::Setting::Dimension::ARROW_HEAD_STYLE,QString::null,&ok);
+    settings.value( lC::Setting::Dimension::ARROW_HEAD_STYLE ).toString();
 
   if ( ok )
     OpenGLGlobals::instance()->
       setArrowHeadStyle( lC::arrowHeadStyle( arrow_head_style ) );
 
   double clearance =
-    settings.readDoubleEntry( lC::Setting::Dimension::CLEARANCE, 0, &ok );
+    settings.value( lC::Setting::Dimension::CLEARANCE, 0 ).toDouble();
 
   if ( ok )
     OpenGLGlobals::instance()->setClearance( clearance );
 
   double line_thickness =
-    settings.readDoubleEntry( lC::Setting::Dimension::LINE_THICKNESS, 0, &ok );
+    settings.value ( lC::Setting::Dimension::LINE_THICKNESS, 0 ).toDouble();
 
   if ( ok )
     OpenGLGlobals::instance()->setLineThickness( line_thickness );
 
   double extension_line_offset =
-    settings.readDoubleEntry( lC::Setting::Dimension::EXTENSION_LINE_OFFSET, 0,&ok);
+    settings.value ( lC::Setting::Dimension::EXTENSION_LINE_OFFSET, 0).toDouble();
 
   if ( ok )
     OpenGLGlobals::instance()->setExtensionLineOffset( extension_line_offset );
 
   QString annotation_font =
-    settings.readEntry( lC::Setting::Annotation::FONT );
+    settings.value ( lC::Setting::Annotation::FONT ).toString();
 
   if ( !annotation_font.isEmpty() )
     OpenGLGlobals::instance()->setAnnotationFont( annotation_font );
 
   double handle_size =
-    settings.readDoubleEntry( lC::Setting::Handle::SIZE, 0, &ok );
+    settings.value ( lC::Setting::Handle::SIZE, 0 ).toDouble();
 
   if ( ok )
     OpenGLGlobals::instance()->setHandleSize( handle_size );
@@ -359,28 +366,26 @@ void DesignBookView::init ( void )
 
   page_info_dialog_ = new PageInfoDialog( lCMW_ );
 
-  setSpacing( 1 );
-
   opengl_view_ = new OpenGLView( this, "openGLView", lCMW_, 0 );
   opengl_view_->setFocus();
 
   page_tabbar_ = new TabBarContext( this, "pageTabBarContext" );
-  page_tabbar_->setShape( QTabBar::RoundedBelow );
+  page_tabbar_->setShape( QTabBar::RoundedSouth );
 
-#ifndef LAYOUT_COMPREHENSION
-  // Without at least one tab, QTabBar starts with an initial height
-  // of 0, from which the layout never seems to recover. It's probably
-  // something wrong with the specification of QGLWidget's resizing
-  // preferences. Look at this later. For now...
-  page_tabbar_->setMinimumHeight( 32 );
-  page_tabbar_->addTab( new QTab( "###dummy###" ) );
-#endif
+//#ifndef LAYOUT_COMPREHENSION
+//  // Without at least one tab, QTabBar starts with an initial height
+//  // of 0, from which the layout never seems to recover. It's probably
+//  // something wrong with the specification of QGLWidget's resizing
+//  // preferences. Look at this later. For now...
+//  page_tabbar_->setMinimumHeight( 32 );
+//  page_tabbar_->addTab( new QTab( "###dummy###" ) );
+//#endif
 
   // Add the available pages to the Insert menu and the Tab Bar context
   // menu.
 
-  QValueVector<uint> page_ids = PageFactory::instance()->pageIDs();
-  QValueVector<uint>::const_iterator id = page_ids.begin();
+  QVector<uint> page_ids = PageFactory::instance()->pageIDs();
+  QVector<uint>::const_iterator id = page_ids.begin();
   // This loop assumes that the page creation menu items are the first
   // items inserted into both the menu bar Insert menu and the tab bar
   // context popup menu. (QAction really needs some more identifying
@@ -388,9 +393,9 @@ void DesignBookView::init ( void )
   for ( int index = 0; id != page_ids.end(); ++id, ++index ) {
     QAction* insertAction = PageFactory::instance()->action( *id, lCMW_ );
 
-    insertAction->addTo( page_tabbar_->contextMenu() );
-    insertAction->addTo( lCMW_->insertMenu );
-    insertAction->addTo( lCMW_->insertToolbar );
+    page_tabbar_->contextMenu()->addAction(insertAction);
+    lCMW_Ui->insertMenu->addAction ( insertAction );
+    lCMW_Ui->insertToolbar->addAction ( insertAction );
 
     connect( insertAction, SIGNAL( activated() ),
 	     new CreatePage( this, *id ), SLOT( createPage() ) );
@@ -398,39 +403,39 @@ void DesignBookView::init ( void )
     insertAction->setEnabled( false );
   }
 
-  page_tabbar_->contextMenu()->insertSeparator();
-  lCMW_->renamePageAction->addTo( page_tabbar_->contextMenu() );
-  lCMW_->deletePageAction->addTo( page_tabbar_->contextMenu() );
+  page_tabbar_->contextMenu()->addSeparator();
+  page_tabbar_->contextMenu()->addAction( lCMW_Ui->renamePageAction );
+  page_tabbar_->contextMenu()->addAction( lCMW_Ui->deletePageAction );
 
   connect( opengl_view_, SIGNAL( scale( const Ratio& ) ),
 	   lCMW_, SLOT( scaleChanged( const Ratio& ) ) );
 
   connect( page_tabbar_, SIGNAL( selected( int ) ), SLOT( pageChanged( int ) ) );
 
-  connect( lCMW_->editPreferencesAction, SIGNAL( activated() ),
+  connect( lCMW_Ui->editPreferencesAction, SIGNAL( activated() ),
 	   SLOT( editPreferences() ) );
 
-  connect( lCMW_->renamePageAction, SIGNAL( activated() ), SLOT( renamePage() ) );
-  connect( lCMW_->deletePageAction, SIGNAL( activated() ), SLOT( deletePage() ) );
+  connect( lCMW_Ui->renamePageAction, SIGNAL( activated() ), SLOT( renamePage() ) );
+  connect( lCMW_Ui->deletePageAction, SIGNAL( activated() ), SLOT( deletePage() ) );
 
   connect( this, SIGNAL( setCaption( const QString& ) ),
-	   lCMW_, SLOT( setCaption( const QString& ) ) );
+       lCMW_, SLOT( setCaption( const QString& ) ) );
   connect( this, SIGNAL( pageChanged( const QString& ) ),
-	   lCMW_, SLOT( pageChanged( const QString& ) ) );
+       lCMW_, SLOT( pageChanged( const QString& ) ) );
 
   // Disable the actions we can't take.
-  lCMW_->fileSaveAction->setEnabled( false );
-  lCMW_->fileSaveAsAction->setEnabled( false );
-  lCMW_->filePrintAction->setEnabled( false );
-  lCMW_->exportPageAction->setEnabled( false );
-  lCMW_->modelInfoAction->setEnabled( false );
+  lCMW_Ui->fileSaveAction->setEnabled( false );
+  lCMW_Ui->fileSaveAsAction->setEnabled( false );
+  lCMW_Ui->filePrintAction->setEnabled( false );
+  lCMW_Ui->exportPageAction->setEnabled( false );
+  lCMW_Ui->modelInfoAction->setEnabled( false );
 
-  lCMW_->editUndoAction->setEnabled( false );
-  lCMW_->editRedoAction->setEnabled( false );
-  lCMW_->editCutAction->setEnabled( false );
-  lCMW_->editCopyAction->setEnabled( false );
-  lCMW_->editPasteAction->setEnabled( false );
-  lCMW_->editFindAction->setEnabled( false );
+  lCMW_Ui->editUndoAction->setEnabled( false );
+  lCMW_Ui->editRedoAction->setEnabled( false );
+  lCMW_Ui->editCutAction->setEnabled( false );
+  lCMW_Ui->editCopyAction->setEnabled( false );
+  lCMW_Ui->editPasteAction->setEnabled( false );
+  lCMW_Ui->editFindAction->setEnabled( false );
 
   if ( preferences_dialog_ == 0 )
     preferences_dialog_ = new PreferencesDialog( lCMW_ );
@@ -470,16 +475,16 @@ void DesignBookView::showView ( void )
 {
   // Enable the actions we can now take.
 
-  lCMW_->fileSaveAction->setEnabled( model_->changed() );
-  lCMW_->fileSaveAsAction->setEnabled( true );
-  lCMW_->filePrintAction->setEnabled( true );
-  lCMW_->exportPageAction->setEnabled( true );
-  lCMW_->modelInfoAction->setEnabled( true );
+  lCMW_->getUi()->fileSaveAction->setEnabled( model_->changed() );
+  lCMW_->getUi()->fileSaveAsAction->setEnabled( true );
+  lCMW_->getUi()->filePrintAction->setEnabled( true );
+  lCMW_->getUi()->exportPageAction->setEnabled( true );
+  lCMW_->getUi()->modelInfoAction->setEnabled( true );
 
-  lCMW_->editFindAction->setEnabled( true );
+  lCMW_->getUi()->editFindAction->setEnabled( true );
 
-  QValueVector<uint> page_ids = PageFactory::instance()->pageIDs();
-  QValueVector<uint>::const_iterator id = page_ids.begin();
+  QVector<uint> page_ids = PageFactory::instance()->pageIDs();
+  QVector<uint>::const_iterator id = page_ids.begin();
   for ( int index = 0; id != page_ids.end(); ++id, ++index ) {
     QAction* insertAction = PageFactory::instance()->action( *id, lCMW_ );
     insertAction->setEnabled( true );
@@ -497,13 +502,13 @@ void DesignBookView::showView ( void )
     lCMW_->setCentralWidget( this );
     show();
     gui_visible_ = true;
-#ifndef LAYOUT_COMPREHENSION
-    if ( page_tabbar_->count() > 0 ) {
-      QTab* tab0 = page_tabbar_->tabAt( 0 );
-      if ( tab0 != 0 && tab0->text() == "###dummy###" )
-	page_tabbar_->removeTab( tab0 );
-    }
-#endif
+//#ifndef LAYOUT_COMPREHENSION
+//    if ( page_tabbar_->count() > 0 ) {
+//      QTab* tab0 = page_tabbar_->tabAt( new QPoint() );
+//      if ( tab0 != 0 && tab0->text() == "###dummy###" )
+//	page_tabbar_->removeTab( tab0 );
+//    }
+//#endif
   }
 
   model_list_item_->setText( lC::NAME, lC::STR::NAME_ID.

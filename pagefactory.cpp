@@ -50,9 +50,9 @@ void PageFactory::addPageMetadata ( uint id, PageMetadata* page_data )
 
 // Extract the keys from the page data array.
 
-QValueVector<uint> PageFactory::pageIDs ( void ) const
+QVector<uint> PageFactory::pageIDs ( void ) const
 {
-  QValueVector<uint> page_ids( page_data_.count() );
+  QVector<uint> page_ids( page_data_.count() );
   QMap<uint, PageMetadata*>::const_iterator page = page_data_.begin();
   for ( uint i = 0; page != page_data_.end(); ++page, ++i ) {
     page_ids[i] = page.key();
