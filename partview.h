@@ -37,7 +37,7 @@ class PartView : public PageView {
   //! Part this view references.
   Part* part_;
 
-  QTab* tab_;
+  int tabId;
   ListViewItem* list_view_item_;
 
   QPopupMenu* context_menu_;
@@ -79,7 +79,7 @@ public:
   // Implementation of PageView interface
 
   //! \return the tab for this page view.
-  QTab* tab ( void ) const { return tab_; }
+  int tabIdx ( void ) const { return tabId; }
   //! \return the list view item for this page view.
   ListViewItem* listViewItem ( void ) const { return list_view_item_; }
 

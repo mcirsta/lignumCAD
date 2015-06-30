@@ -1,7 +1,14 @@
 #ifndef LIGNUMCADMAINWINDOW
 #define LIGNUMCADMAINWINDOW
+
 #include "ui_lignumcadmainwindow.h"
 #include <QTableWidget>
+#include <QTreeView>
+#include <QStandardItemModel>
+
+class QListView;
+class DesignBookView;
+class aboutDialog;
 
 class lignumCADMainWindow : public QMainWindow
 {
@@ -14,6 +21,16 @@ public:
 private:
     Ui::lignumCADMainWindow ui;
 
+    QDir home_dir_;
+    QDockWidget* model_hierarchy_view_;
+    QLabel* page_label_;
+    QLabel* scale_label_;
+    static aboutDialog* about_dialog_;
+    DesignBookView* design_book_view_;
+    QLabel* message_label_;
+    QLabel* information_label_;
+    QStandardItemModel* model_hierarchy_data;
+    QTreeView* model_hierarchy_list_;
 
 public slots:
     void init ();
@@ -42,7 +59,7 @@ public slots:
     void scaleChanged( const Ratio & scale );
     void pageChanged( const QString& name );
     void updateInformation( const QString& information );
-    QTableWidget* modelHierarchyList();
+    QStandardItem *modelHierarchyList();
     void showView();
     void setHomeDir( QDir & home_dir );
 

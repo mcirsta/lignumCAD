@@ -83,7 +83,7 @@ Q_OBJECT
 
   Model* model_;
 
-  ListViewItem* model_list_item_;
+  QStandardItem * model_list_item_;
 
   bool printing_;
   static Printer* printer_;
@@ -91,6 +91,8 @@ Q_OBJECT
 
   static PreferencesDialog* preferences_dialog_;
   static OpenGLExample* preferences_example_;
+
+  int currentPageView;
 
 public:
   DesignBookView ( lignumCADMainWindow* lCMW );
@@ -101,7 +103,7 @@ public:
   Model* model ( void ) const { return model_; }
   lignumCADMainWindow* lCMW ( void ) const { return lCMW_; }
 
-  ListViewItem* modelListItem ( void ) const { return model_list_item_; }
+  QStandardItem* modelListItem ( void ) const { return model_list_item_; }
 
   QPalette appPalette ( void ) const { return app_palette_; }
 
@@ -111,10 +113,10 @@ public:
   void showPageView ( PageView* page_view );
   void removePageView ( PageView* page_view );
   PageView* lastPageView ( void );
-  QListViewItem* previousItem ( uint id ) const;
+  QStandardItem* previousItem ( uint id ) const;
   void deletePage ( PageView* page_view );
   View* lookup ( const DBURL& db_url );
-  std::vector<GLuint> lookup ( const QValueVector<uint>& id_path ) const;
+  std::vector<GLuint> lookup (const QVector<uint> &id_path ) const;
 
   void modelChanged ( bool status );
 
@@ -149,6 +151,9 @@ public:
   // Implementation of View interface
   QString name ( void ) const;
   DBURL dbURL ( void ) const;
+
+  //TODO implement CurrentPageView()
+  PageView* getCurrentPageView() const;
 
 public slots:
   void editPreferences ( void );

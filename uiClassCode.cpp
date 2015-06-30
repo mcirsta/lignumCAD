@@ -5,6 +5,7 @@ lignumCADMainWindow::lignumCADMainWindow(QWidget *parent)
     : QWidget(parent)
 {
     ui.setupUi(this);
+    init();
 }
 
 Ui::lignumCADMainWindow* lignumCADMainWindow::getUi()
@@ -287,12 +288,15 @@ void lignumCADMainWindow::showView( const char * file_name )
     ts >> *this;
     }
 
-    model_hierarchy_list_ = new QListView( model_hierarchy_view_, "modelHierarchyList" );
+    model_hierarchy_list_ = new QTreeView( model_hierarchy_view_, "modelHierarchyList" );
+    model_hierarchy_list_->setUniformRowHeights(true);
     model_hierarchy_list_->setRootIsDecorated( true );
-    model_hierarchy_list_->addColumn( tr( "Name" ) );
-    model_hierarchy_list_->addColumn( tr( "Type" ) );
-    model_hierarchy_list_->addColumn( tr( "Detail" ) );
-    model_hierarchy_list_->setSorting( -1 );
+    QStringList headerStrings ( tr( "Name" ) , tr( "Type" ) , tr( "Detail" ) );
+    model_hierarchy_data->setHorizontalHeaderLabels(headerStrings);
+    model_hierarchy_list_->addColumn(  );
+    model_hierarchy_list_->addColumn(  );
+    model_hierarchy_list_->addColumn( );
+    model_hierarchy_list_->setSortingEnabled(false);
 
     ui.model_hierarchy_view_->boxLayout()->addWidget( model_hierarchy_list_ );
     model_hierarchy_list_->show();
@@ -337,9 +341,10 @@ void lignumCADMainWindow::updateInformation( const QString& information )
   information_label_->setText( information );
 }
 
-QListView* lignumCADMainWindow::modelHierarchyList()
+QStandardItem* lignumCADMainWindow::modelHierarchyList()
 {
-    return model_hierarchy_list_;
+    //TODO figure out what to return here
+    return model_hierarchy_data->item(0);
 }
 
 void lignumCADMainWindow::showView()

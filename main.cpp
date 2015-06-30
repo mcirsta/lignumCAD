@@ -163,7 +163,7 @@ int main( int argc, char ** argv )
     // Otherwise, load the given model and get going
 
     else
-        lCMW->show();
+        lCMW->showView(argv[1]);
 
     QObject::connect( &app, SIGNAL( lastWindowClosed() ), lCMW , SLOT( fileExit() ) );
 
