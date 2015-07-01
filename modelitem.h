@@ -82,7 +82,7 @@ public:
    * which should improve performance as a return value.
    * \return the hierarchical object id.
    */
-  virtual QValueVector<uint> ID ( void ) const = 0;
+  virtual QVector<uint> ID ( void ) const = 0;
   /*!
    * Determine the fully qualified object name. The subclass which
    * knows the parent of this object should implement this method.

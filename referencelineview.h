@@ -23,7 +23,6 @@
 #ifndef REFERENCELINEVIEW_H
 #define REFERENCELINEVIEW_H
 
-#include <qintdict.h>
 #include <qdom.h>
 
 #include "vectoralgebra.h"

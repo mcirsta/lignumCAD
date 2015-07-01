@@ -25,7 +25,6 @@
 
 #include <qcolor.h>
 #include <qdom.h>
-#include <qvaluevector.h>
 
 #include "graphics.h"
 #include "dimension.h"

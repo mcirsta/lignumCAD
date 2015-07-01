@@ -45,7 +45,8 @@ namespace lC {
 
   //! The minimum size of any dimension in inches. Actually, if you're careful,
   //! you can build something two miles wide.
-  const double MINIMUM_DIMESION = -MAXIMUM_DIMENSION;
+  //TODO not used ?
+  //const double MINIMUM_DIMESION = -MAXIMUM_DIMENSION;
 
   //! The Version number of the LIGNUMCAD model file
   const uint FILE_VERSION = 2;

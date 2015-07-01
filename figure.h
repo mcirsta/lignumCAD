@@ -109,7 +109,7 @@ namespace Space2D {
     bool isComplete ( void ) const { return complete_; }
     void setComplete ( bool complete );
 
-    QValueVector<uint> ID ( void ) const;
+    QVector<uint> ID ( void ) const;
     QString path ( void ) const;
 
     virtual Vertex closestVertex( Point p, Curve* curve ) const = 0;

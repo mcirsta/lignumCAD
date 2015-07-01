@@ -8,9 +8,16 @@ class ModelInfoDialog : public QDialog {
 
 public:
     ModelInfoDialog(QWidget *parent = 0);
+     Ui::ModelInfoDialog* getUi();
 
 private:
     Ui::ModelInfoDialog ui;
+
+public slots:
+    virtual void buttonHelp_clicked();
+
+private slots:
+    void modelNameEdit_textChanged( const QString & text );
 };
 
 #endif // MODELINFODIALOG

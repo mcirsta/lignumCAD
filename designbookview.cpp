@@ -673,7 +673,7 @@ void DesignBookView::addPageView ( PageView* page_view )
     for ( ; p < page_views_.count(); ++p ) {
         if ( page_views_.at( p )->id() > page_view->id() ) break;
     }
-    page_views_.insert( p, std::make_shared<PageView>(page_view) );
+    page_views_.insert( p, std::shared_ptr<PageView>(page_view) );
     //TODO tab() is replaced by tabIdx
     //page_tabs_.insert( page_view->tab(), std::make_shared<PageView>(page_view) );
     //page_tabbar_->insertTab( page_view->tab(), p );
@@ -1612,7 +1612,8 @@ void DesignBookView::print ( void )
     painter.setWindow( 0, margin.height(), margin.width(), -margin.height() );
 
     // Print the first page...
-    uint page_no = 1;
+    //TODO not used ?
+    //uint page_no = 1;
 
     QListIterator< std::shared_ptr <PageView> > pv( page_views_ );
 
@@ -1898,44 +1899,44 @@ bool DesignBookView::write ( void )
 
 bool DesignBookView::newModelWizard ( Model* model, uint& initial_page_id )
 {
-    new_model_wizard_->showPage( new_model_wizard_->NewModelPage );
+    //TODO don't think we need this
+    //new_model_wizard_->showPage( new_model_wizard_->getUi()->NewModelPage );
 
-    new_model_wizard_->modelNameEdit->setText( model->name() );
-    new_model_wizard_->modelFileChooser->setFileName( model->writeFileName() );
+    new_model_wizard_->getUi()->modelNameEdit->setText( model->name() );
+    new_model_wizard_->getUi()->modelFileChooser->setFileName( model->writeFileName() );
 
-    new_model_wizard_->versionSpinBox->setValue( model->version() );
-    new_model_wizard_->revisionSpinBox->setValue( model->revision() );
+    new_model_wizard_->getUi()->versionSpinBox->setValue( model->version() );
+    new_model_wizard_->getUi()->revisionSpinBox->setValue( model->revision() );
 
-    new_model_wizard_->descriptionEdit->setText( model->description() );
+    new_model_wizard_->getUi()->descriptionEdit->setText( model->description() );
 
-    new_model_wizard_->creationDateLabel->setText( model->created().toString() );
-    new_model_wizard_->modificationDateLabel->setText( model->modified().toString() );
+    new_model_wizard_->getUi()->creationDateLabel->setText( model->created().toString() );
+    new_model_wizard_->getUi()->modificationDateLabel->setText( model->modified().toString() );
 
     new_model_wizard_->unsetInitialPages();
 
-    new_model_wizard_->modelNameEdit->setFocus();
-    new_model_wizard_->nextButton()->setDefault( true );
+    new_model_wizard_->getUi()->modelNameEdit->setFocus();
 
     int ret = new_model_wizard_->exec();
 
     if ( ret == QDialog::Rejected ) return false;
 
-    if ( new_model_wizard_->modelNameEdit->edited() ) {
-        model->setName( new_model_wizard_->modelNameEdit->text() );
+    if ( new_model_wizard_->getUi()->modelNameEdit->isModified() ) {
+        model->setName( new_model_wizard_->getUi()->modelNameEdit->text() );
         //    model_list_item_->setText( lC::NAME, model->name() );
     }
 
-    if ( new_model_wizard_->modelFileChooser->edited() )
-        model->setWriteFileName( new_model_wizard_->modelFileChooser->fileName() );
+    if ( new_model_wizard_->getUi()->modelFileChooser->edited() )
+        model->setWriteFileName( new_model_wizard_->getUi()->modelFileChooser->fileName() );
 
-    if ( new_model_wizard_->descriptionEdit->isModified() )
-        model->setDescription( new_model_wizard_->descriptionEdit->text() );
+    if ( new_model_wizard_->getUi()->descriptionEdit->document()->isModified() )
+        model->setDescription( new_model_wizard_->getUi()->descriptionEdit->document()->toPlainText() );
 
-    if ( (uint)new_model_wizard_->versionSpinBox->value() != model->version() )
-        model->setVersion( new_model_wizard_->versionSpinBox->value() );
+    if ( (uint)new_model_wizard_->getUi()->versionSpinBox->value() != model->version() )
+        model->setVersion( new_model_wizard_->getUi()->versionSpinBox->value() );
 
-    if ( (uint)new_model_wizard_->revisionSpinBox->value() != model->revision() )
-        model->setRevision( new_model_wizard_->revisionSpinBox->value() );
+    if ( (uint)new_model_wizard_->getUi()->revisionSpinBox->value() != model->revision() )
+        model->setRevision( new_model_wizard_->getUi()->revisionSpinBox->value() );
 
     new_model_wizard_->selectedPage( initial_page_id );
 
@@ -1951,39 +1952,39 @@ bool DesignBookView::newModelWizard ( Model* model, uint& initial_page_id )
 
 void DesignBookView::editModelInfo ( void )
 {
-    model_info_dialog_->modelNameEdit->setText( lC::formatName( model_->name() ) );
-    model_info_dialog_->modelFileChooser->setFileName( model_->writeFileName() );
+    model_info_dialog_->getUi()->modelNameEdit->setText( lC::formatName( model_->name() ) );
+    model_info_dialog_->getUi()->modelFileChooser->setFileName( model_->writeFileName() );
 
-    model_info_dialog_->versionSpinBox->setValue( model_->version() );
-    model_info_dialog_->revisionSpinBox->setValue( model_->revision() );
+    model_info_dialog_->getUi()->versionSpinBox->setValue( model_->version() );
+    model_info_dialog_->getUi()->revisionSpinBox->setValue( model_->revision() );
 
-    model_info_dialog_->descriptionEdit->setText( model_->description() );
+    model_info_dialog_->getUi()->descriptionEdit->setText( model_->description() );
 
-    model_info_dialog_->creationDateLabel->setText( model_->created().toString() );
-    model_info_dialog_->modificationDateLabel->setText( model_->modified().toString() );
+    model_info_dialog_->getUi()->creationDateLabel->setText( model_->created().toString() );
+    model_info_dialog_->getUi()->modificationDateLabel->setText( model_->modified().toString() );
 
-    model_info_dialog_->modelNameEdit->setFocus();
-    model_info_dialog_->buttonOk->setDefault( true );
+    model_info_dialog_->getUi()->modelNameEdit->setFocus();
+    model_info_dialog_->getUi()->buttonOk->setDefault( true );
 
     int ret = model_info_dialog_->exec();
 
     if ( ret == QDialog::Rejected ) return;
 
-    if ( model_info_dialog_->modelNameEdit->edited() ) {
-        setName( model_info_dialog_->modelNameEdit->text() );
+    if ( model_info_dialog_->getUi()->modelNameEdit->isModified() ) {
+        setName( model_info_dialog_->getUi()->modelNameEdit->text() );
     }
 
-    if ( model_info_dialog_->modelFileChooser->edited() )
-        model_->setWriteFileName( model_info_dialog_->modelFileChooser->fileName() );
+    if ( model_info_dialog_->getUi()->modelFileChooser->edited() )
+        model_->setWriteFileName( model_info_dialog_->getUi()->modelFileChooser->fileName() );
 
-    if ( model_info_dialog_->descriptionEdit->isModified() )
-        model_->setDescription( model_info_dialog_->descriptionEdit->text() );
+    if ( model_info_dialog_->getUi()->descriptionEdit->document()->isModified() )
+        model_->setDescription( model_info_dialog_->getUi()->descriptionEdit->document()->toPlainText() );
 
-    if ( (uint)model_info_dialog_->versionSpinBox->value() != model_->version() )
-        model_->setVersion( model_info_dialog_->versionSpinBox->value() );
+    if ( (uint)model_info_dialog_->getUi()->versionSpinBox->value() != model_->version() )
+        model_->setVersion( model_info_dialog_->getUi()->versionSpinBox->value() );
 
-    if ( (uint)model_info_dialog_->revisionSpinBox->value() != model_->revision() )
-        model_->setRevision( model_info_dialog_->revisionSpinBox->value() );
+    if ( (uint)model_info_dialog_->getUi()->revisionSpinBox->value() != model_->revision() )
+        model_->setRevision( model_info_dialog_->getUi()->revisionSpinBox->value() );
 
     if ( model_->changed() ) {
         emit setCaption( tr( "lignumCAD: %1-%2.%3%4" ).
@@ -1992,7 +1993,7 @@ void DesignBookView::editModelInfo ( void )
                          arg( model_->revision() ).
                          arg( tr( "*", "model changed flag" ) ) );
 
-        lCMW_->fileSaveAction->setEnabled( true );
+        lCMW_->getUi()->fileSaveAction->setEnabled( true );
     }
 }
 
@@ -2017,9 +2018,10 @@ void DesignBookView::updateName ( const QString& name )
     model_->setWriteFileName( name + lC::STR::LCAD_FILE_EXT );
     model_->setChanged( true );
 
-    model_list_item_->setText( lC::NAME, lC::STR::NAME_ID.
+    model_list_item_->setData( lC::STR::NAME_ID.
                                arg( lC::formatName( model_->name() ) ).
-                               arg( model_->id() ) );
+                               arg( model_->id() ),
+                               lC::NAME );
 
     emit setCaption( tr( "lignumCAD: %1-%2.%3%4" ).
                      arg( lC::formatName( model_->name() ) ).

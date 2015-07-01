@@ -34,6 +34,7 @@
 
 #include <memory>
 
+#include "lcdefaultcombobox/lcdefaultcombobox.h"
 #include "newmodelwizard.h"
 #include "modelinfodialog.h"
 #include "pageinfodialog.h"

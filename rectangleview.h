@@ -24,7 +24,6 @@
 #define RECTANGLEVIEW_H
 
 #include <map>
-#include <qintdict.h>
 #include <qdom.h>
 
 #include "line.h"

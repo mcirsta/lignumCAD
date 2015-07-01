@@ -23,7 +23,6 @@
 #ifndef CENTERLINEVIEW_H
 #define CENTERLINEVIEW_H
 
-#include <qintdict.h>
 #include <qdom.h>
 
 #include "vectoralgebra.h"
