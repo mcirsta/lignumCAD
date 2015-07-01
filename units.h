@@ -459,6 +459,8 @@ class UnitsBasis : public QObject {
   //! needs to be a default setting in the preferences dialog as well...)
   static UnitsBasis* units_basis_;
 
+  int currentLenghtUnit;
+
 protected:
   //! Constructor makes a unit object for each possible display unit.
   UnitsBasis ( void );
@@ -481,7 +483,8 @@ public:
   /*!
    * \return the index of the current length unit representation.
    */
-  //int at ( void ) const { return length_units_.at(); }
+  //TODO implement setter
+  int at ( void ) const { return currentLenghtUnit; }
 
   /*!
    * Retrieve the precision index of the current length unit representation.
@@ -504,13 +507,13 @@ public:
   /*!
    * \return the full name of the current length unit.
    */
-  QString name ( int i ) const { return length_units_[i]->name(); }
+  QString name ( ) const { return length_units_[currentLenghtUnit]->name(); }
 
   /*!
    * \return the abbreviation of the current length unit.
    */
-  QString abbreviation ( int i ) const
-  { return length_units_[i]->abbreviation(); }
+  QString abbreviation ( ) const
+  { return length_units_[currentLenghtUnit]->abbreviation(); }
 
   /*!
    * \return the format of the current length unit.
@@ -538,7 +541,7 @@ public:
    * Restore the current length unit from its QSettings representation.
    * \param list QSettings representation of length unit (as a string list).
    */
-  void setLengthUnit ( const QStringList& list );
+  void setLengthUnit (const QString &lText );
 
   /*!
    * Select the format for the current length unit representation.

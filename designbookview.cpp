@@ -45,7 +45,7 @@
 #include <qlayout.h>
 
 #include <QDesktopWidget>
-
+#include <QPrintDialog>
 
 #include "configuration.h"
 #include "openglview.h"
@@ -210,8 +210,8 @@ void DesignBookView::init ( void )
     if ( ok )
         BusinessInfo::instance().setLogo( business_logo );
 
-    QStringList length_unit =
-            settings.value ( lC::Setting::LENGTH_UNIT, ',').toStringList();
+    QString length_unit =
+            settings.value ( lC::Setting::LENGTH_UNIT, ',').toString();
 
     if ( ok )
         UnitsBasis::instance()->setLengthUnit( length_unit );
@@ -474,6 +474,12 @@ PageView* DesignBookView::getCurrentPageView() const
 {
     return page_views_.value(currentPageView).get();
 }
+
+int DesignBookView::getCurrentPageViewIdx() const
+{
+    return currentPageView;
+}
+
 
 // Show the design book GUI.
 
@@ -880,34 +886,34 @@ void DesignBookView::editPreferences ( void )
 
     // Recover any changes made to the default business information
 
-    if ( preferences_dialog_->businessNameLineEdit->edited() ) {
-        QString name = preferences_dialog_->businessNameLineEdit->text();
+    if ( preferences_dialog_->getUi()->businessNameLineEdit->isModified() ) {
+        QString name = preferences_dialog_->getUi()->businessNameLineEdit->text();
         BusinessInfo::instance().setName( name );
 
         if ( !name.isEmpty() )
-            settings.writeEntry( lC::Setting::Business::NAME, name );
+            settings.setValue( lC::Setting::Business::NAME, name );
         else
-            settings.removeEntry( lC::Setting::Business::NAME );
+            settings.remove( lC::Setting::Business::NAME );
     }
 
-    if ( preferences_dialog_->businessLocationLineEdit->edited() ) {
-        QString location = preferences_dialog_->businessLocationLineEdit->text();
+    if ( preferences_dialog_->getUi()->businessLocationLineEdit->isModified() ) {
+        QString location = preferences_dialog_->getUi()->businessLocationLineEdit->text();
         BusinessInfo::instance().setLocation( location );
 
         if ( !location.isEmpty() )
-            settings.writeEntry( lC::Setting::Business::LOCATION, location );
+            settings.setValue( lC::Setting::Business::LOCATION, location );
         else
-            settings.removeEntry( lC::Setting::Business::LOCATION );
+            settings.remove( lC::Setting::Business::LOCATION );
     }
 
-    if ( preferences_dialog_->logoFileChooser->edited() ) {
-        QString logo = preferences_dialog_->logoFileChooser->fileName();
+    if ( preferences_dialog_->getUi()->logoFileChooser->edited() ) {
+        QString logo = preferences_dialog_->getUi()->logoFileChooser->fileName();
         BusinessInfo::instance().setLogo( logo );
 
         if ( !logo.isEmpty() )
-            settings.writeEntry( lC::Setting::Business::LOGO, logo );
+            settings.setValue( lC::Setting::Business::LOGO, logo );
         else
-            settings.removeEntry( lC::Setting::Business::LOGO );
+            settings.remove( lC::Setting::Business::LOGO );
     }
 
     // Recover any changes made to the default unit preference.
@@ -916,27 +922,27 @@ void DesignBookView::editPreferences ( void )
 
     bool unit_modified = false;
 
-    if ( preferences_dialog_->unitsListBox->currentItem() !=
+    if ( preferences_dialog_->getUi()->unitsListBox->currentIndex().row() !=
          UnitsBasis::instance()->at() ) {
         UnitsBasis::instance()->
-                setLengthUnit( preferences_dialog_->unitsListBox->currentItem() );
+                setLengthUnit( preferences_dialog_->getUi()->unitsListBox->currentItem()->text() );
         unit_modified = true;
     }
 
-    if ( preferences_dialog_->fractionalRadioButton->isOn() &&
+    if ( preferences_dialog_->getUi()->fractionalRadioButton->isChecked() &&
          UnitsBasis::instance()->format() != FRACTIONAL ) {
         UnitsBasis::instance()->setFormat( FRACTIONAL );
         unit_modified = true;
     }
-    else if ( preferences_dialog_->decimalRadioButton->isOn() &&
+    else if ( preferences_dialog_->getUi()->decimalRadioButton->isChecked() &&
               UnitsBasis::instance()->format() != DECIMAL ) {
         UnitsBasis::instance()->setFormat( DECIMAL );
         unit_modified = true;
     }
 
-    if ( preferences_dialog_->precisionComboBox->value() !=
+    if ( preferences_dialog_->getUi()->precisionComboBox->value() !=
          UnitsBasis::instance()->precision() ) {
-        UnitsBasis::instance()->setPrecision( preferences_dialog_->precisionComboBox->
+        UnitsBasis::instance()->setPrecision( preferences_dialog_->getUi()->precisionComboBox->
                                               value() );
         unit_modified = true;
     }
@@ -951,17 +957,17 @@ void DesignBookView::editPreferences ( void )
 
         length_unit << QString::number( UnitsBasis::instance()->precision() );
 
-        settings.writeEntry( lC::Setting::LENGTH_UNIT, length_unit, ',' );
+        settings.setValue( lC::Setting::LENGTH_UNIT, length_unit );
     }
 
     // Recover any changes made to the default color scheme preference.
 
-    if ( preferences_dialog_->predefinedRadioButton->isOn() ) {
+    if ( preferences_dialog_->getUi()->predefinedRadioButton->isChecked() ) {
         if ( !OpenGLGlobals::instance()->isPredefinedScheme() ) {
             OpenGLGlobals::instance()->setPredefinedScheme( true );
         }
 
-        if ( preferences_dialog_->colorSchemeListBox->currentItem() !=
+        if ( preferences_dialog_->getUi()->colorSchemeListBox->currentIndex().row() !=
              OpenGLGlobals::instance()->at() ) {
             // This effectively discards any modifications which the user
             // made to the custom settings. So, I guess the question is:
@@ -970,199 +976,199 @@ void DesignBookView::editPreferences ( void )
             // saying I want the attributes of the selected predefined entry
             // and there is only one current set of values.
             OpenGLGlobals::instance()->
-                    setScheme( preferences_dialog_->colorSchemeListBox->currentItem() );
+                    setScheme( preferences_dialog_->getUi()->colorSchemeListBox->currentIndex().row() );
         }
 
-        settings.writeEntry( lC::Setting::ColorScheme::CUSTOM, false );
+        settings.setValue( lC::Setting::ColorScheme::CUSTOM, false );
 
-        settings.writeEntry( lC::Setting::ColorScheme::BASE,
+        settings.setValue( lC::Setting::ColorScheme::BASE,
                              OpenGLGlobals::instance()->scheme().name() );
     }
     else {
-        settings.writeEntry( lC::Setting::ColorScheme::CUSTOM, true );
+        settings.setValue( lC::Setting::ColorScheme::CUSTOM, true );
 
-        settings.writeEntry( lC::Setting::ColorScheme::BASE,
+        settings.setValue( lC::Setting::ColorScheme::BASE,
                              OpenGLGlobals::instance()->scheme().name() );
 
         if ( OpenGLGlobals::instance()->isPredefinedScheme() )
             OpenGLGlobals::instance()->setPredefinedScheme( false );
 
-        if ( preferences_dialog_->geometryColorChooser->edited() ) {
+        if ( preferences_dialog_->getUi()->geometryColorChooser->edited() ) {
             OpenGLGlobals::instance()->
-                    setGeometryColor( preferences_dialog_->geometryColorChooser->color() );
+                    setGeometryColor( preferences_dialog_->getUi()->geometryColorChooser->color() );
 
-            settings.writeEntry( lC::Setting::ColorScheme::GEOMETRY,
+            settings.setValue( lC::Setting::ColorScheme::GEOMETRY,
                                  OpenGLGlobals::instance()->geometryColor().name() );
         }
 
-        if ( preferences_dialog_->annotationColorChooser->edited() ) {
+        if ( preferences_dialog_->getUi()->annotationColorChooser->edited() ) {
             OpenGLGlobals::instance()->
-                    setAnnotationColor( preferences_dialog_->annotationColorChooser->color() );
+                    setAnnotationColor( preferences_dialog_->getUi()->annotationColorChooser->color() );
 
-            settings.writeEntry( lC::Setting::ColorScheme::ANNOTATION,
+            settings.setValue( lC::Setting::ColorScheme::ANNOTATION,
                                  OpenGLGlobals::instance()->annotationColor().name() );
         }
 
-        if ( preferences_dialog_->gridColorChooser->edited() ) {
+        if ( preferences_dialog_->getUi()->gridColorChooser->edited() ) {
             OpenGLGlobals::instance()->
-                    setGridColor( preferences_dialog_->gridColorChooser->color() );
+                    setGridColor( preferences_dialog_->getUi()->gridColorChooser->color() );
 
-            settings.writeEntry( lC::Setting::ColorScheme::GRID,
+            settings.setValue( lC::Setting::ColorScheme::GRID,
                                  OpenGLGlobals::instance()->gridColor().name() );
         }
 
-        if ( preferences_dialog_->constraintPrimaryColorChooser->edited() ) {
+        if ( preferences_dialog_->getUi()->constraintPrimaryColorChooser->edited() ) {
             OpenGLGlobals::instance()->
-                    setConstraintPrimaryColor( preferences_dialog_->
+                    setConstraintPrimaryColor( preferences_dialog_->getUi()->
                                                constraintPrimaryColorChooser->color() );
 
-            settings.writeEntry( lC::Setting::ColorScheme::CONSTRAINT_PRIMARY,
+            settings.setValue( lC::Setting::ColorScheme::CONSTRAINT_PRIMARY,
                                  OpenGLGlobals::instance()->
                                  constraintPrimaryColor().name() );
         }
 
-        if ( preferences_dialog_->constraintSecondaryColorChooser->edited() ) {
+        if ( preferences_dialog_->getUi()->constraintSecondaryColorChooser->edited() ) {
             OpenGLGlobals::instance()->
-                    setConstraintSecondaryColor( preferences_dialog_->
+                    setConstraintSecondaryColor( preferences_dialog_->getUi()->
                                                  constraintSecondaryColorChooser->color() );
 
-            settings.writeEntry( lC::Setting::ColorScheme::CONSTRAINT_SECONDARY,
+            settings.setValue( lC::Setting::ColorScheme::CONSTRAINT_SECONDARY,
                                  OpenGLGlobals::instance()->
                                  constraintSecondaryColor().name() );
         }
 
-        if ( preferences_dialog_->backgroundSlider->value() !=
+        if ( preferences_dialog_->getUi()->backgroundSlider->value() !=
              OpenGLGlobals::instance()->backgroundStyle() ) {
             OpenGLGlobals::instance()->
-                    setBackgroundStyle( (lC::Background::Style)preferences_dialog_->
+                    setBackgroundStyle( (lC::Background::Style)preferences_dialog_->getUi()->
                                         backgroundSlider->value() );
 
-            settings.writeEntry( lC::Setting::ColorScheme::BACKGROUND_STYLE,
+            settings.setValue( lC::Setting::ColorScheme::BACKGROUND_STYLE,
                                  lC::Background::backgroundStyleText( OpenGLGlobals::instance()->
                                                                       backgroundStyle() ) );
         }
 
-        if ( preferences_dialog_->solidBackgroundColorChooser->edited() ) {
+        if ( preferences_dialog_->getUi()->solidBackgroundColorChooser->edited() ) {
             OpenGLGlobals::instance()->
-                    setBackgroundColor( preferences_dialog_->solidBackgroundColorChooser->
+                    setBackgroundColor( preferences_dialog_->getUi()->solidBackgroundColorChooser->
                                         color() );
 
-            settings.writeEntry( lC::Setting::ColorScheme::BACKGROUND,
+            settings.setValue( lC::Setting::ColorScheme::BACKGROUND,
                                  OpenGLGlobals::instance()->backgroundColor().name() );
         }
 
-        if ( preferences_dialog_->gradientBackgroundColorChooser->edited() ) {
+        if ( preferences_dialog_->getUi()->gradientBackgroundColorChooser->edited() ) {
             OpenGLGlobals::instance()->
-                    setGradientColor( preferences_dialog_->gradientBackgroundColorChooser->
+                    setGradientColor( preferences_dialog_->getUi()->gradientBackgroundColorChooser->
                                       color() );
 
-            settings.writeEntry( lC::Setting::ColorScheme::GRADIENT,
+            settings.setValue( lC::Setting::ColorScheme::GRADIENT,
                                  OpenGLGlobals::instance()->gradientColor().name() );
         }
 
-        if ( preferences_dialog_->patternBackgroundFileChooser->edited() ) {
+        if ( preferences_dialog_->getUi()->patternBackgroundFileChooser->edited() ) {
             OpenGLGlobals::instance()->
-                    setPatternFile( preferences_dialog_->patternBackgroundFileChooser->
+                    setPatternFile( preferences_dialog_->getUi()->patternBackgroundFileChooser->
                                     fileName() );
 
-            settings.writeEntry( lC::Setting::ColorScheme::PATTERN_FILE,
+            settings.setValue( lC::Setting::ColorScheme::PATTERN_FILE,
                                  OpenGLGlobals::instance()->patternFile() );
         }
     }
     // This may be surprising to the user. The attributes themselves
     // will be the same, but the (hidden) defaults may change.
-    if ( preferences_dialog_->colorSchemeListBox->currentItem() !=
+    if ( preferences_dialog_->getUi()->colorSchemeListBox->currentIndex().row() !=
          OpenGLGlobals::instance()->at() ) {
         OpenGLGlobals::instance()->
-                setDefaultScheme( preferences_dialog_->colorSchemeListBox->currentItem() );
+                setDefaultScheme( preferences_dialog_->getUi()->colorSchemeListBox->currentItem()->text() );
     }
 
     // Recover any changes made to the *other* attribute preferences.
 
-    if ( preferences_dialog_->dimensionFontChooser->edited() ) {
-        QString font = preferences_dialog_->dimensionFontChooser->font();
+    if ( preferences_dialog_->getUi()->dimensionFontChooser->edited() ) {
+        QString font = preferences_dialog_->getUi()->dimensionFontChooser->font();
         OpenGLGlobals::instance()->setDimensionFont( font );
 
         if ( !font.isEmpty() )
-            settings.writeEntry( lC::Setting::Dimension::FONT, font );
+            settings.setValue( lC::Setting::Dimension::FONT, font );
         else
-            settings.removeEntry( lC::Setting::Dimension::FONT );
+            settings.remove( lC::Setting::Dimension::FONT );
     }
 
-    if ( preferences_dialog_->arrowHeadLengthSpinBox->length()
+    if ( preferences_dialog_->getUi()->arrowHeadLengthSpinBox->length()
          != OpenGLGlobals::instance()->arrowHeadLength() ) {
         OpenGLGlobals::instance()->
-                setArrowHeadLength( preferences_dialog_->arrowHeadLengthSpinBox->length() );
+                setArrowHeadLength( preferences_dialog_->getUi()->arrowHeadLengthSpinBox->length() );
 
-        settings.writeEntry( lC::Setting::Dimension::ARROW_HEAD_LENGTH,
+        settings.setValue( lC::Setting::Dimension::ARROW_HEAD_LENGTH,
                              OpenGLGlobals::instance()->arrowHeadLength() );
     }
 
-    if ( preferences_dialog_->arrowHeadWidthRatioSpinBox->ratio()
+    if ( preferences_dialog_->getUi()->arrowHeadWidthRatioSpinBox->ratio()
          != OpenGLGlobals::instance()->arrowHeadWidthRatio() ) {
         OpenGLGlobals::instance()->
-                setArrowHeadWidthRatio( preferences_dialog_->arrowHeadWidthRatioSpinBox->
+                setArrowHeadWidthRatio( preferences_dialog_->getUi()->arrowHeadWidthRatioSpinBox->
                                         ratio() );
 
-        settings.writeEntry( lC::Setting::Dimension::ARROW_HEAD_WIDTH_RATIO,
+        settings.setValue( lC::Setting::Dimension::ARROW_HEAD_WIDTH_RATIO,
                              OpenGLGlobals::instance()->arrowHeadWidthRatio().serial());
     }
 
-    if ( preferences_dialog_->arrowHeadStyleComboBox->value()
+    if ( preferences_dialog_->getUi()->arrowHeadStyleComboBox->value()
          != OpenGLGlobals::instance()->arrowHeadStyle() ) {
         OpenGLGlobals::instance()->
-                setArrowHeadStyle( (lC::ArrowHeadStyle)preferences_dialog_->
+                setArrowHeadStyle( (lC::ArrowHeadStyle)preferences_dialog_->getUi()->
                                    arrowHeadStyleComboBox->value() );
 
-        settings.writeEntry( lC::Setting::Dimension::ARROW_HEAD_STYLE,
+        settings.setValue( lC::Setting::Dimension::ARROW_HEAD_STYLE,
                              lC::arrowHeadStyleText( OpenGLGlobals::instance()->
                                                      arrowHeadStyle() ) );
     }
 
-    if ( preferences_dialog_->clearanceLengthSpinBox->length()
+    if ( preferences_dialog_->getUi()->clearanceLengthSpinBox->length()
          != OpenGLGlobals::instance()->clearance() ) {
         OpenGLGlobals::instance()->
-                setClearance( preferences_dialog_->clearanceLengthSpinBox->length() );
+                setClearance( preferences_dialog_->getUi()->clearanceLengthSpinBox->length() );
 
-        settings.writeEntry( lC::Setting::Dimension::CLEARANCE,
+        settings.setValue( lC::Setting::Dimension::CLEARANCE,
                              OpenGLGlobals::instance()->clearance() );
     }
 
-    if ( preferences_dialog_->lineThicknessLengthSpinBox->length()
+    if ( preferences_dialog_->getUi()->lineThicknessLengthSpinBox->length()
          != OpenGLGlobals::instance()->lineThickness() ) {
         OpenGLGlobals::instance()->
-                setLineThickness( preferences_dialog_->lineThicknessLengthSpinBox->length() );
+                setLineThickness( preferences_dialog_->getUi()->lineThicknessLengthSpinBox->length() );
 
-        settings.writeEntry( lC::Setting::Dimension::LINE_THICKNESS,
+        settings.setValue( lC::Setting::Dimension::LINE_THICKNESS,
                              OpenGLGlobals::instance()->lineThickness() );
     }
 
-    if ( preferences_dialog_->extensionOffsetLengthSpinBox->length()
+    if ( preferences_dialog_->getUi()->extensionOffsetLengthSpinBox->length()
          != OpenGLGlobals::instance()->extensionLineOffset() ) {
         OpenGLGlobals::instance()->
-                setExtensionLineOffset( preferences_dialog_->extensionOffsetLengthSpinBox->
+                setExtensionLineOffset( preferences_dialog_->getUi()->extensionOffsetLengthSpinBox->
                                         length() );
 
-        settings.writeEntry( lC::Setting::Dimension::EXTENSION_LINE_OFFSET,
+        settings.setValue( lC::Setting::Dimension::EXTENSION_LINE_OFFSET,
                              OpenGLGlobals::instance()->extensionLineOffset() );
     }
 
-    if ( preferences_dialog_->annotationFontChooser->edited() ) {
-        QString font = preferences_dialog_->annotationFontChooser->font();
+    if ( preferences_dialog_->getUi()->annotationFontChooser->edited() ) {
+        QString font = preferences_dialog_->getUi()->annotationFontChooser->font();
         OpenGLGlobals::instance()->setAnnotationFont( font );
 
         if ( !font.isEmpty() )
-            settings.writeEntry( lC::Setting::Annotation::FONT, font );
+            settings.setValue( lC::Setting::Annotation::FONT, font );
         else
-            settings.removeEntry( lC::Setting::Annotation::FONT );
+            settings.remove( lC::Setting::Annotation::FONT );
     }
 
-    if ( preferences_dialog_->handleLengthSpinBox->length()
+    if ( preferences_dialog_->getUi()->handleLengthSpinBox->length()
          != OpenGLGlobals::instance()->handleSize() ) {
         OpenGLGlobals::instance()->
-                setHandleSize( preferences_dialog_->handleLengthSpinBox->length() );
+                setHandleSize( preferences_dialog_->getUi()->handleLengthSpinBox->length() );
 
-        settings.writeEntry( lC::Setting::Handle::SIZE,
+        settings.setValue( lC::Setting::Handle::SIZE,
                              OpenGLGlobals::instance()->handleSize() );
     }
 }
@@ -1172,18 +1178,23 @@ void DesignBookView::editPreferences ( void )
 
 void DesignBookView::pageChanged ( int id )
 {
-    QTab* tab = page_tabbar_->tab( id );
-    PageView* page_view = page_tabs_[tab];
+    if ( page_tabs_.contains(id)) return;
 
-    if ( page_view == 0 ) return;
+    PageView* page_view = page_tabs_[id].get();
 
     // As a side effect: Set this page to be the current item in the list
-    page_views_.find( page_view );
-    page_view->show();
-    opengl_view_->setPageView( page_view );
+    QListIterator< std::shared_ptr <PageView> > pv( page_views_ );
+    while(pv.hasNext()) {
+        if(pv.next().get() == page_view ) {
+            page_view->show();
+            opengl_view_->setPageView( page_view );
+            break;
+        }
+    }
 
     // Scroll the model hierarchy to show the page, too.
-    model_list_item_->listView()->ensureItemVisible( page_view->listViewItem() );
+    //TODO implement this
+    //model_list_item_->listView()->ensureItemVisible( page_view->listViewItem() );
 
     emit pageChanged( page_view->name() );
 }
@@ -1192,36 +1203,35 @@ void DesignBookView::pageChanged ( int id )
 
 void DesignBookView::renamePage ( void )
 {
-    if ( page_views_.current() == 0 ) return;
+    if ( getCurrentPageView() == 0 ) return;
 
 RENAME:			// Maybe we can do better than this...
-    page_info_dialog_->nameEdit->
-            setText( lC::formatName( page_views_.current()->name() ) );
+    page_info_dialog_->getUi()->nameEdit->
+            setText( lC::formatName( getCurrentPageView()->name() ) );
 
-    page_info_dialog_->nameEdit->selectAll();
-    page_info_dialog_->nameEdit->setFocus();
-    page_info_dialog_->buttonOk->setDefault( true );
+    page_info_dialog_->getUi()->nameEdit->selectAll();
+    page_info_dialog_->getUi()->nameEdit->setFocus();
+    page_info_dialog_->getUi()->buttonOk->setDefault( true );
 
     int ret = page_info_dialog_->exec();
 
     if ( ret == QDialog::Rejected )
         return;
 
-    if ( page_info_dialog_->nameEdit->edited() ) {
-        if ( uniquePageName( page_info_dialog_->nameEdit->text() ) ) {
-            page_views_.current()->setName( page_info_dialog_->nameEdit->text() );
+    if ( page_info_dialog_->getUi()->nameEdit->isModified() ) {
+        if ( uniquePageName( page_info_dialog_->getUi()->nameEdit->text() ) ) {
+            getCurrentPageView()->setName( page_info_dialog_->getUi()->nameEdit->text() );
 
-            emit pageChanged( page_views_.current()->name() );
+            emit pageChanged( getCurrentPageView()->name() );
         }
         else {
-            QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
+            QMessageBox  mb(QMessageBox::Information,
+                            trC( lC::STR::LIGNUMCAD ),
                             tr( "The name \"%1\" for a page of type %2 already exists." ).
-                            arg( page_info_dialog_->nameEdit->text() ).
-                            arg( trC( page_views_.current()->type() ) ),
-                            QMessageBox::Information,
-                            QMessageBox::Yes | QMessageBox::Default,
-                            QMessageBox::Cancel,
-                            QMessageBox::NoButton );
+                                arg( page_info_dialog_->getUi()->nameEdit->text() ).
+                                arg( trC( getCurrentPageView()->type() ) ),
+                            QMessageBox::Yes | QMessageBox::Cancel,
+                            this);
             mb.setButtonText( QMessageBox::Yes, tr( "Enter another name" ) );
             mb.setButtonText( QMessageBox::Cancel, tr( "Cancel name change" ) );
 
@@ -1239,21 +1249,21 @@ RENAME:			// Maybe we can do better than this...
 
 void DesignBookView::deletePage ( void )
 {
-    if ( page_views_.current() == 0 ) return;
+    if ( getCurrentPageView() == 0 ) return;
 
-    QPtrList<PageBase> usages = model_->whereUsed( page_views_.current()->dbURL() );
+    QList<std::shared_ptr <PageBase> > usages = model_->whereUsed( getCurrentPageView()->dbURL() );
 
     if ( usages.count() > 0 ) {
         QStringList usage_name_list;
-        for ( uint i = 0; i < usages.count(); ++i )
+        for ( int i = 0; i < usages.count(); ++i )
             usage_name_list << QString( "%1.%2" ).arg( usages.at(i)->name() ).
-                               arg( tr( usages.at(i)->type() ) );
+                               arg( tr( usages.at(i)->type().toLatin1() ) );
 
         QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
                         tr( "<p>You cannot delete \"%1\" because it is referenced by "
                             "other assemblies:<br>"
                             "<ul><li>%2</li></ul></p>" ).
-                        arg( page_views_.current()->name() ).
+                        arg( getCurrentPageView()->name() ).
                         arg( usage_name_list.join( "</li><li>" ) ),
                         QMessageBox::Information,
                         QMessageBox::Ok | QMessageBox::Default,
@@ -1267,10 +1277,10 @@ void DesignBookView::deletePage ( void )
 
     CommandHistory::instance().
             addCommand( new DeleteCommand( QString( "delete %1" ).
-                                           arg( page_views_.current()->type() ),
-                                           page_views_.current()->memento() ) );
+                                           arg( getCurrentPageView()->type() ),
+                                           getCurrentPageView()->memento() ) );
 
-    deletePage( page_views_.current() );
+    deletePage( getCurrentPageView() );
 
     // Only mark the model as changed on a page deletion if the user
     // has actually invoked the "Delete Page" action.
@@ -1286,23 +1296,26 @@ void DesignBookView::deletePage ( PageView* page_view )
 
     opengl_view_->setPageView( 0 );
 
-    page_tabbar_->removeTab( page_view->tab() );
-    page_tabs_.remove( page_view->tab() );
-    page_views_.removeRef( page_view );
+    page_tabbar_->removeTab( page_view->tabIdx() );
+    page_tabs_.remove( page_view->tabIdx() );
+
+    QMutableListIterator< std::shared_ptr <PageView> > pv( page_views_ );
+    while(pv.hasNext()) {
+
+        if(pv.next().get() == page_view ) {
+            pv.remove();
+        }
+    }
 
     // Activate whatever page is now current in the TabBar
-    QTab* tab = page_tabbar_->tab( page_tabbar_->currentTab() );
-    if ( tab != 0 ) {
-        page_view = page_tabs_[tab];
-        page_views_.find( page_view );
-        page_view->show();
-        page_tabbar_->setCurrentTab( tab );
-        opengl_view_->setPageView( page_view );
-
-        emit pageChanged( page_view->name() );
+    int tabId = page_tabbar_->currentIndex();
+    if ( page_tabs_.contains(tabId) ) {
+        page_view = page_tabs_[tabId].get();
+        //TODO check calling this function works
+        showPageView(page_view);
     }
     else {
-        lCMW_->editPasteAction->setEnabled( false );
+        lCMW_->getUi()->editPasteAction->setEnabled( false );
 
         emit pageChanged( trC( lC::STR::NONE ) );
     }
@@ -1314,7 +1327,7 @@ void DesignBookView::deletePage ( PageView* page_view )
 
 View* DesignBookView::lookup ( const DBURL& db_url )
 {
-    QStringList path_components = QStringList::split( "/", db_url.path() );
+    QStringList path_components = db_url.path().split('/');
 
     if ( path_components.front() != model_->name() )
         return 0;			// Not this model!
@@ -1322,25 +1335,26 @@ View* DesignBookView::lookup ( const DBURL& db_url )
     // Pop the model name off the list
     path_components.erase( path_components.begin() );
 
-    QPtrListIterator< PageView > pv( page_views_ );
+    QListIterator< std::shared_ptr<PageView> > pv( page_views_ );
 
     // The front path component is the name of a page with ".type" appended
     // to it.
-    int dot_pos = path_components.front().findRev( '.' );
+    int dot_pos = path_components.front().lastIndexOf( '.' );
     QString name = path_components.front().left( dot_pos );
     QString type = path_components.front().right( path_components.front().length()
                                                   - dot_pos - 1 );
 
-    for ( ; pv.current(); ++pv ) {
-        if ( pv.current()->name() == name && pv.current()->type() == type ) {
+    while(pv.hasNext()) {
+        PageView* tempPv = pv.next().get();
+        if ( tempPv->name() == name && tempPv->type() == type ) {
 
             // Pop the page name off the list
             path_components.erase( path_components.begin() );
 
             if ( path_components.empty() )
-                return pv.current();
+                return tempPv;
             else
-                return pv.current()->lookup( path_components );
+                return tempPv->lookup( path_components );
         }
     }
 
@@ -1371,11 +1385,14 @@ std::vector<GLuint> DesignBookView::lookup ( const QVector<uint>& id_path ) cons
             return p.data()->lookup( my_path );
     }
 #else
-    QPtrListIterator<PageView> p( page_views_ );
-    for ( ; p.current() != 0; ++p ) {
-        if ( p.current()->id() == my_path[0] ) {
+    QListIterator< std::shared_ptr<PageView> > p( page_views_ );
+    while ( p.hasNext() ) {
+        if ( p.peekNext()->id() == my_path[0] ) {
             my_path.erase( my_path.begin() );
-            return p.current()->lookup( my_path );
+            return p.next()->lookup( my_path );
+        }
+        else {
+            p.next();
         }
     }
 #endif
@@ -1441,7 +1458,7 @@ void DesignBookView::newModel ( void )
         return;
     }
 
-    page_tabbar_->setCurrentTab( page_view->tab() );
+    page_tabbar_->setCurrentIndex( page_view->tabIdx() );
     page_view->show();
     opengl_view_->setPageView( page_view );
 
@@ -1477,11 +1494,10 @@ void DesignBookView::open ( void )
     }
 
     QString file_name =
-            QFileDialog::getOpenFileName( QString::null,
-                                          tr( "lignumCAD (*.lcad);;All Files (*)" ),
-                                          0,
-                                          "open file dialog",
-                                          tr( "Choose a file" ) );
+            QFileDialog::getOpenFileName( this,
+                                          tr( "Open File" ),
+                                          QString::null,
+                                          tr( "lignumCAD (*.lcad);;All Files (*)" ) );
 
     if ( file_name.isEmpty() )
         return;
@@ -1490,10 +1506,10 @@ void DesignBookView::open ( void )
         return;
 
     page_views_.first();
-    page_tabbar_->setCurrentTab( page_views_.current()->tab() );
+    page_tabbar_->setCurrentIndex( getCurrentPageView()->tabIdx() );
     page_tabbar_->update();
-    page_views_.current()->show();
-    opengl_view_->setPageView( page_views_.current() );
+    getCurrentPageView()->show();
+    opengl_view_->setPageView( getCurrentPageView() );
 
     showView();
 }
@@ -1524,11 +1540,10 @@ bool DesignBookView::saveAs ( void )
     else
         file_name = model_->writeFileName();
 
-    file_name = QFileDialog::getSaveFileName( file_name,
-                                              tr( "lignumCAD (*.lcad);;All Files (*)"),
-                                              0,
-                                              "save file dialog",
-                                              tr( "Choose a file" ) );
+    file_name = QFileDialog::getSaveFileName( this,
+                                              tr( "Save File" ),
+                                              QString::null,
+                                              tr( "lignumCAD (*.lcad);;All Files (*)") );
     if ( !file_name.isEmpty() ) {
 
         if ( !file_name.endsWith( lC::STR::LCAD_FILE_EXT ) )
@@ -1565,24 +1580,24 @@ void DesignBookView::print ( void )
                           arg( lC::STR::VERSION_MAJOR ).
                           arg( lC::STR::VERSION_MINOR ) );
 
-    bool ok = printer_->setup();
-
-    if ( !ok ) return;
+    QPrintDialog printDialog(printer_, this);
+    if (printDialog.exec() != QDialog::Accepted) {
+        return;
+    }
 
     printing_ = true;
 
     opengl_printer_->makeCurrent();
 
     QPainter painter( printer_ );
-    QPaintDeviceMetrics pdm( printer_ );
 
     // OK, deduct 1/2" margin all around. For a QRect, that's 1/2" in
     // from the top and left edges and a width of 'page width - 2 *
     // DPI * 1/2"' and a height of 'page height - 2 * DPI * 1/2"'.
-    QRect margin( (int)rint( pdm.logicalDpiX() * .5 ),
-                  (int)rint( pdm.logicalDpiY() * .5 ),
-                  pdm.width() - pdm.logicalDpiX(),
-                  pdm.height() - pdm.logicalDpiY() );
+    QRect margin( (int)rint( printer_->logicalDpiX() * .5 ),
+                  (int)rint( printer_->logicalDpiY() * .5 ),
+                  printer_->width() - printer_->logicalDpiX(),
+                  printer_->height() - printer_->logicalDpiY() );
 
     painter.setViewport( margin );
 
@@ -1590,7 +1605,8 @@ void DesignBookView::print ( void )
     // units of DOTS [aka device units]), but the upper left corner is
     // (0,0) in window coodinates.
 
-    margin.moveBy( -margin.x(), -margin.y() );
+    //TODO see how to move this
+    //margin.moveBy( -margin.x(), -margin.y() );
 
     // Reverse the polarity of the Y axis here.
     painter.setWindow( 0, margin.height(), margin.width(), -margin.height() );
@@ -1598,20 +1614,22 @@ void DesignBookView::print ( void )
     // Print the first page...
     uint page_no = 1;
 
-    QPtrListIterator< PageView > pv( page_views_ );
+    QListIterator< std::shared_ptr <PageView> > pv( page_views_ );
 
-    opengl_printer_->print( *pv, painter, page_no, page_views_.count() );
+    //TODO do we really need this ?
+//    opengl_printer_->print( *pv, painter, page_no, page_views_.count() );
 
-    // ...then any more which happen to be there. (Evidently, painter is
-    // not flushed by QPrinter::newPage(); you have to draw some more to get
-    // rid of the old stuff. And, you get an extra page if there
-    // are residual graphics in painter.)
+//    // ...then any more which happen to be there. (Evidently, painter is
+//    // not flushed by QPrinter::newPage(); you have to draw some more to get
+//    // rid of the old stuff. And, you get an extra page if there
+//    // are residual graphics in painter.)
 
-    for ( ++pv, ++page_no; *pv != 0; ++pv, ++page_no ){
-        printer_->newPage();
+//    while(pv.hasNext()) {
+//    for ( ++pv, ++page_no; *pv != 0; ++pv, ++page_no ){
+//        printer_->newPage();
 
-        opengl_printer_->print( *pv, painter, page_no, page_views_.count() );
-    }
+//        opengl_printer_->print( *pv, painter, page_no, page_views_.count() );
+//    }
 
     printing_ = false;
     opengl_view_->redisplay();
@@ -1621,14 +1639,13 @@ void DesignBookView::print ( void )
  */
 void DesignBookView::exportPage ( void )
 {
-    if ( page_views_.current() == 0 ) return;
+    if ( getCurrentPageView() == 0 ) return;
 
     QString export_file =
-            QFileDialog::getSaveFileName( QString::null,
-                                          tr( "EMF (*.emf)" ),
-                                          lCMW_,
-                                          "export file dialog",
-                                          tr( "Enter a file name for page export" ) );
+            QFileDialog::getSaveFileName( lCMW_,
+                                          tr( "Enter a file name for page export" ),
+                                          QString::null,
+                                          tr( "EMF (*.emf)" ) );
 
     if ( export_file.isEmpty() ) return;
 
@@ -1636,8 +1653,8 @@ void DesignBookView::exportPage ( void )
 
     opengl_printer_->makeCurrent();
 
-    opengl_printer_->exportPage( page_views_.current(), opengl_view_, export_file,
-                                 page_views_.at()+1, page_views_.count() );
+    opengl_printer_->exportPage( getCurrentPageView(), opengl_view_, export_file,
+                                 getCurrentPageViewIdx() + 1, page_views_.count() );
 
     printing_ = false;
     opengl_view_->redisplay();
@@ -1679,7 +1696,7 @@ bool DesignBookView::read ( const QString file_name )
 
     // Well, who wants to wait?
     qApp->setOverrideCursor( Qt::WaitCursor );
-    qApp->processEvents( 1 );
+    qApp->processEvents( QEventLoop::AllEvents,1 );
 
     QDomElement docElement = doc.documentElement();
 
@@ -1724,7 +1741,7 @@ bool DesignBookView::read ( const QString file_name )
             }
         }
 
-        qApp->processEvents( 1 );
+        qApp->processEvents( QEventLoop::AllEvents,1 );
 
         n = n.nextSibling();
     }
@@ -1796,11 +1813,10 @@ bool DesignBookView::write ( void )
 
                 if ( choice == QMessageBox::Yes ) {
                     QString file_name =
-                            QFileDialog::getSaveFileName( QString::null,
-                                                          tr( "lignumCAD (*.lcad);;All Files (*)" ),
-                                                          0,
-                                                          "save file dialog",
-                                                          tr( "Choose a file" ) );
+                            QFileDialog::getSaveFileName( this,
+                                                          tr( "Choose a file name" ),
+                                                          QString::null,
+                                                          tr( "lignumCAD (*.lcad);;All Files (*)" ) );
                     // If file_name is empty, assume the user picked Cancel and apply
                     // it to the whole saving process
                     if ( file_name.isEmpty() )

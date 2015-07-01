@@ -139,7 +139,7 @@ public:
   void paste ( void );
 
   virtual View* lookup ( QStringList& path_components ) const;
-  virtual std::vector<GLuint> lookup ( QValueVector<uint>& id_path ) const;
+  virtual std::vector<GLuint> lookup (QVector<uint> &id_path ) const;
 
   /*!
    * (Temporarily) turn off any highlights or activations

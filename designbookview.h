@@ -155,6 +155,8 @@ public:
   //TODO implement CurrentPageView()
   PageView* getCurrentPageView() const;
 
+  int getCurrentPageViewIdx() const;
+
 public slots:
   void editPreferences ( void );
   void pageChanged ( int id );

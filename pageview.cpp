@@ -365,7 +365,7 @@ View* PageView::lookup ( QStringList& path_components ) const
 
 // Lookup the OpenGL selection name path for the given object.
 
-std::vector<GLuint> PageView::lookup ( QValueVector<uint>& id_path ) const
+std::vector<GLuint> PageView::lookup ( QVector<uint>& id_path ) const
 {
   std::vector<GLuint> name_path;
 

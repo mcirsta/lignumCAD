@@ -8,6 +8,7 @@ class PageInfoDialog : public QDialog {
 
 public:
     PageInfoDialog(QWidget *parent = 0);
+    Ui::PageInfoDialog* getUi();
 
 private:
     Ui::PageInfoDialog ui;

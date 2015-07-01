@@ -39,7 +39,7 @@ namespace {
   // Do these need to be translated...?
   const QString INCH_QUOTE_ABBREV = "\"";
   const QString INCH_IN_ABBREV    = "in";
-  const QString FOOT_QUOTE_ABBREV = "´";
+  const QString FOOT_QUOTE_ABBREV = "â€²";
   const QString FOOT_FT_ABBREV    = "ft";
   const QString YARD_ABBREV       = "yd";
   const QString MILLIMETER_ABBREV = "mm";
@@ -727,6 +727,7 @@ public:
 UnitsBasis* UnitsBasis::units_basis_;
 
 UnitsBasis* UnitsBasis::instance ( void )
+        :currentLenghtUnit(0)
 {
   if ( units_basis_ == 0 )
     units_basis_ = new UnitsBasis();
@@ -788,15 +789,11 @@ void UnitsBasis::setLengthUnit ( int index )
 
 // Set the current unit based on the string read from the default settings.
 
-void UnitsBasis::setLengthUnit ( const QStringList& list )
+void UnitsBasis::setLengthUnit ( const QString& lText )
 {
   QRegExp name_rx( "(.*)\\[(.*)\\]" );
-  QStringList::const_iterator l = list.begin();
 
-  if ( l == list.end() )
-    return;
-
-  int position = name_rx.search( *l );
+  int position = name_rx.search( lText );
 
   if ( position < 0 )
     return;

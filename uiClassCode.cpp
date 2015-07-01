@@ -361,8 +361,30 @@ void lignumCADMainWindow::setHomeDir( QDir & home_dir )
 
 
 
-NewModelWizard::NewModelWizard(QWidget *parent)
+NewModelWizard::NewModelWizard( QWidget *parent )
     : QWidget(parent)
 {
     ui.setupUi(this);
+}
+
+
+PreferencesDialog::PreferencesDialog( QWidget *parent )
+    : QWidget(parent)
+{
+    ui.setupUi(this);
+}
+
+Ui::PreferencesDialog* getUi() {
+    return &ui;
+}
+
+PreferencesDialog::PageInfoDialog(QWidget *parent )
+    : QWidget(parent)
+{
+    ui.setupUi(this);
+}
+
+Ui::PageInfoDialog* PageInfoDialog::getUi()
+{
+    return *ui;
 }

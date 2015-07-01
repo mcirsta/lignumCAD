@@ -8,6 +8,7 @@ class PreferencesDialog : public QDialog {
 
 public:
     PreferencesDialog(QWidget *parent = 0);
+    Ui::PreferencesDialog* getUi();
 
 private:
     Ui::PreferencesDialog ui;
