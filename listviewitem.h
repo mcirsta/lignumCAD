@@ -23,17 +23,17 @@
 #ifndef LISTVIEWITEM_H
 #define LISTVIEWITEM_H
 
-#include <QTableWidgetItem>
+#include <QStandardItem>
 
 // Subclass of QListViewItem to act on changes to the name of an object
 // in the model hierarchy view. Emits a signal when the user completes
 // a valid name change.
 
-class ListViewItem : public QTableWidgetItem {
+class ListViewItem : public QStandardItem {
   Q_OBJECT
 public:
-  ListViewItem ( QTableWidget* parent );
-  ListViewItem ( QTableWidget* parent, QTableWidgetItem* after );
+  ListViewItem ( QStandardItem* parent );
+  ListViewItem ( QStandardItem* parent, QStandardItem* after );
   ~ListViewItem ();
 protected:
   void okRename ( int col );
