@@ -61,7 +61,7 @@ namespace Space2D {
      * which should improve performance as a return value.
      * \return the hierarchical object id.
      */
-    QValueVector<uint> ID ( void ) const;
+    QVector<uint> ID ( void ) const;
 
     /*!
      * Return the fully qualified path to this geometry. Note: it appears
@@ -111,7 +111,7 @@ namespace Space3D {
      * which should improve performance as a return value.
      * \return the hierarchical object id.
      */
-    QValueVector<uint> ID ( void ) const;
+    QVector<uint> ID ( void ) const;
 
     /*!
      * Return the fully qualified path to this geometry. Note: it appears

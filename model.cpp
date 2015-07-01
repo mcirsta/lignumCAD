@@ -163,7 +163,7 @@ void Model::resolveNow ( void )
 
 uint Model::newID ( void ) { return ++unique_page_id_; }
 
-QValueVector<uint> Model::ID ( void ) const
+QVector<uint> Model::ID( void ) const
 {
   QValueVector<uint> ids( 1 );
   ids[0] = id();
@@ -183,7 +183,7 @@ QString Model::path ( void ) const
 #endif
 }
 
-QString Model::idPath ( const QValueVector<uint>& id_path ) const
+QString Model::idPath (const QVector<uint> &id_path ) const
 {
   if ( id_path.empty() )
     return QString::null;	// Really an error...
@@ -226,7 +226,7 @@ QString Model::idPath ( const QValueVector<uint>& id_path ) const
 #endif
 }
 
-QValueVector<uint> Model::pathID ( const DBURL& db_url ) const
+QVector<uint> Model::pathID( const DBURL& db_url ) const
 {
   QStringList path_components = QStringList::split( "/", db_url.path() );
 
@@ -345,7 +345,7 @@ ModelItem* Model::lookup ( const DBURL& db_url ) const
   return 0;
 }
 
-ModelItem* Model::lookup ( const QValueVector<uint>& id_path ) const
+ModelItem* Model::lookup (const QVector<uint> &id_path ) const
 {
   QValueVector<uint> my_path = id_path;
 
@@ -461,7 +461,7 @@ TopoDS_Shape Model::lookupShape ( const DBURL& db_url ) const
   return TopoDS_Shape();
 }
 
-TopoDS_Shape Model::lookupShape ( const QValueVector<uint>& id_path ) const
+TopoDS_Shape Model::lookupShape (const QVector<uint> &id_path ) const
 {
   QValueVector<uint> my_path = id_path;
 

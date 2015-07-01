@@ -104,7 +104,7 @@ namespace Space3D {
     }
   }
 
-  QValueVector<uint> Figure::ID ( void ) const
+  QVector<uint> Figure::ID( void ) const
   {
     QValueVector<uint> ids;
 

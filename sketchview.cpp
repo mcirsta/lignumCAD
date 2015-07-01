@@ -72,7 +72,8 @@ public:
 
     QDomElement root = xml_doc_.createElement( lC::STR::MEMENTO );
 
-    root.setAttribute( lC::STR::NAME, sketch_view->dbURL().toString(true) );
+    //TODO maybe toString needs another encoding ?
+    root.setAttribute( lC::STR::NAME, sketch_view->dbURL().toString() );
 
     sketch_view->sketch()->write( root );
     sketch_view->write( root );
@@ -178,7 +179,7 @@ public:
     if ( memento_list.length() > 0 ) {
       QString path = memento_list.item(0).toElement().attribute( lC::STR::NAME );
 
-      if ( path != rename->oldDBURL().toString(true) )
+      if ( path != rename->oldDBURL().toString() )
 	return false;
 
       // Additional sanity check: make sure the object and its view have elements.
@@ -193,13 +194,13 @@ public:
       // Update the name elements in the object and it's view.
 
       memento_list.item(0).toElement().setAttribute( lC::STR::NAME,
-						     rename->newDBURL().toString(true) );
+                             rename->newDBURL().toString() );
 
       sketch_list.item(0).toElement().
 	setAttribute( lC::STR::NAME, rename->newDBURL().name() );
 
       sketch_view_list.item(0).toElement().setAttribute( lC::STR::SKETCH,
-							 rename->newDBURL().toString(true) );
+                             rename->newDBURL().toString() );
 
       return true;
     }
@@ -222,13 +223,13 @@ GLushort* SketchView::dashes[4] = { dashes0, dashes1, dashes2, dashes3 };
 PageInfoDialog* SketchView::config_dialog_ = 0;
 
 SketchView::SketchView ( Sketch* sketch, DesignBookView* parent )
-  : PageView( parent ), sketch_( sketch )
+  : PageView( parent ), sketch_( sketch ), currentTab( 0 )
 {
   init();
 }
 
 SketchView::SketchView ( DesignBookView* parent, const QDomElement& xml_rep )
-  : PageView( parent )
+  : PageView( parent ), currentTab( 0 )
 {
   DBURL db_url( xml_rep.attribute( lC::STR::SKETCH ) );
 
@@ -287,10 +288,10 @@ void SketchView::init ( void )
   alignment_create_input_ = new AlignmentCreateInput( this );
   constraint_delete_input_ = new ConstraintDeleteInput( this );
 
-  tab_ = new QTab( lC::lookupPixmap( "sketch.png" ),
-		   lC::formatTabName( sketch_->name() ) );
+  tabIcon_ =  lC::lookupPixmap( "sketch.png" );
+  tabText_ =  lC::formatTabName( sketch_->name() );
 
-  QListViewItem* previous_item = parent()->previousItem( sketch_->id() );
+  QStandardItem* previous_item = parent()->previousItem( sketch_->id() );
 
   list_view_item_ = new ListViewItem( parent()->modelListItem(), previous_item );
 

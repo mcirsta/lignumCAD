@@ -50,8 +50,8 @@ namespace Space2D {
     PageView* parent_;
 
     uint n_geometries_;
-    QValueVector< Point > points_;
-    QPtrList< ConstrainedLine > lines_;
+    QVector< Point > points_;
+    QList< ConstrainedLine > lines_;
 
     ConstrainedLine* from_reference_;
     QDomDocument* xml_rep_;

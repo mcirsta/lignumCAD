@@ -167,24 +167,24 @@ namespace Space3D {
     bool isComplete ( void ) const { return complete_; }
     void setComplete ( bool complete );
 
-    QValueVector<uint> ID ( void ) const;
+    QVector<uint> ID ( void ) const;
     QString path ( void ) const;
 #if 0
     virtual Vertex closestVertex( Point p, Curve* curve ) const = 0;
 #endif
     virtual ModelItem* lookup ( QStringList& path_components ) const = 0;
-    virtual ModelItem* lookup ( QValueVector<uint>& id_path ) const = 0;
+    virtual ModelItem* lookup ( QVector<uint>& id_path ) const = 0;
     virtual Handle(Standard_Type) lookupType ( QStringList& path_components ) const = 0;
-    virtual Handle(Standard_Type) lookupType ( QValueVector<uint>& id_path ) const = 0;
+    virtual Handle(Standard_Type) lookupType ( QVector<uint>& id_path ) const = 0;
     virtual TopoDS_Shape lookupShape ( QStringList& path_components ) const = 0;
-    virtual TopoDS_Shape lookupShape ( QValueVector<uint>& id_path ) const = 0;
+    virtual TopoDS_Shape lookupShape ( QVector<uint>& id_path ) const = 0;
     /*!
      * Construct a string path to the specified item. May be either the
      * figure itself or one of its geometries or subfigures.
      * \param id_path id path to item.
      * \return string encoded path to item.
      */
-    virtual QString idPath ( QValueVector<uint> id_path ) const = 0;
+    virtual QString idPath ( QVector<uint> id_path ) const = 0;
     /*!
      * Construct the id path to the specified item. May be either the figure
      * itself or one of its geometries or subfigures.
@@ -192,7 +192,7 @@ namespace Space3D {
      * paths to current item removed.
      * \param id_path id path to update with id's.
      */
-    virtual void pathID ( QStringList& path_components, QValueVector<uint>& id_path ) const = 0;
+    virtual void pathID ( QStringList& path_components, QVector<uint>& id_path ) const = 0;
 
   public slots:
     void pageRenamed ( const QString& name );

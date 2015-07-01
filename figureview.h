@@ -76,7 +76,7 @@ public:
   virtual CreateObject* memento ( void ) = 0;
 
   virtual View* lookup ( QStringList& path_components ) const = 0;
-  virtual void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path ) const = 0;
+  virtual void lookup ( QVector<uint>& id_path, std::vector<GLuint>& name_path ) const = 0;
 
   bool isHighlighted ( void ) const { return highlighted_; }
   void setHighlighted ( bool highlight );
@@ -130,7 +130,7 @@ namespace Space2D {
     virtual Curve* geometry ( GLuint /*selection_name*/ ) const { return 0; }
 
     // Not implemented in 2D...
-    void lookup ( QValueVector<uint>& /*id_path*/, std::vector<GLuint>& /*name_path*/ )
+    void lookup ( QVector<uint>& /*id_path*/, std::vector<GLuint>& /*name_path*/ )
       const
     {}
   };

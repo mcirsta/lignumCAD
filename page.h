@@ -41,23 +41,23 @@ public:
   PageBase ( uint id, const QString& name, const QString& type, Model* parent );
 
   virtual ModelItem* lookup ( QStringList& path_components ) const = 0;
-  virtual ModelItem* lookup ( QValueVector<uint>& id_path ) const = 0;
+  virtual ModelItem* lookup ( QVector<uint>& id_path ) const = 0;
   virtual Handle(Standard_Type) lookupType ( QStringList& path_components )
     const = 0;
-  virtual Handle(Standard_Type) lookupType ( QValueVector<uint>& id_path )
+  virtual Handle(Standard_Type) lookupType ( QVector<uint>& id_path )
     const = 0;
   virtual TopoDS_Shape lookupShape ( QStringList& path_components )
     const = 0;
-  virtual TopoDS_Shape lookupShape ( QValueVector<uint>& id_path )
+  virtual TopoDS_Shape lookupShape ( QVector<uint>& id_path )
     const = 0;
 
   virtual bool used ( const PageBase* page ) const = 0;
 
-  QValueVector<uint> ID ( void ) const;
+  QVector<uint> ID ( void ) const;
   QString path ( void ) const;
 
-  virtual QString idPath ( QValueVector<uint> id_path ) const = 0;
-  virtual void pathID ( QStringList& path_components, QValueVector<uint>& id_path ) const = 0;
+  virtual QString idPath ( QVector<uint> id_path ) const = 0;
+  virtual void pathID ( QStringList& path_components, QVector<uint>& id_path ) const = 0;
   virtual void dumpInfo ( void ) const = 0;
 
 protected:
@@ -84,7 +84,7 @@ namespace Space2D {
     QPtrListIterator< Figure > figures ( void ) const;
 #endif
     ModelItem* lookup ( QStringList& path_components ) const;
-    ModelItem* lookup ( QValueVector<uint>& /*id_path*/ ) const
+    ModelItem* lookup ( QVector<uint>& /*id_path*/ ) const
     {
       return 0; // Not needed (currently) in 2D context.
     }
@@ -93,17 +93,17 @@ namespace Space2D {
     {
       return Handle(Standard_Type)(); // Not needed (currently) in 2D context
     }
-    Handle(Standard_Type) lookupType ( QValueVector<uint>& /*path_components*/ ) const
+    Handle(Standard_Type) lookupType ( QVector<uint>& /*path_components*/ ) const
     {
       return Handle(Standard_Type)(); // Not needed (currently) in 2D context
     }
     TopoDS_Shape lookupShape ( QStringList& /*path_components*/ ) const;
-    TopoDS_Shape lookupShape ( QValueVector<uint>& /*path_components*/ ) const;
+    TopoDS_Shape lookupShape ( QVector<uint>& /*path_components*/ ) const;
 
     bool used ( const PageBase* /*page*/ ) const { return false; }
 
-    QString idPath ( QValueVector<uint> id_path ) const;
-    void pathID ( QStringList& path_components, QValueVector<uint>& id_path ) const;
+    QString idPath ( QVector<uint> id_path ) const;
+    void pathID ( QStringList& path_components, QVector<uint>& id_path ) const;
 
     void dumpInfo ( void ) const;
 
@@ -146,7 +146,7 @@ namespace Space3D {
     //    virtual const TopoDS_Shape& shape ( void ) const = 0;
 
     ModelItem* lookup ( QStringList& path_components ) const;
-    ModelItem* lookup ( QValueVector<uint>& id_path ) const;
+    ModelItem* lookup ( QVector<uint>& id_path ) const;
 
     void dumpInfo ( void ) const;
 

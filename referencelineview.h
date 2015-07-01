@@ -124,8 +124,8 @@ namespace Space2D {
     ReferenceLineCreateInput create_input_;
     ReferenceLineModifyInput modify_input_;
 
-    QIntDict< GraphicsView > reference_line_objects_;
-    QIntDict< DimensionView > dimensionview_objects_;
+    QHash< int,GraphicsView > reference_line_objects_;
+    QHash< int,DimensionView > dimensionview_objects_;
 
   public:
     ReferenceLineView ( ReferenceLine* reference_line, PageView* parent );

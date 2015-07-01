@@ -44,7 +44,8 @@ Q_OBJECT
   Space2D::AlignmentCreateInput* alignment_create_input_;
   Space2D::ConstraintDeleteInput* constraint_delete_input_;
 
-  QTab* tab_;
+  QPixmap tabIcon_;
+  QString tabText_;
   ListViewItem* list_view_item_;
 
   QPopupMenu* context_menu_;
@@ -56,6 +57,8 @@ Q_OBJECT
   static GLushort* dashes[4];
 
   static PageInfoDialog* config_dialog_;
+
+  int currentTab;
 
 public:
   SketchView ( Sketch* sketch, DesignBookView* parent );
@@ -81,7 +84,7 @@ public:
   // Implementation of PageView interface
 
   //! \return the tab for this page view.
-  QTab* tab ( void ) const { return tab_; }
+  int tabIdx ( void ) const { return currentTab; }
   //! \return the list view item for this page view.
   ListViewItem* listViewItem ( void ) const { return list_view_item_; }
 
@@ -90,7 +93,7 @@ public:
   QString type ( void ) const { return sketch_->type(); }
 
   DBURL dbURL ( void ) const { return sketch_->dbURL(); }
-  QValueVector<uint> ID ( void ) const { return sketch_->ID(); }
+  QVector<uint> ID ( void ) const { return sketch_->ID(); }
 
 
   CreateObject* memento ( void );

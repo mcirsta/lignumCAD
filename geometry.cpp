@@ -97,7 +97,7 @@ namespace Space3D {
     return parent_->model();
   }
 
-  QValueVector<uint> Geometry::ID ( void ) const
+  QVector<uint> Geometry::ID( void ) const
   {
     QValueVector<uint> ids;
 

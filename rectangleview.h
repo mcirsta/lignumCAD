@@ -30,6 +30,8 @@
 #include "figureview.h"
 #include "handle.h"
 
+#include <memory>
+
 class Style;
 class RectangleInfoDialog;
 
@@ -83,7 +85,7 @@ namespace Space2D {
     Point last_pnt_;
     Point current_pnt_;
 
-    QPtrList< ConstrainedLine > edges_;
+    QList< ConstrainedLine > edges_;
 
     double old_x0_offset_;
     double old_y0_offset_;
@@ -154,8 +156,8 @@ namespace Space2D {
     GraphicsView lt_handle_;
     GraphicsView ml_handle_;
 
-    QIntDict< GraphicsView > rectangle_objects_;
-    QIntDict< DimensionView > dimensionview_objects_;
+    QHash< int,GraphicsView > rectangle_objects_;
+    QHash< int,std::shared_ptr<DimensionView> > dimensionview_objects_;
 
     std::map< int, lC::ValidDelta( Rectangle::* ) ( const Point&, Point& )> adjustments_;
 
@@ -225,7 +227,7 @@ namespace Space2D {
     void draw ( void ) const;
     void select ( SelectionType select_type ) const;
 
-    QPtrList< ConstrainedLine > dragEdges (  GLuint selection_name ) const;
+    QList< ConstrainedLine > dragEdges (  GLuint selection_name ) const;
 
     lC::ValidDelta adjust ( int selection_name, const Point& last_pnt,
 			    Point& current_pnt );

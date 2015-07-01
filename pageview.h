@@ -159,7 +159,7 @@ public:
   virtual QString name ( void ) const = 0;
   virtual void setName ( const QString& name ) = 0;
   virtual DBURL dbURL ( void ) const = 0;
-  virtual QValueVector<uint> ID ( void ) const = 0;
+  virtual QVector<uint> ID ( void ) const = 0;
 
   virtual QString type ( void ) const = 0;
 

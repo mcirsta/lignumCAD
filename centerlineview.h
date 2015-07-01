@@ -126,8 +126,8 @@ namespace Space2D {
     CenterlineCreateInput create_input_;
     CenterlineModifyInput modify_input_;
 
-    QIntDict< GraphicsView > centerline_objects_;
-    QIntDict< DimensionView > dimensionview_objects_;
+    QHash< int,GraphicsView > centerline_objects_;
+    QHash< int,DimensionView > dimensionview_objects_;
 
   public:
     CenterlineView ( Centerline* centerline, PageView* parent );

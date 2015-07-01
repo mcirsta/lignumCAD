@@ -31,7 +31,7 @@ PageBase::PageBase ( uint id, const QString& name, const QString& type,
   : ModelItem( id, name, type ), parent_( parent )
 {}
 
-QValueVector<uint> PageBase::ID ( void ) const
+QVector<uint> PageBase::ID( void ) const
 {
   QValueVector<uint> ids;
 
@@ -136,7 +136,7 @@ namespace Space2D {
     return TopoDS_Shape(); // Not needed (currently) in 2D context
   }
 
-  QString Page::idPath ( QValueVector<uint> /*id_path*/ ) const
+  QString Page::idPath (QVector<uint> /*id_path*/ ) const
   {
     return name(); // Not needed (currently) in 2D context.
   }
@@ -217,7 +217,7 @@ namespace Space3D {
     return 0;			// Really an error...
   }
 
-  ModelItem* Page::lookup ( QValueVector<uint>& id_path ) const
+  ModelItem* Page::lookup (QVector<uint> &id_path ) const
   {
     QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
 
