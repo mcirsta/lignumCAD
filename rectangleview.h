@@ -48,7 +48,7 @@ namespace Space2D {
   class RectangleCreateInput : public InputObject {
     Q_OBJECT
 
-    QPopupMenu* context_menu_;
+    QMenu* context_menu_;
     int separator_id_;
 
     Rectangle* rectangle_;
@@ -61,8 +61,8 @@ namespace Space2D {
       return SelectionType( TRANSIENT, EDGE );
     }
     bool needsPrepressMouseCoordinates ( void ) const { return true; }
-    void startDisplay ( QPopupMenu* context_menu );
-    void stopDisplay ( QPopupMenu* /*context_menu*/ ) {}
+    void startDisplay ( QMenu* context_menu );
+    void stopDisplay ( QMenu* /*context_menu*/ ) {}
     void mousePrepress ( QMouseEvent* me, const SelectedNames& selected );
     void mousePress ( QMouseEvent* me, const SelectedNames& selected );
     void mouseDrag ( QMouseEvent* me, const SelectedNames& selected );
@@ -99,8 +99,8 @@ namespace Space2D {
     RectangleModifyInput ( Rectangle* rectangle, RectangleView* rectangle_view );
     SelectionType selectionType ( void ) const { return selection_type_; }
     bool needsPrepressMouseCoordinates ( void ) const { return true; }
-    void startDisplay ( QPopupMenu* /*context_menu*/ ) {}
-    void stopDisplay ( QPopupMenu* /*context_menu*/ ) {}
+    void startDisplay ( QMenu* /*context_menu*/ ) {}
+    void stopDisplay ( QMenu* /*context_menu*/ ) {}
     void mousePrepress ( QMouseEvent* me, const SelectedNames& selected );
     void mousePress ( QMouseEvent* me, const SelectedNames& selected );
     void mouseDrag ( QMouseEvent* me, const SelectedNames& selected );

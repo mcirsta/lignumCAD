@@ -48,11 +48,11 @@ Q_OBJECT
   QString tabText_;
   ListViewItem* list_view_item_;
 
-  QPopupMenu* context_menu_;
-  int wireframe_id_;
-  int solid_id_;
-  int texture_id_;
-  int cancel_separator_id_;
+  QMenu* context_menu_;
+  QAction* wireframe_id_;
+  QAction* solid_id_;
+  QAction* texture_id_;
+  QAction* cancel_separator_id_;
 
   static GLushort* dashes[4];
 
@@ -104,8 +104,8 @@ public:
   void pasteFigure ( const QDomElement& xml_rep );
 
   // Implementation of remaining InputObject interface
-  void startDisplay ( QPopupMenu* context_menu );
-  void stopDisplay ( QPopupMenu* context_menu );
+  void startDisplay ( QMenu* context_menu );
+  void stopDisplay ( QMenu* context_menu );
 
   // Implementation of GraphicsObject interface
 
@@ -132,7 +132,8 @@ private slots:
    */
   void listNameChanged ( const QString& name );
   void updateName ( const QString& name );
-  void toggleRenderStyle ( int id );
+  void toggleRenderStyleWireframe ( );
+  void toggleRenderStyle (QAction *id );
   void createRectangle ();
   void createReferenceLine ();
   void createCenterline ();

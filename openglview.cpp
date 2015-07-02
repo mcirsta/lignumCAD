@@ -21,7 +21,7 @@
  *
  */
 #include <qcursor.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qaction.h>
 #include <qpainter.h>
 #include <qprinter.h>
