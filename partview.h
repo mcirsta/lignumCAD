@@ -40,7 +40,7 @@ class PartView : public PageView {
   int tabId;
   ListViewItem* list_view_item_;
 
-  QPopupMenu* context_menu_;
+  QMenu* context_menu_;
   int wireframe_id_;
   int hidden_id_;
   int solid_id_;
@@ -100,8 +100,8 @@ public:
   void pasteFigure ( const QDomElement& xml_rep );
 
   // Implementation of remaining InputObject interface
-  void startDisplay ( QPopupMenu* context_menu );
-  void stopDisplay ( QPopupMenu* context_menu );
+  void startDisplay ( QMenu* context_menu );
+  void stopDisplay ( QMenu* context_menu );
 
   // Implementation of GraphicsObject interface
 

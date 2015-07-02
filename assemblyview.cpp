@@ -458,7 +458,7 @@ public:
    *
    * \param context_menu main OpenGL view's context menu.
    */
-  void startDisplay ( QPopupMenu* context_menu )
+  void startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 
@@ -494,7 +494,7 @@ public:
    * When changing the current page remove the context dialog action and
    * undo any cursor changes.
    */
-  void stopDisplay ( QPopupMenu* /*context_menu*/ )
+  void stopDisplay ( QMenu* /*context_menu*/ )
   {
     QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
@@ -728,7 +728,7 @@ private slots:
 
 private:
   //! OpenGL view context menu.
-  QPopupMenu* context_menu_;
+  QMenu* context_menu_;
   //! Separator for Cancel action.
   int separator_id_;
   //! Parent assembly view.
@@ -778,7 +778,7 @@ public:
    *
    * \param context_menu main OpenGL view's context menu.
    */
-  void startDisplay ( QPopupMenu* context_menu )
+  void startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 
@@ -815,7 +815,7 @@ public:
    * When changing the current page, remove the context dialog action and
    * undo any cursor changes.
    */
-  void stopDisplay ( QPopupMenu* /*context_menu*/ )
+  void stopDisplay ( QMenu* /*context_menu*/ )
   {
     QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
@@ -1064,7 +1064,7 @@ private slots:
 
 private:
   //! OpenGL view context menu.
-  QPopupMenu* context_menu_;
+  QMenu* context_menu_;
   //! Separator for Cancel action.
   int separator_id_;
   //! Parent assembly view.
@@ -1100,7 +1100,7 @@ public:
   //! \return true does need selection scan.
   bool needsPrepressMouseCoordinates ( void ) const { return true; }
 
-  void startDisplay ( QPopupMenu* context_menu )
+  void startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 
@@ -1117,7 +1117,7 @@ public:
    * When changing the current page remove the context dialog action and
    * undo any cursor changes.
    */
-  void stopDisplay ( QPopupMenu* /*context_menu*/ )
+  void stopDisplay ( QMenu* /*context_menu*/ )
   {
     // Not the only stopDisplay which needs a make-over...
 #if 0
@@ -1219,7 +1219,7 @@ public slots:
   }
 private:
   //! OpenGL view context menu.
-  QPopupMenu* context_menu_;
+  QMenu* context_menu_;
   //! Separator for Cancel action.
   int separator_id_;
   //! Parent assembly view.
@@ -1512,7 +1512,7 @@ SelectionType AssemblyView::defaultSelectionType ( void ) const
 /*
  * Append some useful actions to the OpenGL view context menu.
  */
-void AssemblyView::startDisplay ( QPopupMenu* context_menu )
+void AssemblyView::startDisplay ( QMenu* context_menu )
 {
   context_menu_ = context_menu;
 
@@ -1593,7 +1593,7 @@ void AssemblyView::startDisplay ( QPopupMenu* context_menu )
 /*
  * Clean up when are not the current page.
  */
-void AssemblyView::stopDisplay ( QPopupMenu* /*context_menu*/ )
+void AssemblyView::stopDisplay ( QMenu* /*context_menu*/ )
 {
   if ( current_view_ != 0 &&
        current_view_->subassembly()->constraints().status() != PlacementComplete ) {

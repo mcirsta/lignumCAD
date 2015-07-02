@@ -55,7 +55,7 @@ class AssemblyView : public PageView {
 
   SubassemblyView* current_view_;
 
-  QPopupMenu* context_menu_;
+  QMenu* context_menu_;
   int wireframe_id_;
   int hidden_id_;
   int solid_id_;
@@ -111,8 +111,8 @@ public:
 
   // Implementation of remaining InputObject interface
   SelectionType defaultSelectionType ( void ) const;
-  void startDisplay ( QPopupMenu* context_menu );
-  void stopDisplay ( QPopupMenu* context_menu );
+  void startDisplay ( QMenu* context_menu );
+  void stopDisplay ( QMenu* context_menu );
 
   // Implementation of GraphicsObject interface
 

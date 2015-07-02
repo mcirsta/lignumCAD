@@ -58,7 +58,7 @@ namespace Space2D {
   /*
    * Prep for operation.
    */
-  void AlignmentCreateInput::startDisplay ( QPopupMenu* /*context_menu*/ )
+  void AlignmentCreateInput::startDisplay ( QMenu* /*context_menu*/ )
   {
     from_ = to_ = 0;
 

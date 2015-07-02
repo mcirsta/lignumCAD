@@ -252,7 +252,7 @@ namespace Space2D {
   /*
    * Set up UI for creating an annotation.
    */
-  void AnnotationCreateInput::startDisplay ( QPopupMenu* /*context_menu*/ )
+  void AnnotationCreateInput::startDisplay ( QMenu* /*context_menu*/ )
   {
     QAction* cancel_action =
       annotation_view_->parent()->lCMW()->cancelAnnotationAction;

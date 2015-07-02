@@ -341,7 +341,7 @@ void DrawingView::write ( QDomElement& xml_rep ) const
 /*
  * Append some useful actions to the OpenGL view context menu.
  */
-void DrawingView::startDisplay ( QPopupMenu* /*context_menu*/ )
+void DrawingView::startDisplay ( QMenu* /*context_menu*/ )
 {
   connect( drawing_, SIGNAL( nameChanged( const QString& ) ),
 	   lCMW(), SLOT( pageChanged( const QString& ) ) );
@@ -349,7 +349,7 @@ void DrawingView::startDisplay ( QPopupMenu* /*context_menu*/ )
 /*
  * Clean up when are not the current page.
  */
-void DrawingView::stopDisplay ( QPopupMenu* /*context_menu*/ )
+void DrawingView::stopDisplay ( QMenu* /*context_menu*/ )
 {
   disconnect( drawing_, SIGNAL( nameChanged( const QString& ) ),
 	      lCMW(), SLOT( pageChanged( const QString& ) ) );

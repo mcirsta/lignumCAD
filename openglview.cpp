@@ -190,8 +190,8 @@ OpenGLView::OpenGLView ( DesignBookView* parent, const char* name,
 
   setFocusPolicy( StrongFocus );
   // Printing view doesn't need this either...
-  context_menu_ = new QPopupMenu( this, "openglview_context" );
-  view_menu_ = new QPopupMenu( this, "view_menu" );
+  context_menu_ = new QMenu( this, "openglview_context" );
+  view_menu_ = new QMenu( this, "view_menu" );
 
   if ( lCMW != 0 ) { // Note: printing view doesn't have a reference to lCMW!
     lCMW->viewLeftAction->addTo( view_menu_ );

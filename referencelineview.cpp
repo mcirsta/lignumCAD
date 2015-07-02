@@ -298,7 +298,7 @@ namespace Space2D {
       reference_line_view_( reference_line_view )
   {}
 
-  void ReferenceLineCreateInput::startDisplay ( QPopupMenu* context_menu )
+  void ReferenceLineCreateInput::startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 

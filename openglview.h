@@ -31,7 +31,7 @@
 #include "arrow.h"
 #include "openglbase.h"
 
-class QPopupMenu;
+class QMenu;
 class QAction;
 class QPixmap;
 class DesignBookView;
@@ -91,8 +91,8 @@ protected:
   Space3D::Arrow arrow_;
 
 private:
-  QPopupMenu* context_menu_;
-  QPopupMenu* view_menu_;
+  QMenu* context_menu_;
+  QMenu* view_menu_;
   //  QAction* view_restore_action_;
 
   SelectionType selection_type_;
@@ -107,7 +107,7 @@ public:
   ~OpenGLView ( void );
 
   //! \return the context menu for this view.
-  QPopupMenu* contextMenu ( void ) const { return context_menu_; }
+  QMenu* contextMenu ( void ) const { return context_menu_; }
 
   double scale ( void ) const { return view_data_.scale_; }
   Ratio scaleRatio ( void ) const { return view_data_.scale_; }

@@ -29,7 +29,7 @@
 TabBarContext::TabBarContext ( QWidget* parent, const char* name )
   : QTabBar( parent, name )
 {
-  context_menu_ = new QPopupMenu( this, "page_context" );
+  context_menu_ = new QMenu( this, "page_context" );
 
   QWhatsThis::add( this, tr( "<p><b>Page Tab Bar</b></p>\
 <p>This tab bar shows the pages in the model.\

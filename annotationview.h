@@ -74,12 +74,12 @@ namespace Space2D {
      * option to the context menu, set the active cursor.
      * \param context_menu the OpenGL view's context menu.
      */
-    void startDisplay ( QPopupMenu* context_menu );
+    void startDisplay ( QMenu* context_menu );
     /*!
      * Prepare to be hidden from display. Nothing to do really.
      * \param context_menu the OpenGL view's context menu.
      */
-    void stopDisplay ( QPopupMenu* /*context_menu*/ ) {}
+    void stopDisplay ( QMenu* /*context_menu*/ ) {}
     /*!
      * (The page view handles everything here.)
      * \param me current mouse position (unused).
@@ -160,9 +160,9 @@ namespace Space2D {
     //! \return true: Annotations need to actively define the cursor.
     bool needsPrepressMouseCoordinates ( void ) const { return true; }
     //! Does nothing in this context.
-    void startDisplay ( QPopupMenu* /*context_menu*/ ) {}
+    void startDisplay ( QMenu* /*context_menu*/ ) {}
     //! Does nothing in this context.
-    void stopDisplay ( QPopupMenu* /*context_menu*/ ) {}
+    void stopDisplay ( QMenu* /*context_menu*/ ) {}
     /*!
      * Mostly just sets the cursor when it is over a resize handle.
      * \param me current mouse position.

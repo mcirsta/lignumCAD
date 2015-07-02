@@ -478,7 +478,7 @@ void PartView::write ( QDomElement& xml_rep ) const
 /*
  * Append some useful actions to the OpenGL view context menu.
  */
-void PartView::startDisplay ( QPopupMenu* context_menu )
+void PartView::startDisplay ( QMenu* context_menu )
 {
   context_menu_ = context_menu;
 
@@ -517,7 +517,7 @@ void PartView::startDisplay ( QPopupMenu* context_menu )
 /*
  * Clean up when are not the current page.
  */
-void PartView::stopDisplay ( QPopupMenu* /*context_menu*/ )
+void PartView::stopDisplay ( QMenu* /*context_menu*/ )
 {
   /*
    * When we are not the current page, don't respond to changes in the view

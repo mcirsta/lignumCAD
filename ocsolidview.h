@@ -51,8 +51,8 @@ namespace Space3D {
     OCSolidModifyInput ( OCSolid* solid, OCSolidView* solid_view );
     SelectionType selectionType ( void ) const { return selection_type_; }
     bool needsPrepressMouseCoordinates ( void ) const { return true; }
-    void startDisplay ( QPopupMenu* /*context_menu*/ ) {}
-    void stopDisplay ( QPopupMenu* /*context_menu*/ ) {}
+    void startDisplay ( QMenu* /*context_menu*/ ) {}
+    void stopDisplay ( QMenu* /*context_menu*/ ) {}
     void mousePrepress ( QMouseEvent* me, const SelectedNames& selected );
     void mousePress ( QMouseEvent* me, const SelectedNames& selected );
     void mouseDrag ( QMouseEvent* me, const SelectedNames& selected );

@@ -531,7 +531,7 @@ namespace Space2D {
     : rectangle_( rectangle ), rectangle_view_( rectangle_view )
   {}
 
-  void RectangleCreateInput::startDisplay ( QPopupMenu* context_menu )
+  void RectangleCreateInput::startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 

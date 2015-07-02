@@ -340,14 +340,14 @@ public:
    *
    * \param context_menu main OpenGL view's context menu.
    */
-  void startDisplay ( QPopupMenu* /*context_menu*/ )
+  void startDisplay ( QMenu* /*context_menu*/ )
   {
   }
   /*!
    * Does nothing now, but may later. (For example, when changing the current
    * page: remove the context dialog action.)
    */
-  void stopDisplay ( QPopupMenu* /*context_menu*/ )
+  void stopDisplay ( QMenu* /*context_menu*/ )
   {
   }
   /*!

@@ -295,7 +295,7 @@ namespace Space2D {
     : centerline_( centerline ), centerline_view_( centerline_view )
   {}
 
-  void CenterlineCreateInput::startDisplay ( QPopupMenu* context_menu )
+  void CenterlineCreateInput::startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 

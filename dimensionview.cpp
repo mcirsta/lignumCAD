@@ -58,7 +58,7 @@ namespace Space2D {
     if ( xml_rep_ != 0 ) delete xml_rep_;
   }
 
-  void DimensionCreateInput::startDisplay ( QPopupMenu* context_menu )
+  void DimensionCreateInput::startDisplay ( QMenu* context_menu )
   {
     n_geometries_ = 0;
     points_.clear();
@@ -479,7 +479,7 @@ namespace Space2D {
       old_extension_offset_( 0 ), free_( false )
   {}
 
-  void DimensionModifyInput::startDisplay ( QPopupMenu* /*context_menu*/ )
+  void DimensionModifyInput::startDisplay ( QMenu* /*context_menu*/ )
   {
     free_ = false;
   }

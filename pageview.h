@@ -193,8 +193,8 @@ public:
 
   SelectionType selectionType ( void ) const;
   bool needsPrepressMouseCoordinates ( void ) const;
-  virtual void startDisplay ( QPopupMenu* context_menu ) = 0;
-  virtual void stopDisplay ( QPopupMenu* context_menu ) = 0;
+  virtual void startDisplay ( QMenu* context_menu ) = 0;
+  virtual void stopDisplay ( QMenu* context_menu ) = 0;
   void mousePrepress ( QMouseEvent* me, const SelectedNames& selected );
   void mousePress ( QMouseEvent* me, const SelectedNames& selected );
   void mouseDrag ( QMouseEvent* me, const SelectedNames& selected );

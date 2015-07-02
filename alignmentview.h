@@ -66,12 +66,12 @@ namespace Space2D {
      * option to the context menu, set the active cursor.
      * \param context_menu the OpenGL view's context menu.
      */
-    void startDisplay ( QPopupMenu* context_menu );
+    void startDisplay ( QMenu* context_menu );
     /*!
      * Prepare to be hidden from display. Nothing to do really.
      * \param context_menu the OpenGL view's context menu.
      */
-    void stopDisplay ( QPopupMenu* /*context_menu*/ ) {}
+    void stopDisplay ( QMenu* /*context_menu*/ ) {}
     /*!
      * (The page view handles everything here, chielfly highlighting geometry.)
      * \param me current mouse position (unused).

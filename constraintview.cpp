@@ -47,7 +47,7 @@ namespace Space2D {
     if ( xml_rep_ != 0 ) delete xml_rep_;
   }
 
-  void ConstraintDeleteInput::startDisplay ( QPopupMenu* context_menu )
+  void ConstraintDeleteInput::startDisplay ( QMenu* context_menu )
   {
     target_ = 0;
 
