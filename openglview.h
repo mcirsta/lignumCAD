@@ -26,6 +26,8 @@
 
 #include <qcursor.h>
 
+#include <QOpenGLPaintDevice>
+
 #include "graphics.h"
 #include "viewdata.h"
 #include "arrow.h"

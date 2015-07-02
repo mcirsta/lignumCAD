@@ -21,7 +21,7 @@
  *
  */
 
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qwhatsthis.h>
 
 #include "tabbarcontext.h"
