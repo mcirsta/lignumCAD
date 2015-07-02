@@ -324,32 +324,32 @@ bool SketchView::configure ( void )
 {
   // Just set the name of the sketch.
 
-  config_dialog_->nameEdit->setText( lC::formatName( name() ) );
-  config_dialog_->nameEdit->selectAll();
-  config_dialog_->nameEdit->setFocus();
-  config_dialog_->buttonOk->setDefault( true );
+  config_dialog_->getUi()->nameEdit->setText( lC::formatName( name() ) );
+  config_dialog_->getUi()->nameEdit->selectAll();
+  config_dialog_->getUi()->nameEdit->setFocus();
+  config_dialog_->getUi()->buttonOk->setDefault( true );
 
  redo:
   int ret = config_dialog_->exec();
 
   if ( ret == QDialog::Rejected ) return false;
 
-  if ( config_dialog_->nameEdit->edited() ) {
+  if ( config_dialog_->getUi()->nameEdit->isModified() ) {
     // DesignBookView handles checking the name and putting up the error dialog
     // if necessary.
     int ret = parent()->uniquePageName( this,
-					config_dialog_->nameEdit->text(),
+                    config_dialog_->getUi()->nameEdit->text(),
 					sketch_->type() );
 
     switch ( ret ) {
     case lC::Rejected:
       return false;
     case lC::Redo:
-      config_dialog_->nameEdit->setText( lC::formatName( sketch_->name() ) );
+      config_dialog_->getUi()->nameEdit->setText( lC::formatName( sketch_->name() ) );
       goto redo;
     }
 
-    sketch_->setName( config_dialog_->nameEdit->text() );
+    sketch_->setName( config_dialog_->getUi()->nameEdit->text() );
   }
 
   return true;
@@ -396,39 +396,39 @@ void SketchView::listNameChanged ( const QString& name )
  */
 void SketchView::show ( void ) const
 {
-  lCMW()->toolMenu->clear();
-  lCMW()->toolRectangleAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolMenu->insertSeparator();
-  lCMW()->toolReferenceLineAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolCenterlineAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolAnnotationAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolMenu->insertSeparator();
-  lCMW()->toolDimensionAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolAlignmentAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolMenu->insertSeparator();
-  lCMW()->toolConstraintDeleteAction->addTo( lCMW()->toolMenu );
+  lCMW()->getUi()->toolMenu->clear();
+  lCMW()->getUi()->toolMenu->addAction( lCMW()->getUi()->toolRectangleAction );
+  lCMW()->getUi()->toolMenu->addSeparator();
+  lCMW()->getUi()->toolMenu->addAction ( lCMW()->getUi()->toolReferenceLineAction  );
+  lCMW()->getUi()->toolMenu->addAction ( lCMW()->getUi()->toolCenterlineAction );
+  lCMW()->getUi()->toolMenu->addAction ( lCMW()->getUi()->toolAnnotationAction );
+  lCMW()->getUi()->toolMenu->addSeparator();
+  lCMW()->getUi()->toolMenu->addAction ( lCMW()->getUi()->toolDimensionAction );
+  lCMW()->getUi()->toolMenu->addAction ( lCMW()->getUi()->toolAlignmentAction );
+  lCMW()->getUi()->toolMenu->addSeparator();
+  lCMW()->getUi()->toolMenu->addAction ( lCMW()->getUi()->toolConstraintDeleteAction );
 
-  lCMW()->toolRectangleAction->disconnect();
-  lCMW()->toolReferenceLineAction->disconnect();
-  lCMW()->toolCenterlineAction->disconnect();
-  lCMW()->toolAnnotationAction->disconnect();
-  lCMW()->toolDimensionAction->disconnect();
-  lCMW()->toolAlignmentAction->disconnect();
-  lCMW()->toolConstraintDeleteAction->disconnect();
+  lCMW()->getUi()->toolRectangleAction->disconnect();
+  lCMW()->getUi()->toolReferenceLineAction->disconnect();
+  lCMW()->getUi()->toolCenterlineAction->disconnect();
+  lCMW()->getUi()->toolAnnotationAction->disconnect();
+  lCMW()->getUi()->toolDimensionAction->disconnect();
+  lCMW()->getUi()->toolAlignmentAction->disconnect();
+  lCMW()->getUi()->toolConstraintDeleteAction->disconnect();
 
-  connect( lCMW()->toolRectangleAction, SIGNAL( activated() ),
+  connect( lCMW()->getUi()->toolRectangleAction, SIGNAL( activated() ),
 	   SLOT( createRectangle() ) );
-  connect( lCMW()->toolCenterlineAction, SIGNAL( activated() ),
+  connect( lCMW()->getUi()->toolCenterlineAction, SIGNAL( activated() ),
 	   SLOT( createCenterline() ) );
-  connect( lCMW()->toolReferenceLineAction, SIGNAL( activated() ),
+  connect( lCMW()->getUi()->toolReferenceLineAction, SIGNAL( activated() ),
 	   SLOT( createReferenceLine() ) );
-  connect( lCMW()->toolAnnotationAction, SIGNAL( activated() ),
+  connect( lCMW()->getUi()->toolAnnotationAction, SIGNAL( activated() ),
 	   SLOT( createAnnotation() ) );
-  connect( lCMW()->toolDimensionAction, SIGNAL( activated() ),
+  connect( lCMW()->getUi()->toolDimensionAction, SIGNAL( activated() ),
 	   SLOT( createDimension() ) );
-  connect( lCMW()->toolAlignmentAction, SIGNAL( activated() ),
+  connect( lCMW()->getUi()->toolAlignmentAction, SIGNAL( activated() ),
 	   SLOT( createAlignment() ) );
-  connect( lCMW()->toolConstraintDeleteAction, SIGNAL( activated() ),
+  connect( lCMW()->getUi()->toolConstraintDeleteAction, SIGNAL( activated() ),
 	   SLOT( deleteConstraint() ) );
 }
 
@@ -439,7 +439,7 @@ void SketchView::write ( QDomElement& xml_rep ) const
 {
   QDomDocument document = xml_rep.ownerDocument();
   QDomElement view_element = document.createElement( lC::STR::SKETCH_VIEW );
-  view_element.setAttribute( lC::STR::SKETCH, sketch_->dbURL().toString( true ) );
+  view_element.setAttribute( lC::STR::SKETCH, sketch_->dbURL().toString( ) );
 
   QDomElement render_style_element = document.createElement( lC::STR::RENDER_STYLE);
   render_style_element.setAttribute( lC::STR::STYLE,
@@ -448,10 +448,10 @@ void SketchView::write ( QDomElement& xml_rep ) const
 
   viewData().write( view_element );
 
-  QPtrListIterator< FigureViewBase > fv( figureViews() );
+  QListIterator< std::shared_ptr<FigureViewBase> > fv( figureViews() );
 
-  for ( ; fv.current(); ++fv )
-    fv.current()->write( view_element );
+  while(fv.hasNext())
+    fv.next()->write( view_element );
 
   xml_rep.appendChild( view_element );
 }
@@ -463,7 +463,7 @@ void SketchView::startDisplay ( QPopupMenu* context_menu )
 {
   context_menu_ = context_menu;
 
-  context_menu_->insertSeparator();
+  context_menu_->addSeparator();
   wireframe_id_ = context_menu_->insertItem( tr( "Wireframe" ), this,
 					     SLOT( toggleRenderStyle( int ) ) );
   solid_id_ = context_menu_->insertItem( tr( "Solid" ), this,

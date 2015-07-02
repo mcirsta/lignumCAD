@@ -27,6 +27,8 @@
 
 #include <qobject.h>
 
+#include <QMenu>
+
 //#include "constants.h"
 
 typedef enum { TRANSIENT, PICK } SelectionMode;
@@ -68,7 +70,6 @@ struct SelectionType {
 typedef enum { SPACE2D, SPACE3D } Space;
 
 class QMouseEvent;
-class QPopupMenu;
 class ViewData;
 class SelectedNames;
 
@@ -140,8 +141,8 @@ public:
   virtual ~InputObject ( void ) {}
   virtual SelectionType selectionType ( void ) const = 0;
   virtual bool needsPrepressMouseCoordinates ( void ) const = 0;
-  virtual void startDisplay ( QPopupMenu* context_menu ) = 0;
-  virtual void stopDisplay ( QPopupMenu* context_menu ) = 0;
+  virtual void startDisplay ( QMenu* context_menu ) = 0;
+  virtual void stopDisplay ( QMenu* context_menu ) = 0;
   virtual void mousePrepress ( QMouseEvent* me, const SelectedNames& selected )=0;
   virtual void mousePress ( QMouseEvent* me, const SelectedNames& selected ) = 0;
   virtual void mouseDrag ( QMouseEvent* me, const SelectedNames& selected ) = 0;
