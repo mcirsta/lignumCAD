@@ -26,10 +26,6 @@
 #include <map>
 #include <hash_map>
 
-#include <qdict.h>
-#include <qptrlist.h>
-#include <qvaluevector.h>
-
 #include <gp_Ax2.hxx>
 #include <TopoDS_Solid.hxx>
 #include <TopoDS_Face.hxx>

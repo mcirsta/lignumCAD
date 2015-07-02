@@ -22,30 +22,33 @@
  */
 
 #include <QMenu>
+#include<QContextMenuEvent>
 #include <qwhatsthis.h>
 
 #include "tabbarcontext.h"
 
 TabBarContext::TabBarContext ( QWidget* parent, const char* name )
-  : QTabBar( parent, name )
+    : QTabBar( parent )
 {
-  context_menu_ = new QMenu( this, "page_context" );
+    setObjectName( name );
+    context_menu_ = new QMenu( this );
+    context_menu_->setObjectName( "page_context" );
 
-  QWhatsThis::add( this, tr( "<p><b>Page Tab Bar</b></p>\
-<p>This tab bar shows the pages in the model.\
- Clicking on a tab makes that the current page. The type of page is symbolized by\
- the icons:<ul>\
-<li><img src=\"sketch_min.png\">Sketch</li>\
-<li><img src=\"part_min.png\">Part</li>\
-<li><img src=\"assembly_min.png\">Assembly</li>\
-<li><img src=\"drawing_min.png\">Drawing</li>\
-</ul>\
-</p>" ) );
+    this->setWhatsThis( tr( "<p><b>Page Tab Bar</b></p>\
+                            <p>This tab bar shows the pages in the model.\
+                            Clicking on a tab makes that the current page. The type of page is symbolized by\
+                            the icons:<ul>\
+                            <li><img src=\"sketch_min.png\">Sketch</li>\
+            <li><img src=\"part_min.png\">Part</li>\
+            <li><img src=\"assembly_min.png\">Assembly</li>\
+            <li><img src=\"drawing_min.png\">Drawing</li>\
+            </ul>\
+            </p>" ) );
 }
 
 void TabBarContext::contextMenuEvent ( QContextMenuEvent* cme )
 {
-  context_menu_->exec( cme->globalPos() );
+    context_menu_->exec( cme->globalPos() );
 
-  cme->accept();
+    cme->accept();
 }

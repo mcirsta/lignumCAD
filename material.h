@@ -23,7 +23,6 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <qdict.h>
 #include <qimage.h>
 #include <qcolor.h>
 

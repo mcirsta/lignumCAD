@@ -25,8 +25,6 @@
 
 #include <map>
 
-#include <qdict.h>
-
 #include "page.h"
 
 class DBURL;
