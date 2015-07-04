@@ -26,7 +26,8 @@
 #include <gp_Ax2.hxx>
 
 #include <qstringlist.h>
-#include <qptrlist.h>
+
+#include <memory>
 
 class Subassembly;
 class Handle( Geom_Surface );
@@ -54,18 +55,18 @@ struct SurfacePair {
   virtual ~SurfacePair ( void ) {}
   virtual SurfacePair* clone ( void ) const = 0;
 #if 0
-  virtual AssemblyConstraintStatus addSurface( const QValueVector<uint>& surface_id ) = 0;
+  virtual AssemblyConstraintStatus addSurface( const QVector<uint>& surface_id ) = 0;
 #endif
-  virtual QValueVector<uint> reference0 ( void ) const = 0;
-  virtual QValueVector<uint> reference1 ( void ) const = 0;
+  virtual QVector<uint> reference0 ( void ) const = 0;
+  virtual QVector<uint> reference1 ( void ) const = 0;
 
   virtual double offset ( void ) const = 0;
   virtual Space3D::Point end0 ( void ) const = 0;
   virtual Space3D::Point end1 ( void ) const = 0;
   virtual Space3D::Vector normal ( void ) const = 0;
 
-  virtual AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id ) = 0;
-  virtual AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id ) = 0;
+  virtual AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id ) = 0;
+  virtual AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id ) = 0;
   virtual void transform ( void ) = 0;
   virtual gp_Ax2 characteristic ( void ) const = 0;
   virtual void recompute ( void ) = 0;
@@ -110,18 +111,18 @@ public:
   Subassembly* subassembly ( void ) const { return subassembly_; }
   //! \return a string representing the constraint's first reference (may
   //! or may not be defined).
-  QValueVector<uint> reference0 ( void ) const {
+  QVector<uint> reference0 ( void ) const {
     if ( surfaces_ != 0 )
       return surfaces_->reference0();
-    return QValueVector<uint>();
+    return QVector<uint>();
   }
   //! \return a string representing the constraint's second reference (may
   //! or may not be defined).
-  QValueVector<uint> reference1 ( void ) const
+  QVector<uint> reference1 ( void ) const
   {
     if ( surfaces_ != 0 )
       return surfaces_->reference1();
-    return QValueVector<uint>();
+    return QVector<uint>();
   }
   //! \return the offset of the constraint.
   double offset ( void ) const
@@ -149,10 +150,10 @@ public:
    * whether the attempt was successful and whether to keep adding surfaces.
    * \param surface_id id path to surface.
    */
-  virtual AssemblyConstraintStatus addSurface ( const QValueVector<uint>&
+  virtual AssemblyConstraintStatus addSurface ( const QVector<uint>&
 						surface_id ) = 0;
 #else
-  virtual AssemblyConstraintStatus validate ( const QValueVector<uint>& surface_id ) = 0;
+  virtual AssemblyConstraintStatus validate ( const QVector<uint>& surface_id ) = 0;
 #endif
   /*!
    * The surface pair has been validated; now perform the transformation of
@@ -246,10 +247,9 @@ public:
   AssemblyConstraintManager ( Subassembly* parent )
     : parent_( parent )
   {
-    constraints_.setAutoDelete( true );
   }
   //! \return a pointer to the current constraint.
-  const AssemblyConstraint* current ( void ) const { return constraints_.current(); }
+  const AssemblyConstraint* current ( void ) const { return currentConstraint; }
   /*!
    * Return a pointer to the constraint at the given phase. (Should not
    * change the "current" constraint.)
@@ -259,8 +259,8 @@ public:
   AssemblyConstraint* constraint ( uint phase ) const;
 
   //! \return an iterator over the defined constaints.
-  QPtrListIterator<AssemblyConstraint> constraints ( void ) const
-  { return QPtrListIterator<AssemblyConstraint>( constraints_ ); }
+  QListIterator< std::shared_ptr<AssemblyConstraint>> constraints ( void ) const
+  { return QListIterator<std::shared_ptr<AssemblyConstraint>>( constraints_ ); }
   //! \return the status of the current constraint.
   AssemblyConstraintStatus status ( void ) const;
   /*!
@@ -322,7 +322,7 @@ public:
    * Validate the surface against the current state of the constraint.
    * \param surface_id id path to selected surface.
    */
-  AssemblyConstraintStatus validate ( const QValueVector<uint>& surface_id );
+  AssemblyConstraintStatus validate ( const QVector<uint>& surface_id );
   /*!
    * We seem to need to separate the validation from the actual application
    * of the surface to the current constraint. This is so the constraintChanged
@@ -387,9 +387,11 @@ private:
   //! There are some methods of the parent we need to invoke.
   Subassembly* parent_;
   //! List of constraints defining this subassembly.
-  QPtrList<AssemblyConstraint> constraints_;
+  QList<std::shared_ptr<AssemblyConstraint>> constraints_;
   //! Current constraint before change.
   AssemblyConstraint* old_constraint_;
+  //TODO set this
+  AssemblyConstraint* currentConstraint;
 };
 
 #endif // ASSEMBLYCONSTRAINT_H

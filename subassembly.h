@@ -92,7 +92,7 @@ public:
    * \param surface_id id path to the surface on which the position
    * of this subassembly depends.
    */
-  void addDependency ( const QValueVector<uint>& surface_id );
+  void addDependency ( const QVector<uint>& surface_id );
   /*!
    * Rotate the subassembly about the given direction. The origin of the
    * subassembly is (effectively) translated to the origin, rotated, and then
@@ -125,7 +125,7 @@ public:
   Vertex closestVertex( Point p, Curve* curve ) const;
 #endif
   ModelItem* lookup ( QStringList& path_components ) const;
-  ModelItem* lookup ( QValueVector<uint>& id_path ) const;
+  ModelItem* lookup ( QVector<uint>& id_path ) const;
   /*!
    * Find the OpenCASCADE type of the given surface (identified by
    * path).
@@ -139,7 +139,7 @@ public:
    * \param id_path id path to solid.
    * \return OpenCASCADE standard type identifier.
    */
-  Handle(Standard_Type) lookupType ( QValueVector<uint>& id_path ) const;
+  Handle(Standard_Type) lookupType ( QVector<uint>& id_path ) const;
   /*!
    * Look up the topology of an OpenCASCADE shape. Should return
    * a shape which has the proper Location based on its traversal
@@ -153,7 +153,7 @@ public:
    * of the assembly hierarchy.
    * \param id_path id path to solid.
    */
-  TopoDS_Shape lookupShape ( QValueVector<uint>& id_path ) const;
+  TopoDS_Shape lookupShape ( QVector<uint>& id_path ) const;
   /*!
    * Determine if any of the constraints in this subassembly reference a surface
    * (or other geometry) of the given subassembly.
@@ -167,7 +167,7 @@ public:
    * \param id_path id path to item.
    * \return string encoded path to item.
    */
-  QString idPath ( QValueVector<uint> id_path ) const;
+  QString idPath ( QVector<uint> id_path ) const;
   /*!
    * Construct the id path to the specified item. May be either the subassembly
    * itself or one of its subassemblies.
@@ -175,7 +175,7 @@ public:
    * paths to current item removed.
    * \param id_path id path to update with id's.
    */
-  void pathID ( QStringList& path_components, QValueVector<uint>& id_path ) const;
+  void pathID ( QStringList& path_components, QVector<uint>& id_path ) const;
   /*!
    * Build up a single OC representation of the geometry of the assembly.
    */
@@ -223,7 +223,7 @@ private:
   //! The constraints which locate this subassembly.
   AssemblyConstraintManager constraints_;
   //! List of other subassemblies this subassembly depends on via constraints.
-  QPtrList<const ModelItem> dependencies_;
+  QList<const std::shared_ptr<ModelItem>> dependencies_;
 };
 
 #endif // SUBASSEMBLY_H

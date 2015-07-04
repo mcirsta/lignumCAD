@@ -101,7 +101,7 @@ namespace Space3D {
      * have any).
      * \return 0: Construction datums don't have subcomponents.
      */
-    ModelItem* lookup ( QValueVector<uint>& /*id_path*/ ) const { return 0; }
+    ModelItem* lookup ( QVector<uint>& /*id_path*/ ) const { return 0; }
     /*!
      * Find the OpenCASCADE type of the given surface (identified by
      * path). In this case, returns the Geom version.
@@ -116,7 +116,7 @@ namespace Space3D {
      * \param id_path id path to solid.
      * \return OpenCASCADE standard type identifier.
      */
-    Handle(Standard_Type) lookupType ( QValueVector<uint>& /*path_components*/ ) const
+    Handle(Standard_Type) lookupType ( QVector<uint>& /*path_components*/ ) const
     { return STANDARD_TYPE(Geom_Axis2Placement); }
     /*!
      * Look up the topology of an OpenCASCADE shape. Should return
@@ -131,21 +131,21 @@ namespace Space3D {
      * of the assembly hierarchy.
      * \param id_path id path to solid.
      */
-    TopoDS_Shape lookupShape ( QValueVector<uint>& id_path ) const;
+    TopoDS_Shape lookupShape ( QVector<uint>& id_path ) const;
     /*!
      * Construct a string path to the specified item. May be either the
      * figure itself or one of its geometries or subfigures.
      * \param id_path id path to item.
      * \return string encoded path to item.
      */
-    QString idPath ( QValueVector<uint> /*id_path*/ ) const { return QString::null;}
+    QString idPath ( QVector<uint> /*id_path*/ ) const { return QString::null;}
     /*!
      * Construct a id path to the specified item. May be either the
      * figure itself or one of its geometries or subfigures.
      * \param id_path id path to item.
      * \return string encoded path to item.
      */
-    void pathID ( QStringList& /*path_components*/, QValueVector<uint>& /*id_path*/)
+    void pathID ( QStringList& /*path_components*/, QVector<uint>& /*id_path*/)
       const
     {}
 

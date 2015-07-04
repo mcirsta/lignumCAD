@@ -30,7 +30,7 @@
 
 void MaterialDialog::init()
 {
-  QDictIterator<Material> material = MaterialDatabase::instance().materials();
+  QHashIterator<int,Material> material = MaterialDatabase::instance().materials();
 
   for ( ; material.current() != 0; ++material ) {
 

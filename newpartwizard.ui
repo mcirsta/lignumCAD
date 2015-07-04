@@ -4,7 +4,7 @@
   <comment></comment>
   <exportmacro></exportmacro>
   <class>NewPartWizard</class>
-  <widget class="Q3Wizard" name="NewPartWizard">
+  <widget class="QWizard" name="NewPartWizard">
     <property name="geometry">
       <rect>
         <x>0</x>
@@ -19,7 +19,7 @@
     <property name="windowIcon">
       <pixmap>lignumCAD.png</pixmap>
     </property>
-    <widget class="QWidget" name="initialPartPage">
+    <widget class="QWizardPage" name="initialPartPage">
       <attribute name="title">
         <string>Select an initial form for the part</string>
       </attribute>
@@ -110,7 +110,7 @@ Enter a name for the part.</string>
           </widget>
         </item>
         <item row="1" column="1" rowspan="1" colspan="2">
-          <widget class="Q3GroupBox" name="partLibraryGroupBox">
+          <widget class="QGroupBox" name="partLibraryGroupBox">
             <property name="title">
               <string>&amp;Initial Part Library</string>
             </property>
@@ -122,7 +122,7 @@ Enter a name for the part.</string>
                 <number>6</number>
               </property>
               <item row="0" column="0">
-                <widget class="Q3ListView" name="partLibraryListView">
+                <widget class="QListView" name="partLibraryListView">
                   <property name="toolTip" stdset="0">
                     <string>Select a template part from the list.</string>
                   </property>
@@ -161,7 +161,7 @@ This list contains the available template parts. The parts are categorized by gr
         </item>
       </layout>
     </widget>
-    <widget class="QWidget" name="partParametersPage">
+    <widget class="QWizardPage" name="partParametersPage">
       <attribute name="title">
         <string>Enter the parameters for the part</string>
       </attribute>
@@ -228,7 +228,7 @@ This list contains the available template parts. The parts are categorized by gr
           </layout>
         </item>
         <item row="0" column="1">
-          <widget class="Q3GroupBox" name="partParameterFrame">
+          <widget class="QGroupBox" name="partParameterFrame">
             <property name="title">
               <string>&amp;Parameters</string>
             </property>
@@ -246,18 +246,12 @@ This list contains the available template parts. The parts are categorized by gr
     </widget>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
-  <includes>
-    <include location="global">q3vbox.h</include>
-    <include location="global">q3dict.h</include>
-    <include location="global">q3scrollview.h</include>
-  </includes>
   <connections>
     <connection>
       <sender>partLibraryListView</sender>
-      <signal>currentChanged(Q3ListViewItem*)</signal>
+      <signal>currentChanged(QListViewItem*)</signal>
       <receiver>NewPartWizard</receiver>
-      <slot>partLibraryListView_currentChanged(Q3ListViewItem*)</slot>
+      <slot>partLibraryListView_currentChanged(QListViewItem*)</slot>
     </connection>
     <connection>
       <sender>NewPartWizard</sender>

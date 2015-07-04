@@ -51,7 +51,7 @@
         </widget>
       </item>
       <item row="0" column="2" rowspan="1" colspan="3">
-        <widget class="Q3GroupBox" name="detailsGroupBox">
+        <widget class="QGroupBox" name="detailsGroupBox">
           <property name="title">
             <string>Material Details</string>
           </property>
@@ -63,7 +63,7 @@
               <number>6</number>
             </property>
             <item>
-              <widget class="Q3TextEdit" name="MaterialText">
+              <widget class="QTextEdit" name="MaterialText">
                 <property name="sizePolicy">
                   <sizepolicy>
                     <hsizetype>7</hsizetype>
@@ -521,15 +521,12 @@
         </widget>
       </item>
       <item row="0" column="0" rowspan="1" colspan="2">
-        <widget class="Q3ListView" name="MaterialList">
+        <widget class="QListWidget" name="MaterialList">
           <property name="minimumSize">
             <size>
               <width>150</width>
               <height>0</height>
             </size>
-          </property>
-          <property name="allColumnsShowFocus">
-            <bool>true</bool>
           </property>
           <column>
             <property name="text">
@@ -592,7 +589,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>MaterialList</tabstop>
     <tabstop>buttonOk</tabstop>
@@ -618,9 +614,9 @@
     </connection>
     <connection>
       <sender>MaterialList</sender>
-      <signal>selectionChanged(Q3ListViewItem*)</signal>
+      <signal>selectionChanged(QListViewItem*)</signal>
       <receiver>MaterialDialog</receiver>
-      <slot>MaterialList_selectionChanged(Q3ListViewItem*)</slot>
+      <slot>MaterialList_selectionChanged(QListViewItem*)</slot>
     </connection>
     <connection>
       <sender>buttonHelp</sender>

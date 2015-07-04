@@ -26,13 +26,12 @@
 #include "dburl.h"
 #include "pageview.h"
 #include "assembly.h"
+#include "assemblyconfigdialog.h"
+#include "assemblyadddialog.h"
+#include "assemblyconstraint.h"
+#include "assemblyconstraintform.h"
 
-class QDockWindow;
-class AssemblyAddDialog;
-class AssemblyConfigDialog;
-class AssemblyConstraint;
-class AssemblyConstraintForm;
-class OffsetInfoDialog;
+#include <QDockWidget>
 
 class SubassemblyView;
 
@@ -50,7 +49,8 @@ class AssemblyView : public PageView {
 
   Assembly* assembly_;
 
-  QTab* tab_;
+  QString tabText;
+  QPixmap tabIcon;
   ListViewItem* list_view_item_;
 
   SubassemblyView* current_view_;
@@ -91,7 +91,7 @@ public:
   // Implementation of PageView interface
 
   //! \return the tab for this page view.
-  QTab* tab ( void ) const { return tab_; }
+  int tabIdx ( void ) const { return tabIndex; }
   //! \return the list view item for this page view.
   ListViewItem* listViewItem ( void ) const { return list_view_item_; }
 
@@ -100,7 +100,7 @@ public:
   QString type ( void ) const { return assembly_->type(); }
 
   DBURL dbURL ( void ) const { return assembly_->dbURL(); }
-  QValueVector<uint> ID ( void ) const { return assembly_->ID(); }
+  QVector<uint> ID ( void ) const { return assembly_->ID(); }
 
   CreateObject* memento ( void );
 
@@ -178,13 +178,15 @@ private:
 
   Space3D::OCHiddenDraw* hidden_drawer_;
 
-  QValueVector<QStringList> constraints_text_;
+  QVector<QStringList> constraints_text_;
 
   static AssemblyConfigDialog* config_dialog_;
-  static QDockWindow* constraint_dock_;
+  static QDockWidget* constraint_dock_;
   static AssemblyAddDialog* add_dialog_;
   static AssemblyConstraintForm* constraint_form_;
   static OffsetInfoDialog* offset_info_dialog_;
+
+  int tabIndex;
 };
 
 #endif // ASSEMBLYVIEW_H

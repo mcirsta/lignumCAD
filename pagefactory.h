@@ -34,7 +34,7 @@ class PageBase;
 class QAction;
 class QDomElement;
 
-template<class T> class QValueVector;
+template<class T> class QVector;
 
 /*!
  * The metadata defines the infomation presented to the

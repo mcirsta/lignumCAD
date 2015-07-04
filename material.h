@@ -53,12 +53,12 @@ public:
    */
   Material* materialCommon ( const QString& name );
   //! \return an iterator over all material records.
-  QDictIterator<Material> materials ( void ) const
-  { return QDictIterator<Material>( materials_ ); }
+  QHashIterator<int,Material> materials ( void ) const
+  { return QHashIterator<int,Material>( materials_ ); }
 private:
   static MaterialDatabase material_database_;
 
-  QDict< Material > materials_;
+  QHash< int,Material > materials_;
 protected:
   MaterialDatabase ( void );
   //  ~MaterialDatabase ( void );

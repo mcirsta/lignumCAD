@@ -626,10 +626,10 @@ QString SubassemblyView::geometry ( const std::vector<GLuint>& selection_names )
   return name;
 }
 
-QValueVector<uint> SubassemblyView::geomPath ( const std::vector<GLuint>& selection_names ) const
+QVector<uint> SubassemblyView::geomPath ( const std::vector<GLuint>& selection_names ) const
 {
-  QValueVector<uint> id_path = parent()->ID();
-  QValueVector<uint> subcomponent_path = drawer_->ID( selection_names );
+  QVector<uint> id_path = parent()->ID();
+  QVector<uint> subcomponent_path = drawer_->ID( selection_names );
 
   uint id_path_size = id_path.size();
 
@@ -643,7 +643,7 @@ QValueVector<uint> SubassemblyView::geomPath ( const std::vector<GLuint>& select
 // Essentially the reciprocal of the above function. Find the gl selection
 // path corresponding to the id path.
 
-void SubassemblyView::lookup ( QValueVector<uint>& id_path,
+void SubassemblyView::lookup ( QVector<uint>& id_path,
 			       std::vector<GLuint>& name_path ) const
 {
   drawer_->lookup( id_path, name_path );
@@ -839,14 +839,14 @@ void SubassemblyView::updateCanceledConstraint ( void )
   }
 }
 
-void SubassemblyView::addDependency ( const QValueVector<uint>& surface_id )
+void SubassemblyView::addDependency ( const QVector<uint>& surface_id )
 {
   // Basically, the idea here is to connect to each component of the
   // references path whose name change could affect the display.  So,
   // exhustively examine each element of the path and see what it
   // means to us. Note, since part faces are not real ModelItems, we
   // skip the last element of the id_path.
-  QValueVector<uint> id_path;
+  QVector<uint> id_path;
   id_path.reserve( surface_id.size()-1 );
 
   for ( uint i = 0; i < surface_id.size()-1; ++i ) {

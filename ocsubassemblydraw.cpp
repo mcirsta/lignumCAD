@@ -156,12 +156,12 @@ namespace Space3D {
      * \param selection_names "path" to selected face.
      * \return ID of selected face.
      */
-    QValueVector<uint> ID ( const std::vector<GLuint>& selection_names ) const
+    QVector<uint> ID ( const std::vector<GLuint>& selection_names ) const
     {
-      QValueVector<uint> id_path( 4 );
+      QVector<uint> id_path( 4 );
       id_path[0] = subassembly_->id();
       id_path[1] = subassembly_->subassembly()->id();
-      QValueVector<uint> solid_path = drawer_->faceID( selection_names[1] );
+      QVector<uint> solid_path = drawer_->faceID( selection_names[1] );
       id_path[2] = solid_path[0];
       id_path[3] = solid_path[1];
       return id_path;
@@ -170,7 +170,7 @@ namespace Space3D {
      * The inverse of the above function: Find the gl selection name list
      * from the ID.
      */
-    void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path )
+    void lookup ( QVector<uint>& id_path, std::vector<GLuint>& name_path )
       const
     {
       // There should now be exactly three elements in the id_path
@@ -393,7 +393,7 @@ namespace Space3D {
      * \param item "path" to selected face.
      * \return ID of selected face.
      */
-    QValueVector<uint> ID ( const std::vector<GLuint>& item ) const
+    QVector<uint> ID ( const std::vector<GLuint>& item ) const
     {
       std::vector<GLuint> subcomponent( item.size()-1 );
       for ( uint i = 1; i < item.size(); ++i )
@@ -402,12 +402,12 @@ namespace Space3D {
       std::map<GLuint,OCSubassemblyDraw*>::const_iterator drawer =
 	drawers_.find( item[1] );
 
-      QValueVector<uint> id_path( 2 );
+      QVector<uint> id_path( 2 );
       id_path[0] = subassembly_->id();
       id_path[1] = subassembly_->subassembly()->id();
 
       if ( drawer != drawers_.end() ) {
-	QValueVector<uint> subcomponent_path = (*drawer).second->ID( subcomponent );
+	QVector<uint> subcomponent_path = (*drawer).second->ID( subcomponent );
 	id_path.resize( subcomponent_path.size() + 2 );
 	for ( uint i = 0; i < subcomponent_path.size(); ++i )
 	  id_path[2 + i] = subcomponent_path[i];
@@ -419,7 +419,7 @@ namespace Space3D {
      * The inverse of the above function: Find the gl selection name list
      * from the ID.
      */
-    void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path )
+    void lookup ( QVector<uint>& id_path, std::vector<GLuint>& name_path )
       const
     {
       id_path.erase( id_path.begin() );	// Erase subassembly (self?)

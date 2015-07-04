@@ -167,7 +167,7 @@ namespace Space3D {
      * \param selection_name second level identifier in selection name array.
      * \return selected face ID path.
      */
-    QValueVector<uint> faceID ( GLuint selection_name ) const;
+    QVector<uint> faceID ( GLuint selection_name ) const;
     /*!
      * Retrieve the GL selection name for the given face id.
      * \param id face id.

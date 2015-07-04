@@ -20,12 +20,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qaction.h>
 #include <qtabbar.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
-#include <qdockwindow.h>
+#include <QDockWidget>
 #include <qlayout.h>
 #include <qwhatsthis.h>
 #include <qtextbrowser.h>
@@ -60,6 +60,8 @@
 
 #include "lcdebug.h"
 
+#include <QMouseEvent>
+
 /*!
  * AssemblyViewCreate is a memento of the current state of a Assembly and its view.
  * It handles creating and deleting both objects.
@@ -82,7 +84,7 @@ public:
 
     QDomElement root = xml_doc_.createElement( lC::STR::MEMENTO );
 
-    root.setAttribute( lC::STR::NAME, assembly_view->dbURL().toString(true) );
+    root.setAttribute( lC::STR::NAME, assembly_view->dbURL().toString() );
 
     assembly_view->assembly()->write( root );
     assembly_view->write( root );
@@ -188,7 +190,7 @@ public:
     if ( memento_list.length() > 0 ) {
       QString path = memento_list.item(0).toElement().attribute( lC::STR::NAME );
 
-      if ( path != rename->oldDBURL().toString(true) )
+      if ( path != rename->oldDBURL().toString() )
 	return false;
 
       // Additional sanity check: make sure the object and its view have elements.
@@ -203,27 +205,27 @@ public:
       // Update the name elements in the object and it's view.
 
       memento_list.item(0).toElement().setAttribute( lC::STR::NAME,
-					     rename->newDBURL().toString(true) );
+                         rename->newDBURL().toString() );
 
       assembly_list.item(0).toElement().
 	setAttribute( lC::STR::NAME, rename->newDBURL().name() );
 
       assembly_view_list.item(0).toElement().setAttribute( lC::STR::ASSEMBLY,
-					   rename->newDBURL().toString(true) );
+                       rename->newDBURL().toString() );
 
       // Have to update the subassembly views as well!
 
       QDomNodeList subassembly_view_list =
 	xml_doc_.elementsByTagName( lC::STR::SUBASSEMBLY_VIEW );
 
-      for ( uint i = 0; i < subassembly_view_list.length(); i++ ) {
+      for ( int i = 0; i < subassembly_view_list.length(); i++ ) {
 	DBURL old_db_url =
 	  subassembly_view_list.item(i).toElement().attribute(lC::STR::SUBASSEMBLY);
-	DBURL new_db_url( rename->newDBURL(),
+    DBURL new_db_url( rename->newDBURL().toString(),
 			  old_db_url.name() + '.' + old_db_url.type() );
 
 	subassembly_view_list.item(i).toElement().
-	  setAttribute( lC::STR::SUBASSEMBLY, new_db_url.toString( true ) );
+      setAttribute( lC::STR::SUBASSEMBLY, new_db_url.toString( ) );
       }
 
       return true;
@@ -244,16 +246,16 @@ public:
     : Command( name ), design_book_view_( design_book_view ),
       db_url_( subassembly->dbURL() )
   {
-    QPtrListIterator<AssemblyConstraint> constraints =
+    QListIterator< std::shared_ptr<AssemblyConstraint>> constraints =
       subassembly->constraints().constraints();
 
-    constraints.toLast();
-
-    if ( constraints.current() != 0 ) {
+    constraints.toBack();
+//TODO check if this is correct
+    if ( constraints.hasPrevious() ) {
       QDomElement constraint_element =
 	xml_doc_.createElement( lC::STR::CREATE_CONSTRAINT);
 
-      constraints.current()->write( constraint_element );
+      constraints.previous()->write( constraint_element );
 
       xml_doc_.appendChild( constraint_element );
     }
@@ -308,7 +310,7 @@ public:
     QDomElement constraint_element =
       xml_rep->importNode( xml_doc_.firstChild(), true ).toElement();
 
-    constraint_element.setAttribute( lC::STR::SUBASSEMBLY, db_url_.toString(true) );
+    constraint_element.setAttribute( lC::STR::SUBASSEMBLY, db_url_.toString() );
 
     QDomNode root_node = xml_rep->firstChild();
 
@@ -338,16 +340,16 @@ public:
     : Command( name ), design_book_view_( design_book_view ),
       db_url_( subassembly->dbURL() )
   {
-    QPtrListIterator<AssemblyConstraint> constraints =
+    QListIterator<std::shared_ptr<AssemblyConstraint>> constraints =
       subassembly->constraints().constraints();
 
-    constraints.toLast();
-
-    if ( constraints.current() != 0 ) {
+    constraints.toBack();
+//TODO check if correct
+    if ( constraints.hasPrevious() != 0 ) {
       QDomElement constraint_element =
 	xml_doc_.createElement( lC::STR::DELETE_CONSTRAINT);
 
-      constraints.current()->write( constraint_element );
+      constraints.previous()->write( constraint_element );
 
       xml_doc_.appendChild( constraint_element );
     }
@@ -402,7 +404,7 @@ public:
     QDomElement constraint_element =
       xml_rep->importNode( xml_doc_.firstChild(), true ).toElement();
 
-    constraint_element.setAttribute( lC::STR::SUBASSEMBLY, db_url_.toString(true) );
+    constraint_element.setAttribute( lC::STR::SUBASSEMBLY, db_url_.toString() );
 
     QDomNode root_node = xml_rep->firstChild();
 
@@ -462,10 +464,10 @@ public:
   {
     context_menu_ = context_menu;
 
-    QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
+    QAction* cancel_action = assembly_view_->lCMW()->getUi()->cancelAssemblyConstraintAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
+    separator_id_ = context_menu_->addSeparator();
+    context_menu_->addAction(cancel_action);
     connect( cancel_action, SIGNAL( activated() ), SLOT( cancelCurrent() )  );
 
     status_ = subassembly_->constraints().status();
@@ -496,11 +498,11 @@ public:
    */
   void stopDisplay ( QMenu* /*context_menu*/ )
   {
-    QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
+    QAction* cancel_action = assembly_view_->lCMW()->getUi()->cancelAssemblyConstraintAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action);
+    context_menu_->removeAction( separator_id_ );
 
     assembly_view_->view()->unsetCursor();
   }
@@ -532,9 +534,10 @@ public:
       return;
     }
 
+    //TODO check this works
+    std::shared_ptr<FigureViewBase> tmpFig = (assembly_view_-> figureSelectionNames()[ (*f).second[0] ]);
     SubassemblyView* sv =
-      dynamic_cast<SubassemblyView*>( assembly_view_->
-				      figureSelectionNames()[ (*f).second[0] ] );
+      dynamic_cast<SubassemblyView*>( tmpFig.get() );
 
     // Validate this geometry against the current constraint, but don't
     // emit the constraint changed signal until the user releases the mouse
@@ -543,7 +546,7 @@ public:
     status_ = subassembly_->constraints().validate( sv->geomPath( (*f).second ) );
 
     if ( status_ == Invalid ) {
-      QWhatsThis::display( tr( "The selected face is invalid." ) );
+      QWhatsThis::showText(QCursor::pos (), tr( "The selected face is invalid." ) );
       //      me->ignore();
     }
   }
@@ -639,11 +642,11 @@ public slots:
    */
   void cancelOperation ( void )
   {
-    QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
+    QAction* cancel_action = assembly_view_->lCMW()->getUi()->cancelAssemblyConstraintAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_ ->removeAction( cancel_action );
+    context_menu_->removeAction( separator_id_ );
 
     disconnect( subassembly_, SIGNAL( constraintCanceled() ),
 		this, SLOT( cancelOperation() ) );
@@ -700,11 +703,11 @@ private slots:
 
       // Reset the UI.
 
-      QAction* cancel_action=assembly_view_->lCMW()->cancelAssemblyConstraintAction;
+      QAction* cancel_action=assembly_view_->lCMW()->getUi()->cancelAssemblyConstraintAction;
 
       cancel_action->disconnect();
-      cancel_action->removeFrom( context_menu_ );
-      context_menu_->removeItem( separator_id_ );
+      context_menu_ ->removeAction( cancel_action );
+      context_menu_->removeAction( separator_id_ );
 
       assembly_view_->view()->unsetCursor();
 
@@ -730,7 +733,7 @@ private:
   //! OpenGL view context menu.
   QMenu* context_menu_;
   //! Separator for Cancel action.
-  int separator_id_;
+  QAction* separator_id_;
   //! Parent assembly view.
   AssemblyView* assembly_view_;
   //! Current subassembly being constrained.
@@ -782,10 +785,10 @@ public:
   {
     context_menu_ = context_menu;
 
-    QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
+    QAction* cancel_action = assembly_view_->lCMW()->getUi()->cancelAssemblyConstraintAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
+    separator_id_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
     connect( cancel_action, SIGNAL( activated() ), SLOT( cancelCurrent() )  );
 
     status_ = subassembly_->constraints().status();
@@ -817,11 +820,11 @@ public:
    */
   void stopDisplay ( QMenu* /*context_menu*/ )
   {
-    QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
+    QAction* cancel_action = assembly_view_->lCMW()->getUi()->cancelAssemblyConstraintAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_id_ );
 
     assembly_view_->view()->unsetCursor();
   }
@@ -853,9 +856,10 @@ public:
       return;
     }
 
+    //TODO check this works
+    std::shared_ptr<FigureViewBase> tmpFig = (assembly_view_-> figureSelectionNames()[ (*f).second[0] ]);
     SubassemblyView* sv =
-      dynamic_cast<SubassemblyView*>( assembly_view_->
-				      figureSelectionNames()[ (*f).second[0] ] );
+      dynamic_cast<SubassemblyView*>( tmpFig.get() );
 
     // Validate this geometry against the current constraint, but don't
     // emit the constraint changed signal until the user releases the mouse
@@ -864,7 +868,7 @@ public:
     status_ = subassembly_->constraints().validate( sv->geomPath( (*f).second ) );
 
     if ( status_ == Invalid ) {
-      QWhatsThis::display( tr( "The selected face is invalid." ) );
+      QWhatsThis::showText( QCursor::pos(), tr( "The selected face is invalid." ) );
 #if 0
       me->ignore();
 #endif
@@ -975,11 +979,11 @@ public slots:
    */
   void cancelOperation ( void )
   {
-    QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
+    QAction* cancel_action = assembly_view_->lCMW()->getUi()->cancelAssemblyConstraintAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_id_ );
 
     disconnect( subassembly_, SIGNAL( constraintCanceled() ),
 		this, SLOT( cancelOperation() ) );
@@ -1036,11 +1040,11 @@ private slots:
 
       // Reset the UI.
 
-      QAction* cancel_action=assembly_view_->lCMW()->cancelAssemblyConstraintAction;
+      QAction* cancel_action=assembly_view_->lCMW()->getUi()->cancelAssemblyConstraintAction;
 
       cancel_action->disconnect();
-      cancel_action->removeFrom( context_menu_ );
-      context_menu_->removeItem( separator_id_ );
+      context_menu_->removeAction( cancel_action );
+      context_menu_->removeAction( separator_id_ );
 
       assembly_view_->view()->unsetCursor();
 
@@ -1066,7 +1070,7 @@ private:
   //! OpenGL view context menu.
   QMenu* context_menu_;
   //! Separator for Cancel action.
-  int separator_id_;
+  QAction* separator_id_;
   //! Parent assembly view.
   AssemblyView* assembly_view_;
   //! Current subassembly being constrained.
@@ -1104,10 +1108,10 @@ public:
   {
     context_menu_ = context_menu;
 
-    QAction* cancel_action = assembly_view_->lCMW()->cancelConstraintDeleteAction;
+    QAction* cancel_action = assembly_view_->lCMW()->getUi()->cancelConstraintDeleteAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
+    separator_id_ = context_menu_->addSeparator();
+    context_menu_ ->addAction( cancel_action );
     connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
 
     assembly_view_->view()->
@@ -1149,16 +1153,17 @@ public:
     if ( (*f).second.size() < 1 )
       return;
 
+    //TODO check this works
+    std::shared_ptr<FigureViewBase> tmpFig = (assembly_view_-> figureSelectionNames()[ (*f).second[0] ]);
     SubassemblyView* sv =
-      dynamic_cast<SubassemblyView*>( assembly_view_->
-				      figureSelectionNames()[ (*f).second[0] ] );
+      dynamic_cast<SubassemblyView*>( tmpFig.get() );
     if ( sv != 0 ) {
       if ( !assembly_view_->assembly()->referenced( sv->subassembly() ) ) {
 	target_ = sv;
 	return;
       }
       else
-	QWhatsThis::display( tr( "<p>Cannot delete subassembly '%1' because it is "
+    QWhatsThis::showText(QCursor::pos(), tr( "<p>Cannot delete subassembly '%1' because it is "
 				 "referenced by other subassemblies in this "
 				 "assembly</p>" ).arg( sv->name() ) );
     }
@@ -1209,11 +1214,11 @@ public:
 public slots:
   void cancelOperation ( void )
   {
-    QAction* cancel_action = assembly_view_->lCMW()->cancelConstraintDeleteAction;
+    QAction* cancel_action = assembly_view_->lCMW()->getUi()->cancelConstraintDeleteAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_ ->removeAction( cancel_action );
+    context_menu_->removeAction ( separator_id_ );
 
     assembly_view_->cancelDeleteOperation();
   }
@@ -1221,7 +1226,7 @@ private:
   //! OpenGL view context menu.
   QMenu* context_menu_;
   //! Separator for Cancel action.
-  int separator_id_;
+  QAction* separator_id_;
   //! Parent assembly view.
   AssemblyView* assembly_view_;
   //! Subassembly to remove.
@@ -1316,24 +1321,27 @@ void AssemblyView::init ( void )
 
   model_delete_input_ = new ModelDeleteInput( this );
 
-  tab_ = new QTab( lC::lookupPixmap( "assembly.png" ),
-		   lC::formatTabName( assembly_->name() ) );
+  tabIcon = lC::lookupPixmap( "assembly.png" );
+  tabText = lC::formatTabName( assembly_->name() );
 
-  QListViewItem* previous_item = parent()->previousItem( assembly_->id() );
+  ListViewItem* previous_item = parent()->previousItem( assembly_->id() );
 
   list_view_item_ = new ListViewItem( parent()->modelListItem(), previous_item );
 
-  list_view_item_->setText( lC::NAME, lC::formatName( assembly_->name() )
-			    + QString( " <%1>" ).arg( assembly_->id() ) );
-  list_view_item_->setText( lC::TYPE, trC( lC::STR::ASSEMBLY ) );
-  list_view_item_->setOpen( true );
-  list_view_item_->setRenameEnabled( lC::NAME, true );
+  list_view_item_->setData( lC::formatName( assembly_->name() )
+                + QString( " <%1>" ).arg( assembly_->id() ),
+                lC::NAME);
+  list_view_item_->setData( trC( lC::STR::ASSEMBLY ), lC::TYPE );
+  // TODO
+  //list_view_item_->setOpen( true );
+  //list_view_item_->setRenameEnabled( lC::NAME, true );
 
   connect( this, SIGNAL( newInformation( const QString& ) ),
 	   lCMW(), SLOT( updateInformation( const QString& ) ) );
 
-  connect( list_view_item_, SIGNAL( nameChanged( const QString& ) ),
-	   SLOT( listNameChanged( const QString& ) ) );
+  //TODO
+  //connect( list_view_item_, SIGNAL( nameChanged( const QString& ) ),
+  //	   SLOT( listNameChanged( const QString& ) ) );
 
   connect( assembly_, SIGNAL( nameChanged( const QString& ) ),
 	   SLOT( updateName( const QString& ) ) );
@@ -2139,7 +2147,7 @@ void AssemblyView::updateConstraintLabel ( void )
 
   if ( !constraints_text_.empty() ) {
 
-    QValueVector<QStringList>::const_iterator constraint_list =
+    QVector<QStringList>::const_iterator constraint_list =
       constraints_text_.begin();
 
     for ( ; constraint_list != constraints_text_.end(); ++constraint_list ) {

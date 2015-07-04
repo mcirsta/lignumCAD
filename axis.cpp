@@ -48,7 +48,7 @@ namespace Space3D {
     return BRepBuilderAPI_MakeEdge( minimum(), maximum() ).Edge();
   }
 
-  TopoDS_Shape Axis::lookupShape ( QValueVector<uint>& /*id_path*/ ) const
+  TopoDS_Shape Axis::lookupShape ( QVector<uint>& /*id_path*/ ) const
   {
     return BRepBuilderAPI_MakeEdge( minimum(), maximum() ).Edge();
   }

@@ -162,7 +162,7 @@ Handle(Standard_Type) Assembly::lookupType ( QStringList& path_components ) cons
   return Handle(Standard_Type)(); // Really an error...
 }
 
-Handle(Standard_Type) Assembly::lookupType ( QValueVector<uint>& id_path ) const
+Handle(Standard_Type) Assembly::lookupType ( QVector<uint>& id_path ) const
 {
   QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
 
@@ -198,7 +198,7 @@ TopoDS_Shape Assembly::lookupShape ( QStringList& path_components ) const
   return TopoDS_Shape();	// Really an error...
 }
 
-TopoDS_Shape Assembly::lookupShape ( QValueVector<uint>& id_path ) const
+TopoDS_Shape Assembly::lookupShape ( QVector<uint>& id_path ) const
 {
   QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
 
@@ -244,7 +244,7 @@ bool Assembly::referenced ( const Subassembly* target ) const
   return false;
 }
 
-QString Assembly::idPath ( QValueVector<uint> id_path ) const
+QString Assembly::idPath ( QVector<uint> id_path ) const
 {
   // The argument path must not have zero length, i.e., it must
   // refer to a figure (the Model has already taken care of
@@ -263,7 +263,7 @@ QString Assembly::idPath ( QValueVector<uint> id_path ) const
     f.data()->idPath( id_path );
 }
 
-void Assembly::pathID ( QStringList& path_components, QValueVector<uint>& id_path )
+void Assembly::pathID ( QStringList& path_components, QVector<uint>& id_path )
   const
 {
   // The front path component is the name of a figure with ".type" appended

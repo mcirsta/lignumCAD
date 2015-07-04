@@ -38,13 +38,15 @@ class PartView : public PageView {
   Part* part_;
 
   int tabId;
+  QString tabText;
+  QPixmap tabIcon;
   ListViewItem* list_view_item_;
 
   QMenu* context_menu_;
-  int wireframe_id_;
-  int hidden_id_;
-  int solid_id_;
-  int texture_id_;
+  QAction* wireframe_id_;
+  QAction* hidden_id_;
+  QAction* solid_id_;
+  QAction* texture_id_;
 
   //! Generic initial part form selection.
   static NewPartWizard* new_part_wizard_;
@@ -88,7 +90,7 @@ public:
   QString type ( void ) const { return part_->type(); }
 
   DBURL dbURL ( void ) const { return part_->dbURL(); }
-  QValueVector<uint> ID ( void ) const { return part_->ID(); }
+  QVector<uint> ID ( void ) const { return part_->ID(); }
 
   void cancelOperation ( void );
 
@@ -130,7 +132,7 @@ private slots:
    */
   void listNameChanged ( const QString& name );
   void updateName ( const QString& name );
-  void toggleRenderStyle ( int id );
+  void toggleRenderStyle ( QAction* id );
   void setMaterial ( void );
 };
 

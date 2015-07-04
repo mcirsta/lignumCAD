@@ -105,9 +105,8 @@ void Part::write ( QDomElement& xml_rep ) const
 
 // Use the PartFactory interface to create the initial solid geometry
 
-void Part::makeSolidParameters ( const PartMetadata* part,
-				 const QDict<lCDefaultLengthConstraint>&
-				 parameters )
+void Part::makeSolidParameters (const PartMetadata* part,
+                 const QHash<int, lCDefaultLengthConstraint> &parameters )
 {
   solid_ = part->create( name(), parameters, this );
 
@@ -147,7 +146,7 @@ Handle(Standard_Type) Part::lookupType ( QStringList& path_components ) const
   return Handle(Standard_Type)(); // Really an error...
 }
 
-Handle(Standard_Type) Part::lookupType ( QValueVector<uint>& id_path ) const
+Handle(Standard_Type) Part::lookupType ( QVector<uint>& id_path ) const
 {
   QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
 
@@ -185,7 +184,7 @@ TopoDS_Shape Part::lookupShape ( QStringList& path_components ) const
   return TopoDS_Shape();
 }
 
-TopoDS_Shape Part::lookupShape ( QValueVector<uint>& id_path ) const
+TopoDS_Shape Part::lookupShape ( QVector<uint>& id_path ) const
 {
   QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
 
@@ -200,7 +199,7 @@ TopoDS_Shape Part::lookupShape ( QValueVector<uint>& id_path ) const
   return TopoDS_Shape();
 }
 
-QString Part::idPath ( QValueVector<uint> id_path ) const
+QString Part::idPath ( QVector<uint> id_path ) const
 {
   // The argument path must not have zero length, i.e., it must
   // refer to a figure (the Model has already taken care of
@@ -219,7 +218,7 @@ QString Part::idPath ( QValueVector<uint> id_path ) const
     f.data()->idPath( id_path );
 }
 
-void Part::pathID ( QStringList& path_components, QValueVector<uint>& id_path )const
+void Part::pathID (QStringList& path_components, QVector<uint> &id_path )const
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.

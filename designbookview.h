@@ -114,7 +114,7 @@ public:
   void showPageView ( PageView* page_view );
   void removePageView ( PageView* page_view );
   PageView* lastPageView ( void );
-  QStandardItem* previousItem ( uint id ) const;
+  ListViewItem *previousItem( uint id ) const;
   void deletePage ( PageView* page_view );
   View* lookup ( const DBURL& db_url );
   std::vector<GLuint> lookup (const QVector<uint> &id_path ) const;

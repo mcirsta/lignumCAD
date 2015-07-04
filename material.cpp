@@ -97,7 +97,7 @@ Material* MaterialDatabase::materialCommon ( const QString& common_name )
   if ( common_name.isEmpty() )
     return 0;
 
-  QDictIterator<Material> material( materials_ );
+  QHashIterator<int,Material> material( materials_ );
 
   for ( ; material.current() != 0; ++material ) {
     if ( material.current()->commonName() == common_name )

@@ -24,7 +24,7 @@
 #define SOLID_H
 
 #include <map>
-#include <hash_map>
+#include <unordered_map>
 
 #include <gp_Ax2.hxx>
 #include <TopoDS_Solid.hxx>
@@ -185,7 +185,7 @@ namespace Space3D {
     ~OCSolid ( void );
 
     ModelItem* lookup ( QStringList& path_components ) const;
-    ModelItem* lookup ( QValueVector<uint>& id_path ) const;
+    ModelItem* lookup ( QVector<uint>& id_path ) const;
 
     static QString newName ( void );
 
@@ -227,7 +227,7 @@ namespace Space3D {
      */
     QString faceName ( const TopoDS_Face& face ) const
     {
-      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face_name;
+      std::unordered_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face_name;
 
       face_name = face_names_.find( face );
 
@@ -243,7 +243,7 @@ namespace Space3D {
     {
       std::pair<QString,uint> name_id = PartFactory::instance()->name( name );
 
-      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
+      std::unordered_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
 	face_names_.begin();
 
       for ( ; face != face_names_.end(); ++face )
@@ -257,7 +257,7 @@ namespace Space3D {
      */
     const TopoDS_Face face ( uint id ) const
     {
-      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
+      std::unordered_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
 	face_names_.begin();
       for ( ; face != face_names_.end(); ++face )
 	if ( (*face).second == id )
@@ -278,7 +278,7 @@ namespace Space3D {
      */
     uint faceID ( const TopoDS_Face& face ) const
     {
-      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator f =
+      std::unordered_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator f =
 	face_names_.find( face );
       if ( f != face_names_.end() )
 	return (*f).second;
@@ -384,7 +384,7 @@ namespace Space3D {
      * \param name name of face.
      * \return reference to list of handle names.
      */
-    const QValueVector<uint>& faceHandles ( const QString& name )
+    const QVector<uint>& faceHandles ( const QString& name )
     { return face_handles_[ name ]; }
     /*!
      * Set the handles which are associated with the given face. I think
@@ -392,7 +392,7 @@ namespace Space3D {
      * \param name name of face.
      * \param handles list of handle names associated with the named face.
      */
-    void setFaceHandles ( const QString& name, const QValueVector<uint>& handles );
+    void setFaceHandles ( const QString& name, const QVector<uint>& handles );
     /*!
      * Create a full XML representation of this solid suitable for
      * saving in a file with the rest of the model information.
@@ -422,7 +422,7 @@ namespace Space3D {
      * \param id_path id path to solid.
      * \return OpenCASCADE standard type identifier.
      */
-    Handle(Standard_Type) lookupType ( QValueVector<uint>& path_components ) const;
+    Handle(Standard_Type) lookupType ( QVector<uint>& path_components ) const;
     /*!
      * Look up the topology of an OpenCASCADE shape. Should return
      * a shape which has the proper Location based on its traversal
@@ -436,21 +436,21 @@ namespace Space3D {
      * of the assembly hierarchy.
      * \param id_path id path to solid.
      */
-    TopoDS_Shape lookupShape ( QValueVector<uint>& id_path ) const;
+    TopoDS_Shape lookupShape ( QVector<uint>& id_path ) const;
     /*!
      * Construct a string path to the specified item. May be either the
      * figure itself or one of its geometries.
      * \param id_path id path to item.
      * \return string encoded path to item.
      */
-    QString idPath ( QValueVector<uint> id_path ) const;
+    QString idPath ( QVector<uint> id_path ) const;
     /*!
      * Construct a id path to the specified item. May be either the
      * figure itself or one of its geometries.
      * \param id_path id path to item.
      * \return string encoded path to item.
      */
-    void pathID ( QStringList& path_components, QValueVector<uint>& id_path ) const;
+    void pathID ( QStringList& path_components, QVector<uint>& id_path ) const;
 
 private slots:
 signals:
@@ -482,10 +482,10 @@ signals:
     std::map<QString, const ConstructionDatum*> datums_;
 
     //! The mapping the face data structures to their names.
-    __gnu_cxx::hash_map< TopoDS_Face, uint, lCShapeHasher > face_names_;
+    std::unordered_map< TopoDS_Face, uint, lCShapeHasher > face_names_;
 
     //! The list of handles which are associated with each face.
-    std::map<QString, QValueVector<uint> > face_handles_;
+    std::map<QString, QVector<uint> > face_handles_;
 
     //! Is this necessary? (probably not...)
     static uint unique_index_;

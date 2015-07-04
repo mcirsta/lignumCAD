@@ -1659,7 +1659,7 @@ void OpenGLView::csys ( void )
         { 6, 7, 3, 2 }
     };
 
-    GLfloat vertices[8][3] = {
+    GLdouble vertices[8][3] = {
         { scale_/8, 0,        scale_/8 },
         { scale_/8, scale_/8, scale_/8 },
         { 0,        scale_/8, scale_/8 },

@@ -82,14 +82,14 @@ struct PlnPln : public SurfacePair {
 
   //! \return the id path to the first plane (and let the requestor
   //! parse it out as desired).
-  QValueVector<uint> reference0 ( void ) const
+  QVector<uint> reference0 ( void ) const
   {
     return surface0_id_;
   }
 
   //! \return the id path to the second plane (and let the requestor
   //! parse it out as desired).
-  QValueVector<uint> reference1 ( void ) const
+  QVector<uint> reference1 ( void ) const
   {
     return surface1_id_;
   }
@@ -210,11 +210,11 @@ struct PlnPln : public SurfacePair {
     }
   }
 
-  QValueVector<uint> surface0_id_;
+  QVector<uint> surface0_id_;
   TopoDS_Face face0_;
   Handle( Geom_Plane ) plane0_;
 
-  QValueVector<uint> surface1_id_;
+  QVector<uint> surface1_id_;
   TopoDS_Face face1_;
   Handle( Geom_Plane ) plane1_;
   // Optional, really...
@@ -269,7 +269,7 @@ struct MatePlnPln0 : public PlnPln {
 		   plane1_->Pln().Position().XDirection() );
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -282,7 +282,7 @@ struct MatePlnPln0 : public PlnPln {
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -388,7 +388,7 @@ struct MatePlnPln1 : public PlnPln {
     return gp_Ax2( plane1_->Pln().Axis().Location(), n2 );
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -409,7 +409,7 @@ struct MatePlnPln1 : public PlnPln {
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -546,7 +546,7 @@ struct MatePlnPln2 : public PlnPln {
     return gp::XOY();
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -566,7 +566,7 @@ struct MatePlnPln2 : public PlnPln {
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -663,7 +663,7 @@ struct AlignPlnPln0 : public PlnPln {
 		   plane1_->Pln().Position().XDirection() );
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -676,7 +676,7 @@ struct AlignPlnPln0 : public PlnPln {
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -783,7 +783,7 @@ struct AlignPlnPln1 : public PlnPln {
     return gp_Ax2( plane1_->Pln().Axis().Location(), n2 );
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -808,7 +808,7 @@ struct AlignPlnPln1 : public PlnPln {
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -945,7 +945,7 @@ struct AlignPlnPln2 : public PlnPln {
     return gp::XOY();
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -966,7 +966,7 @@ struct AlignPlnPln2 : public PlnPln {
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -1087,7 +1087,7 @@ public:
     transform();
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -1100,7 +1100,7 @@ public:
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -1251,7 +1251,7 @@ public:
     return gp_Ax2( plane1_->Pln().Axis().Location(), n2 );
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -1272,7 +1272,7 @@ public:
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -1453,7 +1453,7 @@ public:
     return gp::XOY();
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -1473,7 +1473,7 @@ public:
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -1617,7 +1617,7 @@ public:
 		   plane1_->Pln().Position().XDirection() );
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -1630,7 +1630,7 @@ public:
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -1782,7 +1782,7 @@ public:
     return gp_Ax2( plane1_->Pln().Axis().Location(), n2 );
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -1807,7 +1807,7 @@ public:
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -1989,7 +1989,7 @@ public:
     return gp::XOY();
   }
 
-  AssemblyConstraintStatus validate0 ( const QValueVector<uint>& surface0_id )
+  AssemblyConstraintStatus validate0 ( const QVector<uint>& surface0_id )
   {
     surface0_id_ = surface0_id;
     TopoDS_Shape shape0 = parent_->model()->lookupShape( surface0_id_ );
@@ -2010,7 +2010,7 @@ public:
     return OK;
   }
 
-  AssemblyConstraintStatus validate1 ( const QValueVector<uint>& surface1_id )
+  AssemblyConstraintStatus validate1 ( const QVector<uint>& surface1_id )
   {
     Handle(Standard_Type) type = parent_->model()->lookupType(surface1_id);
 
@@ -2203,7 +2203,7 @@ public:
     return new_sc;
   }
 
-  AssemblyConstraintStatus validate ( const QValueVector<uint>& surface_id )
+  AssemblyConstraintStatus validate ( const QVector<uint>& surface_id )
   {
     // Determine what kind of surface is supplied and create a surface
     // pair object accordingly.
@@ -2244,7 +2244,7 @@ public:
       QString surface0_db_url = xml_rep.attribute( lC::STR::SURFACE0 );
 
       if ( !surface0_db_url.isEmpty() ) {
-	QValueVector<uint> surface0_id =
+	QVector<uint> surface0_id =
 	  subassembly_->model()->pathID( DBURL( surface0_db_url ) );
 
 	Handle(Standard_Type) type =
@@ -2261,7 +2261,7 @@ public:
       QString surface1_db_url = xml_rep.attribute( lC::STR::SURFACE1 );
 
       if ( !surface1_db_url.isEmpty() ) {
-	QValueVector<uint> surface1_id =
+	QVector<uint> surface1_id =
 	  subassembly_->model()->pathID( DBURL( surface1_db_url ) );
 
 	surfaces_->validate1( surface1_id );
@@ -2612,7 +2612,7 @@ void AssemblyConstraintManager::setOffset ( uint phase, double offset )
 }
 
 AssemblyConstraintStatus
-AssemblyConstraintManager::validate ( const QValueVector<uint>& surface_id )
+AssemblyConstraintManager::validate ( const QVector<uint>& surface_id )
 {
   gp_Ax2 characteristic;
 

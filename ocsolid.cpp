@@ -147,7 +147,7 @@ namespace Space3D {
   // Find the ModelItem associated with the path (presumably some kind
   // of geometry)
 
-  ModelItem* OCSolid::lookup ( QValueVector<uint>& /*id_path*/ ) const
+  ModelItem* OCSolid::lookup (QVector<uint> & /*id_path*/ ) const
   {
     return 0;			// Really an error...
   }
@@ -182,7 +182,7 @@ namespace Space3D {
   // Find the OpenCASCADE type associated with the path (presumably some kind
   // of geometry)
 
-  Handle(Standard_Type) OCSolid::lookupType ( QValueVector<uint>& id_path )
+  Handle(Standard_Type) OCSolid::lookupType ( QVector<uint>& id_path )
     const
   {
     const TopoDS_Face ref_face = face( id_path[0] );
@@ -218,7 +218,7 @@ namespace Space3D {
 
   // Find the OpenCASCADE shape associated with the path.
 
-  TopoDS_Shape OCSolid::lookupShape ( QValueVector<uint>& id_path ) const
+  TopoDS_Shape OCSolid::lookupShape (QVector<uint> &id_path ) const
   {
     return face( id_path[0] );
   }
@@ -226,7 +226,7 @@ namespace Space3D {
   // Return the name of the geometry (face) indicated in the id path. (That
   // should be all that's left by this point, anyway.)
 
-  QString OCSolid::idPath ( QValueVector<uint> id_path ) const
+  QString OCSolid::idPath (QVector<uint> id_path ) const
   {
     __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
       face_names_.begin();
@@ -241,7 +241,7 @@ namespace Space3D {
   // Return the name of the geometry (face) indicated in the string path. (That
   // should be all that's left by this point, anyway.)
 
-  void OCSolid::pathID ( QStringList& path_components, QValueVector<uint>& id_path )
+  void OCSolid::pathID ( QStringList& path_components, QVector<uint>& id_path )
     const
   {
     // The front path component is the name of a figure with ".type" appended
@@ -320,7 +320,7 @@ namespace Space3D {
   // Set the list of handle names for the face
 
   void OCSolid::setFaceHandles ( const QString& name,
-				 const QValueVector<uint>& handles )
+				 const QVector<uint>& handles )
   {
     face_handles_[ name ] = handles;
   }
@@ -379,7 +379,7 @@ namespace Space3D {
     addResizeHandle( 7, HandleData( gp_XYZ( 1, 1, 1 ) ) );
 
     // Setup the (cosmetic) relationships between faces and handles.
-    QValueVector<uint> handles;
+    QVector<uint> handles;
     handles.push_back( 4 );
     handles.push_back( 5 );
     handles.push_back( 6 );
@@ -652,7 +652,7 @@ namespace Space3D {
     addResizeHandle( 7, HandleData( gp_XYZ( 1, 1, 1 ) ) );
 
     // Setup the (cosmetic) relationships between faces and handles.
-    QValueVector<uint> handles;
+    QVector<uint> handles;
     handles.push_back( 4 );
     handles.push_back( 5 );
     handles.push_back( 6 );
@@ -943,7 +943,7 @@ namespace Space3D {
     addResizeHandle( 3, HandleData( gp_XYZ( 0, -1, -1 ) ) );
 
     // Setup the (cosmetic) relationships between faces and handles.
-    QValueVector<uint> handles;
+    QVector<uint> handles;
     handles.push_back( 0 );
     handles.push_back( 2 );
     setFaceHandles( lC::STR::TOP, handles ); handles.clear();
@@ -1200,7 +1200,7 @@ namespace Space3D {
     addResizeHandle( 9, HandleData( gp_XYZ(  0,  1, -1 ) ) );
 
     // Setup the (cosmetic) relationships between faces and handles.
-    QValueVector<uint> handles;
+    QVector<uint> handles;
     handles.push_back( 1 );
     handles.push_back( 2 );
     setFaceHandles( lC::STR::RIGHT, handles ); handles.clear();
@@ -1682,7 +1682,7 @@ namespace Space3D {
     addResizeHandle( 10, HandleData( gp_XYZ(  0,  0, -1 ) ) );
 
     // Setup the (cosmetic) relationships between faces and handles.
-    QValueVector<uint> handles;
+    QVector<uint> handles;
     handles.push_back( 1 );
     handles.push_back( 2 );
     handles.push_back( 8 );
@@ -2125,7 +2125,7 @@ namespace Space3D {
     addResizeHandle( 5, HandleData( gp_XYZ(  1, 0, 1 ) ) );
 
     // Setup the (cosmetic) relationships between faces and handles.
-    QValueVector<uint> handles;
+    QVector<uint> handles;
     handles.push_back( 0 );
     handles.push_back( 1 );
     handles.push_back( 4 );

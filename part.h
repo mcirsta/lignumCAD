@@ -25,6 +25,8 @@
 
 #include <map>
 
+#include <memory>
+
 #include "page.h"
 
 class DBURL;
@@ -79,7 +81,7 @@ public:
    * Look up the geometry type of an OpenCASCADE shape.
    * \param id_path id list of path components.
    */
-  Handle(Standard_Type) lookupType ( QValueVector<uint>& id_path ) const;
+  Handle(Standard_Type) lookupType ( QVector<uint>& id_path ) const;
   /*!
    * Look up the topology of an OpenCASCADE shape. Should return
    * a shape which has the proper Location based on its traversal
@@ -93,7 +95,7 @@ public:
    * of the assembly hierarchy.
    * \param id_path id path.
    */
-  TopoDS_Shape lookupShape ( QValueVector<uint>& id_path ) const;
+  TopoDS_Shape lookupShape ( QVector<uint>& id_path ) const;
   /*!
    * Is the given page referenced by this part. Always false so far.
    * (When the argument is more general, then we'll have to do something.)
@@ -108,7 +110,7 @@ public:
    * \param id_path id path to item.
    * \return string encoded path to item.
    */
-  QString idPath ( QValueVector<uint> id_path ) const;
+  QString idPath ( QVector<uint> id_path ) const;
   /*!
    * Construct the id path to the specified item. May be either the part
    * itself or one of its figures.
@@ -116,7 +118,7 @@ public:
    * paths to current item removed.
    * \param id_path id path to update with id's.
    */
-  void pathID ( QStringList& path_components, QValueVector<uint>& id_path ) const;
+  void pathID ( QStringList& path_components, QVector<uint>& id_path ) const;
 
   void init ( void );
 
@@ -134,11 +136,11 @@ public:
    * template library constructor to create the initial solid geometry
    * of the part.
    * \param part reference to part template's metadata.
-   * \param parameters a QDict containing the lCDefaultLengthConstraint
+   * \param parameters a QHash containing the lCDefaultLengthConstraint
    * widgets which collected the initial parameter data from the user.
    */
   void makeSolidParameters ( const PartMetadata* part,
-			     const QDict<lCDefaultLengthConstraint>& parameters );
+                 const QHash< int,lCDefaultLengthConstraint>& parameters );
 
   /*!
    * Set the (optional) material out of which this part is made.
@@ -197,7 +199,7 @@ public:
    * the user is filling out.
    * \return true if everything is OK with the input.
    */
-  virtual bool valid ( const QDict<lCDefaultLengthConstraint>& initial_values ) const = 0;
+  virtual bool valid ( const QHash< int,lCDefaultLengthConstraint>& initial_values ) const = 0;
   /*!
    * Create the starting solid part requested by the user.
    * \param name new solid name.
@@ -207,7 +209,7 @@ public:
    * \return the solid.
    */
   virtual Space3D::OCSolid* create ( const QString& name,
-				     const QDict<lCDefaultLengthConstraint>& initial_values,
+                     const QHash < int,lCDefaultLengthConstraint>& initial_values,
 				     Part* parent ) const = 0;
   /*!
    * Create the solid from its XML representation.
@@ -255,8 +257,8 @@ public:
   void addPartMetadata ( PartMetadata* part_data );
 
   //! \return an iterator to the parts in the library.
-  QPtrListIterator< PartMetadata > parts ( void ) const
-  { return QPtrListIterator<PartMetadata>( part_data_ ); }
+  QListIterator< std::shared_ptr<PartMetadata> > parts ( void ) const
+  { return QListIterator< std::shared_ptr<PartMetadata>>( part_data_ ); }
 
   /*!
    * Return a specific part's metadata
@@ -299,7 +301,7 @@ private:
   //! Singleton instance of the part factory. Constructed lazily.
   static PartFactory* instance_;
   //! List of parts in the library.
-  QPtrList< PartMetadata > part_data_;
+  QList< std::shared_ptr<PartMetadata> > part_data_;
   //! Global list of geometry names and ids.
   std::map<QString, uint> names_;
   //! Last unique name index used.

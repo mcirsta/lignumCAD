@@ -33,7 +33,7 @@ PageBase::PageBase ( uint id, const QString& name, const QString& type,
 
 QVector<uint> PageBase::ID( void ) const
 {
-  QValueVector<uint> ids;
+  QVector<uint> ids;
 
   if ( parent_ )
     ids = parent_->ID();
@@ -131,7 +131,7 @@ namespace Space2D {
     return TopoDS_Shape(); // Not needed (currently) in 2D context
   }
 
-  TopoDS_Shape Page::lookupShape ( QValueVector<uint>& /*id_path*/ ) const
+  TopoDS_Shape Page::lookupShape ( QVector<uint>& /*id_path*/ ) const
   {
     return TopoDS_Shape(); // Not needed (currently) in 2D context
   }
@@ -142,7 +142,7 @@ namespace Space2D {
   }
 
   void Page::pathID ( QStringList& /*path_components*/,
-		      QValueVector<uint>& /*id_path*/ ) const
+		      QVector<uint>& /*id_path*/ ) const
   {
     return; // Not needed (currently) in 2D context.
   }

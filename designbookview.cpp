@@ -747,18 +747,19 @@ PageView* DesignBookView::lastPageView ( void )
 
 // Search for the place where this page view goes in the hierarchy list.
 
-QStandardItem* DesignBookView::previousItem ( uint id ) const
+ListViewItem* DesignBookView::previousItem ( uint id ) const
 {
-    QStandardItem* previous_item = 0;
+    ListViewItem* previous_item = 0;
     //TODO not sure this is correct, start at 0 ?
     int seekRow = 0;
-    QStandardItem* item = model_list_item_->child( seekRow );
+    //TODO conver
+    ListViewItem* item = static_cast <ListViewItem*> (model_list_item_->child( seekRow ));
     QListIterator< std::shared_ptr <PageView> >  p( page_views_ );
     while ( p.hasNext() &&  item) {
         if ( p.next().get()->id() > id ) break;
 
         previous_item = item;
-        item = model_list_item_->child( seekRow );
+        item = static_cast <ListViewItem*> (model_list_item_->child( seekRow ));
         seekRow++;
     }
     return previous_item;

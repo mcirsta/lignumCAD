@@ -149,7 +149,7 @@ void Subassembly::cancelLast ( void )
   emit constraintCanceled();
 }
 
-void Subassembly::addDependency ( const QValueVector<uint>& surface_id )
+void Subassembly::addDependency ( const QVector<uint>& surface_id )
 {
 #if 0
   // Basically, the idea here is to connect to each component of the surface_id
@@ -162,7 +162,7 @@ void Subassembly::addDependency ( const QValueVector<uint>& surface_id )
   // So, exhustively examine each element of the path and see what it means to
   // us. Note, since part faces are not real ModelItems, we skip the last
   // element of the id_path.
-  QValueVector<uint> id_path;
+  QVector<uint> id_path;
   id_path.reserve( surface_id.size()-1 );
 
   for ( uint i = 0; i < surface_id.size()-1; ++i ) {
@@ -197,7 +197,7 @@ void Subassembly::addDependency ( const QValueVector<uint>& surface_id )
   // modified. At the subassembly level, it doesn't matter if the reference
   // has changed due a solid resize or just a sub-subassembly having been
   // moved. I think?...
-  QValueVector<uint> id_path;
+  QVector<uint> id_path;
   id_path.reserve( surface_id.size()-1 );
 
   for ( uint i = 0; i < surface_id.size()-1; ++i ) {
@@ -311,7 +311,7 @@ ModelItem* Subassembly::lookup ( QStringList& /*path_components*/ ) const { retu
 
 // Find the ModelItem given by the path.
 
-ModelItem* Subassembly::lookup ( QValueVector<uint>& id_path ) const
+ModelItem* Subassembly::lookup ( QVector<uint>& id_path ) const
 {
   if ( subassembly_->id() == id_path[0] ) {
     id_path.erase( id_path.begin() );
@@ -347,7 +347,7 @@ Handle(Standard_Type) Subassembly::lookupType ( QStringList& path_components ) c
 // Find the OpenCASCADE type associated with the path (presumably some kind
 // of geometry)
 
-Handle(Standard_Type) Subassembly::lookupType ( QValueVector<uint>& id_path ) const
+Handle(Standard_Type) Subassembly::lookupType ( QVector<uint>& id_path ) const
 {
   if ( subassembly_->id() == id_path[0] ) {
     id_path.erase( id_path.begin() );
@@ -384,7 +384,7 @@ TopoDS_Shape Subassembly::lookupShape ( QStringList& path_components ) const
 // Find the OpenCASCADE shape associated with the path (presumably some kind
 // of geometry)
 
-TopoDS_Shape Subassembly::lookupShape ( QValueVector<uint>& id_path ) const
+TopoDS_Shape Subassembly::lookupShape ( QVector<uint>& id_path ) const
 {
   TopoDS_Shape shape;
 
@@ -401,11 +401,11 @@ bool Subassembly::referenced ( const Subassembly* target ) const
 {
   // What to do? Look at the ID of each constraint's reference1 and see
   // if target is a prefix match of the reference?
-  QValueVector<uint> target_id = target->ID();
+  QVector<uint> target_id = target->ID();
 
   QPtrListIterator<AssemblyConstraint> constraint = constraints_.constraints();
   for ( ; constraint.current() != 0; ++constraint ) {
-    QValueVector<uint> reference1 = constraint.current()->reference1();
+    QVector<uint> reference1 = constraint.current()->reference1();
     if ( !reference1.empty() && reference1.size() >= target_id.size() ) {
       bool equal = true;
       for ( uint i = 0; i < target_id.size(); i++ ) {
@@ -422,7 +422,7 @@ bool Subassembly::referenced ( const Subassembly* target ) const
   return false;
 }
 
-QString Subassembly::idPath ( QValueVector<uint> id_path ) const
+QString Subassembly::idPath ( QVector<uint> id_path ) const
 {
   if ( subassembly_->id() != id_path[0] )
     return QString::null;	// Really an error...
@@ -437,7 +437,7 @@ QString Subassembly::idPath ( QValueVector<uint> id_path ) const
 }
 
 void Subassembly::pathID ( QStringList& path_components,
-			   QValueVector<uint>& id_path ) const
+			   QVector<uint>& id_path ) const
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.

@@ -37,7 +37,6 @@
 
 #include <memory>
 
-class QTab;
 class QAction;
 class QListViewItem;
 class ListViewItem;
@@ -124,7 +123,7 @@ public:
   void setRenderStyle ( lC::Render::Style render_style );
 
   QList< std::shared_ptr<FigureViewBase> > figureViews ( void ) const;
-  const QHash<int, FigureViewBase >& figureSelectionNames ( void ) const;
+  const QHash<int, std::shared_ptr<FigureViewBase> >& figureSelectionNames ( void ) const;
 
   InputObject* inputObject( void ) const { return input_object_; }
   void setInputObject( InputObject* input_object );

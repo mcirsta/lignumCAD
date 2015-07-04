@@ -40,9 +40,9 @@ void NewModelWizard::init()
     initialPageButtonGroup->hide();
     // Aquire the list of id's which identify the various page types. This list should be ordered
     // in a "logical" order.
-    QValueVector<uint> page_ids = PageFactory::instance()->pageIDs();
+    QVector<uint> page_ids = PageFactory::instance()->pageIDs();
     
-    QValueVector<uint>::const_iterator id = page_ids.begin();
+    QVector<uint>::const_iterator id = page_ids.begin();
     for ( ; id != page_ids.end(); ++id ) {
 	QString text = qApp->translate( "lignumCADMainWindow",
 					PageFactory::instance()->selection( *id ) );

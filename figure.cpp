@@ -49,7 +49,7 @@ namespace Space2D {
 
   QVector<uint> Figure::ID( void ) const
   {
-    QValueVector<uint> ids;
+    QVector<uint> ids;
 
     if ( parent_ )
       ids = parent_->ID();
@@ -106,7 +106,7 @@ namespace Space3D {
 
   QVector<uint> Figure::ID( void ) const
   {
-    QValueVector<uint> ids;
+    QVector<uint> ids;
 
     if ( parent_ )
       ids = parent_->ID();
