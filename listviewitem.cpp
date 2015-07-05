@@ -23,16 +23,19 @@
 
 #include "listviewitem.h"
 
-ListViewItem::ListViewItem ( QListView* parent )
-  : QListViewItem( parent, tr( "unnamed" ) )
+ListViewItem::ListViewItem ( QStandardItem* parent )
+  : QStandardItem( 0 ) //TODO constructor ?
 {
+   //TODO row ?
+    parent->setChild(0, this );
   //  cout << "created list view item @ " << this << endl;
 }
 
-ListViewItem::ListViewItem ( QListViewItem* parent, QListViewItem* after )
-  : QListViewItem( parent, after, tr( "unnamed" ) )
+ListViewItem::ListViewItem ( QStandardItem* parent, QStandardItem* after )
 {
-  //  cout << "created ordered list view item @ " << this << endl;
+    //TODO
+    parent->setChild(0, this);
+    //  cout << "created ordered list view item @ " << this << endl;
 }
 
 ListViewItem::~ListViewItem ( void )
@@ -44,9 +47,9 @@ void ListViewItem::okRename ( int col )
 {
   if ( col != 0 ) return;
 
-  QListViewItem::okRename( col );
+  ListViewItem::okRename( col );
 
-  emit nameChanged( text( 0 ) );
+  emit nameChanged( text( ) );
 }
 
 void ListViewItem::activate ( void )

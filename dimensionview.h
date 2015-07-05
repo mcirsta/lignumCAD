@@ -30,6 +30,8 @@
 #include "dimension.h"
 #include "view.h"
 
+#include <memory>
+
 class OpenGLBase;
 class DimensionInfoDialog;
 class PageView;
@@ -45,13 +47,13 @@ namespace Space2D {
     Q_OBJECT
 
     QMenu* context_menu_;
-    int separator_id_;
+    QAction* separator_id_;
 
     PageView* parent_;
 
-    uint n_geometries_;
+    int n_geometries_;
     QVector< Point > points_;
-    QList< ConstrainedLine > lines_;
+    QList< std::shared_ptr<ConstrainedLine> > lines_;
 
     ConstrainedLine* from_reference_;
     QDomDocument* xml_rep_;

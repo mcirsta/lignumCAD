@@ -60,13 +60,13 @@ CommandHistory& CommandHistory::instance ( void )
 }
 
 CommandHistory::CommandHistory ( void )
-  : QObject( 0, "command_history" ), current_( -1 ), file_( 0 ), stream_( 0 ),
+  : QObject( 0  ), current_( -1 ), file_( 0 ), stream_( 0 ),
     document_( 0 )
 {
-  history_.setAutoDelete( true );
+  setObjectName( "command_history" );
 
   file_ = new QFile( "history.xml" );
-  if ( file_->open( IO_WriteOnly ) ) {
+  if ( file_->open( QIODevice::WriteOnly ) ) {
     stream_ = new QTextStream( file_ );
 
     document_ = new QDomDocument( "LIGNUMCAD-HISTORY" );
@@ -98,7 +98,7 @@ void CommandHistory::addCommand ( Command* command )
   // view modifications).
   command->write( document_ );
   *stream_ << document_->firstChild();
-  stream_->device()->flush();
+  static_cast<QFile*>(stream_->device())->flush();
 
   // If the current command is not the end of the list, then
   // this command basically truncates the remainder of the history

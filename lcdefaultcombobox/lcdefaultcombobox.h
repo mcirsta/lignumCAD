@@ -24,8 +24,8 @@
 #define LCDEFAULTCOMBOBOX_H
 
 
-class QComboBox;
-class QToolButton;
+#include <QWidget>
+
 
 //TODO horiz layout
 class lCDefaultComboBox : public QWidget
@@ -51,10 +51,6 @@ signals:
 private slots:
   void chooseDefault ( void ); 
   void updateIndex ( int ); 
-
-private:
-  QComboBox* combo_box_;
-  QToolButton* default_;
 
   int default_value_;
 };

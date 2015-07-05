@@ -30,100 +30,108 @@
 #include "lccolorchooser.h"
 
 lCColorChooser::lCColorChooser( QWidget *parent, const char *name )
-  : QHBox( parent, name ), edited_( false )
+    : QWidget( parent ), edited_( false )
 {
-  setFrameStyle( Panel | Sunken );
-  setLineWidth( 2 );
-  setMargin( 0 );
-  setSpacing( 0 );
+    setObjectName( name );
+    //TODO
+    //  setFrameStyle( Panel | Sunken );
+    //  setLineWidth( 2 );
+    //  setMargin( 0 );
+    //  setSpacing( 0 );
 
-  color_label_ = new QLabel( this, "label" );
-  color_label_->setMinimumWidth( color_label_->fontMetrics().width( "COLOR" ) );
-  color_label_->setFixedHeight( color_label_->fontMetrics().lineSpacing() );
-  color_label_->setFrameStyle( Box + Plain );
+    color_label_ = new QLabel( this );
+    color_label_->setObjectName( "label" );
+    color_label_->setMinimumWidth( color_label_->fontMetrics().width( "COLOR" ) );
+    color_label_->setFixedHeight( color_label_->fontMetrics().lineSpacing() );
+    color_label_->setFrameStyle( QFrame::Box & QFrame::Plain );
 
-  button_ = new QPushButton( tr( "..." ), this, "button" );
-  button_->setFixedWidth( button_->fontMetrics().width( "ABC" ) );
+    button_ = new QPushButton( this );
+    button_->setObjectName( "..." );
+    button_->setText( "button" );
+    button_->setFixedWidth( button_->fontMetrics().width( "ABC" ) );
 
-  default_ = new QToolButton( this, "default" );
+    default_ = new QToolButton( this );
+    default_->setObjectName( "default" );
 
-  QToolTip::add( default_,
-		 tr( "Click this button to restore the color to the default" ) );
+    default_->setToolTip( tr( "Click this button to restore the color to the default" ) );
 
-  QIconSet icon( lC::lookupPixmap( "default_active.png" ) );
-  icon.setPixmap( lC::lookupPixmap( "default_inactive.png" ),
-		  QIconSet::Automatic, QIconSet::Disabled );
-  default_->setIconSet( icon );
+    QIcon icon( lC::lookupPixmap( "default_active.png" ) );
+    icon.addPixmap( lC::lookupPixmap( "default_inactive.png" ),
+                    QIcon::Disabled, QIcon::Off );
+    default_->setIcon( icon );
 
-  default_->setFixedWidth( default_->sizeHint().width() );
-  default_->setFixedHeight( button_->sizeHint().height()-2 );
+    default_->setFixedWidth( default_->sizeHint().width() );
+    default_->setFixedHeight( button_->sizeHint().height()-2 );
 
-  connect( button_, SIGNAL( clicked() ), this, SLOT( chooseColor() ) );
-  connect( default_, SIGNAL( clicked() ), this, SLOT( chooseDefault() ) );
+    connect( button_, SIGNAL( clicked() ), this, SLOT( chooseColor() ) );
+    connect( default_, SIGNAL( clicked() ), this, SLOT( chooseDefault() ) );
 
-  setFocusProxy( button_ );
+    setFocusProxy( button_ );
 }
 
 bool lCColorChooser::edited ( void ) const
 {
-  return edited_;
+    return edited_;
 }
 
 void lCColorChooser::setEdited ( bool edited )
 {
-  edited_ = edited;
+    edited_ = edited;
 }
 
 void lCColorChooser::setColor( const QColor& color )
 {
-  color_ = color;
-  color_label_->setPaletteBackgroundColor( color_ );
+    color_ = color;
+    //TODO
+    //color_label_->setPaletteBackgroundColor( color_ );
 
-  edited_ = false;
+    edited_ = false;
 
-  if ( color_ == default_color_ )
-    default_->setEnabled( false );
+    if ( color_ == default_color_ )
+        default_->setEnabled( false );
 }
 
 void lCColorChooser::setDefaultColor ( QColor default_color )
 {
-  default_color_ = default_color;
+    default_color_ = default_color;
 }
 
 QColor lCColorChooser::color() const
 {
-  return color_;
+    return color_;
 }
 
 void lCColorChooser::chooseColor()
 {
-  QColor color = QColorDialog::getColor( color_, this );
+    QColor color = QColorDialog::getColor( color_, this );
 
-  if ( color.isValid() ) {
-    color_ = color;
+    if ( color.isValid() ) {
+        color_ = color;
 
-    color_label_->setPaletteBackgroundColor( color_ );
+        //TODO
+        //color_label_->setPaletteBackgroundColor( color_ );
 
-    edited_ = true;
+        edited_ = true;
 
-    if ( color_ != default_color_ )
-      default_->setEnabled( true );
-    else
-      default_->setEnabled( false );
+        if ( color_ != default_color_ )
+            default_->setEnabled( true );
+        else
+            default_->setEnabled( false );
 
-    emit colorChanged( color_ );
-  }
+        emit colorChanged( color_ );
+    }
 }
 
 void lCColorChooser::chooseDefault ( void )
 {
-  color_ = default_color_;
+    color_ = default_color_;
 
-  color_label_->setPaletteBackgroundColor( color_ );
-  
-  edited_ = true;
+    //TODO
+    //color_label_->setPaletteBackgroundColor( color_ );
 
-  default_->setEnabled( false );
+    edited_ = true;
 
-  emit colorChanged( color_ );
+    default_->setEnabled( false );
+
+    emit colorChanged( color_ );
 }

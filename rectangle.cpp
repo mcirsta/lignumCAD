@@ -59,9 +59,9 @@ namespace Space2D {
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
     QRegExp regexp( tr("Rectangle\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name() );
+    int position = regexp.indexIn( name() );
     if ( position >= 0 ) {
-      Rectangle::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+      Rectangle::unique_index_ = qMax( regexp.cap(1).toUInt(),
 				       Rectangle::unique_index_ );
     }
 
@@ -139,9 +139,9 @@ namespace Space2D {
     : Figure( id, name, lC::STR::RECTANGLE, parent )
   {
     QRegExp regexp( tr("Rectangle\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name );
+    int position = regexp.indexIn( name );
     if ( position >= 0 ) {
-      Rectangle::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+      Rectangle::unique_index_ = qMax( regexp.cap(1).toUInt(),
 				       Rectangle::unique_index_ );
     }
 
@@ -207,7 +207,7 @@ namespace Space2D {
   {
     // The front path component is the name of a figure with ".type" appended
     // to it.
-    int dot_pos = path_components.front().findRev( '.' );
+    int dot_pos = path_components.front().lastIndexOf( '.' );
     QString name = path_components.front().left( dot_pos );
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );

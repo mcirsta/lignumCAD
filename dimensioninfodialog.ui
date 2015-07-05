@@ -108,7 +108,7 @@
         </layout>
       </item>
       <item row="2" column="0" rowspan="1" colspan="2">
-        <widget class="Q3GroupBox" name="GroupBox1">
+        <widget class="QGroupBox" name="GroupBox1">
           <property name="title">
             <string>Annotation Side</string>
           </property>
@@ -176,7 +176,7 @@
         </widget>
       </item>
       <item row="2" column="2">
-        <widget class="Q3ButtonGroup" name="orientationGroup">
+        <widget class="QGroupBox" name="orientationGroup">
           <property name="enabled">
             <bool>true</bool>
           </property>
@@ -227,7 +227,7 @@
         </widget>
       </item>
       <item row="1" column="0" rowspan="1" colspan="3">
-        <widget class="Q3GroupBox" name="referencesGroupBox">
+        <widget class="QGroupBox" name="referencesGroupBox">
           <property name="title">
             <string>References</string>
           </property>
@@ -281,7 +281,7 @@
               </widget>
             </item>
             <item row="2" column="0" rowspan="1" colspan="2">
-              <widget class="Q3ButtonGroup" name="offsetButtonGroup">
+              <widget class="QGroupBox" name="offsetButtonGroup">
                 <property name="title">
                   <string>Offset</string>
                 </property>

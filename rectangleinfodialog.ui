@@ -40,7 +40,7 @@
         </widget>
       </item>
       <item row="2" column="0" rowspan="1" colspan="2">
-        <widget class="Q3GroupBox" name="xOriginGroupBox">
+        <widget class="QGroupBox" name="xOriginGroupBox">
           <property name="title">
             <string>X Origin</string>
           </property>
@@ -76,7 +76,7 @@
               </widget>
             </item>
             <item row="1" column="0" rowspan="1" colspan="2">
-              <widget class="Q3ButtonGroup" name="xOriginButtonGroup">
+              <widget class="QGroupBox" name="xOriginButtonGroup">
                 <property name="title">
                   <string>Offset</string>
                 </property>
@@ -153,7 +153,7 @@
         </widget>
       </item>
       <item row="2" column="2" rowspan="1" colspan="3">
-        <widget class="Q3GroupBox" name="yOriginGroupBox">
+        <widget class="QGroupBox" name="yOriginGroupBox">
           <property name="title">
             <string>Y Origin</string>
           </property>
@@ -189,7 +189,7 @@
               </widget>
             </item>
             <item row="1" column="0" rowspan="1" colspan="2">
-              <widget class="Q3ButtonGroup" name="yOriginButtonGroup">
+              <widget class="QGroupBox" name="yOriginButtonGroup">
                 <property name="title">
                   <string>Offset</string>
                 </property>
@@ -262,7 +262,7 @@
         </widget>
       </item>
       <item row="1" column="2" rowspan="1" colspan="3">
-        <widget class="Q3ButtonGroup" name="heightButtonGroup">
+        <widget class="QGroupBox" name="heightButtonGroup">
           <property name="title">
             <string>Height</string>
           </property>
@@ -347,7 +347,7 @@
         </widget>
       </item>
       <item row="3" column="0" rowspan="1" colspan="2">
-        <widget class="Q3GroupBox" name="dimDisplaySideGroupBox">
+        <widget class="QGroupBox" name="dimDisplaySideGroupBox">
           <property name="title">
             <string>Dimension Display Side</string>
           </property>
@@ -477,7 +477,7 @@
         </widget>
       </item>
       <item row="1" column="0" rowspan="1" colspan="2">
-        <widget class="Q3ButtonGroup" name="widthButtonGroup">
+        <widget class="QGroupBox" name="widthButtonGroup">
           <property name="title">
             <string>Width</string>
           </property>
@@ -551,7 +551,7 @@
         </widget>
       </item>
       <item row="3" column="2" rowspan="2" colspan="3">
-        <widget class="Q3GroupBox" name="rectangleStyleGroupBox">
+        <widget class="QGroupBox" name="rectangleStyleGroupBox">
           <property name="title">
             <string>Style</string>
           </property>
@@ -790,7 +790,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <customwidgets>
     <customwidget>
       <class>lCDefaultComboBox</class>

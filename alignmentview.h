@@ -124,7 +124,7 @@ namespace Space2D {
     PageView* parent_;
     //! Context menu id of the separator between the cancel option
     //! and the other context menu options.
-    int separator_id_;
+    QAction* separator_id_;
     //! The PRIMARY coincident constraint object.
     ConstrainedLine* from_;
     //! The SECONDARY coincident constraint object.

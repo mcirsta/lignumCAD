@@ -64,10 +64,10 @@ namespace Space2D {
 
     xml_rep_ = new QDomDocument;
 
-    QAction* cancel_action = parent_->lCMW()->cancelAlignmentAction;
+    QAction* cancel_action = parent_->lCMW()->getUi()->cancelAlignmentAction;
 
-    separator_id_ = parent_->view()->contextMenu()->insertSeparator();
-    cancel_action->addTo( parent_->view()->contextMenu() );
+    separator_id_ = parent_->view()->contextMenu()->addSeparator();
+    parent_->view()->contextMenu()->addAction( cancel_action );
     connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
 
     parent_->view()->
@@ -94,7 +94,7 @@ namespace Space2D {
       return;
 
     FigureView* fv =
-	dynamic_cast< FigureView* >( parent_->figureSelectionNames()[ (*f).second[0] ]);
+    dynamic_cast< FigureView* >( parent_->figureSelectionNames()[ (*f).second[0] ].get());
 
     GLuint g = (*f).second[1]; // (*(*f).second->begin()).first;
     ConstrainedLine* line = dynamic_cast< ConstrainedLine* >( fv->geometry( g ) );
@@ -109,28 +109,32 @@ namespace Space2D {
       else {
 	// Make a few basic checks to see if this comensurate with from_
 	if ( line == from_ ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+      QWhatsThis::showText( QCursor::pos(),
+                           "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"80%\">Cannot align to self.</td>"
 			       "</tr></table>" );
 	  return;
 	}
 	if ( fabs( fabs( line->e() * from_->e() ) - 1. ) > lC::EPSILON ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+      QWhatsThis::showText( QCursor::pos(),
+                            "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"80%\">Cannot align non-parallel lines.</td>"
 			       "</tr></table>" );
 	  return;
 	}
 	if ( from_->parent() == line->parent() ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+      QWhatsThis::showText( QCursor::pos(),
+                            "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"80%\">Cannot align two edges in the same figure.</td>"
 			       "</tr></table>" );
 	  return;
 	}
 	if ( line->dependsOn( from_ ) ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+      QWhatsThis::showText( QCursor::pos(),
+                            "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"80%\">Alignment would create circular reference.</td>"
 			       "</tr></table>" );
@@ -158,7 +162,7 @@ namespace Space2D {
     reconstraints.appendChild( old_constraints );
 
     QDomElement old_xml = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
-    old_xml.setAttribute( lC::STR::URL, from_->dbURL().toString(true) );
+    old_xml.setAttribute( lC::STR::URL, from_->dbURL().toString() );
     from_->constraint()->write( old_xml );
     old_constraints.appendChild( old_xml );
 
@@ -174,7 +178,7 @@ namespace Space2D {
 
     if ( from_reference != 0 ) {
       from_ref_xml_ = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
-      from_ref_xml_.setAttribute( lC::STR::URL, from_reference->dbURL().toString(true) );
+      from_ref_xml_.setAttribute( lC::STR::URL, from_reference->dbURL().toString() );
       from_reference->constraint()->write( from_ref_xml_ );
 
       // If from_reference_'s modifiedConstraint signal is emitted,
@@ -198,7 +202,7 @@ namespace Space2D {
     reconstraints.appendChild( new_constraints );
 
     QDomElement new_xml = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
-    new_xml.setAttribute( lC::STR::URL, from_->dbURL().toString(true) );
+    new_xml.setAttribute( lC::STR::URL, from_->dbURL().toString() );
     from_->constraint()->write( new_xml );
     new_constraints.appendChild( new_xml );
 
@@ -209,10 +213,10 @@ namespace Space2D {
 
     xml_rep_ = 0;
 
-    QAction* cancel_action = parent_->lCMW()->cancelAlignmentAction;
+    QAction* cancel_action = parent_->lCMW()->getUi()->cancelAlignmentAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( parent_->view()->contextMenu() );
-    parent_->view()->contextMenu()->removeItem( separator_id_ );
+    parent_->view()->contextMenu()->removeAction( cancel_action );
+    parent_->view()->contextMenu()->removeAction( separator_id_ );
 
     parent_->view()->unsetCursor();
 
@@ -243,11 +247,11 @@ namespace Space2D {
     delete xml_rep_;
     xml_rep_ = 0;
 
-    QAction* cancel_action = parent_->lCMW()->cancelAlignmentAction;
+    QAction* cancel_action = parent_->lCMW()->getUi()->cancelAlignmentAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( parent_->view()->contextMenu() );
-    parent_->view()->contextMenu()->removeItem( separator_id_ );
+    parent_->view()->contextMenu()->removeAction( cancel_action );
+    parent_->view()->contextMenu()->removeAction( separator_id_ );
 
     parent_->cancelOperation();
   }

@@ -95,7 +95,7 @@
         </layout>
       </item>
       <item row="1" column="0">
-        <widget class="Q3GroupBox" name="definitionGroupBox">
+        <widget class="QGroupBox" name="definitionGroupBox">
           <property name="title">
             <string>Definition</string>
           </property>
@@ -130,7 +130,7 @@
               </widget>
             </item>
             <item row="1" column="0" rowspan="1" colspan="2">
-              <widget class="Q3ButtonGroup" name="offsetButtonGroup">
+              <widget class="QGroupBox" name="offsetButtonGroup">
                 <property name="title">
                   <string>Offset</string>
                 </property>
@@ -244,7 +244,7 @@
         </layout>
       </item>
       <item row="1" column="1">
-        <widget class="Q3ButtonGroup" name="orientationButtonGroup">
+        <widget class="QGroupBox" name="orientationButtonGroup">
           <property name="title">
             <string>Orientation</string>
           </property>
@@ -284,7 +284,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>nameEdit</tabstop>
     <tabstop>referenceLineEdit</tabstop>

@@ -29,6 +29,8 @@ class QLineEdit;
 class QPushButton;
 class QToolButton;
 
+#include <QFrame>
+
 //TODO horiz layout
 class lCFontChooser : public QWidget
 {
@@ -38,7 +40,7 @@ class lCFontChooser : public QWidget
   Q_PROPERTY( bool edited READ edited )
 
 public:
-  lCFontChooser( QWidget* parent = 0, const char* name = 0);
+  lCFontChooser(QWidget *parent = 0, const char* name = 0);
 
   QString font ( void ) const;
   bool edited ( void ) const;

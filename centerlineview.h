@@ -28,7 +28,9 @@
 #include "vectoralgebra.h"
 #include "figureview.h"
 
-class CenterlineInfoDialog;
+#include <memory>
+
+#include "centerlineinfodialog.h"
 
 namespace Space2D {
   class Page;
@@ -40,7 +42,7 @@ namespace Space2D {
     Q_OBJECT
 
     QMenu* context_menu_;
-    int separator_id_;
+    QAction* separator_id_;
 
     Centerline* centerline_;
     CenterlineView* centerline_view_;
@@ -127,7 +129,7 @@ namespace Space2D {
     CenterlineModifyInput modify_input_;
 
     QHash< int,GraphicsView > centerline_objects_;
-    QHash< int,DimensionView > dimensionview_objects_;
+    QHash< int,std::shared_ptr<DimensionView> > dimensionview_objects_;
 
   public:
     CenterlineView ( Centerline* centerline, PageView* parent );

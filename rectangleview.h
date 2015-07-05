@@ -49,7 +49,7 @@ namespace Space2D {
     Q_OBJECT
 
     QMenu* context_menu_;
-    int separator_id_;
+    QAction* separator_id_;
 
     Rectangle* rectangle_;
     RectangleView* rectangle_view_;
@@ -85,7 +85,7 @@ namespace Space2D {
     Point last_pnt_;
     Point current_pnt_;
 
-    QList< ConstrainedLine > edges_;
+    QList< std::shared_ptr<ConstrainedLine> > edges_;
 
     double old_x0_offset_;
     double old_y0_offset_;
@@ -227,7 +227,7 @@ namespace Space2D {
     void draw ( void ) const;
     void select ( SelectionType select_type ) const;
 
-    QList< ConstrainedLine > dragEdges (  GLuint selection_name ) const;
+    QList< std::shared_ptr<ConstrainedLine> > dragEdges (  GLuint selection_name ) const;
 
     lC::ValidDelta adjust ( int selection_name, const Point& last_pnt,
 			    Point& current_pnt );

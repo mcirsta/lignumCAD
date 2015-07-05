@@ -27,6 +27,7 @@
 
 #include "vectoralgebra.h"
 #include "figureview.h"
+#include <memory>
 
 class ReferenceLineInfoDialog;
 
@@ -125,7 +126,7 @@ namespace Space2D {
     ReferenceLineModifyInput modify_input_;
 
     QHash< int,GraphicsView > reference_line_objects_;
-    QHash< int,DimensionView > dimensionview_objects_;
+    QHash< int,std::shared_ptr<DimensionView> > dimensionview_objects_;
 
   public:
     ReferenceLineView ( ReferenceLine* reference_line, PageView* parent );

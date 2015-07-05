@@ -51,6 +51,8 @@
 #include "centerlineinfodialog.h"
 #include "centerlineview.h"
 
+#include <QMouseEvent>
+
 namespace Space2D {
 
   class CenterlineViewCreate : public CreateObject {
@@ -71,7 +73,7 @@ namespace Space2D {
 
       QDomElement root = xml_doc_.createElement( lC::STR::MEMENTO );
 
-      root.setAttribute( lC::STR::NAME, centerline_view->dbURL().toString(true) );
+      root.setAttribute( lC::STR::NAME, centerline_view->dbURL().toString() );
 
       centerline_view->centerline()->write( root );
       centerline_view->write( root );
@@ -255,7 +257,7 @@ namespace Space2D {
       if ( memento_list.length() > 0 ) {
 	QString path = memento_list.item(0).toElement().attribute( lC::STR::NAME );
 
-	if ( path != rename->oldDBURL().toString(true) )
+    if ( path != rename->oldDBURL().toString() )
 	  return false;
 
 	// Additional sanity check: make sure the object and its view have elements.
@@ -272,13 +274,13 @@ namespace Space2D {
 	// Update the name elements in the object and it's view.
 
 	memento_list.item(0).toElement().setAttribute( lC::STR::NAME,
-					       rename->newDBURL().toString(true) );
+                           rename->newDBURL().toString() );
 
 	centerline_list.item(0).toElement().
 	  setAttribute( lC::STR::NAME, rename->newDBURL().name() );
 
 	centerline_view_list.item(0).toElement().setAttribute( lC::STR::CENTERLINE,
-					       rename->newDBURL().toString(true) );
+                           rename->newDBURL().toString() );
 
 	return true;
       }
@@ -300,10 +302,10 @@ namespace Space2D {
     context_menu_ = context_menu;
 
     QAction* cancel_action =
-      centerline_view_->parent()->lCMW()->cancelCenterlineAction;
+      centerline_view_->parent()->lCMW()->getUi()->cancelCenterlineAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
+    separator_id_ = context_menu_->addSeparator();
+    context_menu_ ->addAction( cancel_action );
     connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
 
     centerline_view_->view()->
@@ -328,7 +330,7 @@ namespace Space2D {
     for ( f = selected.begin(); f != selected.end(); ++f ) {
       FigureView* fv =
 	dynamic_cast< FigureView* >( centerline_view_->parent()->
-				     figureSelectionNames()[ (*f).second[0] ] );
+                     figureSelectionNames()[ (*f).second[0] ].get() );
 
       std::vector<GLuint>::const_iterator g;
 
@@ -382,10 +384,10 @@ namespace Space2D {
   {
     PageView* page_view = centerline_view_->parent();
 
-    QAction* cancel_action = page_view->lCMW()->cancelCenterlineAction;
+    QAction* cancel_action = page_view->lCMW()->getUi()->cancelCenterlineAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_id_ );
 
     centerline_->setComplete( true );
 
@@ -414,11 +416,11 @@ namespace Space2D {
   {
     PageView* page_view = centerline_view_->parent();
 
-    QAction* cancel_action = page_view->lCMW()->cancelCenterlineAction;
+    QAction* cancel_action = page_view->lCMW()->getUi()->cancelCenterlineAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_ ->removeAction( cancel_action );
+    context_menu_->removeAction( separator_id_ );
 
     page_view->removeFigureView( centerline_view_ );
 
@@ -562,7 +564,7 @@ namespace Space2D {
     for ( f = selected.begin(); f != selected.end(); ++f ) {
       FigureView* fv =
 	dynamic_cast< FigureView* >( centerline_view_->parent()->
-				     figureSelectionNames()[ (*f).second[0] ] );
+                     figureSelectionNames()[ (*f).second[0] ].get() );
 
       if ( fv == centerline_view_ ) continue;
 
@@ -595,7 +597,7 @@ namespace Space2D {
       QDomElement old_xml = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
 
       old_xml.setAttribute( lC::STR::URL,
-			    centerline_->line()->dbURL().toString(true) );
+                centerline_->line()->dbURL().toString() );
       centerline_->line()->constraint()->write( old_xml );
       old_constraints.appendChild( old_xml );
 
@@ -610,7 +612,7 @@ namespace Space2D {
       if ( from_reference != 0 ) {
 	from_ref_xml_ = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
 	from_ref_xml_.setAttribute( lC::STR::URL,
-				    from_reference->dbURL().toString(true) );
+                    from_reference->dbURL().toString() );
 	from_reference->constraint()->write( from_ref_xml_ );
 
 	connect( from_reference, SIGNAL( modifiedConstraint() ),
@@ -625,7 +627,7 @@ namespace Space2D {
 
       QDomElement new_xml = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
 
-      new_xml.setAttribute( lC::STR::URL, centerline_->line()->dbURL().toString(true) );
+      new_xml.setAttribute( lC::STR::URL, centerline_->line()->dbURL().toString() );
       centerline_->line()->constraint()->write( new_xml );
       new_constraints.appendChild( new_xml );
     }
@@ -689,7 +691,7 @@ namespace Space2D {
 					       this );
 
 	  dimensionview_objects_.insert( dimension_view_->selectionName(),
-					 dimension_view_ );
+                     std::shared_ptr<DimensionView>(dimension_view_) );
 
 	  connect( dimension_view_->fromReference(), SIGNAL( modifiedPosition() ),
 		   SLOT( dmvRefModified() ));
@@ -737,7 +739,7 @@ namespace Space2D {
 
   void CenterlineView::init ( void )
   {
-    QObject::setName( centerline_->name() + lC::STR::VIEW_EXT );
+    setObjectName( centerline_->name() + lC::STR::VIEW_EXT );
 
     // Create unique GL selection names for each of the components
     // of the centerline view (i.e., the line itself, and two handles).
@@ -751,37 +753,40 @@ namespace Space2D {
 
     // Allow for reverse lookup of GL selection name to object
 
-    centerline_objects_.insert( line_.selectionName(), &line_ );
-    centerline_objects_.insert( handle0_.selectionName(), &handle0_ );
-    centerline_objects_.insert( handle1_.selectionName(), &handle1_ );
+    centerline_objects_.insert( line_.selectionName(), line_ );
+    centerline_objects_.insert( handle0_.selectionName(), handle0_ );
+    centerline_objects_.insert( handle1_.selectionName(), handle1_ );
 
-    QListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
+    ListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
 							   centerline_->id() );
 
     list_view_item_ = new ListViewItem( parent()->listViewItem(), previous_item );
 
-  list_view_item_->setText( lC::NAME, lC::formatName( centerline_->name() )
-			    + QString( " <%1>" ).arg( centerline_->id() ) );
-    list_view_item_->setText( lC::TYPE, trC( lC::STR::CENTERLINE ) );
-    list_view_item_->setText( lC::DETAIL, trC( lC::STR::UNDEFINED ) );
-    list_view_item_->setOpen( true );
-    list_view_item_->setRenameEnabled( lC::NAME, true );
+  list_view_item_->setData( lC::formatName( centerline_->name() )
+                + QString( " <%1>" ).arg( centerline_->id() ),
+                            lC::NAME );
+    list_view_item_->setData( trC( lC::STR::CENTERLINE ), lC::TYPE );
+    list_view_item_->setData( trC( lC::STR::UNDEFINED ), lC::DETAIL );
+    //TODO
+    //list_view_item_->setOpen( true );
+    //list_view_item_->setRenameEnabled( lC::NAME, true );
 
     line_list_view_ = new ListViewItem( list_view_item_, 0 );
-    line_list_view_->setText( lC::NAME, lC::formatName( centerline_->name() ) );
-    line_list_view_->setText( lC::TYPE, trC( lC::STR::CONSTRAINED_LINE ) );
-    line_list_view_->setText( lC::DETAIL, trC( lC::STR::CONSTRAINT_UNDEFINED ) );
-    line_list_view_->setOpen( true );
+    line_list_view_->setData( lC::formatName( centerline_->name() ), lC::NAME );
+    line_list_view_->setData( trC( lC::STR::CONSTRAINED_LINE ), lC::TYPE );
+    line_list_view_->setData( trC( lC::STR::CONSTRAINT_UNDEFINED ), lC::DETAIL );
+    //TODO
+    //line_list_view_->setOpen( true );
 
-    line_list_view_->listView()->ensureItemVisible( line_list_view_ );
+    //line_list_view_->listView()->ensureItemVisible( line_list_view_ );
 
     connect( centerline_->line(), SIGNAL( modifiedConstraint() ),
 	     SLOT( modifiedConstraint() ) );
     connect( centerline_->line(), SIGNAL( modifiedPosition() ),
 	     SLOT( modifiedPosition() ) );
-
-    connect( list_view_item_, SIGNAL( nameChanged( const QString& ) ),
-	     SLOT( listNameChanged( const QString& ) ) );
+    //TODO
+    //connect( list_view_item_, SIGNAL( nameChanged( const QString& ) ),
+    //     SLOT( listNameChanged( const QString& ) ) );
 
     connect( centerline_->line(), SIGNAL( nameChanged( const QString& ) ),
 	     SLOT( updateName( const QString& ) ) );
@@ -825,10 +830,10 @@ namespace Space2D {
     if ( isActivated() )
       return &modify_input_;
 
-    QIntDictIterator< DimensionView > idmv( dimensionview_objects_ );
+    QHashIterator< int,std::shared_ptr<DimensionView> > idmv( dimensionview_objects_ );
 
-    for (; idmv.current(); ++idmv ) {
-      if ( idmv.current()->isActivated() )
+    while ( idmv.hasNext()) {
+      if ( idmv.next().value()->isActivated() )
 	return dimension_view_->modifyInput();
     }
 
@@ -864,7 +869,7 @@ namespace Space2D {
 					 this );
 
     dimensionview_objects_.insert( dimension_view_->selectionName(),
-				   dimension_view_ );
+                   std::shared_ptr<DimensionView>(dimension_view_) );
 
     connect( dimension_view_->fromReference(), SIGNAL( modifiedPosition() ),
 	     SLOT( dmvRefModified() ));
@@ -907,7 +912,8 @@ namespace Space2D {
       setName( name );
       break;
     case lC::Redo:
-      list_view_item_->startRename( lC::NAME );
+        //TODO
+        //list_view_item_->startRename( lC::NAME );
     case lC::Rejected:
       updateName( centerline_->name() ); // Repaint list item with old name.
     }
@@ -1063,10 +1069,9 @@ namespace Space2D {
 
   void CenterlineView::setCursor ( GLuint selection_name )
   {
-    GraphicsView* graphics_object = centerline_objects_[ selection_name ];
-
-    if ( graphics_object != 0 )
-      view()->setCursor( QCursor( graphics_object->cursorShape() ) );
+      if ( centerline_objects_.find( selection_name ) != centerline_objects_.end() ) {
+          view()->setCursor( QCursor( centerline_objects_[selection_name ].cursorShape() ) );
+      }
   }
 
   void CenterlineView::setCursor ( const QCursor* cursor )
@@ -1110,7 +1115,7 @@ namespace Space2D {
   View* CenterlineView::lookup ( QStringList& path_components ) const
   {
     if ( dimension_view_ != 0 ) {
-      int dot_pos = path_components.front().findRev( '.' );
+      int dot_pos = path_components.front().lastIndexOf( '.' );
       QString name = path_components.front().left( dot_pos );
       QString type = path_components.front().right( path_components.front().length()
 						    - dot_pos - 1 );
@@ -1124,43 +1129,43 @@ namespace Space2D {
   }
 
   void CenterlineView::setHighlighted( bool highlight, SelectionEntity entity,
-				       const std::vector<GLuint>& items )
+                                       const std::vector<GLuint>& items )
   {
-    if (entity == FIGURE ) {
-      DimensionView* dmv = 0;
+      if (entity == FIGURE ) {
+          QHash< int,std::shared_ptr<DimensionView> >::iterator dmv = dimensionview_objects_.end();
 
-      if ( items.size() > 1 )
-	dmv = dimensionview_objects_[ items[1] ];
+          if ( items.size() > 1 )
+              dmv = dimensionview_objects_.find( items[1] );
 
-      if ( dmv != 0 )
-	dmv->setHighlighted( highlight );
-      else
-	FigureViewBase::setHighlighted( highlight );
-    }
-    else if ( entity == EDGE ) {
-      if ( items.size() > 1 && centerline_objects_[items[1]] != 0 )
-	centerline_objects_[items[1]]->setHighlighted( highlight );
-    }
+          if ( dmv != dimensionview_objects_.end() )
+              dmv.value()->setHighlighted( highlight );
+          else
+              FigureViewBase::setHighlighted( highlight );
+      }
+      else if ( entity == EDGE ) {
+          if ( items.size() > 1 && centerline_objects_.find( items[1] ) != centerline_objects_.end() )
+              centerline_objects_[items[1]].setHighlighted( highlight );
+      }
   }
 
   void CenterlineView::setActivated( bool activate, SelectionEntity entity,
-				     const std::vector<GLuint>& items )
+                                     const std::vector<GLuint>& items )
   {
-    if ( entity == FIGURE ) {
-      DimensionView* dmv = 0;
+      if ( entity == FIGURE ) {
+          QHash< int,std::shared_ptr<DimensionView> >::iterator dmv = dimensionview_objects_.end();
 
-      if ( items.size() > 1 )
-	dmv = dimensionview_objects_[ items[1] ];
+          if ( items.size() > 1 )
+              dmv = dimensionview_objects_.find( items[1] );
 
-      if ( dmv != 0 )
-	dmv->setActivated( activate );
-      else
-	FigureViewBase::setActivated( activate );
-    }
-    else if ( entity == EDGE ) {
-      if ( items.size() > 1 && centerline_objects_[items[1]] != 0 )
-	centerline_objects_[items[1]]->setActivated( activate );
-    }
+          if ( dmv != dimensionview_objects_.end() )
+              dmv.value()->setActivated( activate );
+          else
+              FigureViewBase::setActivated( activate );
+      }
+      else if ( entity == EDGE ) {
+          if ( items.size() > 1 && centerline_objects_.find(items[1]) != centerline_objects_.end() )
+              centerline_objects_[items[1]].setActivated( activate );
+      }
   }
   /*
    * Determine if this selection is part of the geometry representation;
@@ -1170,10 +1175,10 @@ namespace Space2D {
    */
   bool CenterlineView::isGeometry ( GLuint selection_name ) const
   {
-    QIntDictIterator< GraphicsView > igv( centerline_objects_ );
+    QHashIterator< int,GraphicsView > igv( centerline_objects_ );
 
-    for (; igv.current(); ++igv )
-      if ( (GLuint)igv.currentKey() == selection_name ) return true;
+    while ( igv.hasNext() )
+      if ( (GLuint)igv.next().key() == selection_name ) return true;
 
     return false;
   }
@@ -1209,14 +1214,14 @@ namespace Space2D {
 
     if ( dimension_view_ ) dimension_view_->computeLayout();
 
-    list_view_item_->setText( lC::DETAIL,
-			     trC( lC::STR::REFERENCE_LINE_FMT ).
+    list_view_item_->setData(  trC( lC::STR::REFERENCE_LINE_FMT ).
 			     arg( centerline_->line()->o()[X] ).
 			     arg( centerline_->line()->o()[Y] ).
 			     arg( centerline_->line()->e()[X] ).
-			     arg( centerline_->line()->e()[Y] ) );
+                 arg( centerline_->line()->e()[Y] ),
+                               lC::DETAIL );
 
-    line_list_view_->setText( lC::DETAIL, centerline_->line()->detail() );
+    line_list_view_->setData( centerline_->line()->detail(), lC::DETAIL );
   }
 
   /*
@@ -1243,7 +1248,7 @@ namespace Space2D {
 					     this );
 
 	dimensionview_objects_.insert( dimension_view_->selectionName(),
-				       dimension_view_ );
+                       std::shared_ptr<DimensionView>(dimension_view_) );
 
 	connect( reference, SIGNAL( modifiedPosition() ), SLOT( dmvRefModified() ));
 
@@ -1281,7 +1286,7 @@ namespace Space2D {
 	QDomDocument* xml_doc = ConstraintHistory::instance().history();
 	if ( xml_doc != 0 ) {
 	  QDomElement xml_rep = xml_doc->createElement( lC::STR::DIMENSION_VIEW );
-	  xml_rep.setAttribute( lC::STR::URL, centerline_->dbURL().toString(true) );
+      xml_rep.setAttribute( lC::STR::URL, centerline_->dbURL().toString() );
 	  dimension_view_->write( xml_rep );
 	  ConstraintHistory::instance().appendUnconstraint( xml_rep );
 	}
@@ -1307,14 +1312,16 @@ namespace Space2D {
       }
     }
 
-    list_view_item_->setText( lC::DETAIL,
+    list_view_item_->setData(
 			      trC( lC::STR::REFERENCE_LINE_FMT ).
 			      arg( centerline_->line()->o()[X] ).
 			      arg( centerline_->line()->o()[Y] ).
 			      arg( centerline_->line()->e()[X] ).
-			      arg( centerline_->line()->e()[Y] ) );
+                  arg( centerline_->line()->e()[Y] ),
+                 lC::DETAIL);
 
-    line_list_view_->setText( lC::DETAIL, centerline_->line()->detail() );
+    line_list_view_->setData(  centerline_->line()->detail(),
+                               lC::DETAIL );
   }
 
   void CenterlineView::dmvRefModified ( void )
@@ -1327,7 +1334,7 @@ namespace Space2D {
     QDomDocument* xml_doc = ConstraintHistory::instance().history();
     if ( xml_doc != 0 ) {
       QDomElement xml_rep = xml_doc->createElement( lC::STR::DIMENSION_VIEW );
-      xml_rep.setAttribute( lC::STR::URL, centerline_->dbURL().toString(true) );
+      xml_rep.setAttribute( lC::STR::URL, centerline_->dbURL().toString() );
       dimension_view_->write( xml_rep );
       ConstraintHistory::instance().appendUnconstraint( xml_rep );
     }
@@ -1348,53 +1355,54 @@ namespace Space2D {
 
   void CenterlineView::editInformation ( void )
   {
-    if ( FigureViewBase::isActivated() ) {
-      editCenterlineInformation();
-    }
-    else {
-      QIntDictIterator< DimensionView >	idmv( dimensionview_objects_ );
-
-      for ( ; idmv.current(); ++idmv ) {
-	if ( idmv.current()->isActivated() ) {
-	  idmv.current()->editInformation();
-	  return;
-	}
+      if ( FigureViewBase::isActivated() ) {
+          editCenterlineInformation();
       }
-    }
+      else {
+          QMutableHashIterator< int,std::shared_ptr<DimensionView> >	idmv( dimensionview_objects_ );
+
+          while ( idmv.hasNext() ) {
+              if ( idmv.peekNext().value()->isActivated() ) {
+                  idmv.peekNext().value()->editInformation();
+                  return;
+              }
+              idmv.next();
+          }
+      }
   }
 
   void CenterlineView::editCenterlineInformation ( void )
   {
-    centerline_info_dialog_->nameEdit->
+    centerline_info_dialog_->getUi()->nameEdit->
       setText( lC::formatName( centerline_->name() ) );
 
     if ( centerline_->line()->isHorizontal() ) {
-      centerline_info_dialog_->horizontalButton->setChecked( true );
-      centerline_info_dialog_->verticalButton->setChecked( false );
+      centerline_info_dialog_->getUi()->horizontalButton->setChecked( true );
+      centerline_info_dialog_->getUi()->verticalButton->setChecked( false );
     }
     else {
-      centerline_info_dialog_->horizontalButton->setChecked( false );
-      centerline_info_dialog_->verticalButton->setChecked( true );
+      centerline_info_dialog_->getUi()->horizontalButton->setChecked( false );
+      centerline_info_dialog_->getUi()->verticalButton->setChecked( true );
     }
 
-    centerline_info_dialog_->referenceLineEdit->
+    centerline_info_dialog_->getUi()->referenceLineEdit->
       setText( lC::formatName( centerline_->line()->reference()->path() ) );
 
-    centerline_info_dialog_->specifiedRadioButton->setChecked( true );
-    centerline_info_dialog_->offsetLengthSpinBox->setEnabled( true );
+    centerline_info_dialog_->getUi()->specifiedRadioButton->setChecked( true );
+    centerline_info_dialog_->getUi()->offsetLengthSpinBox->setEnabled( true );
 
     // Can't do this yet...
-    centerline_info_dialog_->importedRadioButton->setEnabled( false );
-    centerline_info_dialog_->constraintChooser->setEnabled( false );
+    centerline_info_dialog_->getUi()->importedRadioButton->setEnabled( false );
+    centerline_info_dialog_->getUi()->constraintChooser->setEnabled( false );
 
-    centerline_info_dialog_->offsetLengthSpinBox->
+    centerline_info_dialog_->getUi()->offsetLengthSpinBox->
       setLengthLimits( UnitsBasis::instance()->lengthUnit(),
 		       UnitsBasis::instance()->format(),
 		       UnitsBasis::instance()->precision(),
 		       lC::MINIMUM_DIMESION, lC::MAXIMUM_DIMENSION,
 		       fabs( centerline_->line()->offset() ) );
 
-    centerline_info_dialog_->offsetLengthSpinBox->
+    centerline_info_dialog_->getUi()->offsetLengthSpinBox->
       setLength( fabs( centerline_->line()->offset() ) );
     
   redo:
@@ -1404,35 +1412,35 @@ namespace Space2D {
 
     bool modified = false;
 
-    if ( centerline_info_dialog_->nameEdit->edited() ) {
+    if ( centerline_info_dialog_->getUi()->nameEdit->isModified() ) {
       // Pageview handles checking the name and putting up the error dialog
       // if necessary.
       int ret = parent()->uniqueFigureName( this,
-					  centerline_info_dialog_->nameEdit->text(),
+                      centerline_info_dialog_->getUi()->nameEdit->text(),
 					    centerline_->type() );
 
       switch ( ret ) {
       case lC::Rejected:
 	return;
       case lC::Redo:
-	centerline_info_dialog_->nameEdit->
+    centerline_info_dialog_->getUi()->nameEdit->
 	  setText( lC::formatName( centerline_->name() ) );
 	goto redo;
       }
 
-      setName( centerline_info_dialog_->nameEdit->text() );
+      setName( centerline_info_dialog_->getUi()->nameEdit->text() );
       modified = true;
     }
 
-    if ( centerline_info_dialog_->offsetLengthSpinBox->edited() ) {
+    if ( centerline_info_dialog_->getUi()->offsetLengthSpinBox->edited() ) {
       double old_offset = centerline_->line()->offset();
 
       if ( centerline_->line()->offset() >= 0 )
 	centerline_->line()->
-	  setOffset( centerline_info_dialog_->offsetLengthSpinBox->length() );
+      setOffset( centerline_info_dialog_->getUi()->offsetLengthSpinBox->length() );
       else
 	centerline_->line()->
-	  setOffset( -centerline_info_dialog_->offsetLengthSpinBox->length() );
+      setOffset( -centerline_info_dialog_->getUi()->offsetLengthSpinBox->length() );
 
       MoveLinesCommand* command =
 	new MoveLinesCommand( "move centerline", model() );
@@ -1456,7 +1464,7 @@ namespace Space2D {
       document.createElement( lC::STR::CENTERLINE_VIEW );
 
     centerline_view_element.setAttribute( lC::STR::CENTERLINE,
-					  centerline_->dbURL().toString( true ) );
+                      centerline_->dbURL().toString( ) );
 
     if ( dimension_view_ != 0 )
       dimension_view_->write( centerline_view_element );
@@ -1482,11 +1490,11 @@ namespace Space2D {
    */
   void CenterlineView::updateName ( const QString& /*name*/ )
   {
-  list_view_item_->setText( lC::NAME, lC::formatName( centerline_->name() )
-			    + QString( " <%1>" ).arg( centerline_->id() ) );
-    line_list_view_->setText( lC::NAME,
-			      lC::formatName( centerline_->line()->name()  ) );
-    line_list_view_->setText( lC::DETAIL, centerline_->line()->detail() );
+  list_view_item_->setData( lC::formatName( centerline_->name() )
+                + QString( " <%1>" ).arg( centerline_->id() ),
+                            lC::NAME );
+    line_list_view_->setData( lC::formatName( centerline_->line()->name()  ), lC::NAME );
+    line_list_view_->setData( centerline_->line()->detail(), lC::DETAIL );
   }
 
   // The least little change to user preferences requires that any

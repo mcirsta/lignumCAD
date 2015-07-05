@@ -34,7 +34,7 @@ void ModelItem::setName ( const QString& name )
   // Evidently, neither can "\".
   name_ = QString::null;
 
-  for ( uint i = 0; i < name.length(); i++ )
+  for ( int i = 0; i < name.length(); i++ )
     if ( name[i] == '/' || name[i] == '\\' )
       name_ += QString( "%%1" ).arg( name[i].unicode(), 0, 16 );
     else
@@ -42,7 +42,7 @@ void ModelItem::setName ( const QString& name )
 
   //  name_ = name;
 
-  QObject::setName( name_.latin1() );
+  QObject::setObjectName( name_.toLatin1() );
 
   emit nameChanged( name_ );
 }
@@ -51,18 +51,13 @@ void ModelItem::setName ( const QString& name )
 
 DBURL ModelItem::dbURL ( void ) const
 {
-#if 1
-  QString _path = path();
-  DBURL::encode( _path );
-  return DBURL( lC::STR::DB_PREFIX, _path );
-#else
+    //TODO check this works ?
   return DBURL( lC::STR::DB_PREFIX, path() );
-#endif
 }
 
 // Translate a string in the Constant context.
 
 const QString ModelItem::trC ( const QString& string ) const
 {
-  return qApp->translate( "Constants", string );
+  return qApp->translate( "Constants", string.toLatin1() );
 }
