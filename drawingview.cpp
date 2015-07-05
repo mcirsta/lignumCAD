@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qaction.h>
 #include <qtabbar.h>
 #include <qlineedit.h>
@@ -59,7 +59,7 @@ public:
 
     QDomElement root = xml_doc_.createElement( lC::STR::MEMENTO );
 
-    root.setAttribute( lC::STR::NAME, drawing_view->dbURL().toString(true) );
+    root.setAttribute( lC::STR::NAME, drawing_view->dbURL().toString() );
 
     drawing_view->drawing()->write( root );
     drawing_view->write( root );
@@ -165,7 +165,7 @@ public:
     if ( memento_list.length() > 0 ) {
       QString path = memento_list.item(0).toElement().attribute( lC::STR::NAME );
 
-      if ( path != rename->oldDBURL().toString(true) )
+      if ( path != rename->oldDBURL().toString( ) )
 	return false;
 
       // Additional sanity check: make sure the object and its view have elements.
@@ -180,13 +180,13 @@ public:
       // Update the name elements in the object and it's view.
 
       memento_list.item(0).toElement().setAttribute( lC::STR::NAME,
-					     rename->newDBURL().toString(true) );
+                         rename->newDBURL().toString( ) );
 
       drawing_list.item(0).toElement().
 	setAttribute( lC::STR::NAME, rename->newDBURL().name() );
 
       drawing_view_list.item(0).toElement().setAttribute( lC::STR::DRAWING,
-					  rename->newDBURL().toString(true) );
+                      rename->newDBURL().toString( ) );
 
       return true;
     }
@@ -227,21 +227,24 @@ DrawingView::~DrawingView ()
 
 void DrawingView::init ( void )
 {
-  tab_ = new QTab( lC::lookupPixmap( "drawing.png" ),
-		   lC::formatTabName( drawing_->name() ) );
+  tabIcon =   lC::lookupPixmap( "drawing.png" );
+  tabText = lC::formatTabName( drawing_->name() );
 
-  QListViewItem* previous_item = parent()->previousItem( drawing_->id() );
+  ListViewItem* previous_item = parent()->previousItem( drawing_->id() );
 
   list_view_item_ = new ListViewItem( parent()->modelListItem(), previous_item );
 
-  list_view_item_->setText( lC::NAME, lC::formatName( drawing_->name() )
-			    + QString( " <%1>" ).arg( drawing_->id() ) );
-  list_view_item_->setText( lC::TYPE, trC( lC::STR::DRAWING ) );
-  list_view_item_->setOpen( true );
-  list_view_item_->setRenameEnabled( lC::NAME, true );
+  list_view_item_->setData( lC::formatName( drawing_->name() )
+                + QString( " <%1>" ).arg( drawing_->id(),
+                          lC::NAME ) );
+  list_view_item_->setData( trC( lC::STR::DRAWING ),
+                            lC::TYPE );
+  //TODO
+  //list_view_item_->setOpen( true );
+  //list_view_item_->setRenameEnabled( lC::NAME, true );
 
-  connect( list_view_item_, SIGNAL( nameChanged( const QString& ) ),
-	   SLOT( listNameChanged( const QString& ) ) );
+  //connect( list_view_item_, SIGNAL( nameChanged( const QString& ) ),
+  //	   SLOT( listNameChanged( const QString& ) ) );
 
   connect( drawing_, SIGNAL( nameChanged( const QString& ) ),
 	   SLOT( updateName( const QString& ) ) );
@@ -256,32 +259,32 @@ bool DrawingView::configure ( void )
 {
   // Just set the name of the drawing. More later...
 
-  config_dialog_->nameEdit->setText( lC::formatName( name() ) );
-  config_dialog_->nameEdit->selectAll();
-  config_dialog_->nameEdit->setFocus();
-  config_dialog_->buttonOk->setDefault( true );
+  config_dialog_->getUi()->nameEdit->setText( lC::formatName( name() ) );
+  config_dialog_->getUi()->nameEdit->selectAll();
+  config_dialog_->getUi()->nameEdit->setFocus();
+  config_dialog_->getUi()->buttonOk->setDefault( true );
 
  redo:
   int ret = config_dialog_->exec();
 
   if ( ret == QDialog::Rejected ) return false;
 
-  if ( config_dialog_->nameEdit->edited() ) {
+  if ( config_dialog_->getUi()->nameEdit->isModified() ) {
     // DesignBookView handles checking the name and putting up the error dialog
     // if necessary.
     int ret = parent()->uniquePageName( this,
-					config_dialog_->nameEdit->text(),
+                    config_dialog_->getUi()->nameEdit->text(),
 					drawing_->type() );
 
     switch ( ret ) {
     case lC::Rejected:
       return false;
     case lC::Redo:
-      config_dialog_->nameEdit->setText( lC::formatName( drawing_->name() ) );
+      config_dialog_->getUi()->nameEdit->setText( lC::formatName( drawing_->name() ) );
       goto redo;
     }
 
-    drawing_->setName( config_dialog_->nameEdit->text() );
+    drawing_->setName( config_dialog_->getUi()->nameEdit->text() );
   }
 
   return true;
@@ -315,7 +318,8 @@ void DrawingView::listNameChanged ( const QString& name )
     setName( name );
     break;
   case lC::Redo:
-    list_view_item_->startRename( lC::NAME );
+      //TODO
+      //list_view_item_->startRename( lC::NAME );
   case lC::Rejected:
     updateName( drawing_->name() ); // Repaint list item with old name.
   }
@@ -323,9 +327,9 @@ void DrawingView::listNameChanged ( const QString& name )
 
 void DrawingView::show ( void ) const
 {
-  lCMW()->toolMenu->clear();
+  lCMW()->getUi()->toolMenu->clear();
 
-  lCMW()->toolViewAction->addTo( lCMW()->toolMenu );
+  lCMW()->getUi()->toolMenu->addAction(  lCMW()->getUi()->toolViewAction );
 }
 
 /*!
@@ -335,7 +339,7 @@ void DrawingView::write ( QDomElement& xml_rep ) const
 {
   QDomDocument document = xml_rep.ownerDocument();
   QDomElement view_element = document.createElement( lC::STR::DRAWING_VIEW );
-  view_element.setAttribute( lC::STR::DRAWING, drawing_->dbURL().toString(true) );
+  view_element.setAttribute( lC::STR::DRAWING, drawing_->dbURL().toString() );
   xml_rep.appendChild( view_element );
 }
 /*
@@ -373,9 +377,11 @@ void DrawingView::select ( SelectionType /*select_type*/ ) const
 
 void DrawingView::updateName ( const QString& /*name*/ )
 {
-  tab_->setText( lC::formatTabName( drawing_->name() ) );
-  list_view_item_->setText( lC::NAME, lC::formatName( drawing_->name() )
-			    + QString( " <%1>" ).arg( drawing_->id() ) );
+  //TODO update name
+  tabText = lC::formatTabName( drawing_->name() );
+  list_view_item_->setData( lC::formatName( drawing_->name() )
+                + QString( " <%1>" ).arg( drawing_->id() ),
+                            lC::NAME );
 }
 
 /*
@@ -457,7 +463,7 @@ public:
    */
   QAction* action ( lignumCADMainWindow* lCMW ) const
   {
-    return lCMW->insertDrawingAction;
+    return lCMW->getUi()->insertDrawingAction;
   }
 };
 

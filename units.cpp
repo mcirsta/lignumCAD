@@ -767,14 +767,12 @@ UnitsBasis::~UnitsBasis ( void )
 
 LengthUnit* UnitsBasis::lengthUnit ( int index ) const
 {
-  // For some reason, QPtrList doesn't have a direct access method
-  // which does not change the current item, but we can do this
-  // with an iterator:
-  QPtrListIterator< LengthUnit > lu( length_units_ );
+  return length_units_[index];
+}
 
-  lu += index;
-
-  return lu.current();
+LengthUnit* UnitsBasis::lengthUnit ( ) const
+{
+  return length_units_[currentLenghtUnit];
 }
 
 void UnitsBasis::setLengthUnit ( int index )

@@ -13,7 +13,7 @@ public:
 
 public slots:
     virtual void init();
-    virtual void MaterialList_selectionChanged( QListViewItem * item );
+    virtual void MaterialList_selectionChanged( ListViewItem * item );
     virtual void setMaterial( const Material * material );
     virtual void buttonHelp_clicked();
 

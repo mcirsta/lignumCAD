@@ -29,6 +29,7 @@
 #include <QDrag>
 #include <QMimeData>
 #include <QVector>
+#include <QPixmap>
 
 #include "ratio.h"
 
@@ -45,8 +46,7 @@ namespace lC {
 
   //! The minimum size of any dimension in inches. Actually, if you're careful,
   //! you can build something two miles wide.
-  //TODO not used ?
-  //const double MINIMUM_DIMESION = -MAXIMUM_DIMENSION;
+  const double MINIMUM_DIMESION = -MAXIMUM_DIMENSION;
 
   //! The Version number of the LIGNUMCAD model file
   const uint FILE_VERSION = 2;

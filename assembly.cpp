@@ -61,9 +61,9 @@ Assembly::Assembly ( uint id, const QDomElement& xml_rep, Model* parent )
   setName( xml_rep.attribute( lC::STR::NAME ) );
 
   QRegExp regexp( tr( "Assembly\\[([0-9]+)\\]" ) );
-  int position = regexp.search( name() );
+  int position = regexp.indexIn( name() );
   if ( position >= 0 ) {
-    Assembly::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    Assembly::unique_index_ = qMax( regexp.cap(1).toUInt(),
 				    Assembly::unique_index_ );
   }
 
@@ -142,18 +142,18 @@ Handle(Standard_Type) Assembly::lookupType ( QStringList& path_components ) cons
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
 
-  QMapConstIterator<uint,Figure*> figure = figures_.begin();
+  QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure ) {
-    if ( figure.data()->name() == name && figure.data()->type() == type ) {
+    if ( figure.value()->name() == name && figure.value()->type() == type ) {
       path_components.erase( path_components.begin() );
       if ( !path_components.empty() )
-	return figure.data()->lookupType( path_components );
+    return figure.value()->lookupType( path_components );
       else
 	break;
     }
@@ -164,12 +164,12 @@ Handle(Standard_Type) Assembly::lookupType ( QStringList& path_components ) cons
 
 Handle(Standard_Type) Assembly::lookupType ( QVector<uint>& id_path ) const
 {
-  QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
+  QMap<uint,Figure*>::const_iterator figure = figures_.find( id_path[0] );
 
   if ( figure != figures_.end() ) {
     id_path.erase( id_path.begin() );
     if ( !id_path.empty() )
-      return figure.data()->lookupType( id_path );
+      return figure.value()->lookupType( id_path );
   }
 
   return Handle(Standard_Type)(); // Really an error...
@@ -179,17 +179,17 @@ TopoDS_Shape Assembly::lookupShape ( QStringList& path_components ) const
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
-  QMapConstIterator<uint,Figure*> figure = figures_.begin();
+  QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure ) {
-    if ( figure.data()->name() == name && figure.data()->type() == type ) {
+    if ( figure.value()->name() == name && figure.value()->type() == type ) {
       path_components.erase( path_components.begin() );
       if ( !path_components.empty() )
-	return figure.data()->lookupShape( path_components );
+    return figure.value()->lookupShape( path_components );
       else
 	break;
     }
@@ -200,12 +200,12 @@ TopoDS_Shape Assembly::lookupShape ( QStringList& path_components ) const
 
 TopoDS_Shape Assembly::lookupShape ( QVector<uint>& id_path ) const
 {
-  QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
+  QMap<uint,Figure*>::const_iterator figure = figures_.find( id_path[0] );
 
   if ( figure != figures_.end() ) {
     id_path.erase( id_path.begin() );
     if ( !id_path.empty() )
-      return figure.data()->lookupShape( id_path );
+      return figure.value()->lookupShape( id_path );
   }
 
   return TopoDS_Shape();	// Really an error...
@@ -213,10 +213,10 @@ TopoDS_Shape Assembly::lookupShape ( QVector<uint>& id_path ) const
 
 bool Assembly::used ( const PageBase* page ) const
 {
-  QMapConstIterator<uint,Figure*> figure = figures_.begin();
+  QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure ) {
-    Subassembly* subassembly = dynamic_cast<Subassembly*>( figure.data() );
+    Subassembly* subassembly = dynamic_cast<Subassembly*>( figure.value() );
     if ( subassembly != 0 )
       if ( subassembly->subassembly() == page ) {
 	return true;
@@ -228,10 +228,10 @@ bool Assembly::used ( const PageBase* page ) const
 
 bool Assembly::referenced ( const Subassembly* target ) const
 {
-  QMapConstIterator<uint,Figure*> figure = figures_.begin();
+  QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure ) {
-    Subassembly* subassembly = dynamic_cast<Subassembly*>( figure.data() );
+    Subassembly* subassembly = dynamic_cast<Subassembly*>( figure.value() );
     if ( subassembly != 0 ) {
       if ( subassembly == target )
 	continue;		// Skip self, of course.
@@ -257,10 +257,10 @@ QString Assembly::idPath ( QVector<uint> id_path ) const
   id_path.erase( id_path.begin() );
 
   if ( id_path.empty() )
-    return f.data()->name() + '.' +  f.data()->type();
+    return f.value()->name() + '.' +  f.value()->type();
 
-  return f.data()->name() + '.' +  f.data()->type() + '/' +
-    f.data()->idPath( id_path );
+  return f.value()->name() + '.' +  f.value()->type() + '/' +
+    f.value()->idPath( id_path );
 }
 
 void Assembly::pathID ( QStringList& path_components, QVector<uint>& id_path )
@@ -268,7 +268,7 @@ void Assembly::pathID ( QStringList& path_components, QVector<uint>& id_path )
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -276,13 +276,13 @@ void Assembly::pathID ( QStringList& path_components, QVector<uint>& id_path )
   QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure ) {
-    if ( figure.data()->name() == name && figure.data()->type() == type ) {
-      id_path.push_back( figure.data()->id() );
+    if ( figure.value()->name() == name && figure.value()->type() == type ) {
+      id_path.push_back( figure.value()->id() );
 
       path_components.erase( path_components.begin() );
 
       if ( !path_components.empty() ) {
-	figure.data()->pathID( path_components, id_path );
+    figure.value()->pathID( path_components, id_path );
       }
     }
   }
@@ -295,10 +295,10 @@ void Assembly::write ( QDomElement& xml_rep ) const
   assembly_element.setAttribute( lC::STR::ID, id() );
   assembly_element.setAttribute( lC::STR::NAME, name() );
 
-  QMapConstIterator<uint,Figure*> figure = figures_.begin();
+  QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure )
-    figure.data()->write( assembly_element );
+    figure.value()->write( assembly_element );
 
   xml_rep.appendChild( assembly_element );
 }
@@ -309,10 +309,10 @@ TopoDS_Compound Assembly::compound ( void )
   BRep_Builder builder;
   builder.MakeCompound( assembly );
 
-  QMapConstIterator<uint,Figure*> figure = figures_.begin();
+  QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure ) {
-    Subassembly* subassembly = dynamic_cast<Subassembly*>( figure.data() );
+    Subassembly* subassembly = dynamic_cast<Subassembly*>( figure.value() );
     if ( subassembly != 0 ) {
       subassembly->compound( assembly );
     }

@@ -40,11 +40,13 @@
 
 #include "lcdebug.h"
 
+#include <QMouseEvent>
+#include <QKeyEvent>
+
 PageView::PageView ( DesignBookView* parent )
   : parent_( parent ), input_object_( 0 ),
     valid_view_( false ), render_style_( lC::Render::WIREFRAME )
 {
-  figure_views_.setAutoDelete( true );
 }
 
 PageView::~PageView ( void )
@@ -67,17 +69,18 @@ lignumCADMainWindow* PageView::lCMW ( void ) const
 
 // Search for the place where this page view goes in the hierarchy list.
 
-QListViewItem* PageView::previousItem ( ListViewItem* page_item, uint id ) const
+ListViewItem *PageView::previousItem( ListViewItem* page_item, uint id ) const
 {
-  QListViewItem* previous_item = 0;
-  QListViewItem* item = page_item->firstChild();
-  QPtrListIterator<FigureViewBase> f( figure_views_ );
-  for ( ; f.current() != 0; ++f ) {
-    if ( f.current()->id() > id ) break;
+  ListViewItem* previous_item = 0;
+  //TODO implement
+//  ListViewItem* item = page_item->firstChild();
+//  QListIterator<std::shared_ptr<FigureViewBase>> f( figure_views_ );
+//  for ( ; f.current() != 0; ++f ) {
+//    if ( f.current()->id() > id ) break;
 
-    previous_item = item;
-    item = item->nextSibling();
-  }
+//    previous_item = item;
+//    item = item->nextSibling();
+//  }
   return previous_item;
 }
 
@@ -86,12 +89,12 @@ void PageView::setRenderStyle ( lC::Render::Style render_style )
   render_style_ = render_style;
 }
 
-QPtrListIterator< FigureViewBase > PageView::figureViews ( void ) const
+QList<std::shared_ptr<FigureViewBase> > PageView::figureViews( void ) const
 {
-  return QPtrListIterator< FigureViewBase >( figure_views_ );
+  return figure_views_ ;
 }
 
-const QIntDict< FigureViewBase >& PageView::figureSelectionNames ( void ) const
+const QHash< int,std::shared_ptr<FigureViewBase> >& PageView::figureSelectionNames ( void ) const
 {
   return figure_selection_names_;
 }
@@ -122,9 +125,8 @@ void PageView::setInputObject( InputObject* input_object )
  */
 void PageView::addFigureView ( FigureViewBase* figure_view )
 {
-  figure_views_.append( figure_view );
-  figure_selection_names_.replace( figure_view->selectionName(),
-				   figure_view );
+  figure_views_.push_back( std::shared_ptr<FigureViewBase>(figure_view) );
+  figure_selection_names_[ figure_view->selectionName() ] = std::shared_ptr<FigureViewBase>(figure_view);
 }
 
 void PageView::removeFigureView ( FigureViewBase* figure_view )
@@ -172,7 +174,14 @@ void PageView::removeFigureView ( FigureViewBase* figure_view )
   figure_selection_names_.remove( figure_view->selectionName() );
   // Note: Autodelete causes the figure view to be deleted. The
   // the figure view destructor in turn deletes the figure itself.
-  figure_views_.removeRef( figure_view );
+  QListIterator <std::shared_ptr<FigureViewBase>> ft(figureViews());
+  while( ft.hasNext() )
+  {
+      if( ft.next().get() == figure_view ) {
+        break;
+      }
+  }
+  figureViews().removeOne(ft.previous());
 }
 
 void PageView::clearFigureViews ( void )
@@ -195,7 +204,7 @@ void PageView::cut ( void )
   SelectedNames::const_iterator f;
 
   for ( f = activated_.begin(); f != activated_.end(); ++f ) {
-    FigureViewBase* fv = figure_selection_names_[ (*f).second[0] ];
+    FigureViewBase* fv = figure_selection_names_[ (*f).second[0] ].get();
 
     fv->setActivated( false, selectionType().entity_, (*f).second );
 
@@ -227,10 +236,16 @@ void PageView::cut ( void )
 
     ConstraintHistory::instance().init();
 
-    // 3. Delete it (via AutoDelete). This may cause a cascade of changing
+    // 3. Delete it. This may cause a cascade of changing
     // constraints...
-
-    figure_views_.removeRef( fv );
+    QListIterator <std::shared_ptr<FigureViewBase>> ft(figureViews());
+    while( ft.hasNext() )
+    {
+        if( ft.next().get() == fv ) {
+          break;
+        }
+    }
+    figure_views_.removeOne( ft.previous());
 
     // 4. Add the list of constraints which were affected by the
     // deletion to the memento.
@@ -267,9 +282,9 @@ void PageView::copy ( void )
   for ( f = activated_.begin(); f != activated_.end(); ++f ) {
     QDomElement figure_element = xml_doc.createElement( lC::STR::FIGURE );
 
-    FigureViewBase* fv = figure_selection_names_[ (*f).second[0] ];
+    FigureViewBase* fv = figure_selection_names_[ (*f).second[0] ].get();
 
-    figure_element.setAttribute( lC::STR::URL, fv->dbURL() );
+    figure_element.setAttribute( lC::STR::URL, fv->dbURL().toString() );
 
     fv->copyWrite( figure_element );
 
@@ -282,9 +297,7 @@ void PageView::copy ( void )
   QApplication::clipboard()->setText( xml_doc.toString() );
 
   if ( QApplication::clipboard()->supportsSelection() ) {
-    QApplication::clipboard()->setSelectionMode( true );
-    QApplication::clipboard()->setText( xml_doc.toString() );
-    QApplication::clipboard()->setSelectionMode( false );
+    QApplication::clipboard()->setText( xml_doc.toString(), QClipboard::Selection );
   }
 
   // Alert the UI that we can now paste something.
@@ -308,7 +321,7 @@ void PageView::paste ( void )
 
   if ( page_list.count() == 0 ) return;
 
-  for ( uint p = 0; p < page_list.count(); ++p ) {
+  for ( int p = 0; p < page_list.count(); ++p ) {
 
     QDomElement page_element = page_list.item( p ).toElement();
 
@@ -343,21 +356,22 @@ View* PageView::lookup ( QStringList& path_components ) const
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
 
-  QPtrListIterator< FigureViewBase > fv( figure_views_ );
+  QListIterator< std::shared_ptr<FigureViewBase> > fv( figure_views_ );
 
-  for ( ; fv.current(); ++fv ) {
-    if ( fv.current()->name() == name && fv.current()->type() == type ) {
+  while ( fv.hasNext() ) {
+      FigureViewBase* tmpFv = fv.next().get();
+    if ( tmpFv->name() == name && tmpFv->type() == type ) {
       // Pop the figure name off the list
       path_components.erase( path_components.begin() );
       if ( path_components.empty() )
-	return fv.current();
+    return tmpFv;
       else
-	return fv.current()->lookup( path_components );
+    return tmpFv->lookup( path_components );
     }
   }
   return 0;
@@ -369,17 +383,19 @@ std::vector<GLuint> PageView::lookup ( QVector<uint>& id_path ) const
 {
   std::vector<GLuint> name_path;
 
-  QPtrListIterator< FigureViewBase > fv( figure_views_ );
+  QListIterator< std::shared_ptr<FigureViewBase> > fv( figure_views_ );
 
-  for ( ; fv.current(); ++fv ) {
-    if ( fv.current()->id() == id_path[0] ) {
-      name_path.push_back( fv.current()->selectionName() );
+  while ( fv.hasNext() ) {
+
+      FigureViewBase* tmpFv = fv.next().get();
+    if ( tmpFv->id() == id_path[0] ) {
+      name_path.push_back( tmpFv->selectionName() );
 
       // Pop the figure name off the list
       id_path.erase( id_path.begin() );
 
       if ( !id_path.empty() )
-	fv.current()->lookup( id_path, name_path );
+    tmpFv->lookup( id_path, name_path );
 
       break;
     }
@@ -416,10 +432,10 @@ void PageView::setViewData ( const ViewData& view_data )
  */
 void PageView::viewAttributeChanged ( void )
 {
-  QPtrListIterator< FigureViewBase > fv( figure_views_ );
+  QListIterator< std::shared_ptr<FigureViewBase> > fv( figure_views_ );
 
-  for ( ; fv.current() != 0; ++fv )
-    fv.current()->viewAttributeChanged();
+  while( fv.hasNext() )
+    fv.next()->viewAttributeChanged();
 }
 
 SelectionType PageView::defaultSelectionType ( void ) const
@@ -670,7 +686,7 @@ void PageView::activateFigure ( const std::vector<GLuint>& selection_name )
 {
   activated_.insert( std::pair<GLfloat, std::vector<GLuint> >( 0., selection_name ) );
 
-  FigureViewBase* figure_view = figure_selection_names_[ selection_name[0] ];
+  FigureViewBase* figure_view = figure_selection_names_[ selection_name[0] ].get();
   
   figure_view->setActivated( true, selectionType().entity_, selection_name );
 
@@ -839,7 +855,7 @@ bool PageView::mouseRelease ( QMouseEvent* me, const SelectedNames& selected )
       // (Why? Well, Annotation pops up a dialog forcing the user to
       // let go of the mouse.)
       QMouseEvent new_me( QEvent::MouseMove,
-			  view()->mapFromGlobal( QCursor::pos() ), 0, 0 );
+              view()->mapFromGlobal( QCursor::pos() ), Qt::NoButton, Qt::NoButton, Qt::NoModifier );
       SelectedNames new_selects;
       view()->select( &new_me, new_selects );
       filtered_names = filter( new_selects );
@@ -865,7 +881,7 @@ void PageView::mouseDoubleClick ( QMouseEvent* me )
     input_object_->mouseDoubleClick( me );
     // The mouse might have gone on holiday.
     QMouseEvent new_me( QEvent::MouseMove,
-			view()->mapFromGlobal( QCursor::pos() ), 0, 0 );
+            view()->mapFromGlobal( QCursor::pos() ), Qt::NoButton, Qt::NoButton, Qt::NoModifier );
     SelectedNames new_selects;
     view()->select( &new_me, new_selects );
     input_object_->mousePrepress( &new_me, new_selects );
@@ -906,14 +922,15 @@ lC::RenameStatus PageView::uniqueFigureName ( const FigureViewBase* figure_view,
 					      const QString& name,
 					      const QString& type ) const
 {
-  QPtrListIterator<FigureViewBase> fv( figure_views_ );
+  QListIterator< std::shared_ptr<FigureViewBase>> fv( figure_views_ );
 
-  for ( ; fv.current() != 0; ++fv ) {
+  while(fv.hasNext()) {
+      FigureViewBase* tmpFv = fv.next().get();
     // Skip one's self.
-    if ( fv.current() == figure_view ) continue;
+    if ( tmpFv == figure_view ) continue;
 
-    if ( lC::formatName( fv.current()->name() ) == name &&
-	 fv.current()->type() == type ) {
+    if ( lC::formatName( tmpFv->name() ) == name &&
+      tmpFv->type() == type ) {
       QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
 		      tr( "The name \"%1\" for a figure of type %2 already exists." ).
 		      arg( name ).arg( trC( type ) ),
@@ -944,13 +961,14 @@ QString PageView::uniqueName ( QString (*newName)( void ), const QString& type )
   QString name = newName();
 
  redo:
-  QPtrListIterator<FigureViewBase> fv( figure_views_ );
+  QListIterator<std::shared_ptr<FigureViewBase>> fv( figure_views_ );
 
-  for ( ; fv.current() != 0; ++fv ) {
-    if ( fv.current()->name() == name && fv.current()->type() == type ) {
+  while ( fv.hasNext() ) {
+    if ( fv.peekNext()->name() == name && fv.peekNext()->type() == type ) {
       name = newName();
       goto redo;
     }
+    fv.next();
   }
 
   return name;

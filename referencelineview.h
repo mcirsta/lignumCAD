@@ -40,7 +40,7 @@ namespace Space2D {
     Q_OBJECT
 
     QMenu* context_menu_;
-    int separator_id_;
+    QAction* separator_id_;
 
     ReferenceLine* reference_line_;
     ReferenceLineView* reference_line_view_;

@@ -98,7 +98,7 @@
         </layout>
       </item>
       <item row="0" column="0">
-        <widget class="Q3ListView" name="modelListView">
+        <widget class="QTreeWidget" name="modelListView">
           <column>
             <property name="text">
               <string>Name</string>
@@ -126,7 +126,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <connections>
     <connection>
       <sender>buttonOk</sender>

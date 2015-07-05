@@ -38,15 +38,9 @@ Constraints</string>
         </widget>
       </item>
       <item>
-        <widget class="Q3ButtonGroup" name="constraintButtonGroup">
-          <property name="lineWidth">
-            <number>0</number>
-          </property>
+        <widget class="QGroupBox" name="constraintButtonGroup">
           <property name="title">
             <string/>
-          </property>
-          <property name="exclusive">
-            <bool>true</bool>
           </property>
           <layout class="QVBoxLayout">
             <property name="margin">
@@ -186,7 +180,7 @@ Constraints</string>
         </widget>
       </item>
       <item>
-        <widget class="Q3TextBrowser" name="constraintListBrowser"/>
+        <widget class="QTextBrowser" name="constraintListBrowser"/>
       </item>
       <item>
         <spacer name="Spacer4">
@@ -207,7 +201,6 @@ Constraints</string>
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <connections>
     <connection>
       <sender>helpPushButton</sender>

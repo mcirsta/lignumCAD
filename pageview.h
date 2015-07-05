@@ -38,7 +38,6 @@
 #include <memory>
 
 class QAction;
-class QListViewItem;
 class ListViewItem;
 class OpenGLView;
 class Model;
@@ -117,7 +116,7 @@ public:
    * \param id id of figure being added.
    * \return reference to previous list view item in list.
    */
-  QListViewItem* previousItem ( ListViewItem* page_item, uint id ) const;
+  ListViewItem* previousItem ( ListViewItem* page_item, uint id ) const;
 
   lC::Render::Style renderStyle ( void ) const { return render_style_; }
   void setRenderStyle ( lC::Render::Style render_style );

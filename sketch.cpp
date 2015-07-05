@@ -54,9 +54,9 @@ Sketch::Sketch ( uint id, const QDomElement& xml_rep, Model* parent )
   setName( xml_rep.attribute( lC::STR::NAME ) );
 
   QRegExp regexp( tr( "Sketch\\[([0-9]+)\\]" ) );
-  int position = regexp.search( name() );
+  int position = regexp.indexIn( name() );
   if ( position >= 0 ) {
-    Sketch::unique_index_ = QMAX( regexp.cap(1).toUInt(), Sketch::unique_index_ );
+    Sketch::unique_index_ = qMax( regexp.cap(1).toUInt(), Sketch::unique_index_ );
   }
 
   QDomNode n = xml_rep.firstChild();
@@ -95,7 +95,7 @@ void Sketch::write ( QDomElement& xml_rep ) const
   QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure )
-    figure.data()->write( sketch_element );
+    figure.value()->write( sketch_element );
 
   xml_rep.appendChild( sketch_element );
 }

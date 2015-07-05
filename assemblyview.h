@@ -56,11 +56,11 @@ class AssemblyView : public PageView {
   SubassemblyView* current_view_;
 
   QMenu* context_menu_;
-  int wireframe_id_;
-  int hidden_id_;
-  int solid_id_;
-  int texture_id_;
-  int separator_id_;
+  QAction* wireframe_id_;
+  QAction* hidden_id_;
+  QAction* solid_id_;
+  QAction* texture_id_;
+  QAction* separator_id_;
 
 public:
   AssemblyView ( Assembly* assembly, DesignBookView* parent );
@@ -155,7 +155,7 @@ private slots:
    */
   void listNameChanged ( const QString& name );
   void updateName ( const QString& name );
-  void toggleRenderStyle ( int id );
+  void toggleRenderStyle (QAction *id );
   void cancelOperation ( void );
   void addModel ( void );
   void deleteModel ( void );

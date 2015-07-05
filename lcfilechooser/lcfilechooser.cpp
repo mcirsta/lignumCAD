@@ -26,14 +26,15 @@
 #include <qfiledialog.h>
 
 lCFileChooser::lCFileChooser( QWidget *parent, const char *name )
-  : QHBox( parent, name )
+  : QFrame( parent )
 {
   
-  setSpacing( 0 );
+  setObjectName( name );
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
 
-  lineEdit = new QLineEdit( this, "filechooser_lineedit" );
+  lineEdit = new QLineEdit( this );
+  lineEdit->setObjectName( "filechooser_lineedit" );
   lineEdit->setFrame( false );
   lineEdit->setSizePolicy( QSizePolicy( QSizePolicy::Preferred,
    					QSizePolicy::Maximum ) );
@@ -41,7 +42,9 @@ lCFileChooser::lCFileChooser( QWidget *parent, const char *name )
   connect( lineEdit, SIGNAL( textChanged( const QString & ) ),
 	   this, SIGNAL( fileNameChanged( const QString & ) ) );
 
-  button = new QPushButton( "...", this, "filechooser_button" );
+  button = new QPushButton(  this );
+  button->setObjectName( "filechooser_button" );
+  button->setText("...");
   //  button->setSizePolicy( QSizePolicy( QSizePolicy::Preferred,
   //				      QSizePolicy::Maximum ) );
   button->setFixedWidth( button->fontMetrics().width( " ... " ) );
@@ -56,12 +59,12 @@ lCFileChooser::lCFileChooser( QWidget *parent, const char *name )
 
 bool lCFileChooser::edited ( void ) const
 {
-  return lineEdit->edited();
+  return lineEdit->isModified();
 }
 
 void lCFileChooser::setEdited ( bool edited ) const
 {
-  lineEdit->setEdited( edited );
+  lineEdit->setModified( edited );
 }
 
 void lCFileChooser::setFileName( const QString &fn )
@@ -77,9 +80,9 @@ QString lCFileChooser::fileName() const
 void lCFileChooser::chooseFile()
 {
   QString file_name =
-    QFileDialog::getSaveFileName( lineEdit->text(),
-				  tr( "lignumCAD (*.lcad);;All Files (*)" ),
-				  this );
+    QFileDialog::getSaveFileName( this,
+                                  tr( "Save File " ),
+                                  tr( "lignumCAD (*.lcad);;All Files (*)" ));
 
   if ( !file_name.isEmpty() ) {
     if ( file_name != lineEdit->text() ) {
@@ -87,7 +90,7 @@ void lCFileChooser::chooseFile()
 	file_name += ".lcad";
 
       lineEdit->setText( file_name );
-      lineEdit->setEdited( true );
+      lineEdit->setModified( true );
 
       emit fileNameChanged( file_name );
     }

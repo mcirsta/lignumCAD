@@ -23,7 +23,7 @@
 #ifndef LCDEFAULTLENGTHCONSTRAINT_H
 #define LCDEFAULTLENGTHCONSTRAINT_H
 
-#include <qbuttongroup.h>
+#include <QGroupBox>
 
 #include "units.h"
 
@@ -33,7 +33,7 @@ class lCConstraintChooser;
 class LengthUnit;
 enum UnitFormat;
 
-class lCDefaultLengthConstraint : public QButtonGroup
+class lCDefaultLengthConstraint : public QGroupBox
 {
   Q_OBJECT
 

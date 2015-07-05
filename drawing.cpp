@@ -48,9 +48,9 @@ Drawing::Drawing ( uint id, const QDomElement& xml_rep, Model* parent )
   setName( xml_rep.attribute( lC::STR::NAME ) );
 
   QRegExp regexp( tr( "Drawing\\[([0-9]+)\\]" ) );
-  int position = regexp.search( name() );
+  int position = regexp.indexIn( name() );
   if ( position >= 0 ) {
-    Drawing::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    Drawing::unique_index_ = qMax ( regexp.cap(1).toUInt(),
 				   Drawing::unique_index_ );
   }
 }

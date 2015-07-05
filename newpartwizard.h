@@ -18,7 +18,7 @@ public:
 
 public slots:
     virtual void init();
-    virtual void partLibraryListView_currentChanged( QListViewItem * item );
+    virtual void partLibraryListView_currentChanged( ListViewItem * item );
     virtual void NewPartWizard_selected( const QString & );
     const QHash <int,lCDefaultLengthConstraint>& parameters( void );
     const PartMetadata * part( void );

@@ -47,7 +47,6 @@ class QWidget;
 class DBURL;
 class QPainter;
 class QListBoxItem;
-class QListViewItem;
 class ListViewItem;
 class OpenGLView;
 class OpenGLExample;

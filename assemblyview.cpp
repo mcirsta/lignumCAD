@@ -1237,7 +1237,7 @@ private:
 
 AssemblyConfigDialog* AssemblyView::config_dialog_ = 0;
 
-QDockWindow* AssemblyView::constraint_dock_ = 0;
+QDockWidget* AssemblyView::constraint_dock_ = 0;
 
 AssemblyAddDialog* AssemblyView::add_dialog_ = 0;
 
@@ -1352,12 +1352,12 @@ void AssemblyView::init ( void )
     config_dialog_ = new AssemblyConfigDialog( lCMW() );
 
   if ( constraint_dock_ == 0 ) {
-    constraint_dock_ = new QDockWindow( QDockWindow::InDock, lCMW(),
-					"constraint_dock" );
-    constraint_dock_->setResizeEnabled( true );
-    constraint_dock_->setCaption( tr( "Assembly Constraints" ) );
-    lCMW()->addDockWindow( constraint_dock_, DockRight );
-    lCMW()->setAppropriate( constraint_dock_, false );
+    constraint_dock_ = new QDockWidget(  tr( "Assembly Constraints" ), lCMW() );
+
+    constraint_dock_->setObjectName("constraint_dock");
+    lCMW()->addDockWidget( Qt::RightDockWidgetArea, constraint_dock_ );
+    //TODO
+    //lCMW()->getUi()->setAppropriate( constraint_dock_, false );
     constraint_dock_->hide();
   }
 
@@ -1365,8 +1365,8 @@ void AssemblyView::init ( void )
     add_dialog_ = new AssemblyAddDialog( lCMW() );
 
   if ( constraint_form_ == 0 ) {
-    constraint_form_ = new AssemblyConstraintForm( constraint_dock_,
-						   "constraint_form" );
+    constraint_form_ = new AssemblyConstraintForm( constraint_dock_ );
+    constraint_form_->setObjectName( "constraint_form" );
     constraint_dock_->setWidget( constraint_form_ );
   }
 
@@ -1378,51 +1378,52 @@ void AssemblyView::init ( void )
 
 bool AssemblyView::configure ( void )
 {
-  config_dialog_->nameEdit->setText( lC::formatName( name() ) );
-  config_dialog_->nameEdit->selectAll();
-  config_dialog_->nameEdit->setFocus();
-  config_dialog_->buttonOk->setDefault( true );
+  config_dialog_->getUi()->nameEdit->setText( lC::formatName( name() ) );
+  config_dialog_->getUi()->nameEdit->selectAll();
+  config_dialog_->getUi()->nameEdit->setFocus();
+  config_dialog_->getUi()->buttonOk->setDefault( true );
 
   // Canvas the available models (parts and assemblies) for the user's choice.
-  config_dialog_->modelListView->clear();
+  config_dialog_->getUi()->modelListView->clear();
 
   const QMap<uint, PageBase*>& pages = model()->pages();
   QMap<uint, PageBase*>::const_iterator page = pages.begin();
 
   for ( ; page != pages.end(); ++page ) {
     // Skip self, of course.
-    if ( page.data()->name() == name() &&
-	 page.data()->type() == lC::STR::ASSEMBLY ) continue;
+    if ( page.value()->name() == name() &&
+     page.value()->type() == lC::STR::ASSEMBLY ) continue;
 
-    if ( page.data()->type() == lC::STR::PART ||
-	 page.data()->type() == lC::STR::ASSEMBLY )
-      new QListViewItem( config_dialog_->modelListView,
-			 config_dialog_->modelListView->lastItem(),
-			 lC::formatName( page.data()->name() ),
-			 trC( page.data()->type() ) );
+    //TODO
+//    if ( page.value()->type() == lC::STR::PART ||
+//     page.value()->type() == lC::STR::ASSEMBLY )
+//        new QListWidgetItem( config_dialog_->getUi()->modelListView,
+//             config_dialog_->getUi()->modelListView->item(config_dialog_->getUi()->modelListView->count()),
+//             lC::formatName( page.value()->name() ),
+//             trC( page.value()->type() ) );
   }
 
-  config_dialog_->buttonOk->setEnabled( false );
+  config_dialog_->getUi()->buttonOk->setEnabled( false );
 
   int ret = config_dialog_->exec();
 
   if ( ret == QDialog::Rejected ) return false;
 
-  if ( config_dialog_->nameEdit->edited() )
-    assembly_->setName( config_dialog_->nameEdit->text() );
+  if ( config_dialog_->getUi()->nameEdit->isModified() )
+    assembly_->setName( config_dialog_->getUi()->nameEdit->text() );
 
   // OK, lookup the model and create a view for it attached to this page.
   page = pages.begin();
 
   for ( ; page != pages.end(); ++page ) {
-    if ( config_dialog_->modelListView->currentItem()->text(0) ==
-	 lC::formatName( page.data()->name() ) &&
-	 config_dialog_->modelListView->currentItem()->text(1) ==
-	 trC( page.data()->type() ) ) break;
+    if ( config_dialog_->getUi()->modelListView->currentItem()->text(0) ==
+     lC::formatName( page.value()->name() ) &&
+     config_dialog_->getUi()->modelListView->currentItem()->text(1) ==
+     trC( page.value()->type() ) ) break;
   }
 
   addFigureView( new SubassemblyView( assembly_->
-				      addModel( dynamic_cast<Space3D::Page*>( page.data() ) ),
+                      addModel( dynamic_cast<Space3D::Page*>( page.value() ) ),
 				      this ) );
 
   return true;
@@ -1456,7 +1457,8 @@ void AssemblyView::listNameChanged ( const QString& name )
     setName( name );
     break;
   case lC::Redo:
-    list_view_item_->startRename( lC::NAME );
+      //TODO
+      //list_view_item_->startRename( lC::NAME );
   case lC::Rejected:
     updateName( assembly_->name() ); // Repaint list item with old name.
   }
@@ -1464,27 +1466,27 @@ void AssemblyView::listNameChanged ( const QString& name )
 
 void AssemblyView::show ( void ) const
 {
-  lCMW()->toolMenu->clear();
+  lCMW()->getUi()->toolMenu->clear();
 
-  lCMW()->toolAddModelAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolDeleteModelAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolMenu->insertSeparator();
-  lCMW()->toolJointAction->addTo( lCMW()->toolMenu );
+  lCMW()->getUi()->toolMenu->addAction( lCMW()->getUi()->toolAddModelAction );
+  lCMW()->getUi()->toolMenu->addAction( lCMW()->getUi()->toolDeleteModelAction );
+  lCMW()->getUi()->toolMenu->addSeparator();
+  lCMW()->getUi()->toolMenu->addAction( lCMW()->getUi()->toolJointAction );
 
-  lCMW()->toolAddModelAction->disconnect();
-  lCMW()->toolDeleteModelAction->disconnect();
-  lCMW()->toolJointAction->disconnect();
+  lCMW()->getUi()->toolAddModelAction->disconnect();
+  lCMW()->getUi()->toolDeleteModelAction->disconnect();
+  lCMW()->getUi()->toolJointAction->disconnect();
 
-  connect( lCMW()->toolAddModelAction, SIGNAL( activated() ), SLOT( addModel() ) );
-  connect( lCMW()->toolDeleteModelAction, SIGNAL( activated() ),
+  connect( lCMW()->getUi()->toolAddModelAction, SIGNAL( activated() ), SLOT( addModel() ) );
+  connect( lCMW()->getUi()->toolDeleteModelAction, SIGNAL( activated() ),
 	   SLOT( deleteModel() ) );
 
   // Save our sanity by not allowing the user to delete the first model.
   // Although eventually, this will be a legitimate action.
   if ( assembly_->figures().count() <= 1 )
-    lCMW()->toolDeleteModelAction->setEnabled( false );
+    lCMW()->getUi()->toolDeleteModelAction->setEnabled( false );
   else
-    lCMW()->toolDeleteModelAction->setEnabled( true );
+    lCMW()->getUi()->toolDeleteModelAction->setEnabled( true );
 }
 
 /*
@@ -1494,7 +1496,7 @@ void AssemblyView::write ( QDomElement& xml_rep ) const
 {
   QDomDocument document = xml_rep.ownerDocument();
   QDomElement view_element = document.createElement( lC::STR::ASSEMBLY_VIEW );
-  view_element.setAttribute( lC::STR::ASSEMBLY, assembly_->dbURL().toString(true) );
+  view_element.setAttribute( lC::STR::ASSEMBLY, assembly_->dbURL().toString() );
 
   QDomElement render_style_element = document.createElement( lC::STR::RENDER_STYLE);
   render_style_element.setAttribute( lC::STR::STYLE,
@@ -1503,10 +1505,10 @@ void AssemblyView::write ( QDomElement& xml_rep ) const
 
   viewData().write( view_element );
 
-  QPtrListIterator< FigureViewBase > fv( figureViews() );
+  QListIterator< std::shared_ptr<FigureViewBase> > fv( figureViews() );
 
-  for ( ; fv.current(); ++fv )
-    fv.current()->write( view_element );
+  while(fv.hasNext())
+    fv.next()->write( view_element );
 
   xml_rep.appendChild( view_element );
 }
@@ -1524,33 +1526,34 @@ void AssemblyView::startDisplay ( QMenu* context_menu )
 {
   context_menu_ = context_menu;
 
-  context_menu_->insertSeparator();
-  wireframe_id_ = context_menu_->insertItem( tr( "Wireframe" ), this,
-					     SLOT( toggleRenderStyle( int ) ) );
-  hidden_id_ = context_menu_->insertItem( tr( "Hidden Line" ), this,
-					  SLOT( toggleRenderStyle( int ) ) );
-  solid_id_ = context_menu_->insertItem( tr( "Solid" ), this,
-					 SLOT( toggleRenderStyle( int ) ) );
-  texture_id_ = context_menu_->insertItem( tr( "Texture" ), this,
-					   SLOT( toggleRenderStyle( int ) ) );
-
-  context_menu_->setCheckable( true );
+  context_menu_->addSeparator();
+  wireframe_id_ = context_menu_->addAction( tr( "Wireframe" ));
+  wireframe_id_->setCheckable( true );
+  hidden_id_ = context_menu_->addAction( tr( "Hidden Line" ));
+  hidden_id_->setCheckable( true );
+  solid_id_ = context_menu_->addAction( tr( "Solid" ));
+  solid_id_->setCheckable( true );
+  texture_id_ = context_menu_->addAction( tr( "Texture" ));
+  texture_id_->setCheckable( true );
 
   connect( view(), SIGNAL( rotation( const GLdouble* ) ),
 	   SIGNAL( orientationChanged( const GLdouble* ) ) );
 
   switch ( renderStyle() ) {
   case lC::Render::WIREFRAME:
-    context_menu_->setItemChecked( wireframe_id_, true ); break;
+    wireframe_id_->setChecked( true );
+    break;
   case lC::Render::HIDDEN:
-    context_menu_->setItemChecked( hidden_id_, true );
+    hidden_id_->setChecked( true );
     connect( view(), SIGNAL( rotation( const GLdouble* ) ),
 	     SLOT( updateHiddenOrientation( const GLdouble* ) ) );
     break;
   case lC::Render::SOLID:
-    context_menu_->setItemChecked( solid_id_, true ); break;
+    solid_id_->setChecked( true );
+    break;
   case lC::Render::TEXTURED:
-    context_menu_->setItemChecked( texture_id_, true ); break;
+    texture_id_->setChecked( true );
+    break;
   }
 
   connect( assembly_, SIGNAL( nameChanged( const QString& ) ),
@@ -1565,24 +1568,25 @@ void AssemblyView::startDisplay ( QMenu* context_menu )
        current_view_->subassembly()->constraints().status() != PlacementComplete ) {
     editConstraints( current_view_ );
 
-    QPtrListIterator<AssemblyConstraint> constraint =
+    QListIterator<std::shared_ptr<AssemblyConstraint>> constraint =
       current_view_->subassembly()->constraints().constraints();
 
-    for ( ; constraint.current() != 0; ++constraint ) {
+    while( constraint.hasNext() ) {
       constraints_text_.push_back( QStringList() );
-      if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	   constraint.current()->type() == lC::STR::ALIGN_OFFSET )
+      AssemblyConstraint* tmpAsc = constraint.next().get();
+      if ( tmpAsc->type() == lC::STR::MATE_OFFSET ||
+       tmpAsc->type() == lC::STR::ALIGN_OFFSET )
 	constraints_text_.back() << QString( tr( "%1 (%2)" ) ).
-	  arg( trC( constraint.current()->type() ) ).
-	  arg( UnitsBasis::instance()->format( constraint.current()->offset(), false ) );
+      arg( trC( tmpAsc->type() ) ).
+      arg( UnitsBasis::instance()->format( tmpAsc->offset(), false ) );
       else
-	constraints_text_.back() << trC( constraint.current()->type() );
+    constraints_text_.back() << trC( tmpAsc->type() );
 
-      if ( !constraint.current()->reference0().empty() )
-	constraints_text_.back() << model()->idPath( constraint.current()->reference0() );
+      if ( !tmpAsc->reference0().empty() )
+    constraints_text_.back() << model()->idPath( tmpAsc->reference0() );
 
-      if ( !constraint.current()->reference1().empty() )
-	constraints_text_.back() << model()->idPath( constraint.current()->reference1() );
+      if ( !tmpAsc->reference1().empty() )
+    constraints_text_.back() << model()->idPath( tmpAsc->reference1() );
     }
 
     updateConstraintLabel();
@@ -1590,10 +1594,10 @@ void AssemblyView::startDisplay ( QMenu* context_menu )
     if ( current_view_->subassembly()->constraints().status() !=
 	 ConstraintComplete ) { 
 
-      constraint.toLast();
+      constraint.toBack();
 
-      if ( constraint.current() != 0 ) {
-	editConstraint( constraint.current() );
+      if ( constraint.hasPrevious() != 0 ) {
+    editConstraint( constraint.previous().get() );
       }
     }
   }
@@ -1636,21 +1640,21 @@ void AssemblyView::stopDisplay ( QMenu* /*context_menu*/ )
 				      const AssemblyConstraint* ) ) );
 	   
 
-    QAction* cancel_action = lCMW()->cancelAddModelAction;
+    QAction* cancel_action = lCMW()->getUi()->cancelAddModelAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_id_ );
 
-    disconnect( constraint_form_->matePushButton, SIGNAL( clicked() ),
+    disconnect( constraint_form_->getUi()->matePushButton, SIGNAL( clicked() ),
 		this, SLOT( mate() ) );
-    disconnect( constraint_form_->alignPushButton, SIGNAL( clicked() ),
+    disconnect( constraint_form_->getUi()->alignPushButton, SIGNAL( clicked() ),
 		this, SLOT( align() ) );
-    disconnect( constraint_form_->mateOffsetPushButton, SIGNAL( clicked() ),
+    disconnect( constraint_form_->getUi()->mateOffsetPushButton, SIGNAL( clicked() ),
 		this, SLOT( mateOffset() ) );
-    disconnect( constraint_form_->alignOffsetPushButton, SIGNAL( clicked() ),
+    disconnect( constraint_form_->getUi()->alignOffsetPushButton, SIGNAL( clicked() ),
 		this, SLOT( alignOffset() ) );
-    disconnect( constraint_form_->cancelPushButton, SIGNAL( clicked() ),
+    disconnect( constraint_form_->getUi()->cancelPushButton, SIGNAL( clicked() ),
 		this, SLOT( cancelOperation() ) );
 
     constraint_dock_->hide();
@@ -1681,10 +1685,10 @@ void AssemblyView::draw ( void ) const
   if ( renderStyle() == lC::Render::HIDDEN )
     hidden_drawer_->draw();
 
-  QPtrListIterator< FigureViewBase > f( figureViews() );
+  QListIterator< std::shared_ptr<FigureViewBase> > f( figureViews() );
 
-  for ( ; f.current(); ++f )
-    (*f)->draw();
+  while(f.hasNext())
+    f.next()->draw();
 
   glPopAttrib();
 }
@@ -1697,40 +1701,42 @@ void AssemblyView::draw ( void ) const
  */
 void AssemblyView::select ( SelectionType /*select_type*/ ) const
 {
-  QPtrListIterator< FigureViewBase > f( figureViews() );
+  QListIterator< std::shared_ptr<FigureViewBase> > f( figureViews() );
 
-  for ( ; f.current(); ++f )
-    (*f)->select( selectionType() );
+  while (f.hasNext())
+    f.next()->select( selectionType() );
 }
 
 void AssemblyView::updateName ( const QString& name )
 {
-  tab_->setText( lC::formatTabName( name ) );
-  list_view_item_->setText( lC::NAME, lC::formatName( assembly_->name() )
-			    + QString( " <%1>" ).arg( assembly_->id() ) );
+  //TODO need to update ?
+  tabText = lC::formatTabName( name );
+  list_view_item_->setData( lC::formatName( assembly_->name() )
+                + QString( " <%1>" ).arg( assembly_->id() ),
+                            lC::NAME );
 }
 
 // Allow the user to switch among the various rendering styles.
 
-void AssemblyView::toggleRenderStyle ( int id )
+void AssemblyView::toggleRenderStyle ( QAction* id )
 {
   if ( renderStyle() == lC::Render::HIDDEN && id != hidden_id_ )
     disconnect( view(), SIGNAL( rotation( const GLdouble* ) ),
 		this, SLOT( updateHiddenOrientation( const GLdouble* ) ) );
 
   if ( id == wireframe_id_ and renderStyle() != lC::Render::WIREFRAME ) {
-    context_menu_->setItemChecked( wireframe_id_, true );
-    context_menu_->setItemChecked( hidden_id_, false );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, false );
+    wireframe_id_->setChecked( true );
+    hidden_id_->setChecked( false );
+    solid_id_->setChecked( false );
+    texture_id_->setChecked( false );
 
     setRenderStyle( lC::Render::WIREFRAME );
   }
   else if ( id == hidden_id_ and renderStyle() != lC::Render::HIDDEN ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( hidden_id_, true );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, false );
+      wireframe_id_->setChecked( false );
+      hidden_id_->setChecked( true );
+      solid_id_->setChecked( false );
+      texture_id_->setChecked( false );
 
     setRenderStyle( lC::Render::HIDDEN );
 
@@ -1740,19 +1746,18 @@ void AssemblyView::toggleRenderStyle ( int id )
     updateHiddenOrientation( view()->viewOrientation() );
   }
   else if ( id == solid_id_ and renderStyle() != lC::Render::SOLID ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( hidden_id_, false );
-    context_menu_->setItemChecked( solid_id_, true );
-    context_menu_->setItemChecked( texture_id_, false );
+      wireframe_id_->setChecked( false );
+      hidden_id_->setChecked( false );
+      solid_id_->setChecked( true );
+      texture_id_->setChecked( false );
 
     setRenderStyle( lC::Render::SOLID );
   }
   else if ( id == texture_id_ and renderStyle() != lC::Render::TEXTURED ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( hidden_id_, false );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, true );
-
+      wireframe_id_->setChecked( false );
+      hidden_id_->setChecked( false );
+      solid_id_->setChecked( false );
+      texture_id_->setChecked( true );
     setRenderStyle( lC::Render::TEXTURED );
   }
 
@@ -1778,7 +1783,7 @@ void AssemblyView::cancelOperation ( void )
   removeFigureView( current_view_ );
 
   if ( assembly_->figures().count() <= 1 )
-    lCMW()->toolDeleteModelAction->setEnabled( false );
+    lCMW()->getUi()->toolDeleteModelAction->setEnabled( false );
 
   SelectedNames none;
   highlightFigures( none );
@@ -1795,25 +1800,26 @@ void AssemblyView::cancelOperation ( void )
 void AssemblyView::addModel ( void )
 {
   // Canvas the available models (parts and assemblies) for the user's choice.
-  add_dialog_->modelListView->clear();
+  add_dialog_->getUi()->modelListView->clear();
 
   const QMap<uint, PageBase*>& pages = model()->pages();
   QMap<uint, PageBase*>::const_iterator page = pages.begin();
   for ( ; page != pages.end(); ++page ) {
     // Skip self, of course.
-    if ( page.data()->name() == name() &&
-	 page.data()->type() == lC::STR::ASSEMBLY ) continue;
+    if ( page.value()->name() == name() &&
+     page.value()->type() == lC::STR::ASSEMBLY ) continue;
 
-    if ( page.data()->type() == lC::STR::PART ||
-	 page.data()->type() == lC::STR::ASSEMBLY )
-      new QListViewItem( add_dialog_->modelListView,
-			 add_dialog_->modelListView->lastItem(),
-			 lC::formatName( page.data()->name() ),
-			 trC( page.data()->type() ) );
+    //TODO
+//    if ( page.value()->type() == lC::STR::PART ||
+//     page.value()->type() == lC::STR::ASSEMBLY )
+//      new QListViewItem( add_dialog_->getUi()->modelListView,
+//			 add_dialog_->modelListView->lastItem(),
+//             lC::formatName( page.value()->name() ),
+//             trC( page.value()->type() ) );
   }
 
-  add_dialog_->buttonOk->setEnabled( false );
-  add_dialog_->modelListView->setFocus();
+  add_dialog_->getUi()->buttonOk->setEnabled( false );
+  add_dialog_->getUi()->modelListView->setFocus();
 
   int ret = add_dialog_->exec();
 
@@ -1823,20 +1829,20 @@ void AssemblyView::addModel ( void )
 
   page = pages.begin();
   for ( ; page != pages.end(); ++page ) {
-    if ( add_dialog_->modelListView->currentItem()->text(0) ==
-	 lC::formatName( page.data()->name() ) &&
-	 add_dialog_->modelListView->currentItem()->text(1) ==
-	 trC( page.data()->type() ) ) break;
+    if ( add_dialog_->getUi()->modelListView->currentItem()->text(0) ==
+     lC::formatName( page.value()->name() ) &&
+     add_dialog_->getUi()->modelListView->currentItem()->text(1) ==
+     trC( page.value()->type() ) ) break;
   }
 
   SubassemblyView* sv =
     new SubassemblyView( assembly_->
-			 addModel( dynamic_cast<Space3D::Page*>( page.data() ) ),
+             addModel( dynamic_cast<Space3D::Page*>( page.value() ) ),
 			 this );
 
   addFigureView( sv );
 
-  lCMW()->toolDeleteModelAction->setEnabled( true );
+  lCMW()->getUi()->toolDeleteModelAction->setEnabled( true );
 
   figureModified();
 
@@ -1872,13 +1878,13 @@ void AssemblyView::editConstraints ( SubassemblyView* subassembly_view )
 	      this, SLOT( reeditSubassembly( const AssemblyConstraint*,
 					     const AssemblyConstraint* ) ) );
 
-  QAction* cancel_action = lCMW()->cancelAddModelAction;
+  QAction* cancel_action = lCMW()->getUi()->cancelAddModelAction;
 
-  separator_id_ = context_menu_->insertSeparator();
-  cancel_action->addTo( context_menu_ );
+  separator_id_ = context_menu_->addSeparator();
+  context_menu_->addAction( cancel_action );
   connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
 
-  constraint_form_->constraintsTextLabel->
+  constraint_form_->getUi()->constraintsTextLabel->
     setText( tr( "<p>Defined Constraints for %1</p>" ).
 	     arg( lC::formatName( current_view_->subassembly()->name() ) ) );
 
@@ -1888,21 +1894,21 @@ void AssemblyView::editConstraints ( SubassemblyView* subassembly_view )
 
   constraint_complete_ = true;
 
-  constraint_form_->matePushButton->setOn( false );
-  constraint_form_->alignPushButton->setOn( false );
-  constraint_form_->mateOffsetPushButton->setOn( false );
-  constraint_form_->alignOffsetPushButton->setOn( false );
+  constraint_form_->getUi()->matePushButton->setChecked( false );
+  constraint_form_->getUi()->alignPushButton->setChecked( false );
+  constraint_form_->getUi()->mateOffsetPushButton->setChecked( false );
+  constraint_form_->getUi()->alignOffsetPushButton->setChecked( false );
 
-  connect( constraint_form_->matePushButton, SIGNAL( clicked() ),
+  connect( constraint_form_->getUi()->matePushButton, SIGNAL( clicked() ),
 	   SLOT( mate() ) );
-  connect( constraint_form_->alignPushButton, SIGNAL( clicked() ),
+  connect( constraint_form_->getUi()->alignPushButton, SIGNAL( clicked() ),
 	   SLOT( align() ));
-  connect( constraint_form_->mateOffsetPushButton, SIGNAL( clicked() ),
+  connect( constraint_form_->getUi()->mateOffsetPushButton, SIGNAL( clicked() ),
 	   SLOT( mateOffset() ) );
-  connect( constraint_form_->alignOffsetPushButton, SIGNAL( clicked() ),
+  connect( constraint_form_->getUi()->alignOffsetPushButton, SIGNAL( clicked() ),
 	   SLOT( alignOffset() ) );
 
-  connect( constraint_form_->cancelPushButton, SIGNAL( clicked() ),
+  connect( constraint_form_->getUi()->cancelPushButton, SIGNAL( clicked() ),
 	   SLOT( cancelOperation() ) );
 
   constraint_dock_->show();
@@ -1917,7 +1923,7 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
   constraint_complete_ = false;
 
   if ( constraint->type() == lC::STR::MATE ) {
-    constraint_form_->matePushButton->setOn( true );
+    constraint_form_->getUi()->matePushButton->setChecked ( true );
 
     if ( constraint_input_ == 0 )
       constraint_input_ = new ConstraintInput( this );
@@ -1927,12 +1933,12 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
     constraint_input_->startDisplay( context_menu_ );
 
     connect( constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->matePushButton, SLOT( setOn( bool ) ) );
+         constraint_form_->getUi()->matePushButton, SLOT( setChecked( bool ) ) );
 
     setInputObject( constraint_input_ );
   }
   else if ( constraint->type() == lC::STR::ALIGN ) {
-    constraint_form_->alignPushButton->setOn( true );
+    constraint_form_->getUi()->alignPushButton->setChecked( true );
 
     if ( constraint_input_ == 0 )
       constraint_input_ = new ConstraintInput( this );
@@ -1942,12 +1948,12 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
     constraint_input_->startDisplay( context_menu_ );
 
     connect( constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->alignPushButton, SLOT( setOn( bool ) ) );
+         constraint_form_->getUi()->alignPushButton, SLOT( setChecked( bool ) ) );
 
     setInputObject( constraint_input_ );
   }
   else if ( constraint->type() == lC::STR::MATE_OFFSET ) {
-    constraint_form_->mateOffsetPushButton->setOn( true );
+    constraint_form_->getUi()->mateOffsetPushButton->setChecked( true );
 
     if ( offset_constraint_input_ == 0 )
       offset_constraint_input_ = new OffsetConstraintInput( this );
@@ -1957,12 +1963,12 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
     offset_constraint_input_->startDisplay( context_menu_ );
 
     connect( offset_constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->mateOffsetPushButton, SLOT( setOn( bool ) ) );
+         constraint_form_->getUi()->mateOffsetPushButton, SLOT( setChecked( bool ) ) );
 
     setInputObject( offset_constraint_input_ );
   }
   else if ( constraint->type() == lC::STR::ALIGN_OFFSET ) {
-    constraint_form_->alignOffsetPushButton->setOn( true );
+    constraint_form_->getUi()->alignOffsetPushButton->setChecked( true );
 
     if ( offset_constraint_input_ == 0 )
       offset_constraint_input_ = new OffsetConstraintInput( this );
@@ -1972,7 +1978,7 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
     offset_constraint_input_->startDisplay( context_menu_ );
 
     connect( offset_constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->alignOffsetPushButton, SLOT( setOn( bool ) ) );
+         constraint_form_->getUi()->alignOffsetPushButton, SLOT( setChecked( bool ) ) );
 
     setInputObject( offset_constraint_input_ );
   }
@@ -1998,7 +2004,7 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
   InputObject* constraint_input = 0;
 
   if ( constraint->type() == lC::STR::MATE ) {
-    constraint_form_->matePushButton->setOn( true );
+    constraint_form_->getUi()->matePushButton->setChecked( true );
 
     if ( constraint_input_ == 0 )
       constraint_input_ = new ConstraintInput( this );
@@ -2009,10 +2015,10 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
 				       current_view_->selectionName() );
 
     connect( constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->matePushButton, SLOT( setOn( bool ) ) );
+         constraint_form_->getUi()->matePushButton, SLOT( setChecked( bool ) ) );
   }
   else if ( constraint->type() == lC::STR::ALIGN ) {
-    constraint_form_->alignPushButton->setOn( true );
+    constraint_form_->getUi()->alignPushButton->setChecked( true );
 
     if ( constraint_input_ == 0 )
       constraint_input_ = new ConstraintInput( this );
@@ -2023,10 +2029,10 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
 				       current_view_->selectionName() );
 
     connect( constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->alignPushButton, SLOT( setOn( bool ) ) );
+         constraint_form_->getUi()->alignPushButton, SLOT( setChecked( bool ) ) );
   }
   else if ( constraint->type() == lC::STR::MATE_OFFSET ) {
-    constraint_form_->mateOffsetPushButton->setOn( true );
+    constraint_form_->getUi()->mateOffsetPushButton->setChecked( true );
 
     if ( offset_constraint_input_ == 0 )
       offset_constraint_input_ = new OffsetConstraintInput( this );
@@ -2037,10 +2043,10 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
 					      current_view_->selectionName() );
 
     connect( offset_constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->mateOffsetPushButton, SLOT( setOn( bool ) ) );
+         constraint_form_->getUi()->mateOffsetPushButton, SLOT( setChecked( bool ) ) );
   }
   else if ( constraint->type() == lC::STR::ALIGN_OFFSET ) {
-    constraint_form_->alignOffsetPushButton->setOn( true );
+    constraint_form_->getUi()->alignOffsetPushButton->setChecked( true );
 
     if ( offset_constraint_input_ == 0 )
       offset_constraint_input_ = new OffsetConstraintInput( this );
@@ -2051,7 +2057,7 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
 					      current_view_->selectionName() );
 
     connect( offset_constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->alignOffsetPushButton, SLOT( setOn( bool ) ) );
+         constraint_form_->getUi()->alignOffsetPushButton, SLOT( setChecked( bool ) ) );
   }
 
   constraint_input->startDisplay( context_menu_ );
@@ -2179,7 +2185,7 @@ void AssemblyView::updateConstraintLabel ( void )
 
   text += "</table>";
 
-  constraint_form_->constraintListBrowser->setText( text );
+  constraint_form_->getUi()->constraintListBrowser->setText( text );
 }
 
 void AssemblyView::constraintComplete ( void )
@@ -2312,8 +2318,8 @@ void AssemblyView::alignOffset ( void )
 
 int AssemblyView::editOffset ( const QString& type, double& offset ) const
 {
-  offset_info_dialog_->offsetLengthConstraint->setTitle( trC( type ) );
-  offset_info_dialog_->offsetLengthConstraint->
+  offset_info_dialog_->getUi()->offsetLengthConstraint->setTitle( trC( type ) );
+  offset_info_dialog_->getUi()->offsetLengthConstraint->
     setLengthLimits( UnitsBasis::instance()->lengthUnit(),
 		     UnitsBasis::instance()->format(),
 		     UnitsBasis::instance()->precision(),
@@ -2323,7 +2329,7 @@ int AssemblyView::editOffset ( const QString& type, double& offset ) const
   int ret = offset_info_dialog_->exec();
 
   if ( ret != QDialog::Rejected )
-    offset = offset_info_dialog_->offsetLengthConstraint->specifiedLength();
+    offset = offset_info_dialog_->getUi()->offsetLengthConstraint->specifiedLength();
 
   return ret;
 }
@@ -2355,21 +2361,21 @@ void AssemblyView::placementComplete ( void )
 				    const AssemblyConstraint* ) ) );
 	   
 
-  QAction* cancel_action = lCMW()->cancelAddModelAction;
+  QAction* cancel_action = lCMW()->getUi()->cancelAddModelAction;
 
   cancel_action->disconnect();
-  cancel_action->removeFrom( context_menu_ );
-  context_menu_->removeItem( separator_id_ );
+  context_menu_->removeAction( cancel_action );
+  context_menu_->removeAction( separator_id_ );
 
-  disconnect( constraint_form_->matePushButton, SIGNAL( clicked() ),
+  disconnect( constraint_form_->getUi()->matePushButton, SIGNAL( clicked() ),
 	      this, SLOT( mate() ) );
-  disconnect( constraint_form_->alignPushButton, SIGNAL( clicked() ),
+  disconnect( constraint_form_->getUi()->alignPushButton, SIGNAL( clicked() ),
 	      this, SLOT( align() ) );
-  disconnect( constraint_form_->mateOffsetPushButton, SIGNAL( clicked() ),
+  disconnect( constraint_form_->getUi()->mateOffsetPushButton, SIGNAL( clicked() ),
 	      this, SLOT( mateOffset() ) );
-  disconnect( constraint_form_->alignOffsetPushButton, SIGNAL( clicked() ),
+  disconnect( constraint_form_->getUi()->alignOffsetPushButton, SIGNAL( clicked() ),
 	      this, SLOT( alignOffset() ) );
-  disconnect( constraint_form_->cancelPushButton, SIGNAL( clicked() ),
+  disconnect( constraint_form_->getUi()->cancelPushButton, SIGNAL( clicked() ),
 	      this, SLOT( cancelOperation() ) );
 
   constraint_dock_->hide();
@@ -2380,7 +2386,7 @@ void AssemblyView::placementComplete ( void )
 void AssemblyView::reeditSubassembly ( const AssemblyConstraint* /*old_constraint*/,
 				       const AssemblyConstraint* /*new_constraint*/)
 {
-  current_view_ = dynamic_cast<SubassemblyView*>( figureViews().toLast() );
+  current_view_ = dynamic_cast<SubassemblyView*>( figureViews().last().get() );
 
   disconnect( current_view_->subassembly(),
 	      SIGNAL( constraintChanged( const AssemblyConstraint*,
@@ -2393,34 +2399,37 @@ void AssemblyView::reeditSubassembly ( const AssemblyConstraint* /*old_constrain
 
   editConstraints( current_view_ );
 
-  QPtrListIterator<AssemblyConstraint> constraint =
+  QListIterator<std::shared_ptr<AssemblyConstraint>> constraint =
     current_view_->subassembly()->constraints().constraints();
 
-  for ( ; constraint.current() != 0; ++constraint ) {
+  while ( constraint.hasNext() ) {
+
+    AssemblyConstraint* tmpAsc;
     constraints_text_.push_back( QStringList() );
 #if 1
-    if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	 constraint.current()->type() == lC::STR::ALIGN_OFFSET )
+    if ( tmpAsc->type() == lC::STR::MATE_OFFSET ||
+     tmpAsc->type() == lC::STR::ALIGN_OFFSET )
       constraints_text_.back() << QString( tr( "%1 (%2)" ) ).
-	arg( tr( constraint.current()->type() ) ).
-	arg( UnitsBasis::instance()->format( constraint.current()->offset(), false ) );
+    arg( tr( tmpAsc->type().toLatin1() ) ).
+    arg( UnitsBasis::instance()->format( tmpAsc->offset(), false ) );
     else
-      constraints_text_.back() << tr( constraint.current()->type() );
+      constraints_text_.back() << tr( tmpAsc->type().toLatin1() );
 #else
-    constraints_text_.back() << tr( constraint.current()->type() );
+    constraints_text_.back() << tr( tmpAsc->type() );
 #endif
-    if ( !constraint.current()->reference0().empty() )
-      constraints_text_.back() << model()->idPath( constraint.current()->reference0() );
+    if ( !tmpAsc->reference0().empty() )
+      constraints_text_.back() << model()->idPath( tmpAsc->reference0() );
 
-    if ( !constraint.current()->reference1().empty() )
-      constraints_text_.back() << model()->idPath( constraint.current()->reference1() );
+    if ( !tmpAsc->reference1().empty() )
+      constraints_text_.back() << model()->idPath( tmpAsc->reference1() );
   }
 
   updateConstraintLabel();
 
-  editConstraint( constraint.toLast() );
+  constraint.toBack();
+  editConstraint( constraint.peekPrevious().get() );
 
-  activateFigure( parent()->lookup( constraint.toLast()->reference0() ) );
+  activateFigure( parent()->lookup( constraint.peekPrevious()->reference0() ) );
 }
 
 void AssemblyView::cancelConstraint ( void )
@@ -2558,7 +2567,7 @@ public:
    */
   QAction* action ( lignumCADMainWindow* lCMW ) const
   {
-    return lCMW->insertAssemblyAction;
+    return lCMW->getUi()->insertAssemblyAction;
   }
 };
 

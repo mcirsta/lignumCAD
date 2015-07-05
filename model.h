@@ -234,6 +234,7 @@ private:
 
   //! Transient list of items which need delayed resolution of references
   QList< std::shared_ptr<DelayedResolution> > delay_resolutions_;
+
 };
 
 #endif // MODEL_H

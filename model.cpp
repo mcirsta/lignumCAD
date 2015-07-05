@@ -26,7 +26,6 @@
 #include <qstringlist.h>
 #include <qregexp.h>
 #include <qlistview.h>
-#include <qobjectlist.h>
 
 #include "constants.h"
 #include "globaldata.h"
@@ -41,14 +40,13 @@ uint Model::uniqueID ( void ) { return ++unique_id_; }
 
 Model::Model ( const QString name, const QString description )
   : ModelItem( uniqueID(), name, lC::STR::MODEL ), unique_page_id_( 0 ),
-    read_file_name_( 0 ),
+    read_file_name_( ),
     write_file_name_( name + lC::STR::LCAD_FILE_EXT ),
     description_( description ),
     created_( QDateTime::currentDateTime() ), modified_( created_ ),
     version_( INITIAL_VERSION ), revision_( INITIAL_REVISION ),
     changed_( false )
 {
-  delay_resolutions_.setAutoDelete( true );
 }
 
 Model::Model ( const QString file_name, const QDomElement& xml_rep )
@@ -76,7 +74,7 @@ Model::~Model ( void )
   // An inconvenience of the QMap is that we have to delete the pages ourselves.
   QMap<uint,PageBase*>::iterator p = pages_.begin();
   for ( ; p != pages_.end(); ++p )
-    delete p.data();
+    delete p.value();
 }
 
 void Model::restoreMetadata ( const QDomElement& xml_rep )
@@ -124,17 +122,15 @@ void Model::restorePages ( const QDomElement& xml_rep )
   }
 
   // Need to consider whether one pass through is enough...
-  delay_resolutions_.first();
+  QMutableListIterator< std::shared_ptr<DelayedResolution> > delayedRes (delay_resolutions_);
 
-  while ( delay_resolutions_.current() != 0 ) {
-    ModelItem* resolvee = lookup( delay_resolutions_.current()->dbPath() );
+  while ( delayedRes.hasNext() ) {
+      DelayedResolution* tmpDelR = delayedRes.next().get();
+    ModelItem* resolvee = lookup( tmpDelR->dbPath() );
     if ( resolvee != 0 ) {
-      delay_resolutions_.current()->item()->
-	resolved( delay_resolutions_.current()->dbPath(), resolvee );
-      delay_resolutions_.remove();
+      tmpDelR->item()->resolved( tmpDelR->dbPath(), resolvee );
+      delayedRes.remove();
     }
-    else
-      delay_resolutions_.next();
   }
 
   if ( delay_resolutions_.count() != 0 )
@@ -146,17 +142,15 @@ void Model::restorePages ( const QDomElement& xml_rep )
  */
 void Model::resolveNow ( void )
 {
-  delay_resolutions_.first();
+  QMutableListIterator< std::shared_ptr<DelayedResolution> > delayedRes (delay_resolutions_);
 
-  while ( delay_resolutions_.current() != 0 ) {
-    ModelItem* resolvee = lookup( delay_resolutions_.current()->dbPath() );
+  while ( delayedRes.hasNext() ) {
+      DelayedResolution* tmpDelR = delayedRes.next().get();
+    ModelItem* resolvee = lookup( tmpDelR->dbPath() );
     if ( resolvee != 0 ) {
-      delay_resolutions_.current()->item()->
-	resolved( delay_resolutions_.current()->dbPath(), resolvee);
-      delay_resolutions_.remove();
+      tmpDelR->item()->resolved( tmpDelR->dbPath(), resolvee);
+      delayedRes.remove();
     }
-    else
-      delay_resolutions_.next();
   }
 }
 
@@ -219,16 +213,16 @@ QString Model::idPath (const QVector<uint> &id_path ) const
     arg( p.data()->idPath( my_path ) );
 #else
   if ( my_path.empty() )
-    return name() + '/' + p.data()->name() + '.' +  p.data()->type();
+    return name() + '/' + p.value()->name() + '.' +  p.value()->type();
 
-  return name() + '/' +  p.data()->name() + '.' + p.data()->type() +
-    '/' + p.data()->idPath( my_path );
+  return name() + '/' +  p.value()->name() + '.' + p.value()->type() +
+    '/' + p.value()->idPath( my_path );
 #endif
 }
 
 QVector<uint> Model::pathID( const DBURL& db_url ) const
 {
-  QStringList path_components = QStringList::split( "/", db_url.path() );
+  QStringList path_components = db_url.path().split( '/' );
 
   // The first path component is either the name of the model or a global
   // item (like the X axis in 2D space). Check for global items first.
@@ -257,20 +251,20 @@ QVector<uint> Model::pathID( const DBURL& db_url ) const
 
   // The front path component is the name of a page with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
 
   QMap<uint,PageBase*>::const_iterator p = pages_.begin();
   for ( ; p != pages_.end(); ++p ) {
-    if ( p.data()->name() == name && p.data()->type() == type ) {
-      id_path.push_back( p.data()->id() );
+    if ( p.value()->name() == name && p.value()->type() == type ) {
+      id_path.push_back( p.value()->id() );
 
       path_components.erase( path_components.begin() );
 
       if ( !path_components.empty() ) {
-	p.data()->pathID( path_components, id_path );
+    p.value()->pathID( path_components, id_path );
       }
     }
   }
@@ -287,7 +281,7 @@ void Model::removePage ( PageBase* page )
 {
   QMap<uint,PageBase*>::iterator p = pages_.find( page->id() );
   if ( p != pages_.end() ) {
-    delete p.data();
+    delete p.value();
     pages_.erase( p );
   }
 }
@@ -304,7 +298,7 @@ void Model::removePage ( PageBase* page )
  */
 ModelItem* Model::lookup ( const DBURL& db_url ) const
 {
-  QStringList path_components = QStringList::split( "/", db_url.path() );
+  QStringList path_components = db_url.path().split( '/' );
 
   // The first path component is either the name of the model or a global
   // item (like the X axis in 2D space). Check for global items first.
@@ -326,19 +320,19 @@ ModelItem* Model::lookup ( const DBURL& db_url ) const
 
   // The front path component is the name of a page with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
 
   QMap<uint,PageBase*>::const_iterator p = pages_.begin();
   for ( ; p != pages_.end(); ++p ) {
-    if ( p.data()->name() == name && p.data()->type() == type ) {
+    if ( p.value()->name() == name && p.value()->type() == type ) {
       path_components.erase( path_components.begin() );
       if ( path_components.empty() )
-	return p.data();
+    return p.value();
       else
-	return p.data()->lookup( path_components );
+    return p.value()->lookup( path_components );
     }
   }
 
@@ -364,9 +358,9 @@ ModelItem* Model::lookup (const QVector<uint> &id_path ) const
     my_path.erase( my_path.begin() );
     
     if ( my_path.empty() )
-      return p.data();
+      return p.value();
     else
-      return p.data()->lookup( my_path );
+      return p.value()->lookup( my_path );
   }
 
   return 0;			// Really an error...
@@ -374,7 +368,7 @@ ModelItem* Model::lookup (const QVector<uint> &id_path ) const
 
 Handle(Standard_Type) Model::lookupType ( const DBURL& db_url ) const
 {
-  QStringList path_components = QStringList::split( "/", db_url.path() );
+  QStringList path_components = db_url.path().split( '/' );
 
   if ( path_components.front() != name() )
     return Handle(Standard_Type)(); // Not this model!
@@ -384,7 +378,7 @@ Handle(Standard_Type) Model::lookupType ( const DBURL& db_url ) const
 
   // The front path component is the name of a page with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -393,11 +387,11 @@ Handle(Standard_Type) Model::lookupType ( const DBURL& db_url ) const
 
   QMap<uint,PageBase*>::const_iterator p = pages_.begin();
   for ( ; p != pages_.end(); ++p ) {
-    if ( p.data()->name() == name && p.data()->type() == type ) {
+    if ( p.value()->name() == name && p.value()->type() == type ) {
       if ( path_components.empty() )
 	return Handle(Standard_Type)();
       else
-	return p.data()->lookupType( path_components );
+    return p.value()->lookupType( path_components );
     }
   }
 
@@ -423,7 +417,7 @@ Handle(Standard_Type) Model::lookupType ( const QVector<uint>& id_path ) const
     my_path.erase( my_path.begin() );
     
     if ( !my_path.empty() )
-      return p.data()->lookupType( my_path );
+      return p.value()->lookupType( my_path );
   }
 
   return Handle(Standard_Type)();
@@ -431,7 +425,7 @@ Handle(Standard_Type) Model::lookupType ( const QVector<uint>& id_path ) const
 
 TopoDS_Shape Model::lookupShape ( const DBURL& db_url ) const
 {
-  QStringList path_components = QStringList::split( "/", db_url.path() );
+  QStringList path_components =  db_url.path().split( '/' );
 
   if ( path_components.front() != name() )
     return TopoDS_Shape(); // Not this model!
@@ -441,7 +435,7 @@ TopoDS_Shape Model::lookupShape ( const DBURL& db_url ) const
 
   // The front path component is the name of a page with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -450,11 +444,11 @@ TopoDS_Shape Model::lookupShape ( const DBURL& db_url ) const
 
   QMap<uint,PageBase*>::const_iterator p = pages_.begin();
   for ( ; p != pages_.end(); ++p ) {
-    if ( p.data()->name() == name && p.data()->type() == type ) {
+    if ( p.value()->name() == name && p.value()->type() == type ) {
       if ( path_components.empty() )
 	return TopoDS_Shape();
       else
-	return p.data()->lookupShape( path_components );
+    return p.value()->lookupShape( path_components );
     }
   }
 
@@ -482,15 +476,15 @@ TopoDS_Shape Model::lookupShape (const QVector<uint> &id_path ) const
     if ( my_path.empty() )
       return TopoDS_Shape();
     else
-      return p.data()->lookupShape( my_path );
+      return p.value()->lookupShape( my_path );
   }
 
   return TopoDS_Shape();
 }
 
-QPtrList<PageBase> Model::whereUsed( const DBURL& db_url ) const
+QList<std::shared_ptr<PageBase>> Model::whereUsed( const DBURL& db_url ) const
 {
-  QPtrList<PageBase> usages;
+  QList<std::shared_ptr<PageBase>> usages;
 
   PageBase* page = dynamic_cast<PageBase*>( lookup( db_url ) );
 
@@ -498,8 +492,8 @@ QPtrList<PageBase> Model::whereUsed( const DBURL& db_url ) const
 
     QMap<uint,PageBase*>::const_iterator p = pages_.begin();
     for ( ; p != pages_.end(); ++p ) {
-      if ( p.data() != page && p.data()->used( page ) ) {
-	usages.append( p.data() );
+      if ( p.value() != page && p.value()->used( page ) ) {
+    usages.push_back( std::shared_ptr<PageBase> (p.value()) );
       }
     }
   }
@@ -514,7 +508,7 @@ QPtrList<PageBase> Model::whereUsed( const DBURL& db_url ) const
 
 void Model::addDelayedResolution ( ModelItem* item, const QString db_path )
 {
-  delay_resolutions_.append( new DelayedResolution( item, db_path ) );
+  delay_resolutions_.push_back( std::shared_ptr<DelayedResolution>( new DelayedResolution( item, db_path ) ) );
 }
 
 void Model::write ( QDomElement& xml_rep ) const
@@ -561,7 +555,7 @@ void Model::write ( QDomElement& xml_rep ) const
 
   QMap<uint, PageBase*>::const_iterator p = pages_.begin();
   for ( ; p != pages_.end(); ++p )
-    p.data()->write( pages_element );
+    p.value()->write( pages_element );
 
   xml_rep.appendChild( model_element );
 }

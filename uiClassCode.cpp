@@ -601,7 +601,7 @@ void NewPartWizard::init()
     connect( nextButton(), SIGNAL( clicked() ), SLOT( validateName() ) );
 }
 
-void NewPartWizard::partLibraryListView_currentChanged( QListViewItem* item )
+void NewPartWizard::partLibraryListView_currentChanged(ListViewItem *item )
 {
     if ( item != 0 ) {
     if ( groups_.find( item->text( 0 ) ) != 0 )
@@ -808,7 +808,7 @@ void MaterialDialog::init()
 }
 
 
-void MaterialDialog::MaterialList_selectionChanged( QListViewItem * item )
+void MaterialDialog::MaterialList_selectionChanged(ListViewItem *item )
 {
     if ( item == 0 ) {
     MaterialText->setText( QString::null );

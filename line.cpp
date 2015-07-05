@@ -29,6 +29,8 @@
 #include "model.h"
 #include "line.h"
 
+#include <QString>
+
 // 2D lines
 
 namespace Space2D {
@@ -84,7 +86,7 @@ namespace Space2D {
 
   ostream& Axis::edit ( ostream& o ) const
   {
-    return o << "axis: " << name() << " o:" << o_ << ", e: " << e_ << endl;
+    return o << "axis: " << name().toStdString() << " o:" << o_ << ", e: " << e_ << endl;
   }
 
   void Axis::write ( QDomElement& /*xml_rep*/ ) const
@@ -306,7 +308,7 @@ namespace Space2D {
     QDomDocument* xml_doc = ConstraintHistory::instance().history();
     if ( xml_doc != 0 ) {
       QDomElement old_xml_rep = xml_doc->createElement( lC::STR::CONSTRAINED_LINE );
-      old_xml_rep.setAttribute( lC::STR::URL, dbURL() );
+      old_xml_rep.setAttribute( lC::STR::URL, dbURL().toString() );
       constraint_->write( old_xml_rep );
       ConstraintHistory::instance().appendUnconstraint( old_xml_rep );
     }
@@ -321,7 +323,7 @@ namespace Space2D {
 
     if ( xml_doc != 0 ) {
       QDomElement new_xml_rep = xml_doc->createElement( lC::STR::CONSTRAINED_LINE );
-      new_xml_rep.setAttribute( lC::STR::URL, dbURL() );
+      new_xml_rep.setAttribute( lC::STR::URL, dbURL().toString() );
       constraint_->write( new_xml_rep );
       ConstraintHistory::instance().appendContraint( new_xml_rep );
     }
@@ -348,7 +350,7 @@ namespace Space2D {
     from_ = dynamic_cast< Line* >( parent->model()->lookup( db_url ) );
 
     if ( from_ == 0 )
-      parent->model()->addDelayedResolution( parent, db_url );
+      parent->model()->addDelayedResolution( parent, db_url.toString() );
   }
 
   Point Coincident::o ( void ) const
@@ -405,7 +407,7 @@ namespace Space2D {
   {
     QDomDocument document = xml_rep.ownerDocument();
     QDomElement coincident_element = document.createElement( lC::STR::COINCIDENT_CONSTRAINT );
-    coincident_element.setAttribute( lC::STR::FROM, from_->dbURL().toString(true) );
+    coincident_element.setAttribute( lC::STR::FROM, from_->dbURL().toString() );
     xml_rep.appendChild( coincident_element );
   }
 
@@ -440,7 +442,7 @@ namespace Space2D {
       //      normal_ = Vector( -from_->e().v_[Y], from_->e().v_[X] );
       normal_ = from_->normal();
     else
-      parent->model()->addDelayedResolution( parent, db_url );
+      parent->model()->addDelayedResolution( parent, db_url.toString() );
   }
 
   Point Offset::o ( void ) const
@@ -530,7 +532,7 @@ namespace Space2D {
     QDomDocument document = xml_rep.ownerDocument();
     QDomElement offset_element = document.createElement( lC::STR::OFFSET_CONSTRAINT );
     offset_element.setAttribute( lC::STR::OFFSET, lC::format( offset_ ) );
-    offset_element.setAttribute( lC::STR::FROM, from_->dbURL().toString(true) );
+    offset_element.setAttribute( lC::STR::FROM, from_->dbURL().toString() );
     xml_rep.appendChild( offset_element );
   }
 
@@ -570,7 +572,7 @@ namespace Space2D {
       offset_ = -2. * from_->offset();
     }
     else
-      parent->model()->addDelayedResolution( parent, db_url );
+      parent->model()->addDelayedResolution( parent, db_url.toString() );
   }
 
   Point Centered::o ( void ) const
@@ -679,7 +681,7 @@ namespace Space2D {
     QDomDocument document = xml_rep.ownerDocument();
     QDomElement offset_element = document.createElement( lC::STR::CENTERED_CONSTRAINT );
     offset_element.setAttribute( lC::STR::OFFSET, lC::format( offset_ ) );
-    offset_element.setAttribute( lC::STR::FROM, from_->dbURL().toString(true) );
+    offset_element.setAttribute( lC::STR::FROM, from_->dbURL().toString() );
     xml_rep.appendChild( offset_element );
   }
 } // End of Space2D namespace

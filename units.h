@@ -528,6 +528,8 @@ public:
    */
   LengthUnit* lengthUnit ( int index ) const;
 
+  LengthUnit* lengthUnit ( ) const;
+
   /*!
    * Set the current length unit representation. Note: index is some
    * opaque value corresponding to the order of entries in the

@@ -22,7 +22,7 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qlineedit.h>
 #include <qradiobutton.h>
 #include <qlabel.h>
@@ -51,6 +51,8 @@
 #include "referencelineinfodialog.h"
 #include "referencelineview.h"
 
+#include <QMouseEvent>
+
 namespace Space2D {
   /*!
    * (Find a better name; maybe ReferenceLineViewMemento). Create
@@ -75,7 +77,7 @@ namespace Space2D {
 
       QDomElement root = xml_doc_.createElement( lC::STR::MEMENTO );
 
-      root.setAttribute( lC::STR::NAME,reference_line_view->dbURL().toString(true));
+      root.setAttribute( lC::STR::NAME,reference_line_view->dbURL().toString());
 
       reference_line_view->referenceLine()->write( root );
       reference_line_view->write( root );
@@ -260,7 +262,7 @@ namespace Space2D {
       if ( memento_list.length() > 0 ) {
 	QString path = memento_list.item(0).toElement().attribute( lC::STR::NAME );
 
-	if ( path != rename->oldDBURL().toString(true) )
+    if ( path != rename->oldDBURL().toString() )
 	  return false;
 
 	// Additional sanity check: make sure the object and its view have elements.
@@ -277,13 +279,13 @@ namespace Space2D {
 	// Update the name elements in the object and it's view.
 
 	memento_list.item(0).toElement().setAttribute( lC::STR::NAME,
-						       rename->newDBURL().toString(true) );
+                               rename->newDBURL().toString() );
 
 	reference_line_list.item(0).toElement().
 	  setAttribute( lC::STR::NAME, rename->newDBURL().name() );
 
 	reference_line_view_list.item(0).toElement().
-	  setAttribute( lC::STR::REFERENCE_LINE, rename->newDBURL().toString(true) );
+      setAttribute( lC::STR::REFERENCE_LINE, rename->newDBURL().toString() );
 
 	return true;
       }
@@ -303,10 +305,10 @@ namespace Space2D {
     context_menu_ = context_menu;
 
     QAction* cancel_action =
-      reference_line_view_->parent()->lCMW()->cancelReferenceLineAction;
+      reference_line_view_->parent()->lCMW()->getUi()->cancelReferenceLineAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
+    separator_id_ = context_menu_->addSeparator();
+    context_menu_ ->addAction( cancel_action );
     connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
 
     reference_line_view_->view()->

@@ -23,11 +23,13 @@
 #ifndef LCFILECHOOSER_H
 #define LCFILECHOOSER_H
 
-class QLineEdit;
-class QPushButton;
+#include <QWidget>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QHBoxLayout>
 
-//TODO make Horiz layout for widget
-class lCFileChooser : public QWidget
+//TODO make Horiz layout for widget and see what the derrived class should be
+class lCFileChooser : public QFrame
 {
     Q_OBJECT
 
