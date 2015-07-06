@@ -27,11 +27,12 @@
 #include "lcdefaultratiospinbox.h"
 
 lCRatioSpinBox::lCRatioSpinBox( QWidget *parent, const char *name )
-  : QSpinBox( parent, name )
+  : QSpinBox( parent )
 {
-  setMinValue( -20 );
-  setMaxValue( 20 );
-  updateDisplay();
+    setObjectName( name );
+  setMinimum( -20 );
+  setMaximum( 20 );
+  //updateDisplay();
 }
 
 void lCRatioSpinBox::setRatio ( const Ratio& ratio )
@@ -55,25 +56,27 @@ int lCRatioSpinBox::mapTextToValue ( bool* ok )
   if ( ok != 0 )
     *ok = true;
 
-  return minValue();
+  return minimum();
 }
 
 lCDefaultRatioSpinBox::lCDefaultRatioSpinBox( QWidget *parent, const char *name )
-  : QHBox( parent, name )
+  : QWidget( parent )
 {
-  setSpacing( 0 );
+    setObjectName( name );
+  //setSpacing( 0 );
 
-  spin_box_ = new lCRatioSpinBox( this, "spinbox" );
+  spin_box_ = new lCRatioSpinBox( this );
+  spin_box_->setObjectName( "spinbox" );
 
-  default_ = new QToolButton( this, "default" );
+  default_ = new QToolButton( this );
+  default_->setObjectName( "default" );
 
-  QToolTip::add( default_,
-		 tr( "Click this button to restore the default value" ) );
+  default_->setObjectName(tr( "Click this button to restore the default value" ) );
 
-  QIconSet icon( lC::lookupPixmap( "default_active.png" ) );
-  icon.setPixmap( lC::lookupPixmap( "default_inactive.png" ),
-		  QIconSet::Automatic, QIconSet::Disabled );
-  default_->setIconSet( icon );
+  QIcon icon( lC::lookupPixmap( "default_active.png" ) );
+  icon.addPixmap( lC::lookupPixmap( "default_inactive.png" ),
+          QIcon::Disabled, QIcon::Off );
+  default_->setIcon( icon );
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( spin_box_->sizeHint().height()-2 );

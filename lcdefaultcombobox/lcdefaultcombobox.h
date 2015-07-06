@@ -25,6 +25,8 @@
 
 
 #include <QWidget>
+#include <QComboBox>
+#include <QToolButton>
 
 
 //TODO horiz layout
@@ -51,6 +53,10 @@ signals:
 private slots:
   void chooseDefault ( void ); 
   void updateIndex ( int ); 
+
+private:
+  QComboBox* combo_box_;
+  QToolButton* default_;
 
   int default_value_;
 };

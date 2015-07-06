@@ -27,23 +27,29 @@
 #include "constants.h"
 #include "lcdefaultcombobox.h"
 
+#include <QWidget>
+
 lCDefaultComboBox::lCDefaultComboBox( QWidget *parent, const char *name )
-  : QHBox( parent, name ), default_value_( 0 )
+  : QWidget ( parent ), default_value_( 0 )
 {
-  setSpacing( 0 );
+    setObjectName( name );
+    //TODO
+    //setSpacing( 0 );
 
   // A read only combo box (no reason for the user to type anything)
-  combo_box_ = new QComboBox( false, this, "combobox" );
+  combo_box_ = new QComboBox( this );
+  combo_box_->setObjectName( "combobox" );
+  combo_box_->setEditable( false );
 
-  default_ = new QToolButton( this, "default" );
+  default_ = new QToolButton( this );
+  default_->setObjectName( "default" );
 
-  QToolTip::add( default_,
-		 tr( "Click this button to restore the default value" ) );
+  default_->setToolTip( tr( "Click this button to restore the default value" ) );
 
-  QIconSet icon( lC::lookupPixmap( "default_active.png" ) );
-  icon.setPixmap( lC::lookupPixmap( "default_inactive.png" ),
-		  QIconSet::Automatic, QIconSet::Disabled );
-  default_->setIconSet( icon );
+  QIcon icon( lC::lookupPixmap( "default_active.png" ) );
+  icon.addPixmap( lC::lookupPixmap( "default_inactive.png" ),
+          QIcon::Disabled, QIcon::Off );
+  default_->setIcon( icon );
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( combo_box_->sizeHint().height()-2 );
@@ -56,17 +62,17 @@ lCDefaultComboBox::lCDefaultComboBox( QWidget *parent, const char *name )
 
 void lCDefaultComboBox::insertItem( const QString& text )
 {
-  combo_box_->insertItem( text );
+  combo_box_->addItem( text );
 
-  if ( combo_box_->currentItem() == default_value_ )
+  if ( combo_box_->currentIndex() == default_value_ )
     default_->setEnabled( false );
 }
 
 void lCDefaultComboBox::insertItem( const QPixmap& pixmap, const QString& text )
 {
-  combo_box_->insertItem( pixmap, text );
+  combo_box_->addItem( pixmap, text );
 
-  if ( combo_box_->currentItem() == default_value_ )
+  if ( combo_box_->currentIndex() == default_value_ )
     default_->setEnabled( false );
 }
 
@@ -74,15 +80,15 @@ void lCDefaultComboBox::setStringList( const QStringList& list )
 {
   combo_box_->clear();
 
-  combo_box_->insertStringList( list );
+  combo_box_->addItems( list );
 
-  if ( combo_box_->currentItem() == default_value_ )
+  if ( combo_box_->currentIndex() == default_value_ )
     default_->setEnabled( false );
 }
 
 void lCDefaultComboBox::setValue( int value )
 {
-  combo_box_->setCurrentItem( value );
+  combo_box_->setCurrentIndex( value );
 
   if ( value == default_value_ )
     default_->setEnabled( false );
@@ -94,19 +100,19 @@ void lCDefaultComboBox::setDefaultValue( int value )
 {
   default_value_ = value;
 
-  combo_box_->setCurrentItem( value );
+  combo_box_->setCurrentIndex( value );
 
   default_->setEnabled( false );
 }
 
 int lCDefaultComboBox::value() const
 {
-  return combo_box_->currentItem();
+  return combo_box_->currentIndex();
 }
 
 void lCDefaultComboBox::chooseDefault ( void )
 {
-  combo_box_->setCurrentItem( default_value_ );
+  combo_box_->setCurrentIndex( default_value_ );
 
   default_->setEnabled( false );
 
@@ -117,5 +123,5 @@ void lCDefaultComboBox::updateIndex ( int /*value*/ )
 {
   default_->setEnabled( true );
 
-  emit valueChanged( combo_box_->currentItem() );
+  emit valueChanged( combo_box_->currentIndex() );
 }

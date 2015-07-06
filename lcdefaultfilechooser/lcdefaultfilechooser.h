@@ -23,9 +23,8 @@
 #ifndef LCDEFAULTFILECHOOSER_H
 #define LCDEFAULTFILECHOOSER_H
 
-class QLineEdit;
-class QPushButton;
-class QToolButton;
+#include <QLineEdit>
+
 
 //TODO horiz layout
 class lCDefaultFileChooser : public QWidget

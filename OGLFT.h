@@ -304,7 +304,7 @@ namespace OGLFT {
     enum GlyphCompileMode compile_mode_;
 
     //! Nominal point size.
-    float point_size_;
+    double point_size_;
 
     //! Display resolution in pixels per inch.
     FT_UInt resolution_;
@@ -369,7 +369,7 @@ namespace OGLFT {
      * \param resolution the pixel density of the display in dots per inch (DPI).
      * Defaults to 100 DPI.
      */
-    Face ( const char* filename, float point_size = 12, FT_UInt resolution = 100 );
+    Face ( const char* filename, double point_size = 12, FT_UInt resolution = 100 );
 
     /*!
      * Alternatively, the user may have already opened a face and just
@@ -381,7 +381,7 @@ namespace OGLFT {
      * \param resolution the pixel density of the display in dots per inch (DPI).
      * Defaults to 100 DPI.
      */
-    Face ( FT_Face face, float point_size = 12, FT_UInt resolution = 100 );
+    Face ( FT_Face face, double point_size = 12, FT_UInt resolution = 100 );
 
     /*!
      * Deleting a Face frees its FreeType face (and anything else it's
@@ -1134,8 +1134,8 @@ namespace OGLFT {
      * \param resolution the pixel density of the display in dots per inch (DPI).
      * Defaults to 100 DPI.
      */
-    Polygonal ( const char* filename, float point_size = 12,
-		FT_UInt resolution = 100 );
+    Polygonal (const char* filename, double point_size = 12,
+        FT_UInt resolution = 100 );
 
     /*!
      * \param face open Freetype FT_Face.
@@ -1372,7 +1372,7 @@ namespace OGLFT {
      * \param resolution the pixel density of the display in dots per inch (DPI).
      * Defaults to 100 DPI.
      */
-    Filled ( const char* filename, float point_size = 12,
+    Filled ( const char* filename, double point_size = 12,
 	     FT_UInt resolution = 100 );
     /*!
      * \param face open FreeType FT_Face.

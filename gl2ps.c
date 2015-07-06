@@ -1540,13 +1540,15 @@ void gl2psPrintEMFFooter(GLvoid){
 /* The public routines */
 
 GLvoid gl2psBeginPage(GLint format,
-		      const char *title, char *producer, GLint sort, GLint options, 
+              const char *title,const char *producer, GLint sort, GLint options,
 		      GLint colormode, GLint colorsize, GL2PSrgba *colormap,
 		      GLint buffersize, void *stream){
 
   gl2ps.format = format;
-  gl2ps.title = (char*)title;
-  gl2ps.producer = producer;
+  gl2ps.title = (char*) ( malloc(strlen(title)));
+  strcpy(gl2ps.title, title);
+  gl2ps.producer = (char*) ( malloc( strlen( producer )));
+  strcpy(gl2ps.producer, producer);
   gl2ps.sort = sort;
   gl2ps.options = options;
   gl2ps.colormode = colormode;

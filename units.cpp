@@ -54,13 +54,13 @@ public:
   EnglishFractionalQuote ( void )
     : PrecisionTable( "English Fractional Quote" )
   {
-    precisions_.append( new lCPrecision( 1., lC::STR::VALUE_UNIT.arg("1").arg( INCH_QUOTE_ABBREV ) ) );
-    precisions_.append( new lCPrecision( 2., lC::STR::VALUE_UNIT.arg("1/2").arg( INCH_QUOTE_ABBREV ) ) );
-    precisions_.append( new lCPrecision( 4., lC::STR::VALUE_UNIT.arg("1/4").arg( INCH_QUOTE_ABBREV ) ) );
-    precisions_.append( new lCPrecision( 8., lC::STR::VALUE_UNIT.arg("1/8").arg( INCH_QUOTE_ABBREV ) ) );
-    precisions_.append( new lCPrecision( 16., lC::STR::VALUE_UNIT.arg("1/16").arg( INCH_QUOTE_ABBREV ) ) );
-    precisions_.append( new lCPrecision( 32., lC::STR::VALUE_UNIT.arg("1/32").arg( INCH_QUOTE_ABBREV ) ) );
-    precisions_.append( new lCPrecision( 64., lC::STR::VALUE_UNIT.arg("1/64").arg( INCH_QUOTE_ABBREV ) ) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 1., lC::STR::VALUE_UNIT.arg("1").arg( INCH_QUOTE_ABBREV ) )) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 2., lC::STR::VALUE_UNIT.arg("1/2").arg( INCH_QUOTE_ABBREV )) ) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 4., lC::STR::VALUE_UNIT.arg("1/4").arg( INCH_QUOTE_ABBREV )) ) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 8., lC::STR::VALUE_UNIT.arg("1/8").arg( INCH_QUOTE_ABBREV )) ) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 16., lC::STR::VALUE_UNIT.arg("1/16").arg( INCH_QUOTE_ABBREV )) ) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 32., lC::STR::VALUE_UNIT.arg("1/32").arg( INCH_QUOTE_ABBREV )) ) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 64., lC::STR::VALUE_UNIT.arg("1/64").arg( INCH_QUOTE_ABBREV )) ) );
   }
 
   // Default precision is 1/8"
@@ -72,13 +72,13 @@ public:
   EnglishFractionalIn ( void )
     : PrecisionTable( "English Fractional In" )
   {
-    precisions_.append( new lCPrecision( 1., lC::STR::VALUE_UNIT.arg("1").arg(INCH_IN_ABBREV) ) );
-    precisions_.append( new lCPrecision( 2., lC::STR::VALUE_UNIT.arg("1/2").arg(INCH_IN_ABBREV ) ));
-    precisions_.append( new lCPrecision( 4., lC::STR::VALUE_UNIT.arg("1/4").arg(INCH_IN_ABBREV ) ));
-    precisions_.append( new lCPrecision( 8., lC::STR::VALUE_UNIT.arg("1/8").arg(INCH_IN_ABBREV ) ));
-    precisions_.append( new lCPrecision( 16., lC::STR::VALUE_UNIT.arg("1/16").arg(INCH_IN_ABBREV)));
-    precisions_.append( new lCPrecision( 32., lC::STR::VALUE_UNIT.arg("1/32").arg(INCH_IN_ABBREV)));
-    precisions_.append( new lCPrecision( 64., lC::STR::VALUE_UNIT.arg("1/64").arg(INCH_IN_ABBREV)));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 1., lC::STR::VALUE_UNIT.arg("1").arg(INCH_IN_ABBREV) )) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 2., lC::STR::VALUE_UNIT.arg("1/2").arg(INCH_IN_ABBREV )) ));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 4., lC::STR::VALUE_UNIT.arg("1/4").arg(INCH_IN_ABBREV )) ));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 8., lC::STR::VALUE_UNIT.arg("1/8").arg(INCH_IN_ABBREV )) ));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 16., lC::STR::VALUE_UNIT.arg("1/16").arg(INCH_IN_ABBREV))));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 32., lC::STR::VALUE_UNIT.arg("1/32").arg(INCH_IN_ABBREV))));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 64., lC::STR::VALUE_UNIT.arg("1/64").arg(INCH_IN_ABBREV))));
   }
 
   // Default precision is 1/8"
@@ -90,10 +90,10 @@ public:
   EnglishDecimalQuote ( void )
     : PrecisionTable( "English Decimal Quote" )
   {
-    precisions_.append( new lCPrecision( 1., lC::STR::VALUE_UNIT.arg("1").arg(INCH_QUOTE_ABBREV) ) );
-    precisions_.append( new lCPrecision( 10., lC::STR::VALUE_UNIT.arg("0.1").arg(INCH_QUOTE_ABBREV )));
-    precisions_.append( new lCPrecision( 100.,lC::STR::VALUE_UNIT.arg("0.01").arg(INCH_QUOTE_ABBREV)));
-    precisions_.append(new lCPrecision(1000.,lC::STR::VALUE_UNIT.arg("0.001").arg(INCH_QUOTE_ABBREV)));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 1., lC::STR::VALUE_UNIT.arg("1").arg(INCH_QUOTE_ABBREV)) ) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 10., lC::STR::VALUE_UNIT.arg("0.1").arg(INCH_QUOTE_ABBREV ))));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 100.,lC::STR::VALUE_UNIT.arg("0.01").arg(INCH_QUOTE_ABBREV))));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision(1000.,lC::STR::VALUE_UNIT.arg("0.001").arg(INCH_QUOTE_ABBREV))));
   }
 
   // Default precision is 0.1"
@@ -105,10 +105,10 @@ public:
   EnglishDecimalIn ( void )
     : PrecisionTable( "English Decimal In" )
   {
-    precisions_.append( new lCPrecision( 1., lC::STR::VALUE_UNIT.arg("1").arg(INCH_IN_ABBREV) ) );
-    precisions_.append( new lCPrecision( 10., lC::STR::VALUE_UNIT.arg("0.1").arg(INCH_IN_ABBREV )));
-    precisions_.append( new lCPrecision( 100.,lC::STR::VALUE_UNIT.arg("0.01").arg(INCH_IN_ABBREV)));
-    precisions_.append(new lCPrecision(1000.,lC::STR::VALUE_UNIT.arg("0.001").arg(INCH_IN_ABBREV)));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 1., lC::STR::VALUE_UNIT.arg("1").arg(INCH_IN_ABBREV) )) );
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 10., lC::STR::VALUE_UNIT.arg("0.1").arg(INCH_IN_ABBREV ))));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( 100.,lC::STR::VALUE_UNIT.arg("0.01").arg(INCH_IN_ABBREV))));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision(1000.,lC::STR::VALUE_UNIT.arg("0.001").arg(INCH_IN_ABBREV))));
   }
 
   // Default precision is 0.1"
@@ -120,14 +120,14 @@ public:
   MetricDecimal ( void )
     : PrecisionTable( "Metric Decimal" )
   {
-    precisions_.append( new lCPrecision( MM_PER_INCH / 100.,
-				       lC::STR::VALUE_UNIT.arg("10").arg(CENTIMETER_ABBREV) ));
-    precisions_.append( new lCPrecision( MM_PER_INCH / 10.,
-				       lC::STR::VALUE_UNIT.arg("1").arg(CENTIMETER_ABBREV) ));
-    precisions_.append( new lCPrecision( MM_PER_INCH,
-				       lC::STR::VALUE_UNIT.arg("1").arg(MILLIMETER_ABBREV) ));
-    precisions_.append( new lCPrecision( MM_PER_INCH * 10.,
-				       lC::STR::VALUE_UNIT.arg("0.1").arg(MILLIMETER_ABBREV)));
+    precisions_.append( std::shared_ptr<lCPrecision>( new lCPrecision( MM_PER_INCH / 100.,
+                       lC::STR::VALUE_UNIT.arg("10").arg(CENTIMETER_ABBREV) )));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( MM_PER_INCH / 10.,
+                       lC::STR::VALUE_UNIT.arg("1").arg(CENTIMETER_ABBREV) )));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( MM_PER_INCH,
+                       lC::STR::VALUE_UNIT.arg("1").arg(MILLIMETER_ABBREV) )));
+    precisions_.append( std::shared_ptr<lCPrecision>(new lCPrecision( MM_PER_INCH * 10.,
+                       lC::STR::VALUE_UNIT.arg("0.1").arg(MILLIMETER_ABBREV))));
   }
 
   // Default precision is 1mm
@@ -210,8 +210,8 @@ public:
 
 	    // Format the numerator and shift to the 0xE000 sequence
 	    QString numerator = QString::number( b );
-	    for ( uint i = 0; i < numerator.length(); i++ )
-	      numerator.at(i) = QChar( numerator.at(i).unicode() +
+        for ( int i = 0; i < numerator.length(); i++ )
+          numerator[i] = QChar( numerator.at(i).unicode() +
 				       num_unicode_offset );
 	    formatted_value += numerator;
 	    formatted_value += use_unicode ?
@@ -219,8 +219,8 @@ public:
 	      : QChar( '/' );
 	    // Format the denominator and shift to the 0xE010 sequence
 	    QString denominator = QString::number( c );
-	    for ( uint i = 0; i < denominator.length(); i++ )
-	      denominator.at(i) = QChar( denominator.at(i).unicode() +
+        for ( int i = 0; i < denominator.length(); i++ )
+          denominator[i] = QChar( denominator.at(i).unicode() +
 					 den_unicode_offset );
 	    formatted_value += denominator;
 	  }
@@ -253,13 +253,13 @@ public:
 				       unit_regexp );
 
 	// First, check to see if it is a regular decimal number
-	int pos = decimal_regexp.search( text );
+    int pos = decimal_regexp.indexIn( text );
 	if ( pos >= 0 ) {
 	  value = text.toDouble(); // Just use the regular Qt conversion.
 	  break;
 	}
 	// Next, check to see if it is a pure fraction.
-	pos = fraction_regexp.search( text );
+    pos = fraction_regexp.indexIn( text );
 	if ( pos >= 0 ) {
 	  int numerator = fraction_regexp.cap( 2 ).toInt();
 	  int denominator = fraction_regexp.cap( 3 ).toInt();
@@ -270,7 +270,7 @@ public:
 	  break;
 	}
 	// If not a pure fraction, maybe it's a mixed fraction.
-	pos = mixed_fraction_regexp.search( text );
+    pos = mixed_fraction_regexp.indexIn( text );
 	if ( pos >= 0 ) {
 	  int whole = mixed_fraction_regexp.cap( 2 ).toInt();
 	  int numerator = mixed_fraction_regexp.cap( 3 ).toInt();
@@ -298,8 +298,8 @@ public:
 class InchIn : public Inch
 {
 public:
-  InchIn ( void ) : Inch( qApp->translate( "Precision", INCH_IN_ABBREV ),
-			  &english_fractional_in, &english_decimal_in )
+  InchIn ( void ) : Inch( qApp->translate( "Precision", INCH_IN_ABBREV.toLatin1() ),
+              &english_fractional_in, &english_decimal_in )
   {}
 };
 
@@ -310,7 +310,7 @@ public:
 class InchQuote : public Inch
 {
 public:
-  InchQuote ( void ) : Inch( qApp->translate( "Precision", INCH_QUOTE_ABBREV ),
+  InchQuote ( void ) : Inch( qApp->translate( "Precision", INCH_QUOTE_ABBREV.toLatin1() ),
 			     &english_fractional_quote, &english_decimal_quote )
   {}
 };
@@ -399,13 +399,13 @@ public:
 	QRegExp foot_regexp( "^\\s*([+-]?)(\\d+)(?:'|ft?)" );
 
 	// First,check to see if is in decimal notation
-	int pos = decimal_regexp.search( text );
+    int pos = decimal_regexp.indexIn( text );
 	if ( pos >= 0 ) {
 	  value = INCHES_PER_FOOT * text.toDouble();
 	  break;
 	}
 	// Next, check to see if it has a specified foot length
-	pos = foot_regexp.search( text );
+    pos = foot_regexp.indexIn( text );
 	if ( pos >= 0 ) {
 	  value = INCHES_PER_FOOT * foot_regexp.cap( 2 ).toDouble();
 	  // Parse the rest of the string as an integer by chopping
@@ -439,7 +439,7 @@ class FootFt : public Foot
   //! Use for formatting the inch part in fractional mode.
   InchIn* inch_;
 public:
-  FootFt ( void ) : Foot( qApp->translate( "Precision", FOOT_FT_ABBREV ),
+  FootFt ( void ) : Foot( qApp->translate( "Precision", FOOT_FT_ABBREV.toLatin1() ),
 			  &english_fractional_in, &english_decimal_in )
   {
     inch_ = new InchIn;
@@ -462,7 +462,7 @@ class FootQuote : public Foot
   //! Use for formatting the inch part in fractional mode.
   InchQuote* inch_;
 public:
-  FootQuote ( void ) : Foot( qApp->translate( "Precision", FOOT_QUOTE_ABBREV ),
+  FootQuote ( void ) : Foot( qApp->translate( "Precision", FOOT_QUOTE_ABBREV.toLatin1() ),
 			     &english_fractional_quote, &english_decimal_quote )
   {
     inch_ = new InchQuote;
@@ -559,13 +559,13 @@ public:
 	QRegExp yard_regexp( "^\\s*([+-]?)(\\d+)yd?" );
 
 	// First, check to see if it is just decimal.
-	int pos = decimal_regexp.search( text );
+    int pos = decimal_regexp.indexIn( text );
 	if ( pos >= 0 ) {
 	  value = INCHES_PER_YARD * text.toDouble();
 	  break;
 	}
 	// Next, check to see if it has a specified yard length
-	pos = yard_regexp.search( text );
+    pos = yard_regexp.indexIn( text );
 	if ( pos >= 0 ) {
 	  value = INCHES_PER_YARD * yard_regexp.cap( 2 ).toDouble();
 	  // Parse the rest of the string as a foot length by chopping
@@ -598,7 +598,7 @@ class Millimeter : public LengthUnit
 public:
   Millimeter ( void ) : LengthUnit( METRIC,
 				    qApp->translate( "Precision", "Millimeters" ),
-				    qApp->translate( "Precision", MILLIMETER_ABBREV ),
+                    qApp->translate( "Precision", MILLIMETER_ABBREV.toLatin1() ),
 				    DECIMAL, MM_PER_INCH, false,
 				    0, &metric_decimal )
   {}
@@ -643,7 +643,7 @@ class Centimeter : public LengthUnit
 public:
   Centimeter ( void ) : LengthUnit( METRIC,
 				    qApp->translate( "Precision", "Centimeters" ),
-				    qApp->translate( "Precision", CENTIMETER_ABBREV ),
+                    qApp->translate( "Precision", CENTIMETER_ABBREV.toLatin1() ),
 				    DECIMAL, CM_PER_INCH, false,
 				    0, &metric_decimal )
   {}
@@ -688,7 +688,7 @@ class Meter : public LengthUnit
 public:
   Meter ( void ) : LengthUnit( METRIC,
 			       qApp->translate( "Precision", "Meters" ),
-			       qApp->translate( "Precision", METER_ABBREV ),
+                   qApp->translate( "Precision", METER_ABBREV.toLatin1() ),
 			       DECIMAL, M_PER_INCH, false,
 			       0, &metric_decimal )
   {}
@@ -726,8 +726,7 @@ public:
 
 UnitsBasis* UnitsBasis::units_basis_;
 
-UnitsBasis* UnitsBasis::instance ( void )
-        :currentLenghtUnit(0)
+UnitsBasis* UnitsBasis::instance ( void )      
 {
   if ( units_basis_ == 0 )
     units_basis_ = new UnitsBasis();
@@ -736,30 +735,29 @@ UnitsBasis* UnitsBasis::instance ( void )
 }
 
 UnitsBasis::UnitsBasis ( void )
-  : QObject( 0, "unitsBasis" )
+  : QObject( 0 ), currentLenghtUnit( 0 )
 {
-  length_units_.setAutoDelete( true );
+  setObjectName( "unitsBasis" );
 
-  length_units_.append( new InchIn );
-  length_units_.append( new InchQuote );
-  length_units_.append( new FootFt );
-  length_units_.append( new FootQuote );
-  length_units_.append( new Yard );
-  length_units_.append( new Millimeter );
-  length_units_.append( new Centimeter );
-  length_units_.append( new Meter );
+  length_units_.append( std::shared_ptr<LengthUnit>(new InchIn) );
+  length_units_.append( std::shared_ptr<LengthUnit>(new InchQuote) );
+  length_units_.append( std::shared_ptr<LengthUnit>(new FootFt) );
+  length_units_.append( std::shared_ptr<LengthUnit>(new FootQuote) );
+  length_units_.append( std::shared_ptr<LengthUnit>(new Yard) );
+  length_units_.append( std::shared_ptr<LengthUnit>(new Millimeter) );
+  length_units_.append( std::shared_ptr<LengthUnit>(new Centimeter) );
+  length_units_.append( std::shared_ptr<LengthUnit>(new Meter) );
 
-  QPtrListIterator< LengthUnit > i( length_units_ );
-  for ( ; i.current() != 0; ++i )
+  QListIterator< std::shared_ptr<LengthUnit> > i( length_units_ );
+  while ( i.hasNext() )
     length_unit_strings_.append( qApp->translate( "Precision", "%1 [ %2 ]" ).
-				 arg( i.current()->name() ).
-				 arg( i.current()->abbreviation() ) );
+                 arg( i.peekNext()->name() ).
+                 arg( i.next()->abbreviation() ) );
 
-  // The default default is Inches with the " abbreviation, fractional
-  // representation and a precision of 1/8"
-  length_units_.at( 1 );
-  format_ = length_units_.current()->defaultFormat();
-  setPrecision( length_units_.current()->defaultPrecision( format_ ) );
+  // The default default is Centimeter
+  currentLenghtUnit = 6 ;
+  format_ = length_units_[currentLenghtUnit]->defaultFormat();
+  setPrecision( length_units_[currentLenghtUnit]->defaultPrecision( format_ ) );
 }
 
 UnitsBasis::~UnitsBasis ( void )
@@ -767,20 +765,20 @@ UnitsBasis::~UnitsBasis ( void )
 
 LengthUnit* UnitsBasis::lengthUnit ( int index ) const
 {
-  return length_units_[index];
+  return length_units_[index].get();
 }
 
 LengthUnit* UnitsBasis::lengthUnit ( ) const
 {
-  return length_units_[currentLenghtUnit];
+  return length_units_[currentLenghtUnit].get();
 }
 
 void UnitsBasis::setLengthUnit ( int index )
 {
-  length_units_.at( index );
+  currentLenghtUnit = index;
 
-  format_ = length_units_.current()->defaultFormat();
-  precision_index_ = length_units_.current()->defaultPrecision( format_ );
+  format_ = length_units_[index]->defaultFormat();
+  precision_index_ = length_units_[index]->defaultPrecision( format_ );
 
   emit unitsChanged();
 }
@@ -789,23 +787,30 @@ void UnitsBasis::setLengthUnit ( int index )
 
 void UnitsBasis::setLengthUnit ( const QString& lText )
 {
+  //TODO check what the tokenizer is
+  QStringList list = lText.split(' ');
+  QStringList::const_iterator l = list.begin();
+
+  if ( l == list.end() )
+    return;
+
   QRegExp name_rx( "(.*)\\[(.*)\\]" );
 
-  int position = name_rx.search( lText );
+  int position = name_rx.indexIn( lText );
 
   if ( position < 0 )
     return;
 
   // Don't disturb the current default in case this fails.
-  QPtrListIterator< LengthUnit > lu( length_units_ );
+  QList< std::shared_ptr<LengthUnit> >::const_iterator lu;
   int index = 0;
 
-  for ( ; lu.current() != 0; ++lu, ++index )
-    if ( name_rx.cap(1) == lu.current()->name() &&
-	 name_rx.cap(2) == lu.current()->abbreviation() )
+  for ( lu = length_units_ .begin() ; lu != length_units_.end(); ++lu, ++index )
+    if ( name_rx.cap(1) == lu->get()->name() &&
+     name_rx.cap(2) == lu->get()->abbreviation() )
       break;
 
-  if ( lu.current() == 0 )
+  if ( lu == length_units_.end() )
     return;
 
   // So, at least use the default attributes of this unit
@@ -846,8 +851,8 @@ void UnitsBasis::setPrecision ( int precision_index )
 
 double UnitsBasis::round ( double x ) const
 {
-  lCPrecision* precision = length_units_.current()->precision( format_,
-							     precision_index_ );
+  lCPrecision* precision = length_units_[currentLenghtUnit]->precision( format_,
+                                 precision_index_ );
   double in = precision->unitsPerIn();
   double rounded = rint( in * x ) / in;
 
@@ -875,6 +880,6 @@ void UnitsBasis::round ( Space3D::Point& point ) const
 
 QString UnitsBasis::format( double value, bool use_unicode ) const
 {
-  return length_units_.current()->format( format_, precision_index_, value,
+  return length_units_[currentLenghtUnit]->format( format_, precision_index_, value,
 					  use_unicode );
 }

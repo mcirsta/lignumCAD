@@ -36,7 +36,6 @@
 #include "designbookview.h"
 #include "businessinfo.h"
 #include "systemdependencies.h"
-#include "oglpaintdevice.h"
 #include "openglprinter.h"
 
 using namespace Space3D;
@@ -83,7 +82,7 @@ OGLFT::Face* OpenGLPrinter::font ( const FaceData& requested_face )
   QMap< FaceData, OGLFT::Face* >::const_iterator face = faces_.find( actual_face );
 
   if ( face != faces_.end() )
-    return face.data();
+    return face.value();
 
   QString file;
   double point_size;
@@ -97,7 +96,7 @@ OGLFT::Face* OpenGLPrinter::font ( const FaceData& requested_face )
   // to the face constructor) implies that the point size is
   // effectively in scale inches.
 
-  OGLFT::Face* base_face = new OGLFT::Filled( file, point_size * scale_ * 72 / pdm_.logicalDpiY(), 1 );
+  OGLFT::Face* base_face = new OGLFT::Filled( file.toStdString().c_str(), point_size * scale_ * 72 / this->logicalDpiY(), 1 );
 
   faces_.insert( actual_face, base_face );
 
@@ -152,8 +151,8 @@ QRect OpenGLPrinter::newWindow ( const Space2D::Point& origin,
 			      const Space2D::Vector& size )
 {
   // Compute the size in (OpenGL) screen coordinates.
-  int w = (int)fabs( rint( size[X] * pdm_.logicalDpiX() ) );
-  int h = (int)fabs( rint( size[Y] * pdm_.logicalDpiY() ) );
+  int w = (int)fabs( rint( size[X] * logicalDpiX() ) );
+  int h = (int)fabs( rint( size[Y] * logicalDpiY() ) );
 
   // This is a bit of gloss: don't render outside (below) the bounding box.
   glEnable( GL_CLIP_PLANE0 );
@@ -169,10 +168,10 @@ QRect OpenGLPrinter::newWindow ( const Space2D::Point& origin,
   GLdouble plane[] = { 0, 1, 0, scale_ * fabs(size[Y]) };
   glClipPlane( GL_CLIP_PLANE0, plane );
 
-  glScaled( view_data_.scale_/(double)pdm_.logicalDpiX(),
-	    view_data_.scale_/(double)pdm_.logicalDpiY(), 1. );
+  glScaled( view_data_.scale_/(double)logicalDpiX(),
+        view_data_.scale_/(double)logicalDpiY(), 1. );
 
-  scale_ = pdm_.logicalDpiX();
+  scale_ = logicalDpiX();
   old_scale_ = view_data_.scale_;
   view_data_.scale_ = scale_;
 
@@ -206,8 +205,6 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
   // This really only needs to happen when the scale is changed...
   clearFontCache();
 
-  QPaintDeviceMetrics p_pdm( painter.device() );
-
   // Use the maximum sized viewport on the theory that the OpenGL
   // implementation may use fixed point for the screen coordinates.
 
@@ -228,7 +225,7 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
   while ( state == GL2PS_OVERFLOW ) {
     buffsize += 1024 * 1024;
 
-    gl2psBeginPage( GL2PS_QT, parent()->name(), "lignumCAD",
+    gl2psBeginPage( GL2PS_QT, parent()->objectName().toStdString().c_str(), "lignumCAD",
 		    page_view_->space() == SPACE2D? GL2PS_NO_SORT : GL2PS_BSP_SORT,
 		    GL2PS_SIMPLE_LINE_OFFSET | GL2PS_SILENT,
 		    GL_RGBA, 0, NULL, buffsize, &painter );
@@ -237,9 +234,9 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
     // 2D drawing so that we can draw the frame and the metadata box.
 
     widthIN_ = view_data_.scale_ * painter.viewport().width()
-      / p_pdm.logicalDpiX();
+      / logicalDpiX();
     heightIN_ = view_data_.scale_ * painter.viewport().height()
-      / p_pdm.logicalDpiY();
+      / logicalDpiY();
 
     ll_corner_ = view_data_.view_point_;
     ur_corner_ = ll_corner_ + Vector( widthIN_, heightIN_ );
@@ -252,10 +249,10 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
     // There is a slight mismatch between Qt's and OpenGL's idea of
     // the last pixel on a drawing surface, so reduce the size of the
     // bounding box by the equivalent of one pixel.
-    ll_corner_ += Vector( view_data_.scale_ / p_pdm.logicalDpiX(),
-			  view_data_.scale_ / p_pdm.logicalDpiY() );
-    ur_corner_ -= Vector( view_data_.scale_ / p_pdm.logicalDpiX(),
-			  view_data_.scale_ / p_pdm.logicalDpiY() );
+    ll_corner_ += Vector( view_data_.scale_ / logicalDpiX(),
+              view_data_.scale_ / logicalDpiY() );
+    ur_corner_ -= Vector( view_data_.scale_ / logicalDpiX(),
+              view_data_.scale_ / logicalDpiY() );
 
     glGetDoublev( GL_PROJECTION_MATRIX, projection_ );
 
@@ -315,7 +312,7 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   QString model_str = tr( "Model: %1" ).
     arg( model->name() ).prepend(' ').append(' ');
   QString page_str = tr( "%1: %2" ).
-    arg( tr( page_view_->type() ) ).
+    arg( tr( page_view_->type().toLatin1() ) ).
     arg( page_view_->name() ).prepend(' ').append(' ');
   QString date_str = tr( "Date: %1" ).
     arg( model->modified().date().toString(Qt::ISODate) ).prepend(' ').append(' ');
@@ -331,17 +328,17 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   QFont large_font;
   if ( !OpenGLGlobals::instance()->annotationFont().isEmpty() )
     large_font.fromString( OpenGLGlobals::instance()->annotationFont() );
-  large_font.setPointSizeFloat( 1.5 * large_font.pointSizeFloat() );
+  large_font.setPointSizeF( 1.5 * large_font.pointSizeF() );
   large_font.setBold( false );
 
-  FaceData large_face_data( large_font.toString(), 0, Qt::black.rgb(),
+  FaceData large_face_data( large_font.toString(), 0, QColor(Qt::black).rgb(),
 			    lC::CENTER );
 
   FaceData mid_face_data( OpenGLGlobals::instance()->annotationFont(),
-			  0, Qt::black.rgb(), lC::CENTER );
+              0,  QColor(Qt::black).rgb(), lC::CENTER );
 
   FaceData regular_face_data( OpenGLGlobals::instance()->annotationFont(),
-			      0, Qt::black.rgb(), lC::LEFT );
+                  0,  QColor(Qt::black).rgb(), lC::LEFT );
 
   OGLFT::Face* large_face = font( large_face_data );
   OGLFT::Face* medium_face = font( mid_face_data );
@@ -361,33 +358,33 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   double logo_scale_x = 1, logo_scale_y = 1;
 
   if ( !BusinessInfo::instance().logo().isEmpty() ) {
-    if ( QFileInfo( BusinessInfo::instance().logo() ).extension().lower() == "svg"){
+      //TODO
+   // if ( QFileInfo( BusinessInfo::instance().logo() ).extension().lower() == "svg"){
       logo.load( BusinessInfo::instance().logo(), "svg" );
-      QPaintDeviceMetrics pcpdm( &logo );
       // Convert the size of the logo from paper inches to scale inches (like
       // the font sizes).
-      logo_width = scale_ * pcpdm.width() / pcpdm.logicalDpiX();
-      logo_height = scale_ * pcpdm.height() / pcpdm.logicalDpiY();
+      logo_width = scale_ * logo.width() / logo.logicalDpiX();
+      logo_height = scale_ * logo.height() / logo.logicalDpiY();
 
       // Scale the logo down so that it is not higher than the business info
       // text.
       double logo_scale = ( medium_face->height() + large_face->height() ) /
 	logo_height;
       logo_width *= logo_scale;
-      logo_scale_x = scale_ * logo_scale / pcpdm.logicalDpiX();
-      logo_scale_y = scale_ * logo_scale / pcpdm.logicalDpiY();
-    }
+      logo_scale_x = scale_ * logo_scale / logo.logicalDpiX();
+      logo_scale_y = scale_ * logo_scale / logo.logicalDpiY();
+    //}
     // A Pixmap logo is ignored for now...
   }
 
   double box_width = 2. * approval_bbox.advance_.dx_;
-  box_width = QMAX( box_width, 2. * page_no_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, 2. * scale_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, 2. * date_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, 2. * model_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, 2. * page_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, business_bbox.advance_.dx_ + logo_width );
-  box_width = QMAX( box_width, location_bbox.advance_.dx_ + logo_width );
+  box_width = qMax( box_width, 2. * page_no_bbox.advance_.dx_ );
+  box_width = qMax( box_width, 2. * scale_bbox.advance_.dx_ );
+  box_width = qMax( box_width, 2. * date_bbox.advance_.dx_ );
+  box_width = qMax( box_width, 2. * model_bbox.advance_.dx_ );
+  box_width = qMax( box_width, 2. * page_bbox.advance_.dx_ );
+  box_width = qMax( box_width, business_bbox.advance_.dx_ + logo_width );
+  box_width = qMax( box_width, location_bbox.advance_.dx_ + logo_width );
 
   double row_height = regular_face->height();
   double row_cell_width = box_width / 2.;
@@ -395,9 +392,9 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   double row_y = llCorner()[Y];
   double text_y = row_y +
     ( row_height -
-      QMAX( approval_bbox.y_max_ - approval_bbox.y_min_,
+      qMax( approval_bbox.y_max_ - approval_bbox.y_min_,
 	    page_no_bbox.y_max_ - page_no_bbox.y_min_ ) ) / 2 -
-    QMIN( approval_bbox.y_min_, page_no_bbox.y_min_ );
+    qMin( approval_bbox.y_min_, page_no_bbox.y_min_ );
 
   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   glRectd( row_x, row_y, row_x + row_cell_width, row_y + row_height );
@@ -410,9 +407,9 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   row_y += row_height;
   text_y = row_y +
     ( row_height -
-      QMAX( scale_bbox.y_max_ - scale_bbox.y_min_,
+      qMax( scale_bbox.y_max_ - scale_bbox.y_min_,
 	    date_bbox.y_max_ - date_bbox.y_min_ ) ) / 2 -
-    QMIN( scale_bbox.y_min_, date_bbox.y_min_ );
+    qMin( scale_bbox.y_min_, date_bbox.y_min_ );
 
   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   glRectd( row_x, row_y, row_x + row_cell_width, row_y + row_height );
@@ -425,9 +422,9 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   row_y += row_height;
   text_y = row_y +
     ( row_height -
-      QMAX( model_bbox.y_max_ - model_bbox.y_min_,
+      qMax( model_bbox.y_max_ - model_bbox.y_min_,
 	    page_bbox.y_max_ - page_bbox.y_min_ ) ) / 2 -
-    QMIN( model_bbox.y_min_, page_bbox.y_min_ );
+    qMin( model_bbox.y_min_, page_bbox.y_min_ );
 
   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   glRectd( row_x, row_y, row_x + row_cell_width, row_y + row_height );
@@ -447,8 +444,7 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
     // Highly experimental...
     glPushMatrix(); // Oglpaintdevice should do this...
 
-    OGLPaintDevice ogl_paintdevice( this );
-    QPainter ogl_painter( &ogl_paintdevice );
+    QPainter ogl_painter( this );
 
     // Render at the proper scale.
     ogl_painter.translate( row_x,
@@ -481,8 +477,10 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
 				 const QString& exportFilename,
 				 int page_no, int pages )
 {
+    //TODO implement this without EMF
+#ifdef GL2PS_USE_EMF
   GL2PSEMF emf;
-  emf.stream = ::fopen( exportFilename, "w" );
+  emf.stream = ::fopen( exportFilename.toStdString().c_str(), "w" );
 
   page_view_ = page_view;
   page_view_->viewData( view_data_ );
@@ -492,8 +490,6 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
 
   // This really only needs to happen when the scale is changed...
   clearFontCache();
-
-  QPaintDeviceMetrics p_pdm( view );
 
   // Use the maximum sized viewport on the theory that the OpenGL
   // implementation may use fixed point for the screen coordinates.
@@ -508,11 +504,11 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
   // The first thing to do is to set up the paper size viewport for
   // 2D drawing so that we can draw the frame and the metadata box.
 
-  widthIN_ = view_data_.scale_ * p_pdm.width() / p_pdm.logicalDpiX();
-  heightIN_ = view_data_.scale_ * p_pdm.height() / p_pdm.logicalDpiY();
+  widthIN_ = view_data_.scale_ * view.width() / view.logicalDpiX();
+  heightIN_ = view_data_.scale_ * view.height() / view.logicalDpiY();
 
-  emf.width = (GLdouble)p_pdm.width() / p_pdm.logicalDpiX();
-  emf.height = (GLdouble)p_pdm.height() / p_pdm.logicalDpiY();
+  emf.width = (GLdouble)view.width() / view.logicalDpiX();
+  emf.height = (GLdouble)view.height() / view.logicalDpiY();
   emf.scale_x = 2540 * emf.width / max_viewport_dims[0];
   emf.scale_y = 2540 * emf.height / max_viewport_dims[1];
 
@@ -526,7 +522,7 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
   while ( state == GL2PS_OVERFLOW ) {
     buffsize += 1024 * 1024;
 
-    gl2psBeginPage( GL2PS_EMF, parent()->name(), "lignumCAD",
+    gl2psBeginPage( GL2PS_EMF, parent()->objectName(), "lignumCAD",
 		    page_view_->space() == SPACE2D? GL2PS_NO_SORT : GL2PS_BSP_SORT,
 		    GL2PS_SIMPLE_LINE_OFFSET | GL2PS_SILENT,
 		    GL_RGBA, 0, NULL, buffsize, &emf );
@@ -542,9 +538,9 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
     // There is a slight mismatch between Qt's and OpenGL's idea of
     // the last pixel on a drawing surface, so reduce the size of the
     // bounding box by the equivalent of one pixel.
-    ll_corner_ += Vector( view_data_.scale_ / p_pdm.logicalDpiX(),
+    ll_corner_ += Vector( view_data_.scale_ / view.logicalDpiX(),
 			  view_data_.scale_ / p_pdm.logicalDpiY() );
-    ur_corner_ -= Vector( view_data_.scale_ / p_pdm.logicalDpiX(),
+    ur_corner_ -= Vector( view_data_.scale_ / view.logicalDpiX(),
 			  view_data_.scale_ / p_pdm.logicalDpiY() );
 
     glGetDoublev( GL_PROJECTION_MATRIX, projection_ );
@@ -596,4 +592,5 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
   ::fclose( emf.stream );
 
   page_view_->restoreHighlights();
+#endif
 }

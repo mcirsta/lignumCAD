@@ -209,7 +209,7 @@ GLvoid gl2psBeginPage(GLint format,
 		      GLint buffersize, FILE * stream);
 #else
 GLvoid gl2psBeginPage(GLint format,
-		      const char *title, char *producer, GLint sort, GLint options, 
+              const char *title, const char *producer, GLint sort, GLint options,
 		      GLint colormode, GLint colorsize, GL2PSrgba *colormap, 
 		      GLint buffersize, void * stream);
 #endif

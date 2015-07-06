@@ -71,7 +71,7 @@ namespace OGLFT {
 
   // Load a new face
 
-  Face::Face ( const char* filename, float point_size, FT_UInt resolution )
+  Face::Face ( const char* filename, double point_size, FT_UInt resolution )
     : point_size_( point_size ), resolution_( resolution )
   {
     valid_ = true; // Assume the best :-)
@@ -97,7 +97,7 @@ namespace OGLFT {
 
   // Go with a face that the user has already opened.
 
-  Face::Face ( FT_Face face, float point_size, FT_UInt resolution )
+  Face::Face (FT_Face face, double point_size, FT_UInt resolution )
     : point_size_( point_size ), resolution_( resolution )
   {
     valid_ = true;
@@ -1971,7 +1971,7 @@ namespace OGLFT {
     delete[] inverted_pixmap;
   }
 
-  Polygonal::Polygonal ( const char* filename, float point_size, FT_UInt resolution )
+  Polygonal::Polygonal ( const char* filename, double point_size, FT_UInt resolution )
     : Face( filename, point_size, resolution )
   {
     if ( !isValid() ) return;
@@ -2515,7 +2515,7 @@ namespace OGLFT {
     return 0;
   }
 
-  Filled::Filled ( const char* filename, float point_size, FT_UInt resolution )
+  Filled::Filled (const char* filename, double point_size, FT_UInt resolution )
     : Polygonal( filename, point_size, resolution )
   {
     if ( !isValid() ) return;
