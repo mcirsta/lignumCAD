@@ -20,7 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qpaintdevicemetrics.h>
 #include <qtimer.h>
 
 #include "OGLFT.h"
@@ -88,9 +87,7 @@ void OpenGLExample::setLengthUnit ( LengthUnit* length_unit, UnitFormat format,
 
   makeCurrent();
 
-  QPaintDeviceMetrics pdm( this );
-
-  glViewport( 0, 0, pdm.width(), pdm.height() );
+  glViewport( 0, 0, width(), height() );
 
   computeLayout();
 
@@ -371,7 +368,7 @@ OGLFT::Face* OpenGLExample::font ( const FaceData& requested_face )
   QMap< FaceData, OGLFT::Face* >::const_iterator face = faces_.find( actual_face );
 
   if ( face != faces_.end() )
-      return face.data();
+      return face.value();
 
   QString file;
   double point_size;
@@ -384,7 +381,7 @@ OGLFT::Face* OpenGLExample::font ( const FaceData& requested_face )
   // passes to Xft so the OpenGL font appears to be same size as that
   // shown in the requestor.
 
-  OGLFT::Face* base_face = new OGLFT::Monochrome( file, point_size, 0 );
+  OGLFT::Face* base_face = new OGLFT::Monochrome( file.toStdString().c_str(), point_size, 0 );
 
   faces_.insert( actual_face, base_face );
 
@@ -463,10 +460,9 @@ void OpenGLExample::computeLayout ( void )
   // factor of 2 is to make room for other items.
   double width = 2 * 1.2 * dmn_length_;
 
-  QPaintDeviceMetrics pdm( this );
-  scale_ = pdm.logicalDpiX() / ( pdm.width() / width );
+  scale_ = logicalDpiX() / ( this->width() / width );
 
-  double height = width * pdm.height() / pdm.width();
+  double height = width *  this->height() / this->width();
 
   ll_corner_ = Point( -0.1 * dmn_length_, -.25 * height, -1. );
   ur_corner_ = Point(  width - 0.1 * dmn_length_,  .75 * height, 1. );

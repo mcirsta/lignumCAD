@@ -57,9 +57,9 @@ namespace Space2D {
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
     QRegExp regexp( tr( "Annotation\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name() );
+    int position = regexp.indexIn( name() );
     if ( position >= 0 ) {
-      unique_index_ = QMAX( regexp.cap(1).toUInt(), unique_index_ );
+      unique_index_ = qMax( regexp.cap(1).toUInt(), unique_index_ );
     }
 
     origin_[X] = xml_rep.attribute( lC::STR::X ).toDouble();
@@ -79,9 +79,9 @@ namespace Space2D {
     : Figure( id, name, lC::STR::ANNOTATION, parent )
   {
     QRegExp regexp( tr( "Annotation\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name );
+    int position = regexp.indexIn( name );
     if ( position >= 0 ) {
-      unique_index_ = QMAX( regexp.cap(1).toUInt(), unique_index_ );
+      unique_index_ = qMax ( regexp.cap(1).toUInt(), unique_index_ );
     }
 
     origin_[X] = xml_rep.attribute( lC::STR::X ).toDouble();

@@ -59,8 +59,8 @@ namespace Space2D {
     // calls to glTexCoord versus recomputing the texture coordinates
     // over and over.
 
-    GLfloat s_coefficients[] = { 0.5/side, 0., 0., 1./2. };
-    GLfloat t_coefficients[] = { 0., 0.5/side, 0., 1./2. };
+    GLdouble s_coefficients[] = { 0.5/side, 0., 0., 1./2. };
+    GLdouble t_coefficients[] = { 0., 0.5/side, 0., 1./2. };
 
     glEnable( GL_LIGHTING );
     glEnable( GL_LIGHT0 );
@@ -80,9 +80,9 @@ namespace Space2D {
     glEnable( GL_TEXTURE_GEN_T );
 
     glTexGeni( GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR );
-    glTexGenfv( GL_S, GL_OBJECT_PLANE, s_coefficients );
+    glTexGendv( GL_S, GL_OBJECT_PLANE, s_coefficients );
     glTexGeni( GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR );
-    glTexGenfv( GL_T, GL_OBJECT_PLANE, t_coefficients );
+    glTexGendv( GL_T, GL_OBJECT_PLANE, t_coefficients );
 
     glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );

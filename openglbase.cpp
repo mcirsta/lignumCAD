@@ -22,7 +22,6 @@
  */
 #include <qapplication.h>
 #include <qimage.h>
-#include <qpaintdevicemetrics.h>
 #include <qregexp.h>
 
 #include "OGLFT.h"
@@ -46,12 +45,16 @@ extern "C" {
 
 OpenGLBase::OpenGLBase ( QWidget* parent, const char* name,
 			 QGLWidget* share_widget )
-  : QGLWidget( parent, name, share_widget ), background_texture_( 0 )
-{}
+  : QGLWidget( parent, share_widget ), background_texture_( 0 )
+{
+    setObjectName( name );
+}
 
 OpenGLBase::OpenGLBase ( const QGLFormat& format, QWidget* parent, const char* name)
-  : QGLWidget( format, parent, name )
-{}
+  : QGLWidget( format, parent )
+{
+    setObjectName( name );
+}
 
 OpenGLBase::~OpenGLBase ( void )
 {
@@ -77,7 +80,7 @@ OGLFT::Face* OpenGLBase::font ( const FaceData& requested_face )
   QMap< FaceData, OGLFT::Face* >::const_iterator face = faces_.find( actual_face );
 
   if ( face != faces_.end() )
-      return face.data();
+      return face.value();
 
   QString file;
   double point_size;
@@ -90,7 +93,7 @@ OGLFT::Face* OpenGLBase::font ( const FaceData& requested_face )
   // passes to Xft so the OpenGL font appears to be same size as that
   // shown in the requestor.
 
-  OGLFT::Face* base_face = new OGLFT::Monochrome( file, point_size, 0 );
+  OGLFT::Face* base_face = new OGLFT::Monochrome( file.toStdString().c_str(), point_size, 0 );
 
   faces_.insert( actual_face, base_face );
 
@@ -199,13 +202,13 @@ GLuint OpenGLBase::texture ( const QString& texture_name )
   QMap< QString, GLuint >::const_iterator t = textures_.find( texture_name );
 
   if ( t != textures_.end() )
-      return t.data();
+      return t.value();
 
   // Note: texture images currently have to be compiled into
   // the program...
   // Compensate for the fact that OpenGL expects images defined
   // bottom-up instead of top-down (as is usually the case).
-  QImage image = lC::lookupImage( texture_name ).mirror();
+  QImage image = lC::lookupImage( texture_name ).mirrored();
 
   if ( image.isNull() ) return 0;
 
@@ -214,7 +217,7 @@ GLuint OpenGLBase::texture ( const QString& texture_name )
   int height = nearestPowerCeil( image.height() );
 
   if ( width != image.width() || height != image.height() ) {
-    image = image.smoothScale( width, height );
+    image = image.scaled( width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation );
   }
 
   GLuint gl_texture_name;
@@ -268,7 +271,7 @@ void OpenGLBase::clearFontCache ( void )
   QMap< FaceData, OGLFT::Face* >::iterator f;
 
   for ( f = faces_.begin(); f != faces_.end(); ++f )
-    delete f.data();
+    delete f.value();
 
   faces_.clear();
 }
@@ -311,18 +314,21 @@ GLuint OpenGLBase::createBackgroundTexture ( const QString& file,
   // 2, reduced to grayscale and then color0 and color1 are blended in
   // the proportion given by each pixel. Uses the standard OpenGL
   // pixel transfer functions to do the blending.
-  QImage image = lC::lookupImage( file ).mirror();
+  QImage image = lC::lookupImage( file ).mirrored();
 
   // Scale such that each dimension is a power of two.
   int width = nearestPowerCeil( image.width() );
   int height = nearestPowerCeil( image.height() );
 
   if ( width != image.width() || height != image.height() ) {
-    image = image.smoothScale( width, height );
+    image = image.scaled( width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation );
   }
 
   // Reduce the image to gray scale (conversion factors from ppmtopgm)
-  background_image_.create( width, height, 8, 256 );
+  //TODO really grayscale ?
+  //TODO Format_Grayscale8 in Qt 5.5
+  background_image_ = QImage( width, height, QImage::Format_Indexed8);
+  background_image_.setColorCount( 256 );
 
   for ( int j = 0; j < height; j++ )
     for ( int i = 0; i < width; i++ ) {
@@ -384,15 +390,13 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
       if ( clear_depth_buffer )
 	glClear( GL_DEPTH_BUFFER_BIT );
 
-      QPaintDeviceMetrics pdm( view );
-
       // Set up a projection/modelview in which vertex coordinates
       // correspond to pixels
 
       glMatrixMode( GL_PROJECTION );
       glPushMatrix();
       glLoadIdentity();
-      glOrtho( 0, pdm.width(), 0, pdm.height(), 1., -1. );
+      glOrtho( 0, view->width(), 0, view->height(), 1., -1. );
       glMatrixMode( GL_MODELVIEW );
       glPushMatrix();
       glLoadIdentity();
@@ -412,11 +416,11 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
 
       view->qglColor( color_scheme_.gradientColor() );
       glVertex2i( 0, 0 );
-      glVertex2i( pdm.width(), 0 );
+      glVertex2i( view->width(), 0 );
 
       view->qglColor( color_scheme_.backgroundColor() );
-      glVertex2i( pdm.width(), pdm.height() );
-      glVertex2i( 0, pdm.height() );
+      glVertex2i( view->width(), view->height() );
+      glVertex2i( 0, view->height() );
   
       glEnd();
 
@@ -454,16 +458,15 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
 
       QImage image = view->backgroundImage();
 
-      QPaintDeviceMetrics pdm( view );
-      double s = (double)pdm.width() / image.width();
-      double t = (double)pdm.height() / image.height();
+      double s = (double)view->width() / image.width();
+      double t = (double)view->height() / image.height();
 
       // Change the projection matrix so that the texture is the correct size,
       // i.e., there is a one-to-one correspondence between pixels and texels.
       glMatrixMode( GL_PROJECTION );
       glPushMatrix();
       glLoadIdentity();
-      glOrtho( 0, pdm.width(), 0, pdm.height(), 1., -1. );
+      glOrtho( 0, view->width(), 0, view->height(), 1., -1. );
       glMatrixMode( GL_MODELVIEW );
       glPushMatrix();
       glLoadIdentity();
@@ -483,11 +486,11 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
       glTexCoord2f( 0, 0 );
       glVertex2i( 0, 0 );
       glTexCoord2f( s, 0 );
-      glVertex2i( pdm.width(), 0 );
+      glVertex2i( view->width(), 0 );
       glTexCoord2f( s, t );
-      glVertex2i( pdm.width(), pdm.height() );
+      glVertex2i( view->width(), view->height() );
       glTexCoord2f( 0, t );
-      glVertex2i( 0, pdm.height() );
+      glVertex2i( 0, view->height() );
       
       glEnd();
 
@@ -508,7 +511,7 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
 OpenGLGlobals* OpenGLGlobals::opengl_globals_ = 0;
 
 OpenGLGlobals::OpenGLGlobals ( void )
-  : QObject( 0, "openGLGlobals" ),
+  : QObject( 0 ),
     dimension_minimums_( lC::DEFAULT_FONT, lC::OPEN,
 			 lC::MINIMUM_ARROW_HEAD_LENGTH,
 			 lC::MINIMUM_ARROW_HEAD_WIDTH_RATIO,
@@ -524,14 +527,15 @@ OpenGLGlobals::OpenGLGlobals ( void )
     handle_minimums_( lC::MINIMUM_HANDLE_SIZE ),
     handle_maximums_( lC::MAXIMUM_HANDLE_SIZE )
 {
+  setObjectName( "openGLGlobals" );
   predefined_scheme_ = true;
 
   // Make a list of our default display schemata.
   color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Default (solid)" ) ) );
+    append( PageColorScheme( qApp->translate( "", "Default (solid)" ) ) );
 
   color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Default (gradient)" ),
+    append( PageColorScheme( qApp->translate( "", "Default (gradient)" ),
 				 lC::DEFAULT_GEOMETRY_COLOR,
 				 lC::DEFAULT_ANNOTATION_COLOR,
 				 lC::DEFAULT_GRID_COLOR,
@@ -540,7 +544,7 @@ OpenGLGlobals::OpenGLGlobals ( void )
 				 lC::Background::GRADIENT ) );
 
   color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Default (paper)" ),
+    append( PageColorScheme( qApp->translate( "", "Default (paper)" ),
 				 lC::DEFAULT_GEOMETRY_COLOR,
 				 lC::DEFAULT_ANNOTATION_COLOR,
 				 lC::DEFAULT_GRID_COLOR,
@@ -551,7 +555,7 @@ OpenGLGlobals::OpenGLGlobals ( void )
 				 Qt::gray ) );
 
   color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Monochrome" ),
+    append( PageColorScheme( qApp->translate( "", "Monochrome" ),
 				 Qt::black,
 				 Qt::black,
 				 Qt::gray,
@@ -560,7 +564,7 @@ OpenGLGlobals::OpenGLGlobals ( void )
 				 lC::Background::SOLID,
 				 Qt::white ) );
   color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Monochrome (reverse)" ),
+    append( PageColorScheme( qApp->translate( "", "Monochrome (reverse)" ),
 				 Qt::white,
 				 Qt::white,
 				 Qt::gray,
@@ -570,8 +574,8 @@ OpenGLGlobals::OpenGLGlobals ( void )
 				 Qt::black ) );
 
 
-  default_.setColorScheme( *color_schemes_.at( 0 ) );
-  current_.setColorScheme( *color_schemes_.at( 0 ) );
+  default_.setColorScheme( color_schemes_.at( 0 ) );
+  current_.setColorScheme( color_schemes_.at( 0 ) );
 }
 
 OpenGLGlobals::~OpenGLGlobals ( void )
@@ -589,10 +593,10 @@ QStringList OpenGLGlobals::schemeStrings ( void ) const
 {
   QStringList strings;
 
-  QList< PageColorScheme > cs( color_schemes_ );
+  QListIterator< PageColorScheme > cs( color_schemes_ );
 
-  for ( ; cs.current() != 0; ++cs )
-    strings.append( cs.current()->name() );
+  while ( cs.hasNext() )
+    strings.append( cs.next().name() );
 
   return strings;
 }
@@ -602,16 +606,9 @@ void OpenGLGlobals::setPredefinedScheme ( bool predefined )
   predefined_scheme_ = predefined;
 }
 
-PageColorScheme& OpenGLGlobals::scheme ( int index ) const
+const PageColorScheme& OpenGLGlobals::scheme ( int index ) const
 {
-  // For some reason, QPtrList doesn't have a direct access method
-  // which does not change the current item, but we can do this
-  // with an iterator:
-  QList< PageColorScheme > pcs( color_schemes_ );
-
-  pcs += index;
-
-  return *pcs.current();
+  return color_schemes_[ index ];
 }
 
 // Set the attributes of the given scheme as the default scheme.
@@ -620,21 +617,22 @@ void OpenGLGlobals::setDefaultScheme ( int index )
 {
   // The side-effect of using QPtrList::at(index) is to make index the
   // current entry.
-  default_.setColorScheme( *color_schemes_.at( index ) );
+  default_.setColorScheme( color_schemes_.at( index ) );
 }
 
 // Set the attributes of the named scheme as the default scheme.
 
 void OpenGLGlobals::setDefaultScheme ( const QString& name )
 {
-  // Advance the current entry to the given point
-  PageColorScheme* pcs = color_schemes_.first();
-  for ( ; pcs != 0; pcs = color_schemes_.next() )
-    if ( pcs->name() == name )
-      break;
-
-  if ( pcs != 0 )
-    default_.setColorScheme( *pcs );
+    // Advance the current entry to the given point
+    QListIterator< PageColorScheme > pcs(color_schemes_);
+    while ( pcs.hasNext() ) {
+        if ( pcs.peekNext().name() == name ) {
+            default_.setColorScheme( pcs.peekNext() );
+            break;
+        }
+        pcs.next();
+    }
 }
 
 // Set the attributes of the given scheme into current scheme. For now,

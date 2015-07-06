@@ -104,23 +104,22 @@ void CommandHistory::addCommand ( Command* command )
   // this command basically truncates the remainder of the history
   // and we now take a new course into the future.
   if ( current_ < (int)history_.count() - 1 ) {
-    QPtrList< Command > commands;
+    QList< std::shared_ptr<Command> > commands;
 
     for ( int i = 0; i <= current_; i++ ) {
       commands.append( history_.at( 0 ) );
-      history_.take( 0 );
+      history_.takeAt( 0 );
     }
 
     history_.clear();
     history_ = commands;
-    history_.setAutoDelete( true );
   }
 
   // Can this command be merged into the current command?
   if ( history_.last() != 0 ) {
     if ( !history_.last()->merge( command ) ) {
 
-      history_.append( command );
+      history_.append( std::shared_ptr<Command>(command) );
 
       current_++;
     }
@@ -128,7 +127,7 @@ void CommandHistory::addCommand ( Command* command )
       delete command;
   }
   else {
-    history_.append( command );
+    history_.append( std::shared_ptr<Command>(command) );
 
     current_++;
   }
@@ -149,7 +148,7 @@ void CommandHistory::undo ( void )
 
     *stream_ << "<undo command=\"" << history_.at( current_ )->name() << "\"/>"
 	     << endl;
-    stream_->device()->flush();
+    static_cast<QFile*>(stream_->device())->flush();
 
     current_--;
   }
@@ -168,7 +167,7 @@ void CommandHistory::redo ( void )
 
       *stream_ << "<redo command=\"" << history_.at( current_ )->name() << "\"/>"
 	       << endl;
-      stream_->device()->flush();
+      static_cast<QFile*>(stream_->device())->flush();
     }
   }
   else {
@@ -181,7 +180,7 @@ void CommandHistory::redo ( void )
 
       *stream_ << "<redo command=\"" << history_.at( current_ )->name() << "\"/>"
 	       << endl;
-      stream_->device()->flush();
+      static_cast<QFile*>(stream_->device())->flush();
     }
   }
 
@@ -208,7 +207,7 @@ void CommandHistory::flushOnSegV ( void )
   // close the dribble file's output stream.
   cerr << "Got a segv" << endl;
   if ( stream_ != 0 ) {
-    stream_->device()->flush();
+    static_cast<QFile*>(stream_->device())->flush();
 #if defined(Q_OS_UNIX)
     {
       const int BTSIZE = 200;
@@ -333,15 +332,14 @@ void RenameCommand::write ( QDomDocument* document ) const
   else
     document->appendChild( rename_element );
 
-  rename_element.setAttribute( lC::STR::OLD_URL, old_db_url_.toString(true) );
-  rename_element.setAttribute( lC::STR::NEW_URL, new_db_url_.toString(true) );
+  rename_element.setAttribute( lC::STR::OLD_URL, old_db_url_.toString() );
+  rename_element.setAttribute( lC::STR::NEW_URL, new_db_url_.toString() );
 }
 
 MoveLinesCommand::MoveLinesCommand ( const QString& name,
 				     Model* model )
   : Command( name ), model_( model ), xml_rep_( 0 )
 {
-  lines_.setAutoDelete( true );
 }
 
 MoveLinesCommand::~MoveLinesCommand ( void )
@@ -353,7 +351,7 @@ bool MoveLinesCommand::merge ( Command* /*command*/ ) { return false; }
 
 void MoveLinesCommand::add ( Space2D::ConstrainedLine* line, double old_offset )
 {
-  lines_.append( new MoveLine( line->dbURL(), old_offset, line->offset() ) );
+  lines_.append( std::shared_ptr<MoveLine>(new MoveLine( line->dbURL(), old_offset, line->offset() )) );
 }
 
 void MoveLinesCommand::add ( QDomDocument* xml_rep )
@@ -363,15 +361,16 @@ void MoveLinesCommand::add ( QDomDocument* xml_rep )
 
 void MoveLinesCommand::execute ( void )
 {
-  QPtrListIterator< MoveLine > i( lines_ );
-  for ( ; i.current() != 0; ++i ) {
+  QListIterator< std::shared_ptr<MoveLine> > i( lines_ );
+  while ( i.hasNext() ) {
     Space2D::ConstrainedLine* line =
-      dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( i.current()->db_url_ ) );
+      dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( i.peekNext()->db_url_ ) );
     if ( line == 0 ) {
       cerr << "Yikes, line did not exist!" << endl;
       continue;
     }
-    line->setOffset( i.current()->new_offset_ );
+    line->setOffset( i.peekNext()->new_offset_ );
+    i.next();
   }
 
   if ( xml_rep_ != 0 ) {
@@ -432,16 +431,17 @@ void MoveLinesCommand::unexecute ( void )
     }
   }
 
-  QPtrListIterator< MoveLine > i( lines_ );
-  for ( ; i.current() != 0; ++i ) {
+  QListIterator< std::shared_ptr<MoveLine> > i( lines_ );
+  while ( i.hasNext() ) {
     Space2D::ConstrainedLine* line =
-      dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( i.current()->db_url_ ) );
+      dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( i.peekNext()->db_url_ ) );
     if ( line == 0 ) {
       cerr << "Yikes, line did not exist!" << endl;
       continue;
     }
 
-    line->setOffset( i.current()->old_offset_ );
+    line->setOffset( i.peekNext()->old_offset_ );
+    i.next();
   }
 }
 
@@ -454,17 +454,18 @@ void MoveLinesCommand::write ( QDomDocument* document ) const
   else
     document->appendChild( move_element );
 
-  QPtrListIterator< MoveLine > i( lines_ );
-  for ( ; i.current() != 0; ++i ) {
+  QListIterator< std::shared_ptr<MoveLine> > i( lines_ );
+  while ( i.hasNext() ) {
     QDomElement line_element = document->createElement( lC::STR::MOVE_LINE );
 
-    line_element.setAttribute( lC::STR::URL, i.current()->db_url_ );
+    line_element.setAttribute( lC::STR::URL, i.peekNext()->db_url_.toString() );
     line_element.setAttribute( lC::STR::OLD_OFFSET,
-			       lC::format( i.current()->old_offset_ ) );
+                   lC::format( i.peekNext()->old_offset_ ) );
     line_element.setAttribute( lC::STR::NEW_OFFSET,
-			       lC::format( i.current()->new_offset_ ) );
+                   lC::format( i.peekNext()->new_offset_ ) );
 
     move_element.appendChild( line_element );
+    i.next();
   }
 
   if ( xml_rep_ != 0 ) {

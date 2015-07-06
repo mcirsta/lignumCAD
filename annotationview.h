@@ -35,7 +35,6 @@ class AnnotationInfoDialog;
 namespace lC {
   class ValidDelta;
 }
-class OGLPaintDevice;
 
 namespace Space2D {
   class Page;
@@ -123,7 +122,7 @@ namespace Space2D {
   private:
     //! Context menu id of the separator between the cancel option
     //! and the other context menu options.
-    int separator_id_;
+    QAction* separator_id_;
 
     //! Annotation object to manipulate.
     Annotation* annotation_;
@@ -528,9 +527,6 @@ namespace Space2D {
     AnnotationCreateInput create_input_;
     //! The interactive modification input object.
     AnnotationModifyInput modify_input_;
-    //! A special Qt paint device which renders using OpenGL; specifically
-    //! for text rendering.
-    OGLPaintDevice* ogl_paintdevice_;
     //! Model hierarchy view.
     ListViewItem* list_view_item_;
     //! The line describing the left edge of the text box.

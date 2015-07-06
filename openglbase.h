@@ -605,7 +605,7 @@ public:
    * \param index the index of the scheme to retrieve.
    * \return selected scheme.
    */
-  PageColorScheme& scheme ( int index ) const;
+  const PageColorScheme& scheme ( int index ) const;
 
   /*!
    * \return the current dimension attributes.

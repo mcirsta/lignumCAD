@@ -220,7 +220,7 @@ class MoveLinesCommand : public Command {
     {}
   };
   //! List of lines which were moved by this command.
-  QList< MoveLine > lines_;
+  QList< std::shared_ptr<MoveLine> > lines_;
   //! (Optional) XML document containing the details of any reconstraints
   //! which were caused by the creation of coincindent constraints.
   QDomDocument* xml_rep_;
