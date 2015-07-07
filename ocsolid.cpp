@@ -272,7 +272,7 @@ namespace Space3D {
 
   // Use the given material (if non-zero).
 
-  void OCSolid::setMaterial ( const Material* material )
+  void OCSolid::setMaterial ( const Material& material )
   {
     material_ = material;
 

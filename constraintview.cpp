@@ -55,10 +55,10 @@ namespace Space2D {
 
     context_menu_ = context_menu;
 
-    QAction* cancel_action = parent_->lCMW()->cancelConstraintDeleteAction;
+    QAction* cancel_action = parent_->lCMW()->getUi()->cancelConstraintDeleteAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
+    separator_id_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
     connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
 
     parent_->view()->
@@ -86,7 +86,7 @@ namespace Space2D {
       return;
 
     FigureView* fv =
-	dynamic_cast< FigureView* >( parent_->figureSelectionNames()[ (*f).second[0] ]);
+    dynamic_cast< FigureView* >( parent_->figureSelectionNames()[ (*f).second[0] ].get());
 
     GLuint g = (*f).second[1]; /// (*(*f).second->begin()).first;
     ConstrainedLine* line = dynamic_cast< ConstrainedLine* >( fv->geometry( g ) );
@@ -112,7 +112,7 @@ namespace Space2D {
     reconstraints.appendChild( old_constraints );
 
     QDomElement old_xml = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
-    old_xml.setAttribute( lC::STR::URL, target_->dbURL() );
+    old_xml.setAttribute( lC::STR::URL, target_->dbURL().toString() );
     target_->constraint()->write( old_xml );
     old_constraints.appendChild( old_xml );
 
@@ -128,7 +128,7 @@ namespace Space2D {
 
     if ( from_reference != 0 ) {
       from_ref_xml_ = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
-      from_ref_xml_.setAttribute( lC::STR::URL, from_reference->dbURL() );
+      from_ref_xml_.setAttribute( lC::STR::URL, from_reference->dbURL().toString() );
       from_reference->constraint()->write( from_ref_xml_ );
 
       // If from_reference_'s modifiedConstraint signal is emitted,
@@ -155,7 +155,7 @@ namespace Space2D {
     reconstraints.appendChild( new_constraints );
 
     QDomElement new_xml = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
-    new_xml.setAttribute( lC::STR::URL, target_->dbURL() );
+    new_xml.setAttribute( lC::STR::URL, target_->dbURL().toString() );
     target_->constraint()->write( new_xml );
     new_constraints.appendChild( new_xml );
 
@@ -166,10 +166,10 @@ namespace Space2D {
 
     xml_rep_ = 0;
 
-    QAction* cancel_action = parent_->lCMW()->cancelConstraintDeleteAction;
+    QAction* cancel_action = parent_->lCMW()->getUi()->cancelConstraintDeleteAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_ ->removeAction( cancel_action );
+    context_menu_->removeAction( separator_id_ );
 
     parent_->view()->unsetCursor();
 
@@ -194,11 +194,11 @@ namespace Space2D {
     delete xml_rep_;
     xml_rep_ = 0;
 
-    QAction* cancel_action = parent_->lCMW()->cancelConstraintDeleteAction;
+    QAction* cancel_action = parent_->lCMW()->getUi()->cancelConstraintDeleteAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_ ->removeAction( cancel_action );
+    context_menu_->removeAction( separator_id_ );
 
     parent_->cancelOperation();
   }

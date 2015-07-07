@@ -25,7 +25,7 @@
 
 #include <qdialog.h>
 
-class QListView;
+class QListWidget;
 class QLineEdit;
 class QPushButton;
 
@@ -33,7 +33,7 @@ class lCConstraintDialog : public QDialog
 {
   Q_OBJECT
 
-  QListView* constraint_list_;
+  QListWidget* constraint_list_;
   QPushButton* help_button_;
   QPushButton* ok_button_;
   QPushButton* cancel_button_;

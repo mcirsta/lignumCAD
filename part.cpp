@@ -116,7 +116,7 @@ void Part::makeSolidParameters (const PartMetadata* part,
 
 // Apply this material to the solid
 
-void Part::setSolidMaterial ( const Material* material )
+void Part::setSolidMaterial ( const Material& material )
 {
   if ( solid_ != 0 )
     solid_->setMaterial( material );

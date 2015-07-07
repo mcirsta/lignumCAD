@@ -22,21 +22,24 @@
  */
 #include "dburl.h"
 
+#include <QFileInfo>
+#include <QDir>
+
 QString DBURL::name ( void ) const
 {
   QString name = fileName();
-  return name.left( name.findRev( '.' ) );
+  return name.left( name.lastIndexOf( '.' ) );
 }
 
 QString DBURL::type ( void ) const
 {
   QString name = fileName();
-  return name.right( name.length() - name.findRev( '.' ) - 1 );
+  return name.right( name.length() - name.lastIndexOf( '.' ) - 1 );
 }
 
 DBURL DBURL::parent ( void ) const
 {
   DBURL parent( *this );
-  parent.setPath( dirPath() );
+  parent.setPath( QFileInfo(this->toString()).dir().path() );
   return parent;
 }

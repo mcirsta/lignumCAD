@@ -37,28 +37,28 @@ public:
    * \param material reference to the material. The database takes responsiblity
    * for the memory.
    */
-  void insertMaterial ( Material* material );
+  void insertMaterial ( Material& material );
   /*!
    * Retrieve the material record for the material with given LOCALIZED
    * common name.
    * \param name localized common name of material to retrieve.
    * \return selected material record.
    */
-  Material* material ( const QString& name );
+  const Material& material ( const QString& name );
   /*!
    * Retrieve the material record for the material with standardized
    * common name.
    * \param name standardized common name of material to retrieve.
    * \return selected material record.
    */
-  Material* materialCommon ( const QString& name );
+  const Material& materialCommon ( const QString& name );
   //! \return an iterator over all material records.
-  QHashIterator<int,Material> materials ( void ) const
-  { return QHashIterator<int,Material>( materials_ ); }
+  QHashIterator<QString,Material> materials ( void ) const
+  { return QHashIterator<QString,Material>( materials_ ); }
 private:
   static MaterialDatabase material_database_;
 
-  QHash< int,Material > materials_;
+  QHash< QString,Material > materials_;
 protected:
   MaterialDatabase ( void );
   //  ~MaterialDatabase ( void );
@@ -66,6 +66,7 @@ protected:
 
 class Material {
 public:
+  Material();
   Material ( const QDomElement& xml_rep );
   //! \return the (unique) common name of the material.
   QString commonName ( void ) const { return common_name_; }

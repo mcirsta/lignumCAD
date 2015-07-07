@@ -21,8 +21,6 @@
  *
  */
 #include <qdom.h>
-#include <qmime.h>
-#include <qdragobject.h>
 #include <qdir.h>
 #include <qfile.h>
 #include <qsettings.h>
@@ -35,6 +33,8 @@
 #include "usersettings.h"
 #include "material.h"
 
+#include <QtGlobal>
+
 MaterialDatabase MaterialDatabase::material_database_;
 
 MaterialDatabase& MaterialDatabase::instance ( void )
@@ -44,58 +44,60 @@ MaterialDatabase& MaterialDatabase::instance ( void )
 
 MaterialDatabase::MaterialDatabase ( void )
 {
-  materials_.setAutoDelete( true );
-
   QSettings settings;
   bool ok;
-  QString home = settings.readEntry( lC::Setting::HOME, lC::STR::HOME, &ok );
+  //TODO OK bool ( check exists )
+  QString home = settings.value( lC::Setting::HOME, lC::STR::HOME).toString();
   QDir materials_dir( QString( "%1%2v%3.%4%5%6" ).
 		      arg( home ).arg( QDir::separator() ).
 		      arg( lC::STR::VERSION_MAJOR ).arg( lC::STR::VERSION_MINOR ).
 		      arg( QDir::separator() ).arg( lC::STR::MATERIALS ) );
 
   if ( !materials_dir.exists() ) return;
-  QDir images_dir( materials_dir );
-  if ( images_dir.cd( lC::STR::IMAGES ) ) 
-    QMimeSourceFactory::defaultFactory()->addFilePath( images_dir.absPath() );
+  //TODO init materials here
+//  QDir images_dir( materials_dir );
+//  if ( images_dir.cd( lC::STR::IMAGES ) )
+//    QMimeSourceFactory::defaultFactory()->addFilePath( images_dir.absolutePath() );
 
-  const QFileInfoList* files = materials_dir.entryInfoList(lC::STR::XML_FILE_PATERN,
-						      QDir::Files | QDir::Readable);
-  QFileInfoListIterator file( *files );
-  for ( ; file.current() != 0; ++file ) {
-    QFile material_file( file.current()->absFilePath() );
-    QDomDocument doc( lC::STR::LIGNUMCAD );
+//  const QFileInfoList* files = materials_dir.entryInfoList(lC::STR::XML_FILE_PATERN,
+//						      QDir::Files | QDir::Readable);
+//  QFileInfoListIterator file( *files );
+//  for ( ; file.current() != 0; ++file ) {
+//    QFile material_file( file.current()->absFilePath() );
+//    QDomDocument doc( lC::STR::LIGNUMCAD );
  
-    if ( material_file.open( IO_ReadOnly ) ) {
-      QString errorString;
-      int line, column;
-      doc.setContent( &material_file, false, &errorString, &line, &column );
-      QDomElement root = doc.documentElement();
-      if ( root.tagName() == lC::STR::MATERIAL ) {
-	new Material( root );
-      }
-      material_file.close();	
-    }
+//    if ( material_file.open( IO_ReadOnly ) ) {
+//      QString errorString;
+//      int line, column;
+//      doc.setContent( &material_file, false, &errorString, &line, &column );
+//      QDomElement root = doc.documentElement();
+//      if ( root.tagName() == lC::STR::MATERIAL ) {
+//	new Material( root );
+//      }
+//      material_file.close();
+//    }
+//  }
+}
+
+void MaterialDatabase::insertMaterial ( Material& material )
+{
+  materials_.insert( material.name(), material );
+}
+
+const Material& MaterialDatabase::material ( const QString& name )
+{
+  if ( name.isEmpty() ) {
+      qFatal("material %s not found", qUtf8Printable( name ));
+      return materials_.begin().value();
   }
-}
-
-void MaterialDatabase::insertMaterial ( Material* material )
-{
-  materials_.insert( material->name(), material );
-}
-
-Material* MaterialDatabase::material ( const QString& name )
-{
-  if ( name.isEmpty() )
-    return 0;
 
   return materials_[ name ];
 }
 
-Material* MaterialDatabase::materialCommon ( const QString& common_name )
+const Material& MaterialDatabase::materialCommon ( const QString& common_name )
 {
   if ( common_name.isEmpty() )
-    return 0;
+    return materials_.begin().value();
 
   QHashIterator<int,Material> material( materials_ );
 
@@ -104,7 +106,7 @@ Material* MaterialDatabase::materialCommon ( const QString& common_name )
       return material.current();
   }
 
-  return 0;
+  return materials_.begin().value();
 }
 
 Material::Material ( const QDomElement& xml_rep )
@@ -127,7 +129,7 @@ Material::Material ( const QDomElement& xml_rep )
 
       // Incrementally strip off extra localizations.
       int rightmost = 0;
-      for ( uint j = 0; j < delimiters.length(); j++ ) {
+      for ( int j = 0; j < delimiters.length(); j++ ) {
 	int k = locale.findRev( delimiters[j] );
 	if ( k > rightmost )
 	  rightmost = k;

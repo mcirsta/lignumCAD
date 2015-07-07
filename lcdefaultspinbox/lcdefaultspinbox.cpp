@@ -28,21 +28,23 @@
 #include "lcdefaultspinbox.h"
 
 lCDefaultSpinBox::lCDefaultSpinBox( QWidget *parent, const char *name )
-  : QHBox( parent, name )
+  : QWidget( parent )
 {
-  setSpacing( 0 );
+    setObjectName( name );
+  //setSpacing( 0 );
 
-  spin_box_ = new QSpinBox( this, "spinbox" );
+  spin_box_ = new QSpinBox( this );
+  spin_box_->setObjectName( "spinbox" );
 
-  default_ = new QToolButton( this, "default" );
+  default_ = new QToolButton( this );
+  default_->setObjectName( "default" );
 
-  QToolTip::add( default_,
-		 tr( "Click this button to restore the default value" ) );
+  default_->setToolTip( tr( "Click this button to restore the default value" ) );
 
-  QIconSet icon( lC::lookupPixmap( "default_active.png" ) );
-  icon.setPixmap( lC::lookupPixmap( "default_inactive.png" ),
-		  QIconSet::Automatic, QIconSet::Disabled );
-  default_->setIconSet( icon );
+  QIcon icon( lC::lookupPixmap( "default_active.png" ) );
+  icon.addPixmap( lC::lookupPixmap( "default_inactive.png" ),
+          QIcon::Disabled, QIcon::Off );
+  default_->setIcon( icon );
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( spin_box_->sizeHint().height()-2 );
@@ -64,12 +66,12 @@ void lCDefaultSpinBox::setValue( int value )
 
 void lCDefaultSpinBox::setMinValue( int value )
 {
-  spin_box_->setMinValue( value );
+  spin_box_->setMinimum( value );
 }
 
 void lCDefaultSpinBox::setMaxValue( int value )
 {
-  spin_box_->setMaxValue( value );
+  spin_box_->setMaximum( value );
 }
 
 void lCDefaultSpinBox::setDefaultValue( int value )
@@ -88,12 +90,12 @@ int lCDefaultSpinBox::value() const
 
 int lCDefaultSpinBox::minValue() const
 {
-  return spin_box_->minValue();
+  return spin_box_->minimum();
 }
 
 int lCDefaultSpinBox::maxValue() const
 {
-  return spin_box_->maxValue();
+  return spin_box_->maximum();
 }
 
 int lCDefaultSpinBox::defaultValue() const

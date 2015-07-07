@@ -146,7 +146,7 @@ public:
    * Set the (optional) material out of which this part is made.
    * \param material (new) material of part.
    */
-  void setSolidMaterial ( const Material* material );
+  void setSolidMaterial (const Material &material );
 
   // Global class methods
   /*!
