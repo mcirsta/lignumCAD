@@ -139,14 +139,14 @@ public:
    * \param parameters a QHash containing the lCDefaultLengthConstraint
    * widgets which collected the initial parameter data from the user.
    */
-  void makeSolidParameters ( const PartMetadata* part,
-                 const QHash< int,lCDefaultLengthConstraint>& parameters );
+  void makeSolidParameters (const PartMetadata* part,
+                 const QHash<QString, std::shared_ptr<lCDefaultLengthConstraint>> &parameters );
 
   /*!
    * Set the (optional) material out of which this part is made.
    * \param material (new) material of part.
    */
-  void setSolidMaterial (const Material &material );
+  void setSolidMaterial (Material *material );
 
   // Global class methods
   /*!
@@ -199,7 +199,7 @@ public:
    * the user is filling out.
    * \return true if everything is OK with the input.
    */
-  virtual bool valid ( const QHash< int,lCDefaultLengthConstraint>& initial_values ) const = 0;
+  virtual bool valid ( const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>&  initial_values ) const = 0;
   /*!
    * Create the starting solid part requested by the user.
    * \param name new solid name.
@@ -209,7 +209,7 @@ public:
    * \return the solid.
    */
   virtual Space3D::OCSolid* create ( const QString& name,
-                     const QHash < int,lCDefaultLengthConstraint>& initial_values,
+                     const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>& initial_values,
 				     Part* parent ) const = 0;
   /*!
    * Create the solid from its XML representation.

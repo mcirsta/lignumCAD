@@ -197,7 +197,7 @@ namespace Space3D {
      * Apply the given material to the solid. Material is optional.
      * \param material new material to apply to solid.
      */
-    void setMaterial (const Material &material );
+    void setMaterial (Material *material );
     //! \return the current material.
     const Material* material ( void ) const { return material_; }
     /*!

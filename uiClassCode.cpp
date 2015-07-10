@@ -860,7 +860,7 @@ void MaterialDialog::MaterialList_selectionChanged(ListViewItem *item )
 }
 
 
-void MaterialDialog::setMaterial( const Material * material )
+void MaterialDialog::setMaterial( const Material* material )
 {
     if ( material == 0 ) {
     MaterialList->clearSelection(); // In single selection mode, the signal is not emitted.

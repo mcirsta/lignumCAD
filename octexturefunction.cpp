@@ -193,7 +193,7 @@ private:
 class OCPlaneTexture : public OCTextureFunction {
 public:
   OCPlaneTexture ( void ) {
-    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_Plane )->HashCode( IntegerLast() ), this );
+    OCTextureFactory::instance()->addTextureFunction( HashCode(STANDARD_TYPE( Geom_Plane ), IntegerLast() ), this );
   }
   /*!
    * Update the planar surface properties used to in the computation of the
@@ -328,7 +328,7 @@ private:
 class OCCylindricalTexture : public OCTextureFunction {
 public:
   OCCylindricalTexture ( void ) {
-    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_CylindricalSurface )->HashCode( IntegerLast() ), this );
+    OCTextureFactory::instance()->addTextureFunction( HashCode(STANDARD_TYPE( Geom_CylindricalSurface ), IntegerLast() ), this );
   }
   /*!
    * Update the cylindrical surface properties used to in the computation of the
@@ -428,7 +428,7 @@ private:
 class OCConicalTexture : public OCTextureFunction {
 public:
   OCConicalTexture ( void ) {
-    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_ConicalSurface )->HashCode( IntegerLast() ), this );
+    OCTextureFactory::instance()->addTextureFunction( HashCode(STANDARD_TYPE( Geom_ConicalSurface ), IntegerLast() ), this );
   }
   /*!
    * Update the cylindrical surface properties used to in the computation of the
@@ -538,7 +538,7 @@ private:
 class OCSORTexture : public OCTextureFunction {
 public:
   OCSORTexture ( void ) {
-    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_SurfaceOfRevolution )->HashCode( IntegerLast() ), this );
+    OCTextureFactory::instance()->addTextureFunction( HashCode(STANDARD_TYPE( Geom_SurfaceOfRevolution ), IntegerLast() ), this );
   }
   /*!
    * Update the cylindrical surface properties used to in the computation of the
@@ -696,7 +696,7 @@ OCTextureFunction* OCTextureFactory::function ( OpenGLBase* view,
   Handle( Geom_Surface ) surface = BRep_Tool::Surface( face );
 
   std::map<Standard_Integer, OCTextureFunction*>::iterator tf =
-    texture_functions_.find( surface->DynamicType()->HashCode( IntegerLast() ) );
+    texture_functions_.find( HashCode(surface->DynamicType(), IntegerLast() ) );
 
   OCTextureFunction* texture_function;
 

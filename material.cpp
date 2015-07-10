@@ -80,42 +80,34 @@ MaterialDatabase::MaterialDatabase ( void )
     //  }
 }
 
-void MaterialDatabase::insertMaterial ( Material& material )
+void MaterialDatabase::insertMaterial ( Material* material )
 {
-    materials_.insert( material.name(), material );
+    materials_.insert( material->name(), std::shared_ptr<Material>(material) );
 }
 
-const Material& MaterialDatabase::material ( const QString& name )
+Material* MaterialDatabase::material ( const QString& name )
 {
     if ( name.isEmpty() ) {
-        //TODO popup
-        qFatal("material %s not found", qUtf8Printable( name ));
-        return materials_.begin().value();
+        return 0;
     }
 
-    return materials_[ name ];
+    return materials_[ name ].get();
 }
 
-const Material& MaterialDatabase::materialCommon ( const QString& common_name )
+Material* MaterialDatabase::materialCommon ( const QString& common_name )
 {
     if ( common_name.isEmpty() ) {
-        qFatal("material %s not found", qUtf8Printable( common_name ));
-        //TODO popup
-        quick_exit(1);
-        return materials_.begin().value();
+        return 0;
     }
 
-    QHash<QString,Material>::iterator material = materials_.begin();
+    QHash<QString,std::shared_ptr<Material>>::iterator material = materials_.begin();
 
     for ( ; material != materials_.end(); ++material ) {
-        if ( material->commonName() == common_name )
-            return *material;
+        if ( material->get()->commonName() == common_name )
+            return material->get();
     }
-    //TODO popup
 
-    quick_exit(1);
-    qFatal("material %s not found", qUtf8Printable( common_name ));
-    return materials_.begin().value();
+    return 0;
 }
 
 Material::Material ( const QDomElement& xml_rep )
@@ -284,7 +276,7 @@ done:
     if ( common_name_.isNull() )
         return;
 
-    MaterialDatabase::instance().insertMaterial( *this );
+    MaterialDatabase::instance().insertMaterial( this );
 }
 
 #if 0

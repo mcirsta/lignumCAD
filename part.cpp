@@ -106,7 +106,7 @@ void Part::write ( QDomElement& xml_rep ) const
 // Use the PartFactory interface to create the initial solid geometry
 
 void Part::makeSolidParameters (const PartMetadata* part,
-                 const QHash<int, lCDefaultLengthConstraint> &parameters )
+                 const QHash<QString, std::shared_ptr<lCDefaultLengthConstraint>> &parameters )
 {
   solid_ = part->create( name(), parameters, this );
 
@@ -116,7 +116,7 @@ void Part::makeSolidParameters (const PartMetadata* part,
 
 // Apply this material to the solid
 
-void Part::setSolidMaterial ( const Material& material )
+void Part::setSolidMaterial ( Material* material )
 {
   if ( solid_ != 0 )
     solid_->setMaterial( material );

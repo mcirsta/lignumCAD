@@ -27,6 +27,8 @@
 #include "ocsolid.h"
 #include "part.h"
 
+#include <memory>
+
 namespace {
   class BlankBoard : public PartMetadata   {
   public:
@@ -38,7 +40,7 @@ namespace {
       addParameter( lC::STR::WIDTH );
       addParameter( lC::STR::THICKNESS );
     }
-    bool valid ( const QHash<int,lCDefaultLengthConstraint>& initial_values ) const
+    bool valid ( const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>& initial_values ) const
     {
       if ( initial_values[lC::STR::LENGTH_GRAIN] == 0 ||
 	   initial_values[lC::STR::WIDTH] == 0 ||
@@ -53,7 +55,7 @@ namespace {
       return false;
     }
     Space3D::OCSolid* create ( const QString& name,
-                   const QHash<int,lCDefaultLengthConstraint>& initial_values,
+                   const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>& initial_values,
 			       Part* parent ) const
     {
       double length = initial_values[lC::STR::LENGTH_GRAIN]->specifiedLength();
@@ -80,7 +82,7 @@ namespace {
       addParameter( lC::STR::WIDTH );
       addParameter( lC::STR::THICKNESS );
     }
-    bool valid ( const QHash<int,lCDefaultLengthConstraint>& initial_values ) const
+    bool valid ( const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>&  initial_values ) const
     {
       if ( initial_values[lC::STR::LENGTH_GRAIN] == 0 ||
 	   initial_values[lC::STR::WIDTH] == 0 ||
@@ -95,7 +97,7 @@ namespace {
       return false;
     }
     Space3D::OCSolid* create ( const QString& name,
-                   const QHash<int,lCDefaultLengthConstraint>& initial_values,
+                   const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>&  initial_values,
 			       Part* parent ) const
     {
       double length = initial_values[lC::STR::LENGTH_GRAIN]->specifiedLength();
@@ -121,7 +123,7 @@ namespace {
       addParameter( lC::STR::LENGTH_GRAIN );
       addParameter( lC::STR::DIAMETER );
     }
-    bool valid ( const QHash<int,lCDefaultLengthConstraint>& initial_values ) const
+    bool valid ( const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>&  initial_values ) const
     {
       if ( initial_values[lC::STR::LENGTH_GRAIN] == 0 ||
 	   initial_values[lC::STR::DIAMETER] == 0 )
@@ -132,7 +134,7 @@ namespace {
       return false;
     }
     Space3D::OCSolid* create ( const QString& name,
-                   const QHash<int,lCDefaultLengthConstraint>& initial_values,
+                   const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>&  initial_values,
 			       Part* parent ) const
     {
       double length = initial_values[lC::STR::LENGTH_GRAIN]->specifiedLength();
@@ -159,7 +161,7 @@ namespace {
       addParameter( lC::STR::TOP_WIDTH );
       addParameter( lC::STR::BOTTOM_WIDTH );
     }
-    bool valid ( const QHash<int,lCDefaultLengthConstraint>& initial_values ) const
+    bool valid ( const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>& initial_values ) const
     {
       if ( initial_values[lC::STR::LENGTH_GRAIN] == 0 ||
 	   initial_values[lC::STR::TOP_LENGTH] == 0 ||
@@ -178,7 +180,7 @@ namespace {
       return false;
     }
     Space3D::OCSolid* create ( const QString& name,
-                   const QHash<int,lCDefaultLengthConstraint>& initial_values,
+                   const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>& initial_values,
 			       Part* parent ) const
     {
       double length = initial_values[lC::STR::LENGTH_GRAIN]->specifiedLength();
@@ -209,7 +211,7 @@ namespace {
       addParameter( lC::STR::TURNING_TOP_DIAMETER );
       addParameter( lC::STR::TURNING_BOTTOM_DIAMETER );
     }
-    bool valid ( const QHash<int,lCDefaultLengthConstraint>& initial_values ) const
+    bool valid ( const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>&  initial_values ) const
     {
       if ( initial_values[lC::STR::LENGTH_GRAIN] == 0 ||
 	   initial_values[lC::STR::TOP_LENGTH] == 0 ||
@@ -237,7 +239,7 @@ namespace {
       return false;
     }
     Space3D::OCSolid* create ( const QString& name,
-                   const QHash<int,lCDefaultLengthConstraint>& initial_values,
+                   const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>& initial_values,
 			       Part* parent ) const
     {
       double length = initial_values[lC::STR::LENGTH_GRAIN]->specifiedLength();
@@ -273,7 +275,7 @@ namespace {
       addParameter( lC::STR::BASE_DIAMETER );
       addParameter( lC::STR::BASE_LENGTH );
     }
-    bool valid ( const QHash<int,lCDefaultLengthConstraint>& initial_values ) const
+    bool valid ( const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>& initial_values ) const
     {
       if ( initial_values[lC::STR::LENGTH_GRAIN] == 0 ||
 	   initial_values[lC::STR::DIAMETER] == 0 ||
@@ -288,7 +290,7 @@ namespace {
       return false;
     }
     Space3D::OCSolid* create ( const QString& name,
-                   const QHash<int,lCDefaultLengthConstraint>& initial_values,
+                   const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>&  initial_values,
 			       Part* parent ) const
     {
       double length = initial_values[lC::STR::LENGTH_GRAIN]->specifiedLength();

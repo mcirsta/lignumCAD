@@ -154,14 +154,14 @@ struct PlnPln : public SurfacePair {
   {
     xml_rep.setAttribute( lC::STR::SURFACE, lC::STR::PLANE );
     QString surface0_path = parent_->model()->idPath( surface0_id_ );
-    DBURL::encode( surface0_path );
+    QUrl::toPercentEncoding( surface0_path );
     DBURL surface0_db_url( lC::STR::DB_PREFIX, surface0_path );
-    xml_rep.setAttribute( lC::STR::SURFACE0, surface0_db_url.toString( true ) );
+    xml_rep.setAttribute( lC::STR::SURFACE0, surface0_db_url.toString( ) );
 
     QString surface1_path = parent_->model()->idPath( surface1_id_ );
-    DBURL::encode( surface1_path );
+    QUrl::toPercentEncoding( surface1_path );
     DBURL surface1_db_url( lC::STR::DB_PREFIX, surface1_path );
-    xml_rep.setAttribute( lC::STR::SURFACE1, surface1_db_url.toString( true ) );
+    xml_rep.setAttribute( lC::STR::SURFACE1, surface1_db_url.toString( ) );
   }
 
   //! Compute the parameters of a dimension.

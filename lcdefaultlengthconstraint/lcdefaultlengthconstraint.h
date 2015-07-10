@@ -80,7 +80,8 @@ signals:
   void valueChanged ( double length );
 
 private slots:
-    void updateChooser ( int );
+    void updateChooser_specified_button ( );
+    void updateChooser_imported_button ( );
 
 private:
   QRadioButton* specified_button_;

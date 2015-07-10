@@ -50,9 +50,9 @@ public:
     : display_list_( display_list ), cursor_shape_( cursor_shape ), mode_( mode )
   {}
   //! \return the display list.
-  const GLuint displayList ( void ) const { return display_list_; }
+  GLuint displayList ( void ) const { return (const GLuint)display_list_; }
   //! \return the ACTIVATED cursor shape.
-  const Qt::CursorShape cursorShape ( void ) const { return cursor_shape_; }
+  Qt::CursorShape cursorShape ( void ) const { return cursor_shape_; }
   //! \return the current mode.
   lC::Render::Mode mode ( void ) const { return mode_; }
   /*!

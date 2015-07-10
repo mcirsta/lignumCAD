@@ -36,6 +36,7 @@
 #include <BRepBuilderAPI_MakePolygon.hxx>
 #include <BRepBuilderAPI_Transform.hxx>
 #include <BRepMesh.hxx>
+#include <BRepMesh_IncrementalMesh.hxx>
 #include <BRepPrimAPI_MakeBox.hxx>
 #include <BRepPrimAPI_MakeCylinder.hxx>
 #include <BRepPrimAPI_MakeCone.hxx>
@@ -91,9 +92,9 @@ namespace Space3D {
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
     QRegExp regexp( tr("Solid\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name() );
+    int position = regexp.indexIn( name() );
     if ( position >= 0 ) {
-      OCSolid::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+      OCSolid::unique_index_ = qMax( regexp.cap(1).toUInt(),
 				     OCSolid::unique_index_ );
     }
 
@@ -119,9 +120,9 @@ namespace Space3D {
     : Figure( id, name, lC::STR::SOLID, parent )
   {
     QRegExp regexp( tr("Solid\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name );
+    int position = regexp.indexIn( name );
     if ( position >= 0 ) {
-      OCSolid::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+      OCSolid::unique_index_ = qMax( regexp.cap(1).toUInt(),
 				     OCSolid::unique_index_ );
     }
 
@@ -136,7 +137,7 @@ namespace Space3D {
   {
     // The front path component is the name of a figure with ".type" appended
     // to it.
-    int dot_pos = path_components.front().findRev( '.' );
+    int dot_pos = path_components.front().lastIndexOf( '.' );
     QString name = path_components.front().left( dot_pos );
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );
@@ -160,7 +161,7 @@ namespace Space3D {
   {
     // The front path component is the name of a figure with ".type" appended
     // to it.
-    int dot_pos = path_components.front().findRev( '.' );
+    int dot_pos = path_components.front().lastIndexOf( '.' );
     QString name = path_components.front().left( dot_pos );
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );
@@ -205,7 +206,7 @@ namespace Space3D {
   {
     // The front path component is the name of a figure with ".type" appended
     // to it.
-    int dot_pos = path_components.front().findRev( '.' );
+    int dot_pos = path_components.front().lastIndexOf( '.' );
     QString name = path_components.front().left( dot_pos );
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );
@@ -228,7 +229,7 @@ namespace Space3D {
 
   QString OCSolid::idPath (QVector<uint> id_path ) const
   {
-    __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
+    std::unordered_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
       face_names_.begin();
 
     for ( ; face != face_names_.end(); ++face )
@@ -246,12 +247,12 @@ namespace Space3D {
   {
     // The front path component is the name of a figure with ".type" appended
     // to it.
-    int dot_pos = path_components.front().findRev( '.' );
+    int dot_pos = path_components.front().lastIndexOf( '.' );
     QString name = path_components.front().left( dot_pos );
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );
 
-    __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
+     std::unordered_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
       face_names_.begin();
 
     for ( ; face != face_names_.end(); ++face )
@@ -272,7 +273,7 @@ namespace Space3D {
 
   // Use the given material (if non-zero).
 
-  void OCSolid::setMaterial ( const Material& material )
+  void OCSolid::setMaterial ( Material* material )
   {
     material_ = material;
 
@@ -477,7 +478,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, 1. );
+    BRepMesh_IncrementalMesh( solid_, 1. );
 
     // Set the value and dimension end points of the parameters.
     parameter( lC::STR::LENGTH ).setValueEnds( length,
@@ -768,7 +769,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, 1. );
+    BRepMesh_IncrementalMesh( solid_, 1. );
 
     // Set the value and dimension end points of the parameters.
     parameter( lC::STR::LENGTH ).setValueEnds( length,
@@ -1018,7 +1019,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, 1. );
+    BRepMesh_IncrementalMesh( solid_, 1. );
 
     // Set the (cosmetic) ends of the construction axis
     axis_->setMinimum( -1.1 * ( length / 2 ) );
@@ -1396,7 +1397,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, .25 );
+    BRepMesh_IncrementalMesh( solid_, .25 );
 
     // Set the (cosmetic) ends of the construction axis
     axis_->setMinimum( -1.1 * ( length / 2 ) );
@@ -1891,7 +1892,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, 1. );
+    BRepMesh_IncrementalMesh( solid_, 1. );
 
     // Set the value and dimension end points of the parameters.
     parameter( lC::STR::LENGTH ).setValueEnds( length,
@@ -2310,7 +2311,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, .0125 );
+    BRepMesh_IncrementalMesh( solid_, .0125 );
 
     // Set the (cosmetic) ends of the construction axis
     axis_->setMinimum( -1.1 * ( length / 2 ) );

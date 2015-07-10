@@ -44,6 +44,8 @@
 
 #include "lcdebug.h"
 
+#include <QMouseEvent>
+
 namespace Space3D {
   class OCSolidViewCreate : public CreateObject {
     //! When CommandHistory undoes or redoes the creation of this object,
@@ -63,7 +65,7 @@ namespace Space3D {
 
       QDomElement root = xml_doc_.createElement( lC::STR::MEMENTO );
 
-      root.setAttribute( lC::STR::NAME, solid_view->dbURL().toString(true) );
+      root.setAttribute( lC::STR::NAME, solid_view->dbURL().toString() );
 
       solid_view->solid()->write( root );
       solid_view->write( root );
@@ -203,13 +205,13 @@ namespace Space3D {
 	// Update the name elements in the object and it's view.
 
 	memento_list.item(0).toElement().setAttribute( lC::STR::NAME,
-						       rename->newDBURL() );
+                               rename->newDBURL().toString() );
 
 	solid_list.item(0).toElement().
 	  setAttribute( lC::STR::NAME, rename->newDBURL().name() );
 
 	solid_view_list.item(0).toElement().setAttribute( lC::STR::SOLID,
-							  rename->newDBURL() );
+                              rename->newDBURL().toString() );
 
 	return true;
       }
@@ -281,7 +283,7 @@ namespace Space3D {
       else
 	document->appendChild( modify_solid_element );
 
-      modify_solid_element.setAttribute( lC::STR::NAME, db_url_.toString(true) );
+      modify_solid_element.setAttribute( lC::STR::NAME, db_url_.toString() );
       
       std::map<QString,double>::const_iterator old_parameter =old_parameters_.begin();
 
@@ -497,16 +499,17 @@ namespace Space3D {
 #endif
   void OCSolidView::init ( void )
   {
-    QObject::setName( solid_->name().latin1() );
+    setObjectName( solid_->name().toLatin1() );
 
-    QListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
+    ListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
 							   solid_->id() );
 
     list_view_item_ = new ListViewItem( parent()->listViewItem(), previous_item );
 
-  list_view_item_->setText( lC::NAME, lC::formatName( solid_->name() )
-			    + QString( " <%1>" ).arg( solid_->id() ) );
-    list_view_item_->setText( lC::TYPE, trC( lC::STR::SOLID ) );
+  list_view_item_->setData( lC::formatName( solid_->name() )
+                + QString( " <%1>" ).arg( solid_->id() ),
+                            lC::NAME );
+    list_view_item_->setData( trC( lC::STR::SOLID ), lC::TYPE );
     QString detail = tr( "%1:" ).arg( solid_->baseShape() );
     QStringList param_strings;
     std::map<QString,Parameter>::const_iterator parameter = solid_->parametersBegin();
@@ -515,8 +518,9 @@ namespace Space3D {
 	arg( trC( (*parameter).second.title() ) ).
 	arg( (*parameter).second.value() );
     detail.append( param_strings.join( tr( "," ) ) );
-    list_view_item_->setText( lC::DETAIL, detail );
-    list_view_item_->setOpen( true );
+    list_view_item_->setData( detail, lC::DETAIL );
+    //TODO
+    //list_view_item_->setOpen( true );
 
     connect( solid_, SIGNAL( modified() ), SLOT( updateTessellation() ) );
 
@@ -746,7 +750,7 @@ namespace Space3D {
 	arg( trC( (*parameter).second.title() ) ).
 	arg( (*parameter).second.value() );
     detail.append( param_strings.join( tr( "," ) ) );
-    list_view_item_->setText( lC::DETAIL, detail );
+    list_view_item_->setData( detail, lC::DETAIL );
   }
 
   void OCSolidView::updateViewNormal ( const GLdouble* /*modelview*/ )
@@ -780,22 +784,22 @@ namespace Space3D {
     if ( parameter_name != QString::null ) {
       const Parameter& parameter( solid_->parameter( parameter_name ) );
 
-      parameter_info_dialog_->parameterLengthConstraint->
+      parameter_info_dialog_->getUi()->parameterLengthConstraint->
 	setTitle( trC( parameter.title() ) );
-      parameter_info_dialog_->parameterLengthConstraint->
+      parameter_info_dialog_->getUi()->parameterLengthConstraint->
 	setLengthLimits( UnitsBasis::instance()->lengthUnit(),
 			 UnitsBasis::instance()->format(),
 			 UnitsBasis::instance()->precision(),
 			 0, lC::MAXIMUM_DIMENSION,
 			 parameter.value() );
-      parameter_info_dialog_->parameterLengthConstraint->
+      parameter_info_dialog_->getUi()->parameterLengthConstraint->
 	setLength( parameter.value() );
 
       int ret = parameter_info_dialog_->exec();
 
       if ( ret == QDialog::Rejected ) return;
 
-      if ( parameter_info_dialog_->parameterLengthConstraint->edited() ) {
+      if ( parameter_info_dialog_->getUi()->parameterLengthConstraint->edited() ) {
 	std::map<QString,double> old_parameter;
 	old_parameter[ parameter_name ] = parameter.value();
 	//	cout << "Updating parameter " << parameter_name << " of " << solid_->path()
@@ -806,7 +810,7 @@ namespace Space3D {
 
 
 	solid_->updateParameter( parameter_name,
-				 parameter_info_dialog_->
+                 parameter_info_dialog_->getUi()->
 				 parameterLengthConstraint->specifiedLength() );
 
 	qApp->restoreOverrideCursor();
@@ -827,7 +831,7 @@ namespace Space3D {
 
   void OCSolidView::editSolidInformation ( void )
   {
-    part_info_dialog_->nameEdit->setText( lC::formatName( solid_->name() ) );
+    part_info_dialog_->getUi()->nameEdit->setText( lC::formatName( solid_->name() ) );
 
     int ret = part_info_dialog_->exec();
 
@@ -835,8 +839,8 @@ namespace Space3D {
 
     bool modified = false;
 
-    if ( part_info_dialog_->nameEdit->edited() ) {
-      parent()->setName( part_info_dialog_->nameEdit->text() );
+    if ( part_info_dialog_->getUi()->nameEdit->isModified() ) {
+      parent()->setName( part_info_dialog_->getUi()->nameEdit->text() );
       modified = true;
     }
 
@@ -852,7 +856,7 @@ namespace Space3D {
       document.createElement( lC::STR::SOLID_VIEW );
 
     solid_view_element.setAttribute( lC::STR::SOLID,
-				     solid_->dbURL().toString( true ) );
+                     solid_->dbURL().toString( ) );
 
     xml_rep.appendChild( solid_view_element );
   }
@@ -875,7 +879,8 @@ namespace Space3D {
    */
   void OCSolidView::updateName ( const QString& /*name*/ )
   {
-    list_view_item_->setText( lC::NAME, lC::formatName( solid_->name() )
-			      + QString( " <%1>" ).arg( solid_->id() ) );
+    list_view_item_->setData( lC::formatName( solid_->name() )
+                  + QString( " <%1>" ).arg( solid_->id() ),
+                              lC::NAME );
   }
 } // End of Space3D namespace

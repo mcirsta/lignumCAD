@@ -14,7 +14,7 @@ public:
 public slots:
     virtual void init();
     virtual void MaterialList_selectionChanged( ListViewItem * item );
-    virtual void setMaterial( const Material * material );
+    virtual void setMaterial(const Material *material );
     virtual void buttonHelp_clicked();
 
 private:

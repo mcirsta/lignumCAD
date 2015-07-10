@@ -26,6 +26,8 @@
 #include <qimage.h>
 #include <qcolor.h>
 
+#include <memory>
+
 class Material;
 class QDomElement;
 
@@ -37,28 +39,28 @@ public:
    * \param material reference to the material. The database takes responsiblity
    * for the memory.
    */
-  void insertMaterial ( Material& material );
+  void insertMaterial (Material *material );
   /*!
    * Retrieve the material record for the material with given LOCALIZED
    * common name.
    * \param name localized common name of material to retrieve.
    * \return selected material record.
    */
-  const Material& material ( const QString& name );
+  Material *material( const QString& name );
   /*!
    * Retrieve the material record for the material with standardized
    * common name.
    * \param name standardized common name of material to retrieve.
    * \return selected material record.
    */
-  const Material& materialCommon ( const QString& name );
+  Material* materialCommon ( const QString& name );
   //! \return an iterator over all material records.
-  QHashIterator<QString,Material> materials ( void ) const
-  { return QHashIterator<QString,Material>( materials_ ); }
+  QHashIterator<QString,std::shared_ptr<Material>> materials ( void ) const
+  { return QHashIterator<QString,std::shared_ptr<Material>>( materials_ ); }
 private:
   static MaterialDatabase material_database_;
 
-  QHash< QString,Material > materials_;
+  QHash< QString,std::shared_ptr<Material> > materials_;
 protected:
   MaterialDatabase ( void );
   //  ~MaterialDatabase ( void );
@@ -66,7 +68,6 @@ protected:
 
 class Material {
 public:
-  Material();
   Material ( const QDomElement& xml_rep );
   //! \return the (unique) common name of the material.
   QString commonName ( void ) const { return common_name_; }
