@@ -43,6 +43,8 @@
 #include "ocsubassemblydraw.h"
 #include "subassemblyview.h"
 
+#include "QMouseEvent"
+
 #include "lcdebug.h"
 
 /*!
@@ -67,7 +69,7 @@ public:
 
     QDomElement root = xml_doc_.createElement( lC::STR::MEMENTO );
 
-    root.setAttribute( lC::STR::NAME, subassembly_view->dbURL().toString(true) );
+    root.setAttribute( lC::STR::NAME, subassembly_view->dbURL().toString() );
 
     subassembly_view->subassembly()->write( root );
     subassembly_view->write( root );
@@ -122,10 +124,10 @@ public:
 	  // Highly experimental...
 
 	  // Move yourself a little bit just in case.
-	  if ( subassembly->constraints().constraints().count() == 0 )
+      if ( subassembly->constraints().getCount() == 0 )
 	    subassembly->translate( gp_Vec( 20, 0, 0 ) );
 	  
-	  if ( subassembly->constraints().constraints().count() < 3 )
+      if ( subassembly->constraints().getCount() < 3 )
 	    assembly_view->editConstraints( subassembly_view );
 	}
       }
@@ -201,7 +203,7 @@ public:
     if ( memento_list.length() > 0 ) {
       QString path = memento_list.item(0).toElement().attribute( lC::STR::NAME );
 
-      if ( path != rename->oldDBURL().toString(true) )
+      if ( path != rename->oldDBURL().toString() )
 	return false;
 
       // Additional sanity check: make sure the object and its view have elements.
@@ -216,13 +218,13 @@ public:
       // Update the name elements in the object and it's view.
 
       memento_list.item(0).toElement().setAttribute( lC::STR::NAME,
-					     rename->newDBURL().toString(true) );
+                         rename->newDBURL().toString() );
 
       assembly_list.item(0).toElement().
 	setAttribute( lC::STR::NAME, rename->newDBURL().name() );
 
       assembly_view_list.item(0).toElement().setAttribute( lC::STR::ASSEMBLY,
-					   rename->newDBURL().toString(true) );
+                       rename->newDBURL().toString() );
 
       return true;
     }
@@ -291,7 +293,7 @@ public:
     else
       document->appendChild( change_offset_element );
 
-    change_offset_element.setAttribute( lC::STR::NAME, db_url_.toString(true) );
+    change_offset_element.setAttribute( lC::STR::NAME, db_url_.toString() );
     change_offset_element.setAttribute( lC::STR::PHASE, phase_ );
     change_offset_element.setAttribute( lC::STR::OLD_OFFSET, old_offset_ );
     change_offset_element.setAttribute( lC::STR::NEW_OFFSET, new_offset_ );
@@ -446,7 +448,7 @@ SubassemblyView::~SubassemblyView ( void )
 
 void SubassemblyView::init ( void )
 {
-  QObject::setName( subassembly_->name().latin1() );
+  setObjectName( subassembly_->name().toLatin1() );
 
   drawer_ = Space3D::OCSubassemblyDrawFactory::drawer( subassembly_, view() );
 
@@ -456,36 +458,40 @@ void SubassemblyView::init ( void )
 
   dimension_name_ = view()->genSelectionName();
 
-  QListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
+  ListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
 							 subassembly_->id() );
 
   list_view_item_ = new ListViewItem( parent()->listViewItem(), previous_item );
 
-  list_view_item_->setText( lC::NAME, lC::formatName( subassembly_->name() )
-			    + QString( " <%1>" ).arg( subassembly_->id() ) );
-  list_view_item_->setText( lC::TYPE, trC( subassembly_->type() ) );
-  list_view_item_->setText( lC::DETAIL, tr( "Model: %1.%2 <%3>" ).
+  list_view_item_->setData( lC::formatName( subassembly_->name() )
+                + QString( " <%1>" ).arg( subassembly_->id() ),
+                            lC::NAME );
+  list_view_item_->setData( trC( subassembly_->type() ), lC::TYPE );
+  list_view_item_->setData( tr( "Model: %1.%2 <%3>" ).
 		    arg( lC::formatName( subassembly_->subassembly()->name()) ).
 		    arg( trC( subassembly_->subassembly()->type() ) ).
-		    arg( lC::idToString( subassembly_->subassembly()->ID() ) ) );
-  list_view_item_->listView()->ensureItemVisible( list_view_item_ );
+            arg( lC::idToString( subassembly_->subassembly()->ID() ) ),
+                            lC::DETAIL );
+  //TODO
+  //list_view_item_->listView()->ensureItemVisible( list_view_item_ );
 
-  QPtrListIterator<AssemblyConstraint> constraint =
+  QListIterator<std::shared_ptr<AssemblyConstraint>> constraint =
     subassembly_->constraints().constraints();
 
-  QListViewItem* constraint_item = 0;
-  for ( ; constraint.current(); ++constraint ) {
+  ListViewItem* constraint_item = 0;
+  while ( constraint.hasNext() ) {
     constraint_item = new ListViewItem( list_view_item_, constraint_item );
-    constraint_item->setText( lC::NAME, trC( lC::STR::CONSTRAINT ) );
-    constraint_item->setText( lC::TYPE, trC( constraint.current()->type() ) );
-    constraint_item->setText( lC::DETAIL, QString::null );
+    constraint_item->setData( trC( lC::STR::CONSTRAINT ), lC::NAME );
+    constraint_item->setData( trC( constraint.peekNext()->type() ), lC::TYPE );
+    constraint_item->setData( QVariant(), lC::DETAIL );
 
-    updateChangedConstraint( 0, constraint.current() );
+    updateChangedConstraint( 0, constraint.peekNext().get() );
 
     // Are there any offset constraints which need dimensions?
-    if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	 constraint.current()->type() == lC::STR::ALIGN_OFFSET )
-      updateChangedOffset( constraint.current() );
+    if ( constraint.peekNext()->type() == lC::STR::MATE_OFFSET ||
+     constraint.peekNext()->type() == lC::STR::ALIGN_OFFSET )
+      updateChangedOffset( constraint.peekNext().get() );
+    constraint.next();
   }
 
 #if 0
@@ -620,7 +626,7 @@ View* SubassemblyView::lookup ( QStringList& /*path_components*/ ) const
 
 QString SubassemblyView::geometry ( const std::vector<GLuint>& selection_names ) const
 {
-  QString name = lC::STR::PATH_PATTERN.arg( parent()->dbURL() ).
+  QString name = lC::STR::PATH_PATTERN.arg( parent()->dbURL().toString() ).
     arg( drawer_->geometry( selection_names ) );
 
   return name;
@@ -634,7 +640,7 @@ QVector<uint> SubassemblyView::geomPath ( const std::vector<GLuint>& selection_n
   uint id_path_size = id_path.size();
 
   id_path.resize( id_path_size + subcomponent_path.size() );
-  for ( uint i = 0; i < subcomponent_path.size(); ++i )
+  for ( int i = 0; i < subcomponent_path.size(); ++i )
     id_path[ id_path_size + i ] = subcomponent_path[i];
 
   return id_path;
@@ -702,10 +708,11 @@ void SubassemblyView::setActivated( bool activate, SelectionEntity entity,
 
 void SubassemblyView::updateModelName ( const QString& /*name*/ )
 {
-  list_view_item_->setText( lC::DETAIL, tr( "Model: %1.%2 <%3>" ).
+  list_view_item_->setData( tr( "Model: %1.%2 <%3>" ).
 		    arg( lC::formatName( subassembly_->subassembly()->name()) ).
 		    arg( trC( subassembly_->subassembly()->type() ) ).
-		    arg( lC::idToString( subassembly_->subassembly()->ID() ) ) );
+            arg( lC::idToString( subassembly_->subassembly()->ID() ) ),
+                            lC::DETAIL );
 }
 
 void SubassemblyView::updateLocation ( void )
@@ -736,25 +743,29 @@ void SubassemblyView::updateViewNormal ( const GLdouble* modelview )
 
 void SubassemblyView::updateNewConstraint ( const AssemblyConstraint* constraint )
 {
-  QListViewItem* last_item = list_view_item_->firstChild();
-  if ( last_item != 0 )
-    for ( ; last_item->nextSibling() != 0; last_item = last_item->nextSibling() );
+    //TODO
+  //ListViewItem* last_item = list_view_item_->firstChild();
+    ListViewItem* last_item = static_cast<ListViewItem*>(list_view_item_->child(0));
+
+  //TODO
+    //if ( last_item != 0 )
+  //  for ( ; last_item->nextSibling() != 0; last_item = last_item->nextSibling() );
 
   ListViewItem* constraint_item = new ListViewItem( list_view_item_, last_item );
-  constraint_item->setText( lC::NAME, trC( lC::STR::CONSTRAINT ) );
-  constraint_item->setText( lC::TYPE, trC( constraint->type() ) );
-  constraint_item->setText( lC::DETAIL, QString::null );
-  constraint_item->setOpen( true );
-  constraint_item->listView()->ensureItemVisible( constraint_item );
+  constraint_item->setData( trC( lC::STR::CONSTRAINT ), lC::NAME );
+  constraint_item->setData( trC( constraint->type() ), lC::TYPE );
+  constraint_item->setData( QVariant(), lC::DETAIL );
+  //TODO
+  //constraint_item->setOpen( true );
+  //constraint_item->listView()->ensureItemVisible( constraint_item );
 }
 
 void SubassemblyView::updateChangedConstraint (
 				       const AssemblyConstraint* /*old_constraint*/,
 				       const AssemblyConstraint* new_constraint )
 {
-  QListViewItem* last_item = list_view_item_->firstChild();
-  if ( last_item != 0 )
-    for ( ; last_item->nextSibling() != 0; last_item = last_item->nextSibling() );
+  //TODO get lastItem as for above
+    ListViewItem* last_item = static_cast<ListViewItem*>(list_view_item_->child(0));
 
   QString text;
 
@@ -789,7 +800,7 @@ void SubassemblyView::updateChangedConstraint (
     addDependency( new_constraint->reference0() );
     addDependency( new_constraint->reference1() );
   }
-  last_item->setText( lC::DETAIL, text );
+  last_item->setData( text, lC::DETAIL );
 }
 
 void SubassemblyView::updateChangedOffset ( const AssemblyConstraint* constraint )
@@ -806,10 +817,13 @@ void SubassemblyView::updateChangedOffset ( const AssemblyConstraint* constraint
     dimensions_[ constraint->phase() ]->setMode( lC::Render::REGULAR );
   }
 
-  QListViewItem* last_item = list_view_item_->firstChild();
-  if ( last_item != 0 )
-    for ( int phase = 0; phase < constraint->phase(); phase++ )
-      last_item = last_item->nextSibling();
+  //ListViewItem* last_item = list_view_item_->firstChild();
+  //if ( last_item != 0 )
+  //  for ( int phase = 0; phase < constraint->phase(); phase++ )
+  //    last_item = last_item->nextSibling();
+
+  //TODO getlastItem
+ ListViewItem* last_item = static_cast<ListViewItem*>(list_view_item_->child(0));
 
   QString text = tr( "Offset %1: %2 to %3" ).
     arg( UnitsBasis::instance()->format( constraint->offset(), false ) ).
@@ -817,18 +831,21 @@ void SubassemblyView::updateChangedOffset ( const AssemblyConstraint* constraint
     arg( lC::formatName( model()->idPath( constraint->reference1() ) ) );
 
 
-  last_item->setText( lC::DETAIL, text );
+  last_item->setData( text,  lC::DETAIL );
 }
 
 void SubassemblyView::updateCanceledConstraint ( void )
 {
-  QListViewItem* last_item = list_view_item_->firstChild();
-  int phase = 0;
+//  QListViewItem* last_item = list_view_item_->firstChild();
+//  int phase = 0;
 
-  if ( last_item != 0 ) {
-    for ( ; last_item->nextSibling() != 0;
-	  last_item = last_item->nextSibling(), ++phase );
-  }
+//  if ( last_item != 0 ) {
+//    for ( ; last_item->nextSibling() != 0;
+//	  last_item = last_item->nextSibling(), ++phase );
+//  }
+    //TODO get last item
+    int phase = 0;
+    ListViewItem* last_item = static_cast<ListViewItem*>(list_view_item_->child(0));
 
   if ( last_item != 0 )
     delete last_item;
@@ -849,18 +866,26 @@ void SubassemblyView::addDependency ( const QVector<uint>& surface_id )
   QVector<uint> id_path;
   id_path.reserve( surface_id.size()-1 );
 
-  for ( uint i = 0; i < surface_id.size()-1; ++i ) {
+  for ( int i = 0; i < surface_id.size()-1; ++i ) {
     id_path.push_back( surface_id[i] );
     ModelItem* item = model()->lookup( id_path );
     // The first order check is that we don't already depend on this item.
-    if ( dependencies_.findRef( item ) != -1 ) {
+    bool found = false;
+    QListIterator<std::shared_ptr<ModelItem>> it (dependencies_);
+    while(it.hasNext()) {
+        if(it.next().get() == item) {
+            found = true;
+            break;
+        }
+    }
+    if ( found ) {
       continue;
     }
     // If it's a model, part or assembly, then it can be renamed by the user.
     else if ( dynamic_cast<Model*>( item ) != 0 ||
 	      dynamic_cast<Assembly*>( item ) != 0 ||
 	      dynamic_cast<Part*>( item ) != 0 ) {
-      dependencies_.append( item );
+      dependencies_.append( std::shared_ptr<ModelItem>(item) );
       connect( item, SIGNAL( nameChanged(const QString&) ),
 	       SLOT( updateConstraintName( const QString&) ) );
     }
@@ -871,30 +896,32 @@ void SubassemblyView::updateConstraintName ( const QString& /*name*/ )
 {
   // The budget approach is just to recompute all of the list view strings.
   // Not sure what being more selective would avail us.
-  QListViewItem* list_item = list_view_item_->firstChild();
+  //ListViewItem* list_item = list_view_item_->firstChild();
 
-  QPtrListIterator<AssemblyConstraint> constraint( subassembly_->constraints().
-						   constraints() );
+    //TODO
+    ListViewItem* list_item = static_cast<ListViewItem*>(list_view_item_->child(0));
+   QListIterator< std::shared_ptr<AssemblyConstraint>> constraint = subassembly_->constraints().
+                           constraints();
 
-  for ( ; constraint.current() != 0; ++constraint ) {
+  while ( constraint.hasNext() ) {
     QString text;
-    if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	 constraint.current()->type() == lC::STR::ALIGN_OFFSET )
+    if ( constraint.peekNext()->type() == lC::STR::MATE_OFFSET ||
+     constraint.peekNext()->type() == lC::STR::ALIGN_OFFSET )
       text = tr( "Offset %1: " ).
-	arg( UnitsBasis::instance()->format( constraint.current()->offset(),false));
+    arg( UnitsBasis::instance()->format( constraint.peekNext()->offset(),false));
 
-    if ( constraint.current()->reference1().empty() ) {
-      text += lC::formatName( model()->idPath( constraint.current()->reference0()));
+    if ( constraint.peekNext()->reference1().empty() ) {
+      text += lC::formatName( model()->idPath( constraint.peekNext()->reference0()));
     }
     else {
       text += tr( "%1 to %2" ).
-	arg( lC::formatName( model()->idPath( constraint.current()->reference0()))).
-	arg( lC::formatName( model()->idPath( constraint.current()->reference1())));
+    arg( lC::formatName( model()->idPath( constraint.peekNext()->reference0()))).
+    arg( lC::formatName( model()->idPath( constraint.peekNext()->reference1())));
     }
 
-    list_item->setText( lC::DETAIL, text );
-
-    list_item = list_item->nextSibling();
+    list_item->setData( text, lC::DETAIL );
+//TODO
+    //list_item = list_item->nextSibling();
   }
 }
 
@@ -904,7 +931,7 @@ void SubassemblyView::write ( QDomElement& xml_rep ) const
   QDomElement subassembly_view_element =
     document.createElement( lC::STR::SUBASSEMBLY_VIEW );
   subassembly_view_element.setAttribute(lC::STR::SUBASSEMBLY,
-					subassembly_->dbURL().toString(true) );
+                    subassembly_->dbURL().toString() );
 
   xml_rep.appendChild( subassembly_view_element );
 }
@@ -917,8 +944,8 @@ void SubassemblyView::editInformation ( void )
       QString type = subassembly_->constraints().constraint( i )->type();
       double old_offset = subassembly_->constraints().constraint( i )->offset();
 
-      offset_info_dialog_->offsetLengthConstraint->setTitle( trC( type ) );
-      offset_info_dialog_->offsetLengthConstraint->
+      offset_info_dialog_->getUi()->offsetLengthConstraint->setTitle( trC( type ) );
+      offset_info_dialog_->getUi()->offsetLengthConstraint->
 	setLengthLimits( UnitsBasis::instance()->lengthUnit(),
 			 UnitsBasis::instance()->format(),
 			 UnitsBasis::instance()->precision(),
@@ -928,7 +955,7 @@ void SubassemblyView::editInformation ( void )
       int ret = offset_info_dialog_->exec();
 
       if ( ret != QDialog::Rejected ) {
-	double offset = offset_info_dialog_->offsetLengthConstraint->specifiedLength();
+    double offset = offset_info_dialog_->getUi()->offsetLengthConstraint->specifiedLength();
 
 	subassembly_->constraints().setOffset( i, offset );
 

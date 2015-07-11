@@ -66,9 +66,9 @@ Subassembly::Subassembly ( uint id, const QDomElement& xml_rep,
   setName( xml_rep.attribute( lC::STR::NAME ) );
 
   QRegExp regexp( tr("Subassembly\\[([0-9]+)\\]" ) );
-  int position = regexp.search( name() );
+  int position = regexp.indexIn( name() );
   if ( position >= 0 ) {
-    Subassembly::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    Subassembly::unique_index_ = qMax( regexp.cap(1).toUInt(),
 				       Subassembly::unique_index_ );
   }
 
@@ -76,7 +76,7 @@ Subassembly::Subassembly ( uint id, const QDomElement& xml_rep,
   subassembly_ = dynamic_cast<Space3D::Page*>( parent->model()->lookup( url ) );
 
   if ( subassembly_ == 0 ) {
-    parent->model()->addDelayedResolution( this, url );
+    parent->model()->addDelayedResolution( this, url.toString() );
     delayed_constraints_ = xml_rep;
     return;
   }
@@ -200,17 +200,26 @@ void Subassembly::addDependency ( const QVector<uint>& surface_id )
   QVector<uint> id_path;
   id_path.reserve( surface_id.size()-1 );
 
-  for ( uint i = 0; i < surface_id.size()-1; ++i ) {
+  for ( int i = 0; i < surface_id.size()-1; ++i ) {
     id_path.push_back( surface_id[i] );
     ModelItem* item = model()->lookup( id_path );
     // The first order check is that we don't already depend on this item.
-    if ( dependencies_.findRef( item ) != -1 ) {
+    QListIterator<std::shared_ptr<ModelItem>> it ( dependencies_);
+    bool found = false;
+    while(it.hasNext()) {
+        if(it.next().get() == item) {
+            found = true;
+            break;
+        }
+    }
+    if ( found ) {
       continue;
     }
     // If it's the top level subassembly of the reference, then our location
     // may depend on its location (unless it is ourself)
     else if ( dynamic_cast<Subassembly*>( item ) != 0 && item != this ) {
-      dependencies_.append( item );
+        std::shared_ptr<ModelItem> modItem = std::shared_ptr<ModelItem>(item);
+      dependencies_.append( modItem );
       connect( item, SIGNAL( locationChanged() ), SLOT( updateLocation() ) );
       break;			// And that's it. Don't look any more.
     }
@@ -299,7 +308,7 @@ void Subassembly::write ( QDomElement& xml_rep ) const
   subassembly_element.setAttribute( lC::STR::ID, id() );
   subassembly_element.setAttribute( lC::STR::NAME, name() );
   subassembly_element.setAttribute( lC::STR::SUBASSEMBLY,
-				    subassembly_->dbURL().toString(true) );
+                    subassembly_->dbURL().toString() );
 
   constraints_.write( subassembly_element );
 
@@ -331,7 +340,7 @@ Handle(Standard_Type) Subassembly::lookupType ( QStringList& path_components ) c
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -364,7 +373,7 @@ TopoDS_Shape Subassembly::lookupShape ( QStringList& path_components ) const
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -403,12 +412,12 @@ bool Subassembly::referenced ( const Subassembly* target ) const
   // if target is a prefix match of the reference?
   QVector<uint> target_id = target->ID();
 
-  QPtrListIterator<AssemblyConstraint> constraint = constraints_.constraints();
-  for ( ; constraint.current() != 0; ++constraint ) {
-    QVector<uint> reference1 = constraint.current()->reference1();
+  QListIterator< std::shared_ptr<AssemblyConstraint>> constraint = constraints_.constraints();
+  while ( constraint.hasNext() ) {
+    QVector<uint> reference1 = constraint.next()->reference1();
     if ( !reference1.empty() && reference1.size() >= target_id.size() ) {
       bool equal = true;
-      for ( uint i = 0; i < target_id.size(); i++ ) {
+      for ( int i = 0; i < target_id.size(); i++ ) {
 	if ( reference1[i] != target_id[i] ) {
 	  equal = false;
 	  break;
@@ -441,7 +450,7 @@ void Subassembly::pathID ( QStringList& path_components,
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );

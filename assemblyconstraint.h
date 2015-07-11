@@ -261,6 +261,7 @@ public:
   //! \return an iterator over the defined constaints.
   QListIterator< std::shared_ptr<AssemblyConstraint>> constraints ( void ) const
   { return QListIterator<std::shared_ptr<AssemblyConstraint>>( constraints_ ); }
+  int getCount() { return constraints_.size(); }
   //! \return the status of the current constraint.
   AssemblyConstraintStatus status ( void ) const;
   /*!

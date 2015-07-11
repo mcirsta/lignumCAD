@@ -6,9 +6,11 @@
 #include <QTreeView>
 #include <QStandardItemModel>
 
+#include "aboutdialog.h"
+#include "designbookview.h"
+
 class QListView;
 class DesignBookView;
-class aboutDialog;
 
 class lignumCADMainWindow : public QMainWindow
 {

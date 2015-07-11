@@ -5,7 +5,7 @@
 #include "materialdialog.h"
 
 lignumCADMainWindow::lignumCADMainWindow(QWidget *parent)
-    : QWidget(parent)
+    : QMainWindow(parent)
 {
     ui.setupUi(this);
     init();

@@ -223,7 +223,7 @@ private:
   //! The constraints which locate this subassembly.
   AssemblyConstraintManager constraints_;
   //! List of other subassemblies this subassembly depends on via constraints.
-  QList<const std::shared_ptr<ModelItem>> dependencies_;
+  QList<std::shared_ptr<ModelItem>> dependencies_;
 };
 
 #endif // SUBASSEMBLY_H

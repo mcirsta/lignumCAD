@@ -28,5 +28,5 @@
 
 const QString View::trC ( const QString& string ) const
 {
-  return qApp->translate( "Constants", string );
+  return qApp->translate( "Constants", string.toLatin1() );
 }

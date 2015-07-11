@@ -145,7 +145,7 @@ private:
   //! Modify input object.
   SubassemblyModifyInput* modify_input_;
   //! List of other subassemblies this subassembly depends on via constraints.
-  QList<const std::shared_ptr<ModelItem>> dependencies_;
+  QList<std::shared_ptr<ModelItem>> dependencies_;
   //! Offset constraint size editor.
   static OffsetInfoDialog* offset_info_dialog_;
 };

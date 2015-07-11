@@ -21,7 +21,7 @@
  *
  */
 #include <qdom.h>
-#include <QVector.h>
+#include <QVector>
 
 #include "constants.h"
 #include "pagefactory.h"

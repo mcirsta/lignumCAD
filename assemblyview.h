@@ -30,6 +30,7 @@
 #include "assemblyadddialog.h"
 #include "assemblyconstraint.h"
 #include "assemblyconstraintform.h"
+#include "offsetinfodialog.h"
 
 #include <QDockWidget>
 

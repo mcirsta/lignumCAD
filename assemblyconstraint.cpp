@@ -2238,7 +2238,6 @@ public:
    */
   void update ( const QDomElement& xml_rep )
   {
-    AssemblyConstraintStatus status;
 
     if ( surfaces_ == 0 ) {
       QString surface0_db_url = xml_rep.attribute( lC::STR::SURFACE0 );
@@ -2253,7 +2252,6 @@ public:
 	if ( type == STANDARD_TYPE( Geom_Plane ) ) {
 	  surfaces_ = new PlaneConstraint( this );
 
-	  status = surfaces_->validate0( surface0_id );
 	}
       }
     }
@@ -2282,9 +2280,7 @@ public:
 
 AssemblyConstraint* AssemblyConstraintManager::constraint ( uint phase ) const
 {
-  QPtrListIterator<AssemblyConstraint> constraint( constraints_ );
-  for ( uint i = 0; i < phase && constraint.current() != 0; ++constraint, ++i );
-  return constraint.current();
+    return constraints_[ phase ].get();
 }
 
 // Compute the current status of the assembly constraint.
@@ -2293,10 +2289,10 @@ AssemblyConstraintStatus AssemblyConstraintManager::status ( void ) const
 {
   AssemblyConstraintStatus status = Invalid;
 
-  if ( constraints_.current() != 0 ) {
-    if ( !constraints_.current()->reference0().empty() ) {
+  if ( currentConstraint != 0 ) {
+    if ( !currentConstraint->reference0().empty() ) {
       status = OK;
-      if ( !constraints_.current()->reference1().empty() ) {
+      if ( !currentConstraint->reference1().empty() ) {
 	status = ConstraintComplete;
 	if ( constraints_.count() == 3 )
 	  status = PlacementComplete;
@@ -2310,15 +2306,15 @@ AssemblyConstraintStatus AssemblyConstraintManager::status ( void ) const
 void AssemblyConstraintManager::addMate ( void )
 {
   if ( constraints_.count() == 0 )
-    constraints_.append( new SConstraint<MatePlnPln0,&MATE,0>( parent_, gp::XOY()));
+    constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<MatePlnPln0,&MATE,0>( parent_, gp::XOY())));
   else if ( constraints_.count() == 1 )
-    constraints_.append( new SConstraint<MatePlnPln1,&MATE,1>( parent_,
-				       constraints_.current()->phaseCharacteristic() ) );
+    constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<MatePlnPln1,&MATE,1>( parent_,
+                       currentConstraint->phaseCharacteristic() ) ));
   else if ( constraints_.count() == 2 )
-    constraints_.append( new SConstraint<MatePlnPln2,&MATE,2>( parent_,
-				       constraints_.current()->phaseCharacteristic() ) );
+    constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<MatePlnPln2,&MATE,2>( parent_,
+                       currentConstraint->phaseCharacteristic() ) ) );
 
-  parent_->newConstraint( constraints_.current() );
+  parent_->newConstraint( currentConstraint );
 }
 
 void AssemblyConstraintManager::addMate ( const QDomElement& xml_rep )
@@ -2328,45 +2324,45 @@ void AssemblyConstraintManager::addMate ( const QDomElement& xml_rep )
   switch ( phase ) {
   case 0:
     if ( constraints_.count() == 0 ) {
-      constraints_.append( new SConstraint<MatePlnPln0,&MATE,0>( xml_rep, parent_,
-								 gp::XOY() ) );
+      constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<MatePlnPln0,&MATE,0>( xml_rep, parent_,
+                                 gp::XOY() ) ) );
 
-      parent_->newConstraint( constraints_.current() );
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 1 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
 
-      constraints_.current()->update( xml_rep );
+      currentConstraint->update( xml_rep );
 
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
     break;
   case 1:
     if ( constraints_.count() == 1 ) {
-      constraints_.append( new SConstraint<MatePlnPln1,&MATE,1>( xml_rep, parent_,
-				       constraints_.current()->phaseCharacteristic() ) );
+      constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<MatePlnPln1,&MATE,1>( xml_rep, parent_,
+                       currentConstraint->phaseCharacteristic() ) ) );
 
-      parent_->newConstraint( constraints_.current() );
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 2 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
     break;
   case 2:
     if ( constraints_.count() == 2 ) {
-      constraints_.append( new SConstraint<MatePlnPln2,&MATE,2>( xml_rep, parent_,
-				    constraints_.current()->phaseCharacteristic() ) );
+      constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<MatePlnPln2,&MATE,2>( xml_rep, parent_,
+                    currentConstraint->phaseCharacteristic() ) ) );
 
-      parent_->newConstraint( constraints_.current() );
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 3 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
   }
@@ -2375,15 +2371,15 @@ void AssemblyConstraintManager::addMate ( const QDomElement& xml_rep )
 void AssemblyConstraintManager::addAlign ( void )
 {
   if ( constraints_.count() == 0 )
-    constraints_.append( new SConstraint<AlignPlnPln0,&ALIGN,0>( parent_, gp::XOY()));
+    constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<AlignPlnPln0,&ALIGN,0>( parent_, gp::XOY())));
   else if ( constraints_.count() == 1 )
-    constraints_.append( new SConstraint<AlignPlnPln1,&ALIGN,1>( parent_,
-				       constraints_.current()->phaseCharacteristic() ) );
+    constraints_.append(std::shared_ptr<AssemblyConstraint>( new SConstraint<AlignPlnPln1,&ALIGN,1>( parent_,
+                       currentConstraint->phaseCharacteristic() ) ) );
   else if ( constraints_.count() == 2 )
-    constraints_.append( new SConstraint<AlignPlnPln2,&ALIGN,2>( parent_,
-				       constraints_.current()->phaseCharacteristic() ) );
+    constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<AlignPlnPln2,&ALIGN,2>( parent_,
+                       currentConstraint->phaseCharacteristic() ) ) );
 
-  parent_->newConstraint( constraints_.current() );
+  parent_->newConstraint( currentConstraint );
 }
 
 void AssemblyConstraintManager::addAlign ( const QDomElement& xml_rep )
@@ -2393,43 +2389,43 @@ void AssemblyConstraintManager::addAlign ( const QDomElement& xml_rep )
   switch ( phase ) {
   case 0:
     if ( constraints_.count() == 0 ) {
-      constraints_.append( new SConstraint<AlignPlnPln0,&ALIGN,0>( xml_rep, parent_,
-								   gp::XOY() ) );
+      constraints_.append(std::shared_ptr<AssemblyConstraint>( new SConstraint<AlignPlnPln0,&ALIGN,0>( xml_rep, parent_,
+                                   gp::XOY() ) ) );
 
-      parent_->newConstraint( constraints_.current() );
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 1 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
     break;
   case 1:
     if ( constraints_.count() == 1 ) {
-      constraints_.append( new SConstraint<AlignPlnPln1,&ALIGN,1>( xml_rep, parent_,
-				     constraints_.current()->phaseCharacteristic() ) );
+      constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<AlignPlnPln1,&ALIGN,1>( xml_rep, parent_,
+                     currentConstraint->phaseCharacteristic() ) ) );
 
-      parent_->newConstraint( constraints_.current() );
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 2 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
     break;
   case 2:
     if ( constraints_.count() == 2 ) {
-      constraints_.append( new SConstraint<AlignPlnPln2,&ALIGN,2>( xml_rep, parent_,
-				     constraints_.current()->phaseCharacteristic() ) );
+      constraints_.append( std::shared_ptr<AssemblyConstraint>( new SConstraint<AlignPlnPln2,&ALIGN,2>( xml_rep, parent_,
+                     currentConstraint->phaseCharacteristic() ) ) );
 
-      parent_->newConstraint( constraints_.current() );
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 3 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
   }
@@ -2438,17 +2434,17 @@ void AssemblyConstraintManager::addAlign ( const QDomElement& xml_rep )
 void AssemblyConstraintManager::addMateOffset ( void )
 {
   if ( constraints_.count() == 0 )
-    constraints_.append( new SConstraint<MateOffsetPlnPln0,&MATE_OFFSET,0>( parent_,
-								    gp::XOY() ) );
+    constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<MateOffsetPlnPln0,&MATE_OFFSET,0>( parent_,
+                                    gp::XOY() ) ) );
   else if ( constraints_.count() == 1 )
-    constraints_.append( new SConstraint<MateOffsetPlnPln1,&MATE_OFFSET,1>( parent_,
-				     constraints_.current()->phaseCharacteristic() ) );
+    constraints_.append( std::shared_ptr<AssemblyConstraint>( new SConstraint<MateOffsetPlnPln1,&MATE_OFFSET,1>( parent_,
+                     currentConstraint->phaseCharacteristic() ) ) );
 
   else if ( constraints_.count() == 2 )
-    constraints_.append( new SConstraint<MateOffsetPlnPln2,&MATE_OFFSET,2>( parent_,
-				     constraints_.current()->phaseCharacteristic() ) );
+    constraints_.append( std::shared_ptr<AssemblyConstraint>( new SConstraint<MateOffsetPlnPln2,&MATE_OFFSET,2>( parent_,
+                     currentConstraint->phaseCharacteristic() ) ) );
 
-  parent_->newConstraint( constraints_.current() );
+  parent_->newConstraint( currentConstraint );
 }
 
 void AssemblyConstraintManager::addMateOffset ( const QDomElement& xml_rep )
@@ -2458,43 +2454,43 @@ void AssemblyConstraintManager::addMateOffset ( const QDomElement& xml_rep )
   switch ( phase ) {
   case 0:
     if ( constraints_.count() == 0 ) {
-      constraints_.append(new SConstraint<MateOffsetPlnPln0,&MATE_OFFSET,0>(xml_rep,
+      constraints_.append( std::shared_ptr<AssemblyConstraint>( new SConstraint<MateOffsetPlnPln0,&MATE_OFFSET,0>(xml_rep,
 									  parent_,
-								   gp::XOY() ) );
-      parent_->newConstraint( constraints_.current() );
+                                   gp::XOY() ) ) );
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 1 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
     break;
   case 1:
     if ( constraints_.count() == 1 ) {
-      constraints_.append(new SConstraint<MateOffsetPlnPln1,&MATE_OFFSET,1>(xml_rep,
+      constraints_.append(std::shared_ptr<AssemblyConstraint>( new SConstraint<MateOffsetPlnPln1,&MATE_OFFSET,1>(xml_rep,
 									  parent_,
-				    constraints_.current()->phaseCharacteristic()));
-      parent_->newConstraint( constraints_.current() );
+                    currentConstraint->phaseCharacteristic())));
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 2 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
     break;
   case 2:
     if ( constraints_.count() == 2 ) {
-      constraints_.append(new SConstraint<MateOffsetPlnPln2,&MATE_OFFSET,2>(xml_rep,
+      constraints_.append(std::shared_ptr<AssemblyConstraint>(new SConstraint<MateOffsetPlnPln2,&MATE_OFFSET,2>(xml_rep,
 									  parent_,
-				    constraints_.current()->phaseCharacteristic()));
-      parent_->newConstraint( constraints_.current() );
+                    currentConstraint->phaseCharacteristic())));
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 3 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
   }
@@ -2503,17 +2499,17 @@ void AssemblyConstraintManager::addMateOffset ( const QDomElement& xml_rep )
 void AssemblyConstraintManager::addAlignOffset ( void )
 {
   if ( constraints_.count() == 0 )
-    constraints_.append(new SConstraint<AlignOffsetPlnPln0,&ALIGN_OFFSET,0>(parent_,
-								      gp::XOY()));
+    constraints_.append(std::shared_ptr<AssemblyConstraint>(new SConstraint<AlignOffsetPlnPln0,&ALIGN_OFFSET,0>(parent_,
+                                      gp::XOY())));
   else if ( constraints_.count() == 1 )
-    constraints_.append(new SConstraint<AlignOffsetPlnPln1,&ALIGN_OFFSET,1>(parent_,
-				    constraints_.current()->phaseCharacteristic() ) );
+    constraints_.append(std::shared_ptr<AssemblyConstraint>(new SConstraint<AlignOffsetPlnPln1,&ALIGN_OFFSET,1>(parent_,
+                    currentConstraint->phaseCharacteristic() ) ) );
 									     
   else if ( constraints_.count() == 2 )
-    constraints_.append(new SConstraint<AlignOffsetPlnPln2,&ALIGN_OFFSET,2>(parent_,
-				    constraints_.current()->phaseCharacteristic() ) );
+    constraints_.append(std::shared_ptr<AssemblyConstraint>(new SConstraint<AlignOffsetPlnPln2,&ALIGN_OFFSET,2>(parent_,
+                    currentConstraint->phaseCharacteristic() ) ) );
 
-  parent_->newConstraint( constraints_.current() );
+  parent_->newConstraint( currentConstraint );
 }
 
 void AssemblyConstraintManager::addAlignOffset ( const QDomElement& xml_rep )
@@ -2523,43 +2519,43 @@ void AssemblyConstraintManager::addAlignOffset ( const QDomElement& xml_rep )
   switch ( phase ) {
   case 0:
     if ( constraints_.count() == 0 ) {
-      constraints_.append( new SConstraint<AlignOffsetPlnPln0,&ALIGN_OFFSET,0>( xml_rep,
+      constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<AlignOffsetPlnPln0,&ALIGN_OFFSET,0>( xml_rep,
 									    parent_,
-								      gp::XOY() ) );
-      parent_->newConstraint( constraints_.current() );
+                                      gp::XOY() ) ) );
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 1 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
     break;
   case 1:
     if ( constraints_.count() == 1 ) {
-      constraints_.append( new SConstraint<AlignOffsetPlnPln1,&ALIGN_OFFSET,1>( xml_rep,
+      constraints_.append( std::shared_ptr<AssemblyConstraint>( new SConstraint<AlignOffsetPlnPln1,&ALIGN_OFFSET,1>( xml_rep,
 									    parent_,
-				    constraints_.current()->phaseCharacteristic()));
-      parent_->newConstraint( constraints_.current() );
+                    currentConstraint->phaseCharacteristic())));
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 2 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
     break;
   case 2:
     if ( constraints_.count() == 2 ) {
-      constraints_.append( new SConstraint<AlignOffsetPlnPln2,&ALIGN_OFFSET,2>( xml_rep,
+      constraints_.append( std::shared_ptr<AssemblyConstraint>(new SConstraint<AlignOffsetPlnPln2,&ALIGN_OFFSET,2>( xml_rep,
 									    parent_,
-				  constraints_.current()->phaseCharacteristic() ) );
-      parent_->newConstraint( constraints_.current() );
+                  currentConstraint->phaseCharacteristic() ) ) );
+      parent_->newConstraint( currentConstraint );
     }
     else if ( constraints_.count() == 3 ) {
-      AssemblyConstraint* old_constraint = constraints_.current()->clone();
-      constraints_.current()->update( xml_rep );
-      parent_->changeConstraint( old_constraint, constraints_.current() );
+      AssemblyConstraint* old_constraint = currentConstraint->clone();
+      currentConstraint->update( xml_rep );
+      parent_->changeConstraint( old_constraint, currentConstraint );
       delete old_constraint;
     }
   }
@@ -2571,19 +2567,19 @@ void AssemblyConstraintManager::addAlignOffset ( const QDomElement& xml_rep )
 
 void AssemblyConstraintManager::setOffset ( double offset )
 {
-  constraints_.current()->setOffset( offset );
+  currentConstraint->setOffset( offset );
 #if 0
   // It's probably the case that this modification also changed the previous
   // contraints' dimension end points.
 
   QPtrListIterator<AssemblyConstraint> constraint( constraints_ );
 
-  for ( ; constraint.current() != 0; ++constraint ) {
-    if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	 constraint.current()->type() == lC::STR::ALIGN_OFFSET ) {
-      constraint.current()->updateDimension();
+  for ( ; currentConstraint != 0; ++constraint ) {
+    if ( currentConstraint->type() == lC::STR::MATE_OFFSET ||
+     currentConstraint->type() == lC::STR::ALIGN_OFFSET ) {
+      currentConstraint->updateDimension();
 
-      parent_->changeConstraintOffset( constraint.current() );
+      parent_->changeConstraintOffset( currentConstraint );
     }
   }
 #endif
@@ -2599,14 +2595,14 @@ void AssemblyConstraintManager::setOffset ( uint phase, double offset )
   // It's probably the case that this modification also changed the previous
   // contraints' dimension end points.
 
-  QPtrListIterator<AssemblyConstraint> constraint( constraints_ );
+  QList<std::shared_ptr<AssemblyConstraint>>::iterator constraint = constraints_.begin();
 
-  for ( ; constraint.current() != 0; ++constraint ) {
-    if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	 constraint.current()->type() == lC::STR::ALIGN_OFFSET ) {
-      constraint.current()->updateDimension();
+  for ( ; currentConstraint != 0; ++constraint ) {
+    if ( currentConstraint->type() == lC::STR::MATE_OFFSET ||
+     currentConstraint->type() == lC::STR::ALIGN_OFFSET ) {
+      currentConstraint->updateDimension();
 
-      parent_->changeConstraintOffset( constraint.current() );
+      parent_->changeConstraintOffset( currentConstraint );
     }
   }
 }
@@ -2614,13 +2610,6 @@ void AssemblyConstraintManager::setOffset ( uint phase, double offset )
 AssemblyConstraintStatus
 AssemblyConstraintManager::validate ( const QVector<uint>& surface_id )
 {
-  gp_Ax2 characteristic;
-
-  if ( constraints_.count() <= 1 )
-    characteristic = gp::XOY();
-  else
-    characteristic = constraints_.prev()->phaseCharacteristic();
-
   old_constraint_ = constraints_.last()->clone();
 
   AssemblyConstraintStatus status = constraints_.last()->validate( surface_id );
@@ -2633,30 +2622,30 @@ AssemblyConstraintManager::validate ( const QVector<uint>& surface_id )
 
 void AssemblyConstraintManager::apply ( void )
 {
-  parent_->changeConstraint( old_constraint_, constraints_.current() );
+  parent_->changeConstraint( old_constraint_, currentConstraint );
 
   delete old_constraint_;
 }
 
 void AssemblyConstraintManager::transform ( void )
 {
-  constraints_.current()->transform();
+  currentConstraint->transform();
 
-  parent_->changeConstraint( old_constraint_, constraints_.current() );
+  parent_->changeConstraint( old_constraint_, currentConstraint );
 
   delete old_constraint_;
 
   // It's probably the case that this modification also changed the previous
   // contraints' dimension end points.
 
-  QPtrListIterator<AssemblyConstraint> constraint( constraints_ );
+  QList<std::shared_ptr<AssemblyConstraint>>::iterator constraint = constraints_.begin();
 
-  for ( ; constraint.current() != 0; ++constraint ) {
-    if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	 constraint.current()->type() == lC::STR::ALIGN_OFFSET ) {
-      constraint.current()->updateDimension();
+  for ( ; constraint != constraints_.end(); ++constraint ) {
+    if ( constraint->get()->type() == lC::STR::MATE_OFFSET ||
+     constraint->get()->type() == lC::STR::ALIGN_OFFSET ) {
+      constraint->get()->updateDimension();
 
-      parent_->changeConstraintOffset( constraint.current() );
+      parent_->changeConstraintOffset( currentConstraint );
     }
   }
 }
@@ -2666,9 +2655,9 @@ void AssemblyConstraintManager::write ( QDomElement& xml_rep ) const
   QDomDocument document = xml_rep.ownerDocument();
   QDomElement constraints_element = document.createElement( lC::STR::CONSTRAINTS );
 
-  QPtrListIterator<AssemblyConstraint> constraint( constraints_ );
-  for ( ; constraint.current() != 0; ++constraint )
-    constraint.current()->write( constraints_element );
+  QList<std::shared_ptr<AssemblyConstraint>>::const_iterator constraint = constraints_.begin();
+  for ( ; constraint != constraints_.end(); ++constraint )
+    constraint->get()->write( constraints_element );
 
   xml_rep.appendChild( constraints_element );
 }
@@ -2709,28 +2698,34 @@ void AssemblyConstraintManager::addConstraints ( const QDomElement& xml_rep )
     n = n.nextSibling();
   }
 
-  QPtrListIterator<AssemblyConstraint> constraint( constraints_ );
-  for ( ; constraint.current() != 0; ++constraint ) {
-    if ( !constraint.current()->reference0().empty() )
-      parent_->addDependency( constraint.current()->reference0() );
-    if ( !constraint.current()->reference1().empty() )
-      parent_->addDependency( constraint.current()->reference1() );
+  QList<std::shared_ptr<AssemblyConstraint>>::iterator constraint = constraints_.begin();
+  for ( ; constraint != constraints_.end(); ++constraint ) {
+    if ( !constraint->get()->reference0().empty() )
+      parent_->addDependency( currentConstraint->reference0() );
+    if ( !constraint->get()->reference1().empty() )
+      parent_->addDependency( currentConstraint->reference1() );
   }
 }
 
 void AssemblyConstraintManager::recompute ( void )
 {
-  QPtrListIterator<AssemblyConstraint> constraint( constraints_ );
+  QList<std::shared_ptr<AssemblyConstraint>>::iterator constraint = constraints_.begin();
   gp_Ax2 characteristic = gp::XOY();
-  for ( ; constraint.current() != 0; ++constraint ) {
-    constraint.current()->recompute( characteristic );
-    characteristic = constraint.current()->phaseCharacteristic();
+  for ( ; constraint != constraints_.end(); ++constraint ) {
+    constraint->get()->recompute( characteristic );
+    characteristic = constraint->get()->phaseCharacteristic();
   }
 }
 
 void AssemblyConstraintManager::cancelCurrent ( void )
 {
-  constraints_.remove();
+  QMutableListIterator<std::shared_ptr<AssemblyConstraint>> it (constraints_);
+  while(it.hasNext()) {
+      if(it.next().get() == currentConstraint) {
+          it.remove();
+          break;
+      }
+  }
 
   parent_->cancelLast();
 }
@@ -2741,22 +2736,22 @@ void AssemblyConstraintManager::removeFirstReference ( void )
   // the current constraint since we don't know the initial surface type
   // any more.
 
-  AssemblyConstraint* old_constraint = constraints_.current()->clone();
+  AssemblyConstraint* old_constraint = currentConstraint->clone();
 
-  constraints_.current()->removeFirstReference();
+  currentConstraint->removeFirstReference();
 
-  parent_->changeConstraint( old_constraint, constraints_.current() );
+  parent_->changeConstraint( old_constraint, currentConstraint );
 
   delete old_constraint;
 }
 
 void AssemblyConstraintManager::removeLastReference ( void )
 {
-  AssemblyConstraint* old_constraint = constraints_.current()->clone();
+  AssemblyConstraint* old_constraint = currentConstraint->clone();
 
-  constraints_.current()->removeLastReference();
+  currentConstraint->removeLastReference();
 
-  parent_->changeConstraint( old_constraint, constraints_.current() );
+  parent_->changeConstraint( old_constraint, currentConstraint );
 
   delete old_constraint;
 }

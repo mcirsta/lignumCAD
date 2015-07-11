@@ -250,7 +250,7 @@ namespace Space3D {
       QMap<uint,Figure*>::const_iterator figure = figures.begin();
 
       for ( ; figure != figures.end(); ++figure ) {
-	Subassembly* subassembly = dynamic_cast<Subassembly*>( figure.data() );
+    Subassembly* subassembly = dynamic_cast<Subassembly*>( figure.value() );
 	OCSubassemblyDraw* drawer =
 	  OCSubassemblyDrawFactory::drawer( subassembly, view );
 	drawers_[ view->genSelectionName() ] = drawer;

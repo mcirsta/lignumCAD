@@ -18,7 +18,8 @@ HEADERS	+= designbookview.h graphics.h sketchview.h pageview.h openglview.h tabb
     dimensioninfodialog.h \
     annotationinfodialog.h \
     partinfodialog.h \
-    parameterinfodialog.h
+    parameterinfodialog.h \
+    aboutdialog.h
 # The lignumCAD qmake project file
 # Copyright (C) 2002 lignum Computing, Inc. <lignumcad@lignumcomputing.com>
 unix {

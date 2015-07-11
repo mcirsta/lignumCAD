@@ -56,6 +56,7 @@ class PageView;
 class Model;
 class Ratio;
 class Printer;
+class lignumCADMainWindow;
 
 /*!
  * Encapsulate the OpenGL view and the TabBar which constitute the main user
