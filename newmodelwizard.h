@@ -1,7 +1,10 @@
 #ifndef NEWMODELWIZARD
 #define NEWMODELWIZARD
 
+#include <memory>
+
 #include "ui_newmodelwizard.h"
+#include <QRadioButton>
 
 class NewModelWizard : public QWizard
 {
@@ -24,6 +27,11 @@ private slots:
     void modelNameEdit_textChanged( const QString & text );
     void initialPageSelected( void );
     void NewModelWizard_selected( const QString & );
+
+protected:
+    QGroupBox* initialPageButtonGroupBox;
+    QButtonGroup* initialPageButtonGroup;
+    QList<std::shared_ptr<QRadioButton>> initialPageRadioButtons;
 };
 
 

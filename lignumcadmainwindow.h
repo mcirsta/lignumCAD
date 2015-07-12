@@ -3,8 +3,10 @@
 
 #include "ui_lignumcadmainwindow.h"
 #include <QTableWidget>
-#include <QTreeView>
+#include <QTreeWidget>
 #include <QStandardItemModel>
+#include <QStatusBar>
+#include <QDockWidget>
 
 #include "aboutdialog.h"
 #include "designbookview.h"
@@ -32,7 +34,7 @@ private:
     QLabel* message_label_;
     QLabel* information_label_;
     QStandardItemModel* model_hierarchy_data;
-    QTreeView* model_hierarchy_list_;
+    QTreeWidget* model_hierarchy_list_;
 
 public slots:
     void init ();

@@ -452,7 +452,7 @@ void DesignBookView::init ( void )
     connect( &CommandHistory::instance(), SIGNAL( undoRedoChanged(bool, bool ) ),
              SLOT( updateUndoRedo(bool, bool) ) );
 
-    model_info_dialog_ = new ModelInfoDialog( lCMW_ );
+    model_info_dialog_ = new ModelInfoDialog( static_cast<QWidget*>(lCMW_) );
 }
 
 /*
