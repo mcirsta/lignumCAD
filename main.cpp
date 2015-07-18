@@ -154,12 +154,12 @@ int main( int argc, char ** argv )
         return 1;
     }
   */
-
+    //TODO splash screen
     // Without command line arguments, treat the user to the splash
     // screen for a few seconds
 
     if ( argc == 1 )
-        QTimer::singleShot( 1000, lCMW, SLOT( showView() ) );
+        lCMW->showView();
 
     // Otherwise, load the given model and get going
 
@@ -168,19 +168,19 @@ int main( int argc, char ** argv )
 
     QObject::connect( &app, SIGNAL( lastWindowClosed() ), lCMW , SLOT( fileExit() ) );
 
-#if defined(Q_OS_UNIX)
-    // Kind of a last resort thing:
-    sigset_t sigset;
-    sigemptyset( &sigset );
+//#if defined(Q_OS_UNIX)
+//    // Kind of a last resort thing:
+//    sigset_t sigset;
+//    sigemptyset( &sigset );
 
-    struct sigaction segv_action;
-    segv_action.sa_handler = one_shot_segv_handler;
-    segv_action.sa_mask = sigset;
-    segv_action.sa_flags = 0;
-#if 0
-    sigaction( SIGSEGV, &segv_action, 0 );
-#endif
-#endif // Q_OS_UNIX
+//    struct sigaction segv_action;
+//    segv_action.sa_handler = one_shot_segv_handler;
+//    segv_action.sa_mask = sigset;
+//    segv_action.sa_flags = 0;
+//#if 0
+//    sigaction( SIGSEGV, &segv_action, 0 );
+//#endif
+//#endif // Q_OS_UNIX
 
     int ret_code = app.exec();
 

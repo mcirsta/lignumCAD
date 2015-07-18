@@ -556,7 +556,7 @@ void DesignBookView::hideView ( void )
 
 bool DesignBookView::aboutToExit ( void )
 {
-    if ( model_ ) {
+    if ( this->model_ ) {
         if ( model_->changed() ) {
             QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
                             tr( "The current model has been modified.\n"
