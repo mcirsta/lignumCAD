@@ -1,6 +1,9 @@
 #ifndef PREFERENCESDIALOG
 #define PREFERENCESDIALOG
 
+
+#include "lcdefaultcombobox.h"
+
 #include "ui_preferencesdialog.h"
 
 class PreferencesDialog : public QDialog {

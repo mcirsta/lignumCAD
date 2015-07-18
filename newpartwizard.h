@@ -6,7 +6,8 @@
 #include "part.h"
 #include "partview.h"
 
-#include "QWizard"
+#include <QWizard>
+#include <QScrollArea>
 
 class NewPartWizard : public QWizard
 {
@@ -18,7 +19,7 @@ public:
 
 public slots:
     virtual void init();
-    virtual void partLibraryListView_currentChanged( ListViewItem * item );
+    virtual void partLibraryListView_currentChanged(QListWidgetItem *item );
     virtual void NewPartWizard_selected( const QString & );
     const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>& parameters( void );
     const PartMetadata * part( void );
@@ -32,6 +33,15 @@ private slots:
 
 private:
     Ui::NewPartWizard ui;
+
+protected:
+    QScrollArea* scroll_view_;
+    QMap<QListWidgetItem*,PartMetadata*> parts_;
+    QList<std::shared_ptr<lCDefaultLengthConstraint>> labels_;
+    QHash<QString, std::shared_ptr<ListViewItem>> groups_;
+    QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>> parameter_labels_;
+    QWidget* scroll_vbox_;
+    PartView* part_view_;
 };
 
 

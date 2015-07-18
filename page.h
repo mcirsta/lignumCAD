@@ -24,9 +24,11 @@
 #define PAGE_H
 
 #include <qstringlist.h>
+#include <QMap>
 
 #include "modelitem.h"
 #include "figure.h"
+#include <memory>
 
 class Model;
 class TopoDS_Shape;

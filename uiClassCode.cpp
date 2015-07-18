@@ -5,6 +5,7 @@
 #include "materialdialog.h"
 #include "newmodelwizard.h"
 #include "pagefactory.h"
+#include "listviewitem.h"
 
 #include "configuration.h"
 #include "systemdependencies.h"
@@ -14,6 +15,7 @@
 #include <QFileDialog>
 #include <QBoxLayout>
 #include <QCloseEvent>
+#include <QWhatsThis>
 
 lignumCADMainWindow::lignumCADMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -571,62 +573,75 @@ void NewPartWizard::init()
     //finishButton()->setEnabled( false );
 
     QListIterator<std::shared_ptr<PartMetadata>> part = PartFactory::instance()->parts();
-    for ( ; part.current() != 0; ++part ) {
-        QListViewItem* group = groups_.find( trC( part.current()->group() ) );
-        if ( group == 0 ) {
-            group = new QListViewItem( partLibraryListView, trC( part.current()->group() ) );
-            group->setOpen( true );
-            group->setSelectable( false );
-            groups_.insert( trC( part.current()->group() ), group);
+    while ( part.hasNext() ) {
+        QMultiHash<QString, std::shared_ptr<ListViewItem>>::const_iterator foundIt
+                                                    = groups_.find( trC( part.peekNext()->group() ) );
+        std::shared_ptr <ListViewItem> group;
+        if ( foundIt == groups_.cend()) {
+            group = std::shared_ptr<ListViewItem>(new ListViewItem( trC( part.peekNext()->group() ) ));
+            //TODO
+            //group->setOpen( true );
+            //group->setSelectable( false );
         }
-        QListViewItem* item = new QListViewItem( group, trC( part.current()->name() ) );
-        item->setOpen( true );
-        item->setPixmap( 1, lC::lookupPixmap( part.current()->icon() ) );
-        parts_.insert( item, part.current() );
+        else {
+            group = foundIt.value();
+        }
+        groups_.insert( trC( part.peekNext()->group() ), group);
+        QListWidgetItem* item = new QListWidgetItem( trC( part.peekNext()->name() ) );
+        //TODO
+        //item->setOpen( true );
+        //item->setPixmap( 1, lC::lookupPixmap( part.current()->icon() ) );
+        parts_.insert( item, part.peekNext().get() );
+        part.next();
     }
 
-    connect( nextButton(), SIGNAL( clicked() ), SLOT( validateName() ) );
+    //TODO
+    //connect( nextButton(), SIGNAL( clicked() ), SLOT( validateName() ) );
 }
 
-void NewPartWizard::partLibraryListView_currentChanged(ListViewItem *item )
+void NewPartWizard::partLibraryListView_currentChanged(QListWidgetItem *item )
 {
-    if ( item != 0 ) {
-        if ( groups_.find( item->text( 0 ) ) != 0 )
-            nextButton()->setEnabled( false );
-        else
-            nextButton()->setEnabled( true );
-    }
-    else
-        nextButton()->setEnabled( false );
+    //TODO
+//    if ( item != 0 ) {
+//        if ( groups_.find( item->text( ) ) != groups_.cend() )
+//            nextButton()->setEnabled( false );
+//        else
+//            nextButton()->setEnabled( true );
+//    }
+//    else
+//        nextButton()->setEnabled( false );
 }
 
 
 void NewPartWizard::NewPartWizard_selected( const QString& /*page_name*/ )
 {
-    if ( currentPage() == initialPartPage ) {
-        partLibraryListView_currentChanged( partLibraryListView->currentItem() );
-        partLibraryListView->setFocus();
-        nextButton()->setDefault( true );
+    if ( currentPage() == ui.initialPartPage ) {
+        partLibraryListView_currentChanged( ui.partLibraryListView->currentItem() );
+        ui.partLibraryListView->setFocus();
+        //TODO
+        //nextButton()->setDefault( true );
     }
-    else if ( currentPage() == partParametersPage ) {
-        QListViewItem* item = partLibraryListView->currentItem();
+    else if ( currentPage() == ui.partParametersPage ) {
+        QListWidgetItem* item = ui.partLibraryListView->currentItem();
 #if 0
         PartMetadata* part = PartFactory::instance()->part( item->parent()->text(0),
                                                             item->text( 0 ) );
 #else
         PartMetadata* part = parts_[ item ];
 #endif
-        partParameterFrame->setTitle( tr( "&Parameters for %1::%2" ).
+        ui.partParameterFrame->setTitle( tr( "&Parameters for %1::%2" ).
                                       arg( trC( part->group() ) ).
                                       arg( lC::formatName( part->name() ) ) );
         // Construct how ever many input parameter fields this part needs.
         uint n_parameters = part->parameterCount();
         if ( scroll_view_ == 0 ) {
-            QGridLayout* layout = new QGridLayout( partParameterFrame->layout() );
-            scroll_view_ = new QScrollView( partParameterFrame, "parameterScrollView" );
+            QGridLayout* layout = new QGridLayout( ui.partParameterFrame );
+            scroll_view_ = new QScrollArea( ui.partParameterFrame );
+            scroll_view_->setObjectName( "parameterScrollView" );
             layout->addWidget( scroll_view_, 0, 0 );
-            scroll_vbox_ = new QVBox( scroll_view_->viewport(), "parameterVBox" );
-            scroll_view_->addChild( scroll_vbox_ );
+            scroll_vbox_ = new QWidget ( scroll_view_->viewport() );
+            scroll_vbox_->setObjectName( "parameterVBox" );
+            scroll_view_->setWidget( scroll_vbox_ );
             scroll_view_->show();
         }
 
@@ -644,13 +659,13 @@ void NewPartWizard::NewPartWizard_selected( const QString& /*page_name*/ )
             length_constraint->setSpecifiedSpinBoxWhatsThis( tr( "<p><b>Specified Size</b></p> <p>Enter the size of the parameter. The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).</p> <p>If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:</p> <p><code>1.234</code></p> <p>If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:</p> <p><code>1</code> (equals 1.0)</p> <p><code>1/2</code> (equals 0.5)</p> <p><code>1 1/2</code> (equals 1.5, note the blank separating the whole number and the fraction)</p> <p>If you modify the value, you can always go back to the default value when the dialog was opened by clicking the <img src=\"default_active.png\"> button</p>" ) );
             connect( length_constraint, SIGNAL( valueChanged( double ) ),
                      this, SLOT(updateValidity( double ) ) );
-            labels_.append( length_constraint );
+            labels_.append( std::shared_ptr<lCDefaultLengthConstraint>(length_constraint) );
         }
         QStringList::const_iterator parameter = part->parameters();
-        QPtrListIterator<lCDefaultLengthConstraint> label( labels_ );
+        QList<std::shared_ptr<lCDefaultLengthConstraint>>::const_iterator label = labels_.cbegin();
         parameter_labels_.clear();
         for ( uint n = 0; n < n_parameters; n++ ) {
-            lCDefaultLengthConstraint* parameter_label = label.current();
+            std::shared_ptr<lCDefaultLengthConstraint> parameter_label = *label;
             parameter_label->setTitle( trC( *parameter ) );
             parameter_label->setDefaultLength( 0 );
             parameter_label->setLength( 0 );
@@ -659,18 +674,19 @@ void NewPartWizard::NewPartWizard_selected( const QString& /*page_name*/ )
             ++parameter;
             ++label;
         }
-        for ( ; label.current() != 0; ++label ) {
-            label.current()->hide();
+        for ( ; label != labels_.cend(); ++label ) {
+            label->get()->hide();
         }
         scroll_view_->ensureVisible( 0, 0 );
         if ( n_parameters > 0 && labels_.count() > 0 )
             labels_.at(0)->setFocus();
-        finishButton()->setDefault( true );
+        //TODO
+        //finishButton()->setDefault( true );
     }
 }
 
 
-const QDict<lCDefaultLengthConstraint>& NewPartWizard::parameters( void )
+const QHash<QString,std::shared_ptr<lCDefaultLengthConstraint>>& NewPartWizard::parameters( void )
 {
     return parameter_labels_;
 }
@@ -678,7 +694,7 @@ const QDict<lCDefaultLengthConstraint>& NewPartWizard::parameters( void )
 
 const PartMetadata* NewPartWizard::part( void )
 {
-    QListViewItem* item = partLibraryListView->currentItem();
+    QListWidgetItem* item = ui.partLibraryListView->currentItem();
 #if 0
     return PartFactory::instance()->part( item->parent()->text(0), item->text( 0 ) );
 #else
@@ -690,15 +706,16 @@ const PartMetadata* NewPartWizard::part( void )
 void NewPartWizard::updateValidity( double )
 {
     // One of the parameter boxes was changed, so recheck the validity of the input.
-    if ( part()->valid(parameter_labels_) )
-        finishButton()->setEnabled( true );
+//TODO
+    //    if ( part()->valid(parameter_labels_) )
+//        finishButton()->setEnabled( true );
 }
 
 
 void NewPartWizard::NewPartWizard_helpClicked()
 {
-    if ( currentPage() == initialPartPage ) {
-        QWhatsThis::display( tr( "<p><b>Initial Part Page</b></p>\
+    if ( currentPage() == ui.initialPartPage ) {
+        QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Initial Part Page</b></p>\
                                  <p>Each Part is based on a three-dimensional solid geometry model. From this page, \
                                  you can select the base solid geometry. The list shows the predefined solid templates. There \
                                  are essentially two kinds of base solids: blanks and customized parts. The blanks \
@@ -716,8 +733,8 @@ void NewPartWizard::NewPartWizard_helpClicked()
                                  (or press <b>ESC</b> or <b>Alt+C</b>), \
                                  no Part will be generated.</p>" ) );
     }
-    else if ( currentPage() == partParametersPage ) {
-        QWhatsThis::display( tr( "<p><b>Part Parameters Page</b></p>\
+    else if ( currentPage() == ui.partParametersPage ) {
+        QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Part Parameters Page</b></p>\
                                  <p>On this page, the parameters (dimensions or sizes) of the template solids are \
                                  defined. When acceptable \
                                  values are entered for all parameters, the <b>Finish</b> button will become \
@@ -739,10 +756,11 @@ void NewPartWizard::NewPartWizard_helpClicked()
 void NewPartWizard::validateName( void )
 {
     // Check that no part already has this name.
-    int ret = part_view_->parent()->uniquePageName( part_view_, nameEdit->text(), lC::STR::PART );
+    int ret = part_view_->parent()->uniquePageName( part_view_, ui.nameEdit->text(), lC::STR::PART );
     switch ( ret ) {
     case lC::Redo:
-        showPage( initialPartPage );
+        //TODO
+        //showPage( ui.initialPartPage );
         break;
     case lC::Rejected:
         reject();
@@ -758,11 +776,11 @@ void NewPartWizard::setPartView( PartView * part_view )
 
 QString NewPartWizard::trC( const QString & string )
 {
-    return qApp->translate( "Constants", string );
+    return qApp->translate( "Constants", string.toStdString().c_str() );
 }
 
-void MaterialDialog::MaterialDialog( QWidget* parent )
-QWidget( parent)
+MaterialDialog::MaterialDialog( QWidget* parent )
+    :QDialog( parent)
 {
     ui.setupUi(this);
     init();
@@ -775,40 +793,43 @@ Ui::MaterialDialog* MaterialDialog::getUi()
 
 void MaterialDialog::init()
 {
-    QDictIterator<Material> material = MaterialDatabase::instance().materials();
+    QHashIterator<QString,std::shared_ptr<Material>> material = MaterialDatabase::instance().materials();
 
-    for ( ; material.current() != 0; ++material ) {
+    //TODO
+//    while ( material.hasNext() ) {
 
-        QListViewItem* class_item = MaterialList->firstChild();
-        while ( class_item != 0 ) {
-            if ( class_item->text( 0 ) == material.current()->materialClass() ) break;
-            class_item = class_item->nextSibling();
-        }
-        if ( class_item == 0 ) {
-            class_item = new QListViewItem( MaterialList,
-                                            material.current()->materialClass() );
-            class_item->setSelectable( false );
-            class_item->setOpen( true );
-        }
-        new QListViewItem( class_item, material.current()->name() );
-    }
+//        int row = 0;
+//        QListViewItem* class_item = ui.MaterialList->item( row)
+//        while ( class_item != 0 ) {
+//            if ( class_item->text( 0 ) == material.current()->materialClass() ) break;
+//            class_item = class_item->nextSibling();
+//        }
+//        if ( class_item == 0 ) {
+//            class_item = new QListViewItem( MaterialList,
+//                                            material.current()->materialClass() );
+//            class_item->setSelectable( false );
+//            class_item->setOpen( true );
+//        }
+//        new QListViewItem( class_item, material.current()->name() );
+//    }
 }
 
 
-void MaterialDialog::MaterialList_selectionChanged(ListViewItem *item )
+void MaterialDialog::MaterialList_selectionChanged(QListWidgetItem *item )
 {
     if ( item == 0 ) {
-        MaterialText->setText( QString::null );
+        ui.MaterialText->setText( QString::null );
 
-        SolidColor->setPaletteBackgroundColor( colorGroup().background() );
+        //TODO
+        //ui.SolidColor->setPaletteBackgroundColor( colorGroup().background() );
 
-        FaceGrainPixmap->setPixmap( QPixmap() );
-        EndGrainPixmap->setPixmap( QPixmap() );
-        EdgeGrainPixmap->setPixmap( QPixmap() );
+        ui.FaceGrainPixmap->setPixmap( QPixmap() );
+        ui.EndGrainPixmap->setPixmap( QPixmap() );
+        ui.EdgeGrainPixmap->setPixmap( QPixmap() );
         return;
     }
 
-    Material* material = MaterialDatabase::instance().material( item->text( 0 ) );
+    Material* material = MaterialDatabase::instance().material( item->text( ) );
     QString material_text;
     QString botanical_text = material->botanical() != "-" ? material->botanical() : tr( "none" );
     material_text = tr( "<p>Common name: %1</p><p>Botanical name: %2</p><p>Other names: %3</p><p>Specific gravity: %4" ).
@@ -837,38 +858,41 @@ void MaterialDialog::MaterialList_selectionChanged(ListViewItem *item )
 
     material_text += compression_table + tension_shear_table + bend_table + annotations;
 
-    MaterialText->setText( material_text );
+    ui.MaterialText->setText( material_text );
 
-    SolidColor->setPaletteBackgroundColor( material->color() );
+    //TODO
+    //SolidColor->setPaletteBackgroundColor( material->color() );
 
-    FaceGrainPixmap->setPixmap( lC::lookupPixmap( material->faceGrainFile() ) );
-    EndGrainPixmap->setPixmap( lC::lookupPixmap( material->endGrainFile() ) );
-    EdgeGrainPixmap->setPixmap( lC::lookupPixmap( material->edgeGrainFile() ) );
+    ui.FaceGrainPixmap->setPixmap( lC::lookupPixmap( material->faceGrainFile() ) );
+    ui.EndGrainPixmap->setPixmap( lC::lookupPixmap( material->endGrainFile() ) );
+    ui.EdgeGrainPixmap->setPixmap( lC::lookupPixmap( material->edgeGrainFile() ) );
 }
 
 
 void MaterialDialog::setMaterial( const Material* material )
 {
     if ( material == 0 ) {
-        MaterialList->clearSelection(); // In single selection mode, the signal is not emitted.
+        ui.MaterialList->clearSelection(); // In single selection mode, the signal is not emitted.
         MaterialList_selectionChanged( 0 );
     }
     else {
-        QListViewItem* class_item = MaterialList->firstChild();
-        while ( class_item != 0 ) {
-            if ( class_item->text( 0 ) == material->materialClass() ) break;
-            class_item = class_item->nextSibling();
+        QListWidgetItem* class_item = 0;
+        for (int cRow = 0; cRow<ui.MaterialList->count(); cRow++) {
+            class_item = ui.MaterialList->item( cRow );
+            if ( class_item->text( ) == material->materialClass() )
+                break;
         }
-        if ( class_item != 0 ) {
-            QListViewItem* material_item = class_item->firstChild();
-            while ( material_item != 0 ) {
-                if ( material_item->text( 0 ) == material->name() ) {
-                    MaterialList->setSelected( material_item, true );
-                    return;
-                }
-                material_item = material_item->nextSibling();
-            }
-        }
+        //TODO
+        //        if ( class_item != 0 ) {
+//            QListWidgetItem* material_item = class_item->firstChild();
+//            while ( material_item != 0 ) {
+//                if ( material_item->text( ) == material->name() ) {
+//                    MaterialList->setSelected( material_item, true );
+//                    return;
+//                }
+//                material_item = material_item->nextSibling();
+//            }
+//        }
         MaterialList_selectionChanged( 0 );
     }
 }
@@ -876,7 +900,7 @@ void MaterialDialog::setMaterial( const Material* material )
 
 void MaterialDialog::buttonHelp_clicked()
 {
-    QWhatsThis::display( tr( "<p><b>Set Material for Part</b><p>\
+    QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Set Material for Part</b><p>\
                              <p>This dialog allows you to apply a material to the current part. Materials are \
                              grouped by type (e.g., solid wood, composites, and so on). Select a material from the \
                              list and some attributes of the material will be displayed in the Material Details box. \

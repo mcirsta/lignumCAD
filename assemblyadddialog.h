@@ -1,6 +1,8 @@
 #ifndef ASSEMBLYADDDIALOG
 #define ASSEMBLYADDDIALOG
 
+#include "listviewitem.h"
+
 #include "ui_assemblyadddialog.h"
 
 class AssemblyAddDialog : public QDialog

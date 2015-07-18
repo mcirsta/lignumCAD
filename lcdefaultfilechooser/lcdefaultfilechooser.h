@@ -24,6 +24,7 @@
 #define LCDEFAULTFILECHOOSER_H
 
 #include <QLineEdit>
+#include <QPushButton>
 
 
 //TODO horiz layout

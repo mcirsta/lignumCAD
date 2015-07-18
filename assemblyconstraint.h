@@ -23,6 +23,8 @@
 #ifndef ASSEMBLYCONSTRAINT_H
 #define ASSEMBLYCONSTRAINT_H
 
+#include <QVector>
+
 #include <gp_Ax2.hxx>
 
 #include <qstringlist.h>

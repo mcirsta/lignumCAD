@@ -24,6 +24,7 @@
 #define LCCOLORCHOOSER_H
 
 #include <qcolor.h>
+#include <QWidget>
 
 class QLabel;
 class QPushButton;

@@ -23,6 +23,8 @@
 #ifndef SOLID_H
 #define SOLID_H
 
+#include <QVector>
+
 #include <map>
 #include <unordered_map>
 

@@ -30,17 +30,14 @@
 // a valid name change.
 
 class ListViewItem : public QStandardItem {
-  Q_OBJECT
 public:
   ListViewItem ( QStandardItem* parent );
   ListViewItem ( QStandardItem* parent, QStandardItem* after );
+  ListViewItem ( QString itemStr);
   ~ListViewItem ();
 protected:
   void okRename ( int col );
   void activate ( void );
-signals:
-  void nameChanged ( const QString& name );
-  void picked ( void );
 };
 
 #endif // LISTVIEWITEM_H

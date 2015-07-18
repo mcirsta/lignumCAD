@@ -1,6 +1,8 @@
 #ifndef RECTANGLEINFODIALOG
 #define RECTANGLEINFODIALOG
 
+#include "lcdefaultcombobox.h"
+
 #include "ui_rectangleinfodialog.h"
 
 class RectangleInfoDialog : public QDialog

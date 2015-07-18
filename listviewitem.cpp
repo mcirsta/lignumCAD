@@ -38,6 +38,11 @@ ListViewItem::ListViewItem ( QStandardItem* parent, QStandardItem* after )
     //  cout << "created ordered list view item @ " << this << endl;
 }
 
+ListViewItem::ListViewItem (QString itemStr)
+    :QStandardItem (itemStr)
+{
+}
+
 ListViewItem::~ListViewItem ( void )
 {
   //cout << "deleting list view item @ " << this << ": " << text(0) << endl;
@@ -48,11 +53,12 @@ void ListViewItem::okRename ( int col )
   if ( col != 0 ) return;
 
   ListViewItem::okRename( col );
-
-  emit nameChanged( text( ) );
+//TODO
+  //emit nameChanged( text( ) );
 }
 
 void ListViewItem::activate ( void )
 {
-  emit picked();
+  //TODO
+    //emit picked();
 }

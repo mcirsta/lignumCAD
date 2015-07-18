@@ -1,6 +1,8 @@
 #ifndef ASSEMBLYCONFIGDIALOG
 #define ASSEMBLYCONFIGDIALOG
 
+#include "listviewitem.h"
+
 #include "ui_assemblyconfigdialog.h"
 
 class AssemblyConfigDialog : public QDialog
