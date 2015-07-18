@@ -92,12 +92,13 @@ int main( int argc, char ** argv )
     // Translations should be in the data directory
 
     QTranslator translator;
-    QString noTranslationsFound =  "Could not find translation file for locale:\n" +
+    QString noTranslationsFound =  "Could not find translation file for locale: " +
             QLocale::system().name() +
-            "Continuing with built-in strings.\n"
+            "\nContinuing with built-in strings.\n"
             "Please check your installation.";
-    if ( !translator.load( QString( "lignumCAD_" ) +  QLocale::system().name() ) ) {
-        QMessageBox::warning((QWidget*)&app,
+    if ( !translator.load( QString( "lignumCAD_" ) +  QLocale::system().name() ) &&
+         ! QString(  QLocale::system().name() ).startsWith( "en" ) ) {
+        QMessageBox::warning(0,
                              lC::STR::cLIGNUMCAD,
                              noTranslationsFound);
     }

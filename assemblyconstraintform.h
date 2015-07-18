@@ -13,6 +13,9 @@ public:
 
 public slots:
     virtual void helpPushButton_clicked();
+
+private:
+    Ui::AssemblyConstraintForm ui;
 };
 
 #endif // ASSEMBLYCONSTRAINTFORM

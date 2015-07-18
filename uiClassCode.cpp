@@ -5,10 +5,27 @@
 #include "materialdialog.h"
 #include "newmodelwizard.h"
 #include "pagefactory.h"
+#include "assemblyconfigdialog.h"
+#include "assemblyadddialog.h"
 #include "listviewitem.h"
+#include "assemblyconstraintform.h"
+#include "offsetinfodialog.h"
+#include "referencelineinfodialog.h"
+#include "centerlineinfodialog.h"
+#include "dimensioninfodialog.h"
+#include "rectangleinfodialog.h"
+#include "annotationinfodialog.h"
+#include "partinfodialog.h"
+#include "parameterinfodialog.h"
+#include "aboutdialog.h"
 
 #include "configuration.h"
 #include "systemdependencies.h"
+
+#include "Standard_Version.hxx"
+#include "freetype/fttypes.h"
+#include "freetype/freetype.h"
+#include "OGLFT.h"
 
 #include <QSettings>
 #include <QMessageBox>
@@ -16,6 +33,8 @@
 #include <QBoxLayout>
 #include <QCloseEvent>
 #include <QWhatsThis>
+#include <QFontDatabase>
+#include <QColorDialog>
 
 lignumCADMainWindow::lignumCADMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,6 +48,49 @@ Ui::lignumCADMainWindow* lignumCADMainWindow::getUi()
     return &ui;
 }
 
+aboutDialog::aboutDialog( QWidget* parent )
+    :QDialog( parent )
+{
+    ui.setupUi( this );
+    init();
+}
+
+/*!
+ * Initialize the About dialog.
+ */
+void aboutDialog::init()
+{
+    ui.programVersionLabel->setText( tr( "%1 Version %2.%3" ).
+                                  arg( lC::STR::LIGNUMCAD ).
+                                  arg( lC::STR::VERSION_MAJOR ).
+                                  arg( lC::STR::VERSION_MINOR ) );
+    ui.copyrightLabel->setText( tr( "Copyright © %1 %2" ).
+                             arg( lC::STR::COPYRIGHT_DATES ).
+                             arg( lC::STR::LIGNUMCOMPUTINGINC ) );
+    ui.contactLabel->setText( tr( "%1\ne-mail: %2" ).
+                           arg( lC::STR::LIGNUMCOMPUTINGURL ).
+                           arg( lC::STR::LIGNUMCOMPUTINGEMAIL ) );
+    // Try to figure out where all these things come from:
+    // OpenCASCADE
+    ui.openCASCADEVersionLabel->setText( tr( "Version: %1" ).
+                                      arg( OCC_VERSION_STRING ) );
+    // FreeType (this interface is only available in very recent versions of FreeType)
+    {
+        FT_Library library = OGLFT::Library::instance();
+        FT_Int major, minor, patch;
+        FT_Library_Version( library, &major, &minor, &patch );
+        ui.freeTypeVersionLabel->setText( tr( "Version: %1.%2.%3" ).arg(major).arg(minor).arg(patch) );
+    }
+    // Qt
+    ui.qtVersionLabel->setText( tr( "Version: %1" ).arg( qVersion() ) );
+    // SGI's  OpenGL GLU
+    ui.openGLGLUVersionLabel->setText( tr( "Version: %1" ).
+                                    arg( (char*)gluGetString( GLU_VERSION ) ) );
+    // OpenGL driver
+    ui.openGLVersionLabel->setText( tr( "Vendor: %1 Version: %2" ).
+                                 arg( (char*)glGetString( GL_VENDOR ) ).
+                                 arg( (char*)glGetString( GL_VERSION ) ) );
+}
 
 
 aboutDialog* lignumCADMainWindow::about_dialog_ = 0;
@@ -116,6 +178,8 @@ void lignumCADMainWindow::init ()
     scale_label_->setObjectName( "scaleLabel" );
     scale_label_->setWhatsThis( tr( "Shows the scale of the current page." ) );
     statusBar()->addWidget( scale_label_, 0 );
+
+    model_hierarchy_data =  std::make_shared<QStandardItemModel>();
 }
 
 // The MainWindow delegates most of its actions to DesignBookView.
@@ -415,9 +479,9 @@ void NewModelWizard::init()
         initialPageButtonGroup->addButton( button, *id );
         vbox->addWidget( button );
         button->setToolTip( qApp->translate( "lignumCADMainWindow",
-                                        PageFactory::instance()->toolTip( *id ).toStdString().c_str() ));
+                                             PageFactory::instance()->toolTip( *id ).toStdString().c_str() ));
         button->setWhatsThis( qApp->translate( "lignumCADMainWindow",
-                                          PageFactory::instance()->whatsThis( *id ).toStdString().c_str() ) );
+                                               PageFactory::instance()->whatsThis( *id ).toStdString().c_str() ) );
         // Keep a list of these around since QButtonGroup doesn't have an iterator and our
         // ids are not necessarily sequential.
         initialPageRadioButtons.append( std::shared_ptr<QRadioButton>(button) );
@@ -442,7 +506,7 @@ void NewModelWizard::modelNameEdit_textChanged( const QString & text )
  */
 void NewModelWizard::initialPageSelected( void )
 {
-   //TODO
+    //TODO
     // finishButton()->setEnabled( true );
     //finishButton()->setDefault( true );
 }
@@ -471,46 +535,46 @@ void NewModelWizard::NewModelWizard_helpClicked()
 {
     if ( currentPage() == ui.NewModelPage ) {
         this->setWhatsThis( tr( "<p><b>New Model Page</b></p>\
-                                 <p>Enter the basic information about the model. \
-                                 (This is sometimes called the <i>metadata</i>.) \
-                                 The metadata includes:\
-                                 <ul>\
-                                 <li>Model name</li>\
-                                 <li>File to save the model in (defaults to <i>ModelName</i>.lcad)</li>\
-                                 <li>Initial version and revision numbers</li>\
-                                 <li>Optional description of the model</li>\
-                                 <li>Date and time of creation</li>\
-                                 <li>Date and time of last modification</li>\
-                                 </ul>\
-                                 The creation and last modification times \
-                                 are updated automatically.</p>\
-                                 <p>When the fields are filled in to your satisfaction, \
-                                 click the <b>Next</b> button \
-                                 (or press <b>Enter</b> or <b>Alt+N</b>) to \
-                                 proceed to the next page.</p>\
-                                 <p>If you click the <b>Cancel</b> button \
-                                 (or press <b>ESC</b> or <b>Alt+C</b>), \
-                                 no new model will be created.</p>" ) );
+                                <p>Enter the basic information about the model. \
+                                (This is sometimes called the <i>metadata</i>.) \
+                                The metadata includes:\
+                                <ul>\
+                                <li>Model name</li>\
+                                <li>File to save the model in (defaults to <i>ModelName</i>.lcad)</li>\
+                                <li>Initial version and revision numbers</li>\
+                                <li>Optional description of the model</li>\
+                                <li>Date and time of creation</li>\
+                                <li>Date and time of last modification</li>\
+                                </ul>\
+                                The creation and last modification times \
+                                are updated automatically.</p>\
+                                <p>When the fields are filled in to your satisfaction, \
+                                click the <b>Next</b> button \
+                                (or press <b>Enter</b> or <b>Alt+N</b>) to \
+                                proceed to the next page.</p>\
+                                <p>If you click the <b>Cancel</b> button \
+                                (or press <b>ESC</b> or <b>Alt+C</b>), \
+                                no new model will be created.</p>" ) );
     }
     else if ( currentPage() == ui.InitialPagePage ) {
         this->setWhatsThis( tr( "<p><b>Initial Page</b></p>\
-                                 <p><i>lignumCAD</i> requires that you start your \
-                                 model with at least one page. Typically, you would \
-                                 start with a few sketches to establish the overall \
-                                 dimensions of the model; but, you are free to \
-                             start with any page type.</p>\
-                             <p>After you choose a page type \
-                             from the list, the <b>Finish</b> button will be activated. \
-                             You can click that \
-                             (or press <b>Enter</b> or <b>Alt+F</b>) and \
-                             the new model with the specified initial page \
-                             will be created.</p>\
-                             <p>You can also click <b>Back</b> \
-                             (or press <b>Alt+B</b>) \
-                             to edit the model information some more.</p>\
-                             <p>If you click <b>Cancel</b> \
-                             (or press <b>ESC</b> or <b>Alt+C</b>), \
-                             no new model will be created.</p>" ) );
+                                <p><i>lignumCAD</i> requires that you start your \
+                                model with at least one page. Typically, you would \
+                                start with a few sketches to establish the overall \
+                                dimensions of the model; but, you are free to \
+                            start with any page type.</p>\
+                            <p>After you choose a page type \
+                            from the list, the <b>Finish</b> button will be activated. \
+                            You can click that \
+                            (or press <b>Enter</b> or <b>Alt+F</b>) and \
+                            the new model with the specified initial page \
+                            will be created.</p>\
+                            <p>You can also click <b>Back</b> \
+                            (or press <b>Alt+B</b>) \
+                            to edit the model information some more.</p>\
+                            <p>If you click <b>Cancel</b> \
+                            (or press <b>ESC</b> or <b>Alt+C</b>), \
+                            no new model will be created.</p>" ) );
     }
 }
 
@@ -556,12 +620,50 @@ Ui::ModelInfoDialog* ModelInfoDialog::getUi ()
     return &ui;
 }
 
+void ModelInfoDialog::modelNameEdit_textChanged( const QString & text )
+{
+    ui.modelFileChooser->setFileName( text + ".lcad" );
+    ui.modelFileChooser->setEdited( true );
+}
+
+
+void ModelInfoDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Edit Model Information</b></p>\
+                                              <p>Modify the basic information about the model. \
+                                              (This is sometimes called the <i>metadata</i>.) \
+                                              The metadata includes:\
+                                              <ul>\
+                                              <li>Model name</li>\
+                                              <li>File to save the model in (defaults to <i>ModelName</i>.lcad)</li>\
+                                              <li>Version and revision numbers</li>\
+                                              <li>Optional description of the model</li>\
+                                              <li>Date and time of creation</li>\
+                                              <li>Date and time of last modification</li>\
+                                              </ul>\
+                                              The creation and last modification times \
+                                              are updated automatically.</p>\
+                                              <p>When the fields are modified to your satisfaction, \
+                                              click the <b>OK</b> button (or press <b>Enter</b> or \
+                                                                          <b>Alt+O</b>) to \
+                                              apply the changes and exit the dialog.</p>\
+                                              <p>If you click the <b>Cancel</b> button \
+                                              (or press <b>ESC</b> or <b>Alt+C</b>), \
+                                              no changes to the model will be made.</p>" ) );
+
+}
+
 
 NewPartWizard::NewPartWizard(QWidget* parent)
     :QWizard(parent)
 {
     ui.setupUi(this);
     init();
+}
+
+Ui::NewPartWizard* NewPartWizard::getUi()
+{
+    return &ui;
 }
 
 void NewPartWizard::init()
@@ -575,7 +677,7 @@ void NewPartWizard::init()
     QListIterator<std::shared_ptr<PartMetadata>> part = PartFactory::instance()->parts();
     while ( part.hasNext() ) {
         QMultiHash<QString, std::shared_ptr<ListViewItem>>::const_iterator foundIt
-                                                    = groups_.find( trC( part.peekNext()->group() ) );
+                = groups_.find( trC( part.peekNext()->group() ) );
         std::shared_ptr <ListViewItem> group;
         if ( foundIt == groups_.cend()) {
             group = std::shared_ptr<ListViewItem>(new ListViewItem( trC( part.peekNext()->group() ) ));
@@ -602,14 +704,14 @@ void NewPartWizard::init()
 void NewPartWizard::partLibraryListView_currentChanged(QListWidgetItem *item )
 {
     //TODO
-//    if ( item != 0 ) {
-//        if ( groups_.find( item->text( ) ) != groups_.cend() )
-//            nextButton()->setEnabled( false );
-//        else
-//            nextButton()->setEnabled( true );
-//    }
-//    else
-//        nextButton()->setEnabled( false );
+    //    if ( item != 0 ) {
+    //        if ( groups_.find( item->text( ) ) != groups_.cend() )
+    //            nextButton()->setEnabled( false );
+    //        else
+    //            nextButton()->setEnabled( true );
+    //    }
+    //    else
+    //        nextButton()->setEnabled( false );
 }
 
 
@@ -630,8 +732,8 @@ void NewPartWizard::NewPartWizard_selected( const QString& /*page_name*/ )
         PartMetadata* part = parts_[ item ];
 #endif
         ui.partParameterFrame->setTitle( tr( "&Parameters for %1::%2" ).
-                                      arg( trC( part->group() ) ).
-                                      arg( lC::formatName( part->name() ) ) );
+                                         arg( trC( part->group() ) ).
+                                         arg( lC::formatName( part->name() ) ) );
         // Construct how ever many input parameter fields this part needs.
         uint n_parameters = part->parameterCount();
         if ( scroll_view_ == 0 ) {
@@ -706,9 +808,9 @@ const PartMetadata* NewPartWizard::part( void )
 void NewPartWizard::updateValidity( double )
 {
     // One of the parameter boxes was changed, so recheck the validity of the input.
-//TODO
+    //TODO
     //    if ( part()->valid(parameter_labels_) )
-//        finishButton()->setEnabled( true );
+    //        finishButton()->setEnabled( true );
 }
 
 
@@ -716,40 +818,40 @@ void NewPartWizard::NewPartWizard_helpClicked()
 {
     if ( currentPage() == ui.initialPartPage ) {
         QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Initial Part Page</b></p>\
-                                 <p>Each Part is based on a three-dimensional solid geometry model. From this page, \
-                                 you can select the base solid geometry. The list shows the predefined solid templates. There \
-                                 are essentially two kinds of base solids: blanks and customized parts. The blanks \
-                                 include a regular rectangular parallelipiped, called a <em>board</em>, and a \
-                                 cylinder, called a <em>turning</em>. From these shapes, you can generate any \
-                                 other shape through the use of milling operations.</p>\
-                                 <p>The customized parts represent items which are you are more likely to buy pre-made. \
-                                 (Eventually, you will also be able to save your own creations as templates as well.)</p>\
-                                 <p>You should also set the name of the part (although you can change it later, too).</p>\
-                                 <p>When the fields are filled in to your satisfaction, \
-                                 click the <b>Next</b> button \
-                                 (or press <b>Enter</b> or <b>Alt+N</b>) to \
-                                 proceed to the next page.</p>\
-                                 <p>If you click the <b>Cancel</b> button \
-                                 (or press <b>ESC</b> or <b>Alt+C</b>), \
-                                 no Part will be generated.</p>" ) );
+                                                  <p>Each Part is based on a three-dimensional solid geometry model. From this page, \
+                                                  you can select the base solid geometry. The list shows the predefined solid templates. There \
+                                                  are essentially two kinds of base solids: blanks and customized parts. The blanks \
+                                                  include a regular rectangular parallelipiped, called a <em>board</em>, and a \
+                                                  cylinder, called a <em>turning</em>. From these shapes, you can generate any \
+                                                  other shape through the use of milling operations.</p>\
+                                                  <p>The customized parts represent items which are you are more likely to buy pre-made. \
+                                                  (Eventually, you will also be able to save your own creations as templates as well.)</p>\
+                                                  <p>You should also set the name of the part (although you can change it later, too).</p>\
+                                                  <p>When the fields are filled in to your satisfaction, \
+                                                  click the <b>Next</b> button \
+                                                  (or press <b>Enter</b> or <b>Alt+N</b>) to \
+                                                  proceed to the next page.</p>\
+                                                  <p>If you click the <b>Cancel</b> button \
+                                                  (or press <b>ESC</b> or <b>Alt+C</b>), \
+                                                  no Part will be generated.</p>" ) );
     }
     else if ( currentPage() == ui.partParametersPage ) {
         QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Part Parameters Page</b></p>\
-                                 <p>On this page, the parameters (dimensions or sizes) of the template solids are \
-                                 defined. When acceptable \
-                                 values are entered for all parameters, the <b>Finish</b> button will become \
-                                 active and the solid is ready to be generated. You can click that \
-                                 (or press <b>Enter</b> or <b>Alt+F</b>) and \
-                                 the new part will be created.</p>\
-                                 <p>You can also click <b>Back</b> \
-                                 (or press <b>Alt+B</b>) \
-                                 to change the base solid template. (Note that any values you have entered in \
-                                                                     the parameter input boxes will be forgotten when you return to this page, \
-                                                                     even if you select the same \
-                                                                     base solid template.)</p>\
-                                 <p>If you click <b>Cancel</b> \
-                                 (or press <b>ESC</b> or <b>Alt+C</b>), \
-                                 no new Part will be created.</p></p>" ) );
+                                                  <p>On this page, the parameters (dimensions or sizes) of the template solids are \
+                                                  defined. When acceptable \
+                                                  values are entered for all parameters, the <b>Finish</b> button will become \
+                                                  active and the solid is ready to be generated. You can click that \
+                                                  (or press <b>Enter</b> or <b>Alt+F</b>) and \
+                                                  the new part will be created.</p>\
+                                                  <p>You can also click <b>Back</b> \
+                                                  (or press <b>Alt+B</b>) \
+                                                  to change the base solid template. (Note that any values you have entered in \
+                                                                                      the parameter input boxes will be forgotten when you return to this page, \
+                                                                                      even if you select the same \
+                                                                                      base solid template.)</p>\
+                                                  <p>If you click <b>Cancel</b> \
+                                                  (or press <b>ESC</b> or <b>Alt+C</b>), \
+                                                  no new Part will be created.</p></p>" ) );
     }
 }
 
@@ -796,22 +898,22 @@ void MaterialDialog::init()
     QHashIterator<QString,std::shared_ptr<Material>> material = MaterialDatabase::instance().materials();
 
     //TODO
-//    while ( material.hasNext() ) {
+    //    while ( material.hasNext() ) {
 
-//        int row = 0;
-//        QListViewItem* class_item = ui.MaterialList->item( row)
-//        while ( class_item != 0 ) {
-//            if ( class_item->text( 0 ) == material.current()->materialClass() ) break;
-//            class_item = class_item->nextSibling();
-//        }
-//        if ( class_item == 0 ) {
-//            class_item = new QListViewItem( MaterialList,
-//                                            material.current()->materialClass() );
-//            class_item->setSelectable( false );
-//            class_item->setOpen( true );
-//        }
-//        new QListViewItem( class_item, material.current()->name() );
-//    }
+    //        int row = 0;
+    //        QListViewItem* class_item = ui.MaterialList->item( row)
+    //        while ( class_item != 0 ) {
+    //            if ( class_item->text( 0 ) == material.current()->materialClass() ) break;
+    //            class_item = class_item->nextSibling();
+    //        }
+    //        if ( class_item == 0 ) {
+    //            class_item = new QListViewItem( MaterialList,
+    //                                            material.current()->materialClass() );
+    //            class_item->setSelectable( false );
+    //            class_item->setOpen( true );
+    //        }
+    //        new QListViewItem( class_item, material.current()->name() );
+    //    }
 }
 
 
@@ -884,15 +986,15 @@ void MaterialDialog::setMaterial( const Material* material )
         }
         //TODO
         //        if ( class_item != 0 ) {
-//            QListWidgetItem* material_item = class_item->firstChild();
-//            while ( material_item != 0 ) {
-//                if ( material_item->text( ) == material->name() ) {
-//                    MaterialList->setSelected( material_item, true );
-//                    return;
-//                }
-//                material_item = material_item->nextSibling();
-//            }
-//        }
+        //            QListWidgetItem* material_item = class_item->firstChild();
+        //            while ( material_item != 0 ) {
+        //                if ( material_item->text( ) == material->name() ) {
+        //                    MaterialList->setSelected( material_item, true );
+        //                    return;
+        //                }
+        //                material_item = material_item->nextSibling();
+        //            }
+        //        }
         MaterialList_selectionChanged( 0 );
     }
 }
@@ -901,11 +1003,544 @@ void MaterialDialog::setMaterial( const Material* material )
 void MaterialDialog::buttonHelp_clicked()
 {
     QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Set Material for Part</b><p>\
-                             <p>This dialog allows you to apply a material to the current part. Materials are \
-                             grouped by type (e.g., solid wood, composites, and so on). Select a material from the \
-                             list and some attributes of the material will be displayed in the Material Details box. \
-                             Click the <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) to apply the material \
-                             to the part. If you click the \
-                             <b>Cancel</b> button (or press <b>Escape</b> or <b>Alt+C</b>), the material currently \
-                             assigned to the part will not be changed.</p>" ) );
+                                              <p>This dialog allows you to apply a material to the current part. Materials are \
+                                              grouped by type (e.g., solid wood, composites, and so on). Select a material from the \
+                                              list and some attributes of the material will be displayed in the Material Details box. \
+                                              Click the <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) to apply the material \
+                                              to the part. If you click the \
+                                              <b>Cancel</b> button (or press <b>Escape</b> or <b>Alt+C</b>), the material currently \
+                                              assigned to the part will not be changed.</p>" ) );
+}
+
+AssemblyConfigDialog::AssemblyConfigDialog( QWidget* parent )
+    :QDialog( parent )
+{
+    ui.setupUi( this );
+    init();
+}
+
+Ui::AssemblyConfigDialog* AssemblyConfigDialog::getUi ()
+{
+    return &ui;
+}
+
+
+void AssemblyConfigDialog::init()
+{
+    //TODO
+    //ui.modelListView->setSorting( -1 );
+}
+
+void AssemblyConfigDialog::modelListView_selectionChanged( ListViewItem* item )
+{
+    if ( item != 0 )
+        ui.buttonOk->setEnabled( true );
+    else
+        ui.buttonOk->setEnabled( false );
+}
+
+
+void AssemblyConfigDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr( "<p>Set the name for this assembly and then select the model (either a Part or an Assembly) to form the basis for the assembly. Its origin will coincide with the origin of the assembly.</p>\
+                                              <p>Note that the dialog cannot be completed until a model is selected. Canceling the dialog (either by clicking the <b>Cancel</b> button or pressing <b>ESC</b> or <b>Alt+C</b>) will cancel the creation of the assembly as well.</p>" ) );
+}
+
+
+
+AssemblyAddDialog::AssemblyAddDialog( QWidget* parent )
+    :QDialog ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::AssemblyAddDialog* AssemblyAddDialog::getUi()
+{
+    return &ui;
+}
+
+void AssemblyAddDialog::modelListView_selectionChanged( ListViewItem* item )
+{
+    if ( item != 0 )
+        ui.buttonOk->setEnabled( true );
+    else
+        ui.buttonOk->setEnabled( false );
+}
+
+
+void AssemblyAddDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr( "Select the model (either a Part or an Assembly) to add to this assembly." ) );
+}
+
+
+
+AssemblyConstraintForm::AssemblyConstraintForm( QWidget* parent )
+    :QWidget ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::AssemblyConstraintForm* AssemblyConstraintForm::getUi()
+{
+    return &ui;
+}
+
+void AssemblyConstraintForm::helpPushButton_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr( "<p>This dialog allows you to define the constraints by which a new model is located in space with respect to the assembly. A typical example would be the location of a table leg with respect to the skirts of the table.</p>\
+                                              <p>Defining the model location usually involves making three constraints. (It might help to think of the three constraints corresponding to the normal three spatial dimensions.) The constraints which can be made are:</p>\
+                                              <ul><li>Mate: The surfaces of two different models will touch and will face each other.</li>\
+                                              <li>Align: The surfaces of two different models will touch and face in the same direction.</li>\
+                                              <li>Mate Offset: The surfaces of two different models will face each other but will be separated by a given distance.</li>\
+                                              <li>Align Offset: The surfaces of two different models will face in the same direction but will be separated by a given distance</li></ul>\
+                                              <p>To create a constraint, select its button. When you click on it, the button will stay in the down position to indicate the type of constraint in progress. Next click on two surfaces: one on the new model and one on the completed assembly. If the two surfaces are compatible, the constraint will be recorded and the position of the new model will be updated to reflect the constraint.</p>\
+                                              <p>When the new model is completely constrained, usually after making three constraints, this dialog will disappear. If you decide not to place the new model, click <b>Cancel</b> (or select <b>Cancel Model Addition</b> from the context menu or type <b>Alt-C</b>) and the new model will be removed from the assembly.</p>" ) );
+}
+
+
+OffsetInfoDialog::OffsetInfoDialog( QWidget* parent)
+    :QDialog ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::OffsetInfoDialog* OffsetInfoDialog::getUi()
+{
+    return &ui;
+}
+
+void OffsetInfoDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr("<p><b>Offset Information</b></p>\
+                                             <p>This dialog allows you to edit the magnitude of an \
+                                             offset. You can either specify a fixed size or you can reference \
+                                             another dimension in the model.</p>\
+                                             <p>After the offset is adjusted as desired, click on the \
+                                             <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
+                                             to accept your changes. Clicking the <b>Cancel</b> button \
+                                             (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
+                                             dialog without applying the changes.</p>" ) );
+}
+
+
+
+ReferenceLineInfoDialog::ReferenceLineInfoDialog( QWidget* parent )
+    :QDialog ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::ReferenceLineInfoDialog* ReferenceLineInfoDialog::getUi()
+{
+    return &ui;
+}
+
+void ReferenceLineInfoDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr("<p><b>Reference Line Information</b></p>\
+                                             <p>This dialog allows you to edit selected properties of a \
+                                             reference line. These include:\
+                                             <ul>\
+                                             <li>Name</li>\
+                                             <li>Offset from its reference</li>\
+                                             </ul>\
+                                             </p>\
+                                             <p>After the properties are adjusted as desired, click on the \
+                                             <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
+                                             to accept your changes. Clicking the <b>Cancel</b> button \
+                                             (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
+                                             dialog without applying the changes.</p>" ) );
+}
+
+
+
+CenterlineInfoDialog::CenterlineInfoDialog( QWidget* parent )
+    :QDialog ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::CenterlineInfoDialog* CenterlineInfoDialog::getUi()
+{
+    return &ui;
+}
+
+void CenterlineInfoDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr("<p><b>Centerline Information</b></p>\
+                                             <p>This dialog allows you to edit selected properties of a \
+                                             centerline. These include:\
+                                             <ul>\
+                                             <li>Name</li>\
+                                             <li>Offset from its reference</li>\
+                                             </ul></p>\
+                                             <p>After the properties are adjusted as desired, click on the \
+                                             <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
+                                             to accept your changes. Clicking the <b>Cancel</b> button \
+                                             (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
+                                             dialog without applying the changes.</p>" ) );
+}
+
+
+
+DimensionInfoDialog::DimensionInfoDialog( QWidget* parent )
+    : QDialog ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::DimensionInfoDialog* DimensionInfoDialog::getUi()
+{
+    return &ui;
+}
+
+void DimensionInfoDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr("<p><b>Dimension Information</b></p>\
+                                             <p>This dialog allows you to edit selected properties of a \
+                                             dimension. These include:\
+                                             <ul>\
+                                             <li>Name</li>\
+                                             <li>Offset from its reference</li>\
+                                             <li>The side of the references on which the dimension is drawn (annotation side)</li>\
+                                             </ul>\
+                                             </p>\
+                                             <p>After the properties are adjusted as desired, click on the \
+                                             <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
+                                             to accept your changes. Clicking the <b>Cancel</b> button \
+                                             (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
+                                             dialog without applying the changes.</p>" ) );
+}
+
+
+
+RectangleInfoDialog::RectangleInfoDialog( QWidget* parent )
+    :QDialog ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::RectangleInfoDialog* RectangleInfoDialog::getUi()
+{
+    return &ui;
+}
+
+void RectangleInfoDialog::init ()
+{
+    // Create invisible button groups connecting the Left/Right, Above/Below
+    // radio buttons, respectively.
+    QButtonGroup* h = new QButtonGroup( ui.dimDisplaySideGroupBox );
+    h->setObjectName( "H" );
+    h->addButton( ui.leftButton );
+    h->addButton( ui.rightButton );
+    QButtonGroup* v = new QButtonGroup( ui.dimDisplaySideGroupBox );
+    v->setObjectName(  "V" );
+    v->addButton( ui.aboveButton );
+    v->addButton( ui.belowButton );
+
+    // Populate the edge stipple combo box. Maybe make a Designer widget?
+    ui.edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_solid.png" ), tr( "Solid" ) );
+    ui.edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_dash.png" ), tr( "Dash" ) );
+    ui.edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_dot.png" ), tr( "Dot" ) );
+    ui.edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_dashdot.png"), tr( "Dash Dot" ) );
+    ui.edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_dashdotdot.png"), tr( "Dash Dot Dot" ) );
+}
+
+void RectangleInfoDialog::rectangleStyleSlider_valueChanged( int style )
+{
+    switch ( style ) {
+    case lC::Render::PARENT:
+        ui.defaultStyleLabel->setEnabled( true );
+        ui.edgeStyleLabel->setEnabled( false );
+        ui.edgeStyleComboBox->setEnabled( false );
+        ui.wireframeStyleLabel->setEnabled( false );
+        ui.wireframeStyleColorChooser->setEnabled( false );
+        ui.solidStyleLabel->setEnabled( false );
+        ui.solidStyleColorChooser->setEnabled( false );
+        ui.textureStyleLabel->setEnabled( false );
+        ui.textureStyleFileChooser->setEnabled( false );
+        break;
+    case lC::Render::STIPPLE:
+        ui.defaultStyleLabel->setEnabled( false );
+        ui.edgeStyleLabel->setEnabled( true );
+        ui.edgeStyleComboBox->setEnabled( true );
+        ui.wireframeStyleLabel->setEnabled( false );
+        ui.wireframeStyleColorChooser->setEnabled( false );
+        ui.solidStyleLabel->setEnabled( false );
+        ui.solidStyleColorChooser->setEnabled( false );
+        ui.textureStyleLabel->setEnabled( false );
+        ui.textureStyleFileChooser->setEnabled( false );
+        break;
+    case lC::Render::WIREFRAME:
+        ui.defaultStyleLabel->setEnabled( false );
+        ui.edgeStyleLabel->setEnabled( true );
+        ui.edgeStyleComboBox->setEnabled( true );
+        ui.wireframeStyleLabel->setEnabled( true );
+        ui.wireframeStyleColorChooser->setEnabled( true );
+        ui.solidStyleLabel->setEnabled( false );
+        ui.solidStyleColorChooser->setEnabled( false );
+        ui.textureStyleLabel->setEnabled( false );
+        ui.textureStyleFileChooser->setEnabled( false );
+        break;
+    case lC::Render::SOLID:
+        ui.defaultStyleLabel->setEnabled( false );
+        ui.edgeStyleLabel->setEnabled( true );
+        ui.edgeStyleComboBox->setEnabled( true );
+        ui.wireframeStyleLabel->setEnabled( true );
+        ui.wireframeStyleColorChooser->setEnabled( true );
+        ui.solidStyleLabel->setEnabled( true );
+        ui.solidStyleColorChooser->setEnabled( true );
+        ui.textureStyleLabel->setEnabled( false );
+        ui.textureStyleFileChooser->setEnabled( false );
+        break;
+    case lC::Render::TEXTURED:
+        ui.defaultStyleLabel->setEnabled( false );
+        ui.edgeStyleLabel->setEnabled( true );
+        ui.edgeStyleComboBox->setEnabled( true );
+        ui.wireframeStyleLabel->setEnabled( true );
+        ui.wireframeStyleColorChooser->setEnabled( true );
+        ui.solidStyleLabel->setEnabled( true );
+        ui.solidStyleColorChooser->setEnabled( true );
+        ui.textureStyleLabel->setEnabled( true );
+        ui.textureStyleFileChooser->setEnabled( true );
+        break;
+    }
+}
+
+
+void RectangleInfoDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr("<p><b>Rectangle Information</b></p>\
+                                             <p>This dialog allows you to edit selected properties of a \
+                                             rectangle. These include:\
+                                             <ul>\
+                                             <li>Name</li>\
+                                             <li>Width and height</li>\
+                                             <li>X and Y origin offsets</li>\
+                                             <li>The side on which the width and height dimensions are displayed</li>\
+                                             <li>The rendering style</li>\
+                                             </ul>\
+                                             </p>\
+                                             <p>After the properties are adjusted as desired, click on the \
+                                             <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
+                                             to accept your changes. Clicking the <b>Cancel</b> button \
+                                             (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
+                                             dialog without applying the changes.</p>" ) );
+}
+
+
+
+AnnotationInfoDialog::AnnotationInfoDialog( QWidget* parent )
+    :QDialog ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::AnnotationInfoDialog* AnnotationInfoDialog::getUi()
+{
+    return &ui;
+}
+
+/*!
+ * Initialize the Annotation information dialog.
+ */
+void AnnotationInfoDialog::init()
+{
+    int width = ui.boldButton->sizeHint().width();
+    width = qMax( width, ui.boldButton->sizeHint().height() );
+    width = qMax( width, ui.italicButton->sizeHint().width() );
+    width = qMax( width, ui.italicButton->sizeHint().height() );
+    width = qMax( width, ui.underlineButton->sizeHint().width() );
+    width = qMax( width, ui.underlineButton->sizeHint().height() );
+
+    ui.boldButton->setFixedSize( width, width );
+    ui.italicButton->setFixedSize( width, width );
+    ui.underlineButton->setFixedSize( width, width );
+
+    QFont font;
+    if ( !OpenGLGlobals::instance()->annotationFont().isEmpty() )
+        font.fromString( OpenGLGlobals::instance()->annotationFont() );
+
+    ui.annotationTextEdit->setFont( font );
+
+    QList<int> sizes = QFontDatabase::standardSizes();
+    QList<int>::Iterator it = sizes.begin();
+    for ( ; it != sizes.end(); ++it )
+        ui.sizesComboBox->addItem( QString::number( *it ) );
+
+    QPixmap sample( 24, 24 );
+    //TODO
+    //sample.fill( ui.annotationTextEdit->colorGroup().text() );
+    QIcon buttonIcon(sample);
+    ui.colorButton->setIcon( buttonIcon );
+    ui.colorButton->setIconSize( sample.rect().size() );
+}
+
+/*!
+ * Set the bold attribute of the selected text. Also makes this the current
+ * state of the bold  attribute.
+ * \param bold new bold attribute.
+ */
+void AnnotationInfoDialog::boldButton_toggled( bool bold )
+{
+    QFont textFont = ui.annotationTextEdit->font();
+    textFont.setBold( bold );
+    ui.annotationTextEdit->setFont( textFont );
+}
+
+/*!
+ * Set the italic attribute of the selected text. Also makes this the current
+ * state of the italic attribute.
+ * \param italic new italic attribute.
+ */
+void AnnotationInfoDialog::italicButton_toggled( bool italic )
+{
+    ui.annotationTextEdit->setFontItalic( italic );
+}
+
+/*!
+ * Set the underline attribute of the selected text. Also makes this the
+ * current state of the underline attribute.
+ * \param underline new underline attribute.
+ */
+void AnnotationInfoDialog::underlineButton_toggled( bool underline )
+{
+    ui.annotationTextEdit->setFontUnderline( underline );
+}
+
+/*!
+ * Set the point size of the selected text. Also makes this the current
+ * state of the font size.
+ * \param value new point size.
+ */
+void AnnotationInfoDialog::pointSizeSpinBox_valueChanged( int value )
+{
+    ui.annotationTextEdit->setFontPointSize(value);
+}
+
+/*!
+ * Set the color of the selected text. Runs the standard Qt color selector.
+ * Also makes this the current state of the color attribute.
+ */
+void AnnotationInfoDialog::colorButton_clicked()
+{
+    QColor color = QColorDialog::getColor( ui.annotationTextEdit->textColor(), this );
+    ui.annotationTextEdit->setTextColor( color );
+    QPixmap sample( 24, 24);
+    sample.fill( color );
+    QIcon buttonIcon(sample);
+    ui.colorButton->setIcon( buttonIcon );
+    ui.colorButton->setIconSize( sample.rect().size() );
+}
+
+/*!
+ * This is invoked when the text edit cursor enters a region of text
+ * with a different color from the current color.
+ * \param color current color at cursor.
+ */
+void AnnotationInfoDialog::annotationTextEdit_currentColorChanged( const QColor & color )
+{
+    QPixmap sample( 24, 24 );
+    sample.fill( color );
+    QIcon buttonIcon(sample);
+    ui.colorButton->setIcon ( buttonIcon );
+    ui.colorButton->setIconSize( sample.rect().size() );
+}
+
+
+/*!
+ * This is invoked when the text edit cursor enters a region of
+ * different attributes from the current attributes.
+ * \param font current font at cursor.
+ */
+void AnnotationInfoDialog::annotationTextEdit_currentFontChanged( const QFont & font )
+{
+    ui.boldButton->setEnabled( font.bold() );
+    ui.italicButton->setEnabled( font.italic() );
+    ui.underlineButton->setEnabled( font.underline() );
+    ui.sizesComboBox->setCurrentText( QString::number( font.pointSize() ) );
+}
+
+/*!
+ * This is invoked when the user changes the font point size.
+ * \param text point size text from combo box.
+ */
+void AnnotationInfoDialog::sizesComboBox_activated( const QString & text )
+{
+    ui.annotationTextEdit->setFontPointSize( text.toInt() );
+}
+
+/*!
+ * Display brief help message for annotation text editor.
+ */
+void AnnotationInfoDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr("<p><b>Annotation Information</b></p>\
+                                             <p>This dialog allows you to edit selected properties of a \
+                                             text annotation. These include:\
+                                             <ul>\
+                                             <li>Name</li>\
+                                             <li>Text (including font size, color and style)</li>\
+                                             </ul></p>\
+                                             <p>After the properties are adjusted as desired, click on the \
+                                             <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
+                                             to accept your changes. Clicking the <b>Cancel</b> button \
+                                             (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
+                                             dialog without applying the changes.</p>" ) );
+
+}
+
+
+
+
+PartInfoDialog::PartInfoDialog( QWidget* parent )
+    :QDialog ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::PartInfoDialog* PartInfoDialog::getUi()
+{
+    return &ui;
+}
+
+void PartInfoDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Part Information</b></p>\
+                                              <p>This dialog lets you modify the overall attributes of a Part. Currently, \
+                                              the only attribute you can change is the name of the Part.</p>\
+                                              <p>Click the <b>OK</b> button \
+                                              (or press <b>Enter</b> or <b>Alt+O</b>) to apply the change. \
+                                              If you enter the same name as an existing Part, \
+                                              <i>lignumCAD</i> will reject the change.</p>\
+                                              <p>You can cancel these changes by clicking the <b>Cancel</b> \
+                                              button (or by pressing <b>ESC</b> or <b>Alt+C</b>).</p>" ) );
+}
+
+
+
+
+ParameterInfoDialog::ParameterInfoDialog( QWidget* parent )
+    :QDialog ( parent )
+{
+    ui.setupUi( this );
+}
+
+Ui::ParameterInfoDialog* ParameterInfoDialog::getUi()
+{
+    return &ui;
+}
+
+void ParameterInfoDialog::buttonHelp_clicked()
+{
+    QWhatsThis::showText( QCursor::pos(), tr("<p><b>Parameter Information</b></p>\
+                                             <p>This dialog allows you to edit the magnitude of a \
+                                             parameter. You can either specify a fixed size or you can reference \
+                                             another dimension in the model.</p>\
+                                             <p>After the parameter is adjusted as desired, click on the \
+                                             <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
+                                             to accept your changes. Clicking the <b>Cancel</b> button \
+                                             (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
+                                             dialog without applying the changes.</p>" ) );
 }

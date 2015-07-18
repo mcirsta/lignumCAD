@@ -749,11 +749,12 @@ UnitsBasis::UnitsBasis ( void )
   length_units_.append( std::shared_ptr<LengthUnit>(new Meter) );
 
   QListIterator< std::shared_ptr<LengthUnit> > i( length_units_ );
-  while ( i.hasNext() )
+  while ( i.hasNext() ) {
     length_unit_strings_.append( qApp->translate( "Precision", "%1 [ %2 ]" ).
                  arg( i.peekNext()->name() ).
-                 arg( i.next()->abbreviation() ) );
-
+                 arg( i.peekNext()->abbreviation() ) );
+    i.next();
+  }
   // The default default is Centimeter
   currentLenghtUnit = 6 ;
   format_ = length_units_[currentLenghtUnit]->defaultFormat();

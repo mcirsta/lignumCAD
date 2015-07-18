@@ -33,7 +33,7 @@ private:
     DesignBookView* design_book_view_;
     QLabel* message_label_;
     QLabel* information_label_;
-    QStandardItemModel* model_hierarchy_data;
+    std::shared_ptr<QStandardItemModel> model_hierarchy_data;
     QTreeWidget* model_hierarchy_list_;
 
 public slots:

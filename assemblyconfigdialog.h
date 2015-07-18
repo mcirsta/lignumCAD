@@ -18,6 +18,9 @@ public slots:
     virtual void init();
     virtual void modelListView_selectionChanged( ListViewItem * item );
     virtual void buttonHelp_clicked();
+
+private:
+    Ui::AssemblyConfigDialog ui;
 };
 
 

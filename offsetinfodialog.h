@@ -14,6 +14,9 @@ public:
 
 public slots:
     virtual void buttonHelp_clicked();
+
+private:
+    Ui::OffsetInfoDialog ui;
 };
 
 

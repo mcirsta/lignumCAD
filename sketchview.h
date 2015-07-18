@@ -132,7 +132,6 @@ private slots:
    */
   void listNameChanged ( const QString& name );
   void updateName ( const QString& name );
-  void toggleRenderStyleWireframe ( );
   void toggleRenderStyle (QAction *id );
   void createRectangle ();
   void createReferenceLine ();

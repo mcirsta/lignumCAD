@@ -62,7 +62,7 @@ CONFIG	+= qt warn_on debug thread c++11
 DEFINES	+= OGLFT_NO_SOLID GL2PS_USE_QT
 INCLUDEPATH	+= lcfilechooser lcfontchooser lccolorchooser lcdefaultfilechooser lcdefaultcombobox lcdefaultlengthspinbox lcdefaultratiospinbox lcconstraintchooser lcdefaultspinbox lcdefaultlengthconstraint ./
 unix:INCLUDEPATH	+= /usr/local/include/freetype2 /usr/local/src/Mesa/include /usr/include/X11/Xft /usr/lib/opencascade/inc /usr/include/freetype2
-unix:LIBS	+= -L/usr/local/lib -lfreetype -L/usr/local/src/Mesa/lib -L/usr/lib/opencascade/lin64/gcc/lib  -lGLU -lTKHLR -lTKHLR -lTKBool -lTKBO -lTKPrim -lTKTopAlgo -lTKBRep -lTKGeomAlgo -lTKGeomBase -lTKG3d -lTKG2d -lTKMath -lTKernel -lTKShHealing
+unix:LIBS	+= -L/usr/local/lib -lfreetype -L/usr/local/src/Mesa/lib -L/usr/lib/opencascade/lin64/gcc/lib  -lGLU -lfontconfig -lTKHLR -lTKHLR -lTKBool -lTKBO -lTKPrim -lTKTopAlgo -lTKBRep -lTKGeomAlgo -lTKGeomBase -lTKG3d -lTKG2d -lTKMath -lTKernel -lTKShHealing -lTKMesh
 
 RESOURCES += \
     media.qrc
