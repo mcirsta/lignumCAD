@@ -44,9 +44,9 @@ namespace Space2D {
     return parent_->model();
   }
 
-  QValueVector<uint> Geometry::ID ( void ) const
+  QVector<uint> Geometry::ID ( void ) const
   {
-    QValueVector<uint> ids;
+    QVector<uint> ids;
 
     if ( parent_ )
       ids = parent_->ID();
@@ -97,9 +97,9 @@ namespace Space3D {
     return parent_->model();
   }
 
-  QValueVector<uint> Geometry::ID ( void ) const
+  QVector<uint> Geometry::ID ( void ) const
   {
-    QValueVector<uint> ids;
+    QVector<uint> ids;
 
     if ( parent_ )
       ids = parent_->ID();

@@ -26,8 +26,8 @@
 #include <iostream>
 
 #include <qptrlist.h>
-#include <qintdict.h>
-#include <qvaluevector.h>
+#include <QHash>
+#include <QVector>
 #include <qmap.h>
 
 #include "constants.h"
@@ -78,7 +78,7 @@ class PageView : public InputObject, public GraphicsObject, public View {
   //! This is a mapping from OpenGL selection names (GLuints) to
   //! Figure views so that when the select() method is run, we can
   //! figure out just which Figure's were selected.
-  QIntDict< FigureViewBase > figure_selection_names_;
+  QHash<GLuint, FigureViewBase*> figure_selection_names_;
 
   //! Figures which are highlighted because the mouse is hovering over them
   SelectedNames highlighted_;
@@ -124,7 +124,7 @@ public:
   void setRenderStyle ( lC::Render::Style render_style );
 
   QPtrListIterator< FigureViewBase > figureViews ( void ) const;
-  const QIntDict< FigureViewBase >& figureSelectionNames ( void ) const;
+  const QHash<GLuint, FigureViewBase*>& figureSelectionNames ( void ) const;
 
   InputObject* inputObject( void ) const { return input_object_; }
   void setInputObject( InputObject* input_object );
@@ -139,7 +139,7 @@ public:
   void paste ( void );
 
   virtual View* lookup ( QStringList& path_components ) const;
-  virtual std::vector<GLuint> lookup ( QValueVector<uint>& id_path ) const;
+  virtual std::vector<GLuint> lookup ( QVector<uint>& id_path ) const;
 
   /*!
    * (Temporarily) turn off any highlights or activations
@@ -159,7 +159,7 @@ public:
   virtual QString name ( void ) const = 0;
   virtual void setName ( const QString& name ) = 0;
   virtual DBURL dbURL ( void ) const = 0;
-  virtual QValueVector<uint> ID ( void ) const = 0;
+  virtual QVector<uint> ID ( void ) const = 0;
 
   virtual QString type ( void ) const = 0;
 

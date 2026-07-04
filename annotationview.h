@@ -24,7 +24,7 @@
 #define ANNOTATIONVIEW_H
 
 #include <map>
-#include <qintdict.h>
+#include <QHash>
 #include <qdom.h>
 
 #include "vectoralgebra.h"
@@ -562,7 +562,7 @@ namespace Space2D {
     GraphicsView ml_handle_;
     //! All of the graphics objects used in the annotation view. For quick
     //! lookup via OpenGL selection name.
-    QIntDict< GraphicsView > annotation_objects_;
+    QHash<GLuint, GraphicsView*> annotation_objects_;
     //! Convert a handle selection name into a modification action.
     std::map< int, lC::ValidDelta( AnnotationView::* ) ( const Point&, Point& )> adjustments_;
     //! The annotation text editing dialog.

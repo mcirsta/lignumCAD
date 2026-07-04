@@ -70,7 +70,7 @@ public:
   QString type ( void ) const { return drawing_->type(); }
 
   DBURL dbURL ( void ) const { return drawing_->dbURL(); }
-  QValueVector<uint> ID ( void ) const { return drawing_->ID(); }
+  QVector<uint> ID ( void ) const { return drawing_->ID(); }
 
   void cancelOperation ( void );
 

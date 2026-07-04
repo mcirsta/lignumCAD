@@ -90,7 +90,7 @@ public:
   QString type ( void ) const { return sketch_->type(); }
 
   DBURL dbURL ( void ) const { return sketch_->dbURL(); }
-  QValueVector<uint> ID ( void ) const { return sketch_->ID(); }
+  QVector<uint> ID ( void ) const { return sketch_->ID(); }
 
 
   CreateObject* memento ( void );

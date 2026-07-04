@@ -163,9 +163,9 @@ void Model::resolveNow ( void )
 
 uint Model::newID ( void ) { return ++unique_page_id_; }
 
-QValueVector<uint> Model::ID ( void ) const
+QVector<uint> Model::ID ( void ) const
 {
-  QValueVector<uint> ids( 1 );
+  QVector<uint> ids( 1 );
   ids[0] = id();
   return ids;
 }
@@ -183,7 +183,7 @@ QString Model::path ( void ) const
 #endif
 }
 
-QString Model::idPath ( const QValueVector<uint>& id_path ) const
+QString Model::idPath ( const QVector<uint>& id_path ) const
 {
   if ( id_path.empty() )
     return QString::null;	// Really an error...
@@ -191,7 +191,7 @@ QString Model::idPath ( const QValueVector<uint>& id_path ) const
   if ( id_path[0] != id() )
     return QString::null;	// Really an error...
 
-  QValueVector<uint> my_path = id_path;
+  QVector<uint> my_path = id_path;
 
   my_path.erase( my_path.begin() );
 
@@ -226,14 +226,14 @@ QString Model::idPath ( const QValueVector<uint>& id_path ) const
 #endif
 }
 
-QValueVector<uint> Model::pathID ( const DBURL& db_url ) const
+QVector<uint> Model::pathID ( const DBURL& db_url ) const
 {
   QStringList path_components = QStringList::split( "/", db_url.path() );
 
   // The first path component is either the name of the model or a global
   // item (like the X axis in 2D space). Check for global items first.
 
-  QValueVector<uint> id_path;
+  QVector<uint> id_path;
 
   ModelItem* item = GlobalData::lookup( path_components );
 
@@ -345,9 +345,9 @@ ModelItem* Model::lookup ( const DBURL& db_url ) const
   return 0;
 }
 
-ModelItem* Model::lookup ( const QValueVector<uint>& id_path ) const
+ModelItem* Model::lookup ( const QVector<uint>& id_path ) const
 {
-  QValueVector<uint> my_path = id_path;
+  QVector<uint> my_path = id_path;
 
   if ( my_path.empty() || my_path[0] != id() )
     return 0;			// Not this model! Really an error...
@@ -404,9 +404,9 @@ Handle(Standard_Type) Model::lookupType ( const DBURL& db_url ) const
   return Handle(Standard_Type)();
 }
 
-Handle(Standard_Type) Model::lookupType ( const QValueVector<uint>& id_path ) const
+Handle(Standard_Type) Model::lookupType ( const QVector<uint>& id_path ) const
 {
-  QValueVector<uint> my_path = id_path;
+  QVector<uint> my_path = id_path;
 
   if ( my_path.empty() || my_path[0] != id() )
     return Handle(Standard_Type)(); // Not this model!
@@ -461,9 +461,9 @@ TopoDS_Shape Model::lookupShape ( const DBURL& db_url ) const
   return TopoDS_Shape();
 }
 
-TopoDS_Shape Model::lookupShape ( const QValueVector<uint>& id_path ) const
+TopoDS_Shape Model::lookupShape ( const QVector<uint>& id_path ) const
 {
-  QValueVector<uint> my_path = id_path;
+  QVector<uint> my_path = id_path;
 
   if ( my_path.empty() || my_path[0] != id() )
     return TopoDS_Shape(); // Not this model!

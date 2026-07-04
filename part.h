@@ -81,7 +81,7 @@ public:
    * Look up the geometry type of an OpenCASCADE shape.
    * \param id_path id list of path components.
    */
-  Handle(Standard_Type) lookupType ( QValueVector<uint>& id_path ) const;
+  Handle(Standard_Type) lookupType ( QVector<uint>& id_path ) const;
   /*!
    * Look up the topology of an OpenCASCADE shape. Should return
    * a shape which has the proper Location based on its traversal
@@ -95,7 +95,7 @@ public:
    * of the assembly hierarchy.
    * \param id_path id path.
    */
-  TopoDS_Shape lookupShape ( QValueVector<uint>& id_path ) const;
+  TopoDS_Shape lookupShape ( QVector<uint>& id_path ) const;
   /*!
    * Is the given page referenced by this part. Always false so far.
    * (When the argument is more general, then we'll have to do something.)
@@ -110,7 +110,7 @@ public:
    * \param id_path id path to item.
    * \return string encoded path to item.
    */
-  QString idPath ( QValueVector<uint> id_path ) const;
+  QString idPath ( QVector<uint> id_path ) const;
   /*!
    * Construct the id path to the specified item. May be either the part
    * itself or one of its figures.
@@ -118,7 +118,7 @@ public:
    * paths to current item removed.
    * \param id_path id path to update with id's.
    */
-  void pathID ( QStringList& path_components, QValueVector<uint>& id_path ) const;
+  void pathID ( QStringList& path_components, QVector<uint>& id_path ) const;
 
   void init ( void );
 

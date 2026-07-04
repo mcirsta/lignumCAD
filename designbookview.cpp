@@ -384,8 +384,8 @@ void DesignBookView::init ( void )
   // Add the available pages to the Insert menu and the Tab Bar context
   // menu.
 
-  QValueVector<uint> page_ids = PageFactory::instance()->pageIDs();
-  QValueVector<uint>::const_iterator id = page_ids.begin();
+  QVector<uint> page_ids = PageFactory::instance()->pageIDs();
+  QVector<uint>::const_iterator id = page_ids.begin();
   // This loop assumes that the page creation menu items are the first
   // items inserted into both the menu bar Insert menu and the tab bar
   // context popup menu. (QAction really needs some more identifying
@@ -483,8 +483,8 @@ void DesignBookView::showView ( void )
 
   lCMW_->editFindAction->setEnabled( true );
 
-  QValueVector<uint> page_ids = PageFactory::instance()->pageIDs();
-  QValueVector<uint>::const_iterator id = page_ids.begin();
+  QVector<uint> page_ids = PageFactory::instance()->pageIDs();
+  QVector<uint>::const_iterator id = page_ids.begin();
   for ( int index = 0; id != page_ids.end(); ++id, ++index ) {
     QAction* insertAction = PageFactory::instance()->action( *id, lCMW_ );
     insertAction->setEnabled( true );
@@ -1322,9 +1322,9 @@ View* DesignBookView::lookup ( const DBURL& db_url )
 
 // Find the OpenGL selection name path for a given id path.
 
-std::vector<GLuint> DesignBookView::lookup ( const QValueVector<uint>& id_path ) const
+std::vector<GLuint> DesignBookView::lookup ( const QVector<uint>& id_path ) const
 {
-  QValueVector<uint> my_path = id_path;
+  QVector<uint> my_path = id_path;
 
   if ( my_path.empty() || my_path[0] != model_->id() )
     return std::vector<GLuint>();	// Not this model! Really an error...

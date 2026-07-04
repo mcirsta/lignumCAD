@@ -91,7 +91,7 @@ QPtrListIterator< FigureViewBase > PageView::figureViews ( void ) const
   return QPtrListIterator< FigureViewBase >( figure_views_ );
 }
 
-const QIntDict< FigureViewBase >& PageView::figureSelectionNames ( void ) const
+const QHash<GLuint, FigureViewBase*>& PageView::figureSelectionNames ( void ) const
 {
   return figure_selection_names_;
 }
@@ -123,8 +123,8 @@ void PageView::setInputObject( InputObject* input_object )
 void PageView::addFigureView ( FigureViewBase* figure_view )
 {
   figure_views_.append( figure_view );
-  figure_selection_names_.replace( figure_view->selectionName(),
-				   figure_view );
+  figure_selection_names_.insert( figure_view->selectionName(),
+				  figure_view );
 }
 
 void PageView::removeFigureView ( FigureViewBase* figure_view )
@@ -136,7 +136,7 @@ void PageView::removeFigureView ( FigureViewBase* figure_view )
   while ( f != activated_.end() ) {
     if ( (*f).second[0] == figure_view->selectionName() ) {
       active = true;
-      figure_selection_names_[ (*f).second[0] ]->setActivated( false,
+      figure_selection_names_.value( (*f).second[0] )->setActivated( false,
 							       selectionType().entity_,
 							       (*f).second );
       SelectedNames::iterator g = f;
@@ -151,7 +151,7 @@ void PageView::removeFigureView ( FigureViewBase* figure_view )
   while ( f != highlighted_.end() ) {
     if ( (*f).second[0] == figure_view->selectionName() ) {
       active = true;
-      figure_selection_names_[ (*f).second[0] ]->setHighlighted( false,
+      figure_selection_names_.value( (*f).second[0] )->setHighlighted( false,
 								 selectionType().entity_,
 								 (*f).second );
       SelectedNames::iterator g = f;
@@ -195,14 +195,14 @@ void PageView::cut ( void )
   SelectedNames::const_iterator f;
 
   for ( f = activated_.begin(); f != activated_.end(); ++f ) {
-    FigureViewBase* fv = figure_selection_names_[ (*f).second[0] ];
+    FigureViewBase* fv = figure_selection_names_.value( (*f).second[0] );
 
     fv->setActivated( false, selectionType().entity_, (*f).second );
 
     SelectedNames::iterator fh = highlighted_.begin();
     while ( fh != highlighted_.end() ) {
       if ( (*fh).second[0] == fv->selectionName() ) {
-	figure_selection_names_[ (*fh).second[0] ]->setHighlighted( false,
+	figure_selection_names_.value( (*fh).second[0] )->setHighlighted( false,
 								    selectionType().entity_,
 								    (*fh).second );
 	SelectedNames::iterator gh = fh;
@@ -267,7 +267,7 @@ void PageView::copy ( void )
   for ( f = activated_.begin(); f != activated_.end(); ++f ) {
     QDomElement figure_element = xml_doc.createElement( lC::STR::FIGURE );
 
-    FigureViewBase* fv = figure_selection_names_[ (*f).second[0] ];
+    FigureViewBase* fv = figure_selection_names_.value( (*f).second[0] );
 
     figure_element.setAttribute( lC::STR::URL, fv->dbURL() );
 
@@ -365,7 +365,7 @@ View* PageView::lookup ( QStringList& path_components ) const
 
 // Lookup the OpenGL selection name path for the given object.
 
-std::vector<GLuint> PageView::lookup ( QValueVector<uint>& id_path ) const
+std::vector<GLuint> PageView::lookup ( QVector<uint>& id_path ) const
 {
   std::vector<GLuint> name_path;
 
@@ -482,7 +482,7 @@ void PageView::highlightFigures ( const SelectedNames& selected )
 
   // No, No ... shut them all down - C3PO
   for ( f = highlighted_.begin(); f != highlighted_.end(); f++ )
-    figure_selection_names_[ (*f).second[0] ]->setHighlighted( false,
+    figure_selection_names_.value( (*f).second[0] )->setHighlighted( false,
 							   selectionType().entity_,
 							   (*f).second );
   // Need to save a copy of the current selection so we can accurately
@@ -493,7 +493,7 @@ void PageView::highlightFigures ( const SelectedNames& selected )
     GLfloat z = (*selected.begin()).first;
     for ( f = selected.begin(); f != selected.end(); f++ ) {
       if ( (*f).first > z ) break;
-      figure_selection_names_[ (*f).second[0] ]->setHighlighted( true,
+      figure_selection_names_.value( (*f).second[0] )->setHighlighted( true,
 								 selectionType().entity_,
 								 (*f).second );
     }
@@ -503,7 +503,7 @@ void PageView::highlightFigures ( const SelectedNames& selected )
   // (In general, we need some kind of mechanism for selecting more than
   // one thing at a time...)
   if ( !selected.empty() ) {
-    QString text = figure_selection_names_[ (*selected.begin()).second[0] ]->
+    QString text = figure_selection_names_.value( (*selected.begin()).second[0] )->
       selectionText( (*selected.begin()).second, selectionType().entity_ );
     emit newInformation( lC::formatName( text ) );
   }
@@ -519,12 +519,12 @@ void PageView::hideHighlights ( void )
   SelectedNames::const_iterator f;
 
   for ( f = highlighted_.begin(); f != highlighted_.end(); f++ )
-    figure_selection_names_[ (*f).second[0] ]->setHighlighted( false,
+    figure_selection_names_.value( (*f).second[0] )->setHighlighted( false,
 							   selectionType().entity_,
 							   (*f).second );
 
   for ( f = activated_.begin(); f != activated_.end(); f++ )
-    figure_selection_names_[ (*f).second[0] ]->setActivated( false,
+    figure_selection_names_.value( (*f).second[0] )->setActivated( false,
 							 selectionType().entity_,
 							 (*f).second );
 }
@@ -536,12 +536,12 @@ void PageView::restoreHighlights ( void )
   SelectedNames::const_iterator f;
 
   for ( f = highlighted_.begin(); f != highlighted_.end(); f++ )
-    figure_selection_names_[ (*f).second[0] ]->setHighlighted( true,
+    figure_selection_names_.value( (*f).second[0] )->setHighlighted( true,
 							   selectionType().entity_,
 							   (*f).second );
 
   for ( f = activated_.begin(); f != activated_.end(); f++ )
-    figure_selection_names_[ (*f).second[0] ]->setActivated( true,
+    figure_selection_names_.value( (*f).second[0] )->setActivated( true,
 							 selectionType().entity_,
 							 (*f).second );
 }
@@ -600,7 +600,7 @@ void PageView::pickFigure ( QMouseEvent* /*me*/, const SelectedNames& selected )
   activated_ += selected;
 
   // Activate the figure itself and only its first geometry.
-  figure_selection_names_[ (*f).second[0] ]->setActivated( true,
+  figure_selection_names_.value( (*f).second[0] )->setActivated( true,
 						       selectionType().entity_,
 						       (*f).second );
 
@@ -625,14 +625,14 @@ void PageView::activateFigure ( QMouseEvent* me, const SelectedNames& selected )
 
   // And activate the figure itself. Note, if we coalesce rectangle and
   // dimension view, we'll have to pass the sub-names, too...
-  figure_selection_names_[ (*f).second[0] ]->setActivated( true,
+  figure_selection_names_.value( (*f).second[0] )->setActivated( true,
 						       selectionType().entity_,
 						       (*f).second );
   // Turn off any highlights in the current mode
   highlightFigures( SelectedNames() );
 
   // This now the active input object, too
-  setInputObject( figure_selection_names_[ (*f).second[0] ]->modifyInput() );
+  setInputObject( figure_selection_names_.value( (*f).second[0] )->modifyInput() );
 
   input_object_->mousePrepress( me, selected );
   input_object_->mousePress( me, selected );
@@ -670,7 +670,7 @@ void PageView::activateFigure ( const std::vector<GLuint>& selection_name )
 {
   activated_.insert( std::pair<GLfloat, std::vector<GLuint> >( 0., selection_name ) );
 
-  FigureViewBase* figure_view = figure_selection_names_[ selection_name[0] ];
+  FigureViewBase* figure_view = figure_selection_names_.value( selection_name[0] );
   
   figure_view->setActivated( true, selectionType().entity_, selection_name );
 
@@ -694,7 +694,7 @@ void PageView::deactivateFigure ( GLuint figure, GLuint geometry )
       std::vector<GLuint>::const_iterator g = find( (*f).second.begin(),
 					       (*f).second.end(), geometry );
       if ( g != (*f).second.end() ) {
-	figure_selection_names_[ (*f).second[0] ]->setActivated( false,
+	figure_selection_names_.value( (*f).second[0] )->setActivated( false,
 								 selectionType().entity_,
 								 (*f).second );
 	// I think we can just remove this record and be done with this...
@@ -726,7 +726,7 @@ void PageView::deactivateFigure ( const std::vector<GLuint>& selection_name )
     // Note: compare the full vectors!
     if ( (*f).second == selection_name ) {
 
-      figure_selection_names_[ (*f).second[0] ]->setActivated( false,
+      figure_selection_names_.value( (*f).second[0] )->setActivated( false,
 						       selectionType().entity_,
 							       selection_name );
 
@@ -747,7 +747,7 @@ void PageView::deactivateFigures ( void )
   SelectedNames::const_iterator f;
 
   for ( f = activated_.begin(); f != activated_.end(); f++ )
-    figure_selection_names_[ (*f).second[0] ]->setActivated( false,
+    figure_selection_names_.value( (*f).second[0] )->setActivated( false,
 							     selectionType().entity_,
 							     (*f).second );
   activated_.clear();

@@ -25,7 +25,7 @@
 
 #include <qcolor.h>
 #include <qdom.h>
-#include <qvaluevector.h>
+#include <QVector>
 
 #include "graphics.h"
 #include "dimension.h"
@@ -51,7 +51,7 @@ namespace Space2D {
     PageView* parent_;
 
     uint n_geometries_;
-    QValueVector< Point > points_;
+    QVector< Point > points_;
     QPtrList< ConstrainedLine > lines_;
 
     ConstrainedLine* from_reference_;

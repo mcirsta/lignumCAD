@@ -879,12 +879,7 @@ namespace Space2D {
    */
   bool AnnotationView::isGeometry ( GLuint selection_name ) const
   {
-    QIntDictIterator< GraphicsView > igv( annotation_objects_ );
-
-    for (; igv.current(); ++igv )
-      if ( (GLuint)igv.currentKey() == selection_name ) return true;
-
-    return false;
+    return annotation_objects_.contains( selection_name );
   }
 
   void AnnotationView::editInformation ( void )
@@ -1399,7 +1394,7 @@ namespace Space2D {
 
   void AnnotationView::setCursor ( GLuint selection_name )
   {
-    GraphicsView* graphics_object = annotation_objects_[ selection_name ];
+    GraphicsView* graphics_object = annotation_objects_.value( selection_name );
 
     if ( graphics_object != 0 )
       view()->setCursor( QCursor( graphics_object->cursorShape() ) );

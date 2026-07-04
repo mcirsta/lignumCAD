@@ -25,6 +25,7 @@
 
 #include <qstring.h>
 #include <qmap.h>
+#include <QVector>
 
 class Model;
 class lignumCADMainWindow;
@@ -33,8 +34,6 @@ class PageView;
 class PageBase;
 class QAction;
 class QDomElement;
-
-template<class T> class QValueVector;
 
 /*!
  * The metadata defines the infomation presented to the
@@ -142,7 +141,7 @@ public:
 
   void addPageMetadata ( uint id, PageMetadata* page_data );
 
-  QValueVector<uint> pageIDs ( void ) const;
+  QVector<uint> pageIDs ( void ) const;
 
   QString type ( uint i ) const { return page_data_[i]->type(); }
   QString icon ( uint i ) const { return page_data_[i]->icon(); }

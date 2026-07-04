@@ -24,7 +24,7 @@
 #define MODELITEM_H
 
 #include <qobject.h>
-#include <qvaluevector.h>
+#include <QVector>
 
 class QDomElement;
 class DBURL;
@@ -76,12 +76,12 @@ public:
   /*!
    * Determine the full hierarchical object id. The subclass
    * which knows the parent of this object should implement this method.
-   * Note: The hierarchical object id is a QValueVector (as opposed to a
+   * Note: The hierarchical object id is a QVector (as opposed to a
    * regular STL vector<>) since the Qt version is a QShared object,
    * which should improve performance as a return value.
    * \return the hierarchical object id.
    */
-  virtual QValueVector<uint> ID ( void ) const = 0;
+  virtual QVector<uint> ID ( void ) const = 0;
   /*!
    * Determine the fully qualified object name. The subclass which
    * knows the parent of this object should implement this method.

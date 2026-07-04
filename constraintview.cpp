@@ -86,7 +86,7 @@ namespace Space2D {
       return;
 
     FigureView* fv =
-	dynamic_cast< FigureView* >( parent_->figureSelectionNames()[ (*f).second[0] ]);
+	dynamic_cast< FigureView* >( parent_->figureSelectionNames().value( (*f).second[0] ));
 
     GLuint g = (*f).second[1]; /// (*(*f).second->begin()).first;
     ConstrainedLine* line = dynamic_cast< ConstrainedLine* >( fv->geometry( g ) );

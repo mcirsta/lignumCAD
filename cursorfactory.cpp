@@ -21,6 +21,7 @@
  *
  */
 #include <qbitmap.h>
+#include <QtAlgorithms>
 
 #include "cursorfactory.h"
 
@@ -64,7 +65,6 @@ namespace {
 
 CursorFactory::CursorFactory ( void )
 {
-  cursors_.setAutoDelete( true );
 }
 
 CursorFactory& CursorFactory::instance ( void )
@@ -74,7 +74,7 @@ CursorFactory& CursorFactory::instance ( void )
 
 QCursor& CursorFactory::cursor ( enum Cursors c )
 {
-  QCursor* cursor = cursors_[c];
+  QCursor* cursor = cursors_.value( c );
 
   if ( cursor != 0 ) return *cursor;
 
@@ -158,11 +158,12 @@ QCursor& CursorFactory::cursor ( enum Cursors c )
 				   resize_solid_x_hot, resize_solid_y_hot ) );
     break;
   }
-  return *cursors_[c];
+  return *cursors_.value( c );
 }
 
 // Evidently you have to release the cursors before you drop your X connection?
 void CursorFactory::clear ( void )
 {
+  qDeleteAll( cursors_ );
   cursors_.clear();
 }

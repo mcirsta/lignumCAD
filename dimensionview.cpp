@@ -99,7 +99,7 @@ namespace Space2D {
       return;
 
     FigureView* fv =
-      dynamic_cast< FigureView* >( parent_->figureSelectionNames()[ (*f).second[0] ]);
+      dynamic_cast< FigureView* >( parent_->figureSelectionNames().value( (*f).second[0] ));
 
     // Let the first selected figure decide how many selections we need.
     // (This is entirely for the Centerline, which wants 2 additional

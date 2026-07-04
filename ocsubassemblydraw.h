@@ -80,13 +80,13 @@ namespace Space3D {
      * \param selection_names "path" to selected face.
      * \return ID of selected face.
      */
-    virtual QValueVector<uint> ID ( const std::vector<GLuint>& selection_names ) const
+    virtual QVector<uint> ID ( const std::vector<GLuint>& selection_names ) const
       = 0;
     /*!
      * The inverse of the above function: Find the gl selection name list
      * from the ID.
      */
-    virtual void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path )
+    virtual void lookup ( QVector<uint>& id_path, std::vector<GLuint>& name_path )
       const = 0;
     /*!
      * Set the highlighting status of the given item.

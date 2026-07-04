@@ -64,7 +64,7 @@ public:
    * Determine the full hierarchical item id.
    * \return the hierarchical item id.
    */
-  QValueVector<uint> ID ( void ) const;
+  QVector<uint> ID ( void ) const;
   /*!
    * Determine the fully qualified item name. The subclass which
    * knows the parent of this object should implement this method.
@@ -76,14 +76,14 @@ public:
    * \param id_path full id path to object.
    * \return the fully qualified item name.
    */
-  QString idPath ( const QValueVector<uint>& id_path ) const;
+  QString idPath ( const QVector<uint>& id_path ) const;
   /*!
    * Reciprocal to idPath(): return the id path given the DBURL of an
    * item.
    * \param db_url URL reference to item.
    * \return id path to item.
    */
-  QValueVector<uint> pathID ( const DBURL& db_url ) const;
+  QVector<uint> pathID ( const DBURL& db_url ) const;
   /*!
    * Serialize the model. The object creates an XML representation of
    * itself and appends it to the argument.
@@ -161,7 +161,7 @@ public:
    * \param id_path ID path of item.
    * \return model item of ID path.
    */
-  ModelItem* lookup ( const QValueVector<uint>& id_path ) const;
+  ModelItem* lookup ( const QVector<uint>& id_path ) const;
 
   /*!
    * Look up the geometry type of an OpenCASCADE shape.
@@ -173,7 +173,7 @@ public:
    * Look up the geometry type of an OpenCASCADE shape.
    * \param id_path id path to solid shape.
    */
-  Handle(Standard_Type) lookupType ( const QValueVector<uint>& id_path ) const;
+  Handle(Standard_Type) lookupType ( const QVector<uint>& id_path ) const;
   /*!
    * Look up the topology of an OpenCASCADE shape. Should return
    * a shape which has the proper Location based on its traversal
@@ -187,7 +187,7 @@ public:
    * of the assembly hierarchy.
    * \param id_path id path to solid shape.
    */
-  TopoDS_Shape lookupShape ( const QValueVector<uint>& id_path ) const;
+  TopoDS_Shape lookupShape ( const QVector<uint>& id_path ) const;
   /*!
    * Another lookup style routine: find all the pages which reference
    * the given item.

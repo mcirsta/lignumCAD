@@ -100,7 +100,7 @@ public:
   QString type ( void ) const { return assembly_->type(); }
 
   DBURL dbURL ( void ) const { return assembly_->dbURL(); }
-  QValueVector<uint> ID ( void ) const { return assembly_->ID(); }
+  QVector<uint> ID ( void ) const { return assembly_->ID(); }
 
   CreateObject* memento ( void );
 
@@ -178,7 +178,7 @@ private:
 
   Space3D::OCHiddenDraw* hidden_drawer_;
 
-  QValueVector<QStringList> constraints_text_;
+  QVector<QStringList> constraints_text_;
 
   static AssemblyConfigDialog* config_dialog_;
   static QDockWindow* constraint_dock_;

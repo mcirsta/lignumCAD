@@ -88,7 +88,7 @@ public:
   QString type ( void ) const { return part_->type(); }
 
   DBURL dbURL ( void ) const { return part_->dbURL(); }
-  QValueVector<uint> ID ( void ) const { return part_->ID(); }
+  QVector<uint> ID ( void ) const { return part_->ID(); }
 
   void cancelOperation ( void );
 

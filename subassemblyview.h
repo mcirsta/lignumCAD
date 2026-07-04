@@ -68,9 +68,9 @@ public:
   QString selectionText ( const std::vector<GLuint>& selection_name,
 			  SelectionEntity entity ) const;
   View* lookup ( QStringList& path_components ) const;
-  void lookup ( QValueVector<uint>& id_path, std::vector<GLuint>& name_path ) const;
+  void lookup ( QVector<uint>& id_path, std::vector<GLuint>& name_path ) const;
   QString geometry ( const std::vector<GLuint>& selection_name ) const;
-  QValueVector<uint> geomPath ( const std::vector<GLuint>& selection_name ) const;
+  QVector<uint> geomPath ( const std::vector<GLuint>& selection_name ) const;
 
   void setHighlighted ( bool highlight, SelectionEntity entity,
 			const std::vector<GLuint>& items );
@@ -116,7 +116,7 @@ private:
    * Extract the items which can be renamed from this id path.
    * \param surface_id id path of a constraint dependency.
    */
-  void addDependency ( const QValueVector<uint>& surface_id );
+  void addDependency ( const QVector<uint>& surface_id );
 
 private slots:
   void updateModelName ( const QString& );

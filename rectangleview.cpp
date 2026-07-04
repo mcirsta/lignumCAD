@@ -579,7 +579,7 @@ namespace Space2D {
     for ( f = selected.begin(); f != selected.end(); ++f ) {
       FigureView* fv =
 	dynamic_cast< FigureView* >( rectangle_view_->parent()->
-				     figureSelectionNames()[ (*f).second[0] ] );
+				     figureSelectionNames().value( (*f).second[0] ) );
 
       std::vector<GLuint>::const_iterator g;
 
@@ -625,7 +625,7 @@ namespace Space2D {
     for ( f = selected.begin(); f != selected.end(); ++f ) {
       FigureView* fv =
 	dynamic_cast< FigureView* >( rectangle_view_->parent()->
-				     figureSelectionNames()[ (*f).second[0] ] );
+				     figureSelectionNames().value( (*f).second[0] ) );
 
       std::vector<GLuint>::const_iterator g;
 
@@ -850,7 +850,7 @@ namespace Space2D {
     for ( f = selected.begin(); f != selected.end(); ++f ) {
       FigureView* fv =
 	dynamic_cast< FigureView* >( rectangle_view_->parent()->
-				     figureSelectionNames()[ (*f).second[0] ] );
+				     figureSelectionNames().value( (*f).second[0] ) );
 
       if ( fv == rectangle_view_ ) continue;
 
@@ -1377,11 +1377,9 @@ namespace Space2D {
     if ( isActivated() )
       return &modify_input_;
 
-    QIntDictIterator< DimensionView > idmv( dimensionview_objects_ );
-
-    for (; idmv.current(); ++idmv ) {
-      if ( idmv.current()->isActivated() ) {
-	return idmv.current()->modifyInput();
+    for ( DimensionView* dimension_view : dimensionview_objects_ ) {
+      if ( dimension_view->isActivated() ) {
+	return dimension_view->modifyInput();
       }
     }
 
@@ -1806,7 +1804,7 @@ namespace Space2D {
       DimensionView* dmv = 0;
 
       if ( items.size() > 1 )
-	dmv = dimensionview_objects_[ items[1] ];
+	dmv = dimensionview_objects_.value( items[1] );
 
       if ( dmv != 0 )
 	dmv->setHighlighted( highlight );
@@ -1814,8 +1812,8 @@ namespace Space2D {
 	FigureViewBase::setHighlighted( highlight );
     }
     else if ( entity == EDGE ) {
-      if ( items.size() > 1 && rectangle_objects_[items[1]] != 0 )
-	rectangle_objects_[items[1]]->setHighlighted( highlight );
+      if ( items.size() > 1 && rectangle_objects_.value( items[1] ) != 0 )
+	rectangle_objects_.value( items[1] )->setHighlighted( highlight );
     }
   }
 
@@ -1826,7 +1824,7 @@ namespace Space2D {
       DimensionView* dmv = 0;
 
       if ( items.size() > 1 )
-	dmv = dimensionview_objects_[ items[1] ];
+	dmv = dimensionview_objects_.value( items[1] );
 
       if ( dmv != 0 )
 	dmv->setActivated( activate );
@@ -1834,8 +1832,8 @@ namespace Space2D {
 	FigureViewBase::setActivated( activate );
     }
     else if ( entity == EDGE ) {
-      if ( items.size() > 1 && rectangle_objects_[items[1]] != 0 )
-	rectangle_objects_[items[1]]->setActivated( activate );
+      if ( items.size() > 1 && rectangle_objects_.value( items[1] ) != 0 )
+	rectangle_objects_.value( items[1] )->setActivated( activate );
     }
   }
 
@@ -1843,7 +1841,7 @@ namespace Space2D {
   {
     DimensionView* dmv;
 
-    dmv = dimensionview_objects_[ selection_name ];
+    dmv = dimensionview_objects_.value( selection_name );
 
     if ( dmv != 0 )
       return dmv->isActivated();
@@ -1858,12 +1856,7 @@ namespace Space2D {
    */
   bool RectangleView::isGeometry ( GLuint selection_name ) const
   {
-    QIntDictIterator< GraphicsView > igv( rectangle_objects_ );
-
-    for (; igv.current(); ++igv )
-      if ( (GLuint)igv.currentKey() == selection_name ) return true;
-
-    return false;
+    return rectangle_objects_.contains( selection_name );
   }
 
   Curve* RectangleView::geometry ( GLuint selection_name ) const
@@ -1949,11 +1942,9 @@ namespace Space2D {
       editRectangleInformation();
     }
     else {
-      QIntDictIterator< DimensionView >	idmv( dimensionview_objects_ );
-
-      for ( ; idmv.current(); ++idmv ) {
-	if ( idmv.current()->isActivated() ) {
-	  idmv.current()->editInformation();
+      for ( DimensionView* dimension_view : dimensionview_objects_ ) {
+	if ( dimension_view->isActivated() ) {
+	  dimension_view->editInformation();
 	  return;
 	}
       }
@@ -2943,10 +2934,10 @@ namespace Space2D {
 
   void RectangleView::setCursor ( GLuint selection_name )
   {
-    GraphicsView* graphics_object = rectangle_objects_[ selection_name ];
+    GraphicsView* graphics_object = rectangle_objects_.value( selection_name );
 
     if ( graphics_object == 0 )
-      graphics_object = dimensionview_objects_[ selection_name ];
+      graphics_object = dimensionview_objects_.value( selection_name );
 
     if ( graphics_object != 0 )
       view()->setCursor( QCursor( graphics_object->cursorShape() ) );

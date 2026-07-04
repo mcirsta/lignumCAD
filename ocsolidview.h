@@ -135,7 +135,7 @@ namespace Space3D {
 
     View* lookup ( QStringList& /*path_components*/ ) const
     { return 0; }
-    void lookup ( QValueVector<uint>& /*id_path*/, std::vector<GLuint>& /*name_path*/ )
+    void lookup ( QVector<uint>& /*id_path*/, std::vector<GLuint>& /*name_path*/ )
       const
     {}
 

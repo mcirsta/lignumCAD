@@ -534,7 +534,7 @@ public:
 
     SubassemblyView* sv =
       dynamic_cast<SubassemblyView*>( assembly_view_->
-				      figureSelectionNames()[ (*f).second[0] ] );
+				      figureSelectionNames().value( (*f).second[0] ) );
 
     // Validate this geometry against the current constraint, but don't
     // emit the constraint changed signal until the user releases the mouse
@@ -854,7 +854,7 @@ public:
 
     SubassemblyView* sv =
       dynamic_cast<SubassemblyView*>( assembly_view_->
-				      figureSelectionNames()[ (*f).second[0] ] );
+				      figureSelectionNames().value( (*f).second[0] ) );
 
     // Validate this geometry against the current constraint, but don't
     // emit the constraint changed signal until the user releases the mouse
@@ -1149,7 +1149,7 @@ public:
 
     SubassemblyView* sv =
       dynamic_cast<SubassemblyView*>( assembly_view_->
-				      figureSelectionNames()[ (*f).second[0] ] );
+				      figureSelectionNames().value( (*f).second[0] ) );
     if ( sv != 0 ) {
       if ( !assembly_view_->assembly()->referenced( sv->subassembly() ) ) {
 	target_ = sv;
@@ -2137,7 +2137,7 @@ void AssemblyView::updateConstraintLabel ( void )
 
   if ( !constraints_text_.empty() ) {
 
-    QValueVector<QStringList>::const_iterator constraint_list =
+    QVector<QStringList>::const_iterator constraint_list =
       constraints_text_.begin();
 
     for ( ; constraint_list != constraints_text_.end(); ++constraint_list ) {

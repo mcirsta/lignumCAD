@@ -23,7 +23,7 @@
 #ifndef CENTERLINEVIEW_H
 #define CENTERLINEVIEW_H
 
-#include <qintdict.h>
+#include <QHash>
 #include <qdom.h>
 
 #include "vectoralgebra.h"
@@ -127,8 +127,8 @@ namespace Space2D {
     CenterlineCreateInput create_input_;
     CenterlineModifyInput modify_input_;
 
-    QIntDict< GraphicsView > centerline_objects_;
-    QIntDict< DimensionView > dimensionview_objects_;
+    QHash<GLuint, GraphicsView*> centerline_objects_;
+    QHash<GLuint, DimensionView*> dimensionview_objects_;
 
   public:
     CenterlineView ( Centerline* centerline, PageView* parent );

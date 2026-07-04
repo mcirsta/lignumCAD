@@ -366,9 +366,9 @@ namespace Space3D {
     return QString::null;
   }
 
-  QValueVector<uint> OCSolidDraw::faceID ( GLuint selection_name ) const
+  QVector<uint> OCSolidDraw::faceID ( GLuint selection_name ) const
   {
-    QValueVector<uint> id_path( 2 );
+    QVector<uint> id_path( 2 );
     // Unfortunately, this involves a search...
 
     std::map<uint,GLuint>::const_iterator face = face_ids_.begin();
@@ -921,10 +921,10 @@ namespace Space3D {
 	    break;
 	  case lC::Render::HIGHLIGHTED:
 	  case lC::Render::ACTIVATED:
-	    QValueVector<uint> handles( solid_->
+	    QVector<uint> handles( solid_->
 					faceHandles( PartFactory::instance()->
 						     name( (*fid).first ) ) );
-	    QValueVector<uint>::const_iterator h = handles.begin();
+	    QVector<uint>::const_iterator h = handles.begin();
 	    for ( ; h != handles.end(); ++h ) {
 	      const HandleData& handle( solid_->handle( *h ) );
 	      Point p( handle.position().X(),

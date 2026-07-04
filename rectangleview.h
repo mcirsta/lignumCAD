@@ -24,7 +24,7 @@
 #define RECTANGLEVIEW_H
 
 #include <map>
-#include <qintdict.h>
+#include <QHash>
 #include <qdom.h>
 
 #include "line.h"
@@ -155,8 +155,8 @@ namespace Space2D {
     GraphicsView lt_handle_;
     GraphicsView ml_handle_;
 
-    QIntDict< GraphicsView > rectangle_objects_;
-    QIntDict< DimensionView > dimensionview_objects_;
+    QHash<GLuint, GraphicsView*> rectangle_objects_;
+    QHash<GLuint, DimensionView*> dimensionview_objects_;
 
     std::map< int, lC::ValidDelta( Rectangle::* ) ( const Point&, Point& )> adjustments_;
 
@@ -214,7 +214,7 @@ namespace Space2D {
 
     bool isDimensionView ( GLuint selection_name ) const
     {
-      return dimensionview_objects_[selection_name] != 0;
+      return dimensionview_objects_.value( selection_name ) != 0;
     }
     bool isActivated ( GLuint selection_name = 0 ) const;
 

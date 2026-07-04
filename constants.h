@@ -28,7 +28,7 @@
 #include <qstring.h>
 #include <qdragobject.h>
 #include <qmime.h>
-#include <qvaluevector.h>
+#include <QVector>
 
 #include "ratio.h"
 
@@ -502,7 +502,7 @@ namespace lC {
    * Convert an ID array into a string.
    * \param ID Full id path of object.
    */
-  inline QString idToString ( const QValueVector<uint>& ID )
+  inline QString idToString ( const QVector<uint>& ID )
   {
     QString id_string;
 
