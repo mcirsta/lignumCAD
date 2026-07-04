@@ -119,6 +119,7 @@ Review:
 
 - No code edits.
 - File lists should correspond to the old qmake project.
+- Do not carry forward the legacy vendored Xft shim files `xftname.c` and `xftint.h` unless a later build proves they are required.
 
 ### 1.3 Add Qt6 Discovery
 
@@ -160,7 +161,8 @@ Review:
 
 Change:
 
-- Add FreeType, Fontconfig, OpenGL/GLU, X11/Xft, and any other required system libraries.
+- Add FreeType, Fontconfig, OpenGL/GLU, and any other required system libraries.
+- Avoid depending on Xft private APIs; keep the legacy vendored Xft shim quarantined unless proven necessary.
 - Keep each dependency addition separate if possible.
 
 Verify:

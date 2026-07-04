@@ -4400,7 +4400,7 @@ namespace Space2D {
       x0UpdateName( rectangle_->x0()->name() );
       return;
     case lC::OK:
-      return;
+      break;
     }
 
     DBURL old_db_url = rectangle_->x0()->dbURL();
@@ -4423,7 +4423,7 @@ namespace Space2D {
       y0UpdateName( rectangle_->y0()->name() );
       return;
     case lC::OK:
-      return;
+      break;
     }
 
     DBURL old_db_url = rectangle_->y0()->dbURL();
@@ -4446,7 +4446,7 @@ namespace Space2D {
       x1UpdateName( rectangle_->x1()->name() );
       return;
     case lC::OK:
-      return;
+      break;
     }
 
     DBURL old_db_url = rectangle_->x1()->dbURL();
@@ -4469,7 +4469,7 @@ namespace Space2D {
       y1UpdateName( rectangle_->y1()->name() );
       return;
     case lC::OK:
-      return;
+      break;
     }
 
     DBURL old_db_url = rectangle_->y1()->dbURL();

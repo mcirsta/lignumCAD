@@ -579,9 +579,8 @@ public:
       return false;		// Try again.
 
     case ConstraintComplete:
-      return false;		// Try again.
     case PlacementComplete:
-      return false;		// Try again.
+      break;			// Complete; finish below.
     }
 
     // The constraint (and possibly the placement) is complete. Now
@@ -901,9 +900,8 @@ public:
       return false;		// Try again.
 
     case ConstraintComplete:
-      return false;		// Try again.
     case PlacementComplete:
-       return false;		// Try again.
+      break;			// Complete; finish below.
     }
 
     // Prompt for the size of the offset.
