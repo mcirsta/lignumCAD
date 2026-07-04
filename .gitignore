@@ -1,3 +1,4 @@
 build/
+build-qt6/
 .qtcreator/
 orig/
