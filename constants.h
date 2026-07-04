@@ -25,9 +25,8 @@
 
 #include <GL/gl.h>
 
-#include <qstring.h>
-#include <qdragobject.h>
-#include <qmime.h>
+#include <QColor>
+#include <QString>
 #include <QVector>
 
 #include "ratio.h"
@@ -57,10 +56,10 @@ namespace lC {
   const QString DEFAULT_GRADIENT_COLOR = "#aaaaaa";
 
   //! The default background pattern for the Page views.
-  const QString DEFAULT_PATTERN_FILE = "paper.png";
+  const QString DEFAULT_PATTERN_FILE = ":/images/paper.png";
 
   //! The default geometry texture image.
-  const QString DEFAULT_TEXTURE_FILE = "cherry.png";
+  const QString DEFAULT_TEXTURE_FILE = ":/images/cherry.png";
 
   //! The default color for geometry edges
   const QString DEFAULT_GEOMETRY_COLOR = "#c9ce29";
@@ -359,34 +358,6 @@ namespace lC {
   typedef enum { LEFT, ORIGIN, CENTER, RIGHT } HorizontalJustification;
   typedef enum { BOTTOM, BASELINE, MIDDLE, TOP } VerticalJustification;
   
-
-  // Look up the images which are loaded at compile time
-  inline QPixmap lookupPixmap ( const QString name )
-  {
-    const QMimeSource* mime_source =
-      QMimeSourceFactory::defaultFactory()->data( name );
-
-    if ( mime_source == 0 )
-      return QPixmap();
-
-    QPixmap pixmap;
-    QImageDrag::decode( mime_source, pixmap );
-    return pixmap;
-  }
-
-  // Look up the images which are loaded at compile time
-  inline QImage lookupImage ( const QString name )
-  {
-    const QMimeSource* mime_source =
-      QMimeSourceFactory::defaultFactory()->data( name );
-
-    if ( mime_source == 0 )
-      return QImage();
-
-    QImage image;
-    QImageDrag::decode( mime_source, image );
-    return image;
-  }
 
   // The columns of the Model Hierarchy View (why use a single digit
   // when you can use a 10 character name?)

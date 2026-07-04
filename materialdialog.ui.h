@@ -96,9 +96,9 @@ void MaterialDialog::MaterialList_selectionChanged( QListViewItem * item )
     
     SolidColor->setPaletteBackgroundColor( material->color() );
     
-    FaceGrainPixmap->setPixmap( lC::lookupPixmap( material->faceGrainFile() ) );
-    EndGrainPixmap->setPixmap( lC::lookupPixmap( material->endGrainFile() ) );
-    EdgeGrainPixmap->setPixmap( lC::lookupPixmap( material->edgeGrainFile() ) );
+    FaceGrainPixmap->setPixmap( QPixmap( material->faceGrainFile() ) );
+    EndGrainPixmap->setPixmap( QPixmap( material->endGrainFile() ) );
+    EdgeGrainPixmap->setPixmap( QPixmap( material->edgeGrainFile() ) );
 }
 
 

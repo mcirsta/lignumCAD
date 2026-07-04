@@ -21,7 +21,7 @@
  *
  */
 #include <qapplication.h>
-#include <qimage.h>
+#include <QImage>
 #include <qpaintdevicemetrics.h>
 #include <qregexp.h>
 
@@ -205,7 +205,7 @@ GLuint OpenGLBase::texture ( const QString& texture_name )
   // the program...
   // Compensate for the fact that OpenGL expects images defined
   // bottom-up instead of top-down (as is usually the case).
-  QImage image = lC::lookupImage( texture_name ).mirror();
+  QImage image = QImage( texture_name ).mirror();
 
   if ( image.isNull() ) return 0;
 
@@ -311,7 +311,7 @@ GLuint OpenGLBase::createBackgroundTexture ( const QString& file,
   // 2, reduced to grayscale and then color0 and color1 are blended in
   // the proportion given by each pixel. Uses the standard OpenGL
   // pixel transfer functions to do the blending.
-  QImage image = lC::lookupImage( file ).mirror();
+  QImage image = QImage( file ).mirror();
 
   // Scale such that each dimension is a power of two.
   int width = nearestPowerCeil( image.width() );

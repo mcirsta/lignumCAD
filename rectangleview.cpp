@@ -31,6 +31,7 @@
 #include <qslider.h>
 #include <qlabel.h>
 #include <qmessagebox.h>
+#include <QImage>
 
 #include "style.h"
 #include "configuration.h"
@@ -2550,14 +2551,14 @@ namespace Space2D {
       if ( parent()->renderStyle() == lC::Render::TEXTURED ) {
 	QString texture_file = OpenGLGlobals::instance()->textureFile();
 	GLuint gl_texture_name = view()->texture( texture_file );
-	QImage image = lC::lookupImage( texture_file );
+	QImage image = QImage( texture_file );
 
 	drawTextured( gl_texture_name, image );
       }
     }
     else if ( style_->style() == lC::Render::TEXTURED ) {
       GLuint gl_texture_name = view()->texture( style_->textureFile() );
-      QImage image = lC::lookupImage( style_->textureFile() );
+      QImage image = QImage( style_->textureFile() );
 
       drawTextured( gl_texture_name, image );
     }

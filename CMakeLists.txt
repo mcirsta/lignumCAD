@@ -387,6 +387,12 @@ add_executable(lignumCAD
   ${LIGNUMCAD_FORMS}
 )
 
+qt_add_resources(lignumCAD "lignumcad_images"
+  PREFIX "/"
+  FILES
+    ${LIGNUMCAD_IMAGES}
+)
+
 target_compile_definitions(lignumCAD PRIVATE
   OGLFT_NO_SOLID
   GL2PS_USE_QT

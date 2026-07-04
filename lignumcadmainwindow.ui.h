@@ -105,17 +105,6 @@ void lignumCADMainWindow::init ()
     addDisabledIcon( insertDrawingAction );
     addDisabledIcon( toolDeleteModelAction );
 
-    // Construct smaller versions of the Page icons (used, at least, in
-    // the What's This for the Tab bar).
-    QMimeSourceFactory::defaultFactory()->
-      setImage( "sketch_min.png", trimTransparent( lC::lookupImage( "sketch.png")));
-    QMimeSourceFactory::defaultFactory()->
-      setImage( "part_min.png", trimTransparent( lC::lookupImage( "part.png")));
-    QMimeSourceFactory::defaultFactory()->
-      setImage("assembly_min.png",trimTransparent(lC::lookupImage("assembly.png")));
-    QMimeSourceFactory::defaultFactory()->
-      setImage( "drawing_min.png", trimTransparent(lC::lookupImage("drawing.png")));
- 
     // (Request: should be able to do this in Designer)
     QToolButton* whatsThis = QWhatsThis::whatsThisButton( toolBar );
     whatsThisAction->setIconSet( whatsThis->iconSet() );

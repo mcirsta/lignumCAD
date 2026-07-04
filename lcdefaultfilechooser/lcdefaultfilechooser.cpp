@@ -25,6 +25,7 @@
 #include <qtoolbutton.h>
 #include <qfiledialog.h>
 #include <qtooltip.h>
+#include <QPixmap>
 
 #include "constants.h"
 #include "lcdefaultfilechooser.h"
@@ -48,8 +49,8 @@ lCDefaultFileChooser::lCDefaultFileChooser( QWidget *parent, const char *name )
   QToolTip::add( default_,
 		 tr( "Click this button to restore the color to the default" ) );
 
-  QIconSet icon( lC::lookupPixmap( "default_active.png" ) );
-  icon.setPixmap( lC::lookupPixmap( "default_inactive.png" ),
+  QIconSet icon( QPixmap( ":/images/default_active.png" ) );
+  icon.setPixmap( QPixmap( ":/images/default_inactive.png" ),
 		  QIconSet::Automatic, QIconSet::Disabled );
   default_->setIconSet( icon );
 

@@ -23,6 +23,7 @@
 #include <qspinbox.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
+#include <QPixmap>
 
 #include "constants.h"
 #include "lcdefaultspinbox.h"
@@ -39,8 +40,8 @@ lCDefaultSpinBox::lCDefaultSpinBox( QWidget *parent, const char *name )
   QToolTip::add( default_,
 		 tr( "Click this button to restore the default value" ) );
 
-  QIconSet icon( lC::lookupPixmap( "default_active.png" ) );
-  icon.setPixmap( lC::lookupPixmap( "default_inactive.png" ),
+  QIconSet icon( QPixmap( ":/images/default_active.png" ) );
+  icon.setPixmap( QPixmap( ":/images/default_inactive.png" ),
 		  QIconSet::Automatic, QIconSet::Disabled );
   default_->setIconSet( icon );
 

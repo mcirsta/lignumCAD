@@ -42,11 +42,11 @@ void RectangleInfoDialog::init ()
       v->hide();
       
       // Populate the edge stipple combo box. Maybe make a Designer widget?
-      edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_solid.png" ), tr( "Solid" ) );
-      edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_dash.png" ), tr( "Dash" ) );
-      edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_dot.png" ), tr( "Dot" ) );
-      edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_dashdot.png"), tr( "Dash Dot" ) );
-      edgeStyleComboBox->insertItem( lC::lookupPixmap( "edge_dashdotdot.png"), tr( "Dash Dot Dot" ) );
+      edgeStyleComboBox->insertItem( QPixmap( ":/images/edge_solid.png" ), tr( "Solid" ) );
+      edgeStyleComboBox->insertItem( QPixmap( ":/images/edge_dash.png" ), tr( "Dash" ) );
+      edgeStyleComboBox->insertItem( QPixmap( ":/images/edge_dot.png" ), tr( "Dot" ) );
+      edgeStyleComboBox->insertItem( QPixmap( ":/images/edge_dashdot.png"), tr( "Dash Dot" ) );
+      edgeStyleComboBox->insertItem( QPixmap( ":/images/edge_dashdotdot.png"), tr( "Dash Dot Dot" ) );
 }
 
 void RectangleInfoDialog::rectangleStyleSlider_valueChanged( int style )

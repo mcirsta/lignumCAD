@@ -35,10 +35,10 @@ TabBarContext::TabBarContext ( QWidget* parent, const char* name )
 <p>This tab bar shows the pages in the model.\
  Clicking on a tab makes that the current page. The type of page is symbolized by\
  the icons:<ul>\
-<li><img src=\"sketch_min.png\">Sketch</li>\
-<li><img src=\"part_min.png\">Part</li>\
-<li><img src=\"assembly_min.png\">Assembly</li>\
-<li><img src=\"drawing_min.png\">Drawing</li>\
+<li><img src=\":/images/sketch.png\" width=\"16\" height=\"16\">Sketch</li>\
+<li><img src=\":/images/part.png\" width=\"16\" height=\"16\">Part</li>\
+<li><img src=\":/images/assembly.png\" width=\"16\" height=\"16\">Assembly</li>\
+<li><img src=\":/images/drawing.png\" width=\"16\" height=\"16\">Drawing</li>\
 </ul>\
 </p>" ) );
 }

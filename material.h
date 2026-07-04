@@ -67,7 +67,7 @@ protected:
 
 class Material {
 public:
-  Material ( const QDomElement& xml_rep );
+  Material ( const QDomElement& xml_rep, const QString& image_path );
   //! \return the (unique) common name of the material.
   QString commonName ( void ) const { return common_name_; }
   //! \return the class of the material.
@@ -104,11 +104,11 @@ public:
   float bendE ( void ) const { return bend_e_; }
   //! \return solid color of material.
   QColor color ( void ) const { return color_; }
-  //! \return the face grain texture image file name.
+  //! \return the face grain texture image path.
   QString faceGrainFile ( void ) const { return face_grain_file_; }
-  //! \return the end grain texture image file name.
+  //! \return the end grain texture image path.
   QString endGrainFile ( void ) const { return end_grain_file_; }
-  //! \return the edge grain texture image name.
+  //! \return the edge grain texture image path.
   QString edgeGrainFile ( void ) const { return edge_grain_file_; }
 
 private:

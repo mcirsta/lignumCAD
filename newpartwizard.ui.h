@@ -45,7 +45,7 @@ void NewPartWizard::init()
 	}
 	QListViewItem* item = new QListViewItem( group, trC( part.current()->name() ) );
 	item->setOpen( true );
-	item->setPixmap( 1, lC::lookupPixmap( part.current()->icon() ) );
+	item->setPixmap( 1, QPixmap( part.current()->icon() ) );
 	parts_.insert( item, part.current() );
     }
     

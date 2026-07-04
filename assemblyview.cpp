@@ -31,6 +31,7 @@
 #include <qtextbrowser.h>
 #include <qbuttongroup.h>
 #include <qlabel.h>
+#include <QPixmap>
 
 #include <BRepTools.hxx>
 #include <TopoDS_Compound.hxx>
@@ -1314,7 +1315,7 @@ void AssemblyView::init ( void )
 
   model_delete_input_ = new ModelDeleteInput( this );
 
-  tab_ = new QTab( lC::lookupPixmap( "assembly.png" ),
+  tab_ = new QTab( QPixmap( ":/images/assembly.png" ),
 		   lC::formatTabName( assembly_->name() ) );
 
   QListViewItem* previous_item = parent()->previousItem( assembly_->id() );
@@ -2495,7 +2496,7 @@ public:
    */
   AssemblyViewMetadata ( void )
     : PageMetadata( lC::STR::ASSEMBLY,
-		    "new_assembly.png",
+		    ":/images/new_assembly.png",
 		    QT_TRANSLATE_NOOP( "lignumCADMainWindow", "&Assembly" ),
 		    "&Assembly...",
 		    "Insert a new Assembly",

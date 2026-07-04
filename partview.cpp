@@ -26,6 +26,7 @@
 #include <qlineedit.h>
 #include <qradiobutton.h>
 #include <qpushbutton.h>
+#include <QPixmap>
 
 #include "constants.h"
 #include "units.h"
@@ -335,7 +336,7 @@ PartView::~PartView ( void )
 
 void PartView::init ( void )
 {
-  tab_ = new QTab( lC::lookupPixmap( "part.png" ),
+  tab_ = new QTab( QPixmap( ":/images/part.png" ),
 		   lC::formatTabName( part_->name()  ));
 
   QListViewItem* previous_item = parent()->previousItem( part_->id() );
@@ -677,7 +678,7 @@ public:
    */
   PartViewMetadata ( void )
     : PageMetadata( lC::STR::PART,
-		    "new_part.png",
+		    ":/images/new_part.png",
 		    QT_TRANSLATE_NOOP( "lignumCADMainWindow", "&Part" ),
 		    "&Part...",
 		    "Insert a new Part",

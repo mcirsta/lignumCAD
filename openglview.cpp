@@ -26,6 +26,7 @@
 #include <qpainter.h>
 #include <qprinter.h>
 #include <qwhatsthis.h>
+#include <QPixmap>
 
 #include "constants.h"
 #include "units.h"
@@ -357,7 +358,7 @@ void OpenGLView::setPageView ( PageView* page_view )
       set2DView(); break;
     case SPACE3D:
       set3DView();
-      context_menu_->insertItem( lC::lookupPixmap( "view_orientation2.png" ),
+      context_menu_->insertItem( QPixmap( ":/images/view_orientation2.png" ),
 				 tr( "Quick Views" ), view_menu_ );
       context_menu_->insertSeparator();
       dynamic_cast<DesignBookView*>( parentWidget() )->lCMW()->toggleCSysAction->

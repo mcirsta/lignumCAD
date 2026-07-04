@@ -25,6 +25,7 @@
 #include <qtabbar.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
+#include <QPixmap>
 
 #include "constants.h"
 #include "command.h"
@@ -287,7 +288,7 @@ void SketchView::init ( void )
   alignment_create_input_ = new AlignmentCreateInput( this );
   constraint_delete_input_ = new ConstraintDeleteInput( this );
 
-  tab_ = new QTab( lC::lookupPixmap( "sketch.png" ),
+  tab_ = new QTab( QPixmap( ":/images/sketch.png" ),
 		   lC::formatTabName( sketch_->name() ) );
 
   QListViewItem* previous_item = parent()->previousItem( sketch_->id() );
@@ -973,7 +974,7 @@ public:
    */
   SketchViewMetadata ( void )
     : PageMetadata( lC::STR::SKETCH,
-		    "new_sketch.png",
+		    ":/images/new_sketch.png",
 		    QT_TRANSLATE_NOOP( "lignumCADMainWindow", "&Sketch" ),
 		    "&Sketch...",
 		    "Insert a new Sketch",

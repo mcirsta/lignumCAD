@@ -33,6 +33,7 @@
 #include <Geom_SurfaceOfRevolution.hxx>
 #include <GeomAPI_ProjectPointOnSurf.hxx>
 #include <GeomLProp_SLProps.hxx>
+#include <QImage>
 
 #include "constants.h"
 #include "material.h"
@@ -91,7 +92,7 @@ public:
 
     if ( x_dot_n > y_dot_n && x_dot_n > z_dot_n ) {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->faceGrainFile() );
+	QImage image = QImage( material_->faceGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -107,7 +108,7 @@ public:
     }
     else if ( y_dot_n > z_dot_n ) {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->edgeGrainFile() );
+	QImage image = QImage( material_->edgeGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -123,7 +124,7 @@ public:
     }
     else {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->endGrainFile() );
+	QImage image = QImage( material_->endGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -226,7 +227,7 @@ public:
 
     if ( x_dot_n > y_dot_n && x_dot_n > z_dot_n ) {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->faceGrainFile() );
+	QImage image = QImage( material_->faceGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -242,7 +243,7 @@ public:
     }
     else if ( y_dot_n > z_dot_n ) {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->edgeGrainFile() );
+	QImage image = QImage( material_->edgeGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -258,7 +259,7 @@ public:
     }
     else {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->endGrainFile() );
+	QImage image = QImage( material_->endGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -361,7 +362,7 @@ public:
 
     if ( z_dot_n > x_dot_n && z_dot_n > y_dot_n ) {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->faceGrainFile() );
+	QImage image = QImage( material_->faceGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -374,7 +375,7 @@ public:
     }
     else {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->edgeGrainFile() );
+	QImage image = QImage( material_->edgeGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -469,7 +470,7 @@ public:
 
     if ( z_dot_n > x_dot_n && z_dot_n > y_dot_n ) {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->faceGrainFile() );
+	QImage image = QImage( material_->faceGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -482,7 +483,7 @@ public:
     }
     else {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->edgeGrainFile() );
+	QImage image = QImage( material_->edgeGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -581,7 +582,7 @@ public:
 
     if ( z_dot_n > x_dot_n && z_dot_n > y_dot_n ) {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->faceGrainFile() );
+	QImage image = QImage( material_->faceGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -594,7 +595,7 @@ public:
     }
     else {
       if ( material_ != 0 ) {
-	QImage image = lC::lookupImage( material_->edgeGrainFile() );
+	QImage image = QImage( material_->edgeGrainFile() );
 	if ( !image.isNull() ) {
 	  s_resolution_ = 0.0254 * image.dotsPerMeterX() / image.width();
 	  t_resolution_ = 0.0254 * image.dotsPerMeterY() / image.height();
@@ -710,4 +711,3 @@ OCTextureFunction* OCTextureFactory::function ( OpenGLBase* view,
 
   return texture_function;
 }
-

@@ -21,8 +21,6 @@
  *
  */
 #include <qdom.h>
-#include <qmime.h>
-#include <qdragobject.h>
 #include <qdir.h>
 #include <qfile.h>
 #include <qsettings.h>
@@ -34,6 +32,19 @@
 #include "configuration.h"
 #include "usersettings.h"
 #include "material.h"
+
+namespace {
+  QString materialImagePath ( const QString& image_path, const QString& file )
+  {
+    if ( file.isEmpty() || file.startsWith( ":/" ) || QDir::isAbsolutePath( file ) )
+      return file;
+
+    if ( image_path.isEmpty() )
+      return file;
+
+    return QDir( image_path ).filePath( file );
+  }
+}
 
 MaterialDatabase MaterialDatabase::material_database_;
 
@@ -55,9 +66,7 @@ MaterialDatabase::MaterialDatabase ( void )
 		      arg( QDir::separator() ).arg( lC::STR::MATERIALS ) );
 
   if ( !materials_dir.exists() ) return;
-  QDir images_dir( materials_dir );
-  if ( images_dir.cd( lC::STR::IMAGES ) ) 
-    QMimeSourceFactory::defaultFactory()->addFilePath( images_dir.absPath() );
+  QString image_path = materials_dir.filePath( lC::STR::IMAGES );
 
   const QFileInfoList* files = materials_dir.entryInfoList(lC::STR::XML_FILE_PATERN,
 						      QDir::Files | QDir::Readable);
@@ -72,7 +81,7 @@ MaterialDatabase::MaterialDatabase ( void )
       doc.setContent( &material_file, false, &errorString, &line, &column );
       QDomElement root = doc.documentElement();
       if ( root.tagName() == lC::STR::MATERIAL ) {
-	new Material( root );
+	new Material( root, image_path );
       }
       material_file.close();	
     }
@@ -107,7 +116,7 @@ Material* MaterialDatabase::materialCommon ( const QString& common_name )
   return 0;
 }
 
-Material::Material ( const QDomElement& xml_rep )
+Material::Material ( const QDomElement& xml_rep, const QString& image_path )
 {
   // First, extact the language specific items.
 
@@ -248,11 +257,11 @@ Material::Material ( const QDomElement& xml_rep )
 	    if ( ce.tagName() == "color" )
 	      color_.setNamedColor( ce.attribute( lC::STR::VALUE ) );
 	    else if ( ce.tagName() == "face-grain" )
-	      face_grain_file_ = ce.attribute( "file" );
+	      face_grain_file_ = materialImagePath( image_path, ce.attribute( "file" ) );
 	    else if ( ce.tagName() == "end-grain" )
-	      end_grain_file_ = ce.attribute( "file" );
+	      end_grain_file_ = materialImagePath( image_path, ce.attribute( "file" ) );
 	    else if ( ce.tagName() == "edge-grain" )
-	      edge_grain_file_ = ce.attribute( "file" );
+	      edge_grain_file_ = materialImagePath( image_path, ce.attribute( "file" ) );
 	  }
 	  c = c.nextSibling();
 	}

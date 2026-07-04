@@ -25,6 +25,7 @@
 #include <qtabbar.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
+#include <QPixmap>
 
 #include "constants.h"
 #include "command.h"
@@ -227,7 +228,7 @@ DrawingView::~DrawingView ()
 
 void DrawingView::init ( void )
 {
-  tab_ = new QTab( lC::lookupPixmap( "drawing.png" ),
+  tab_ = new QTab( QPixmap( ":/images/drawing.png" ),
 		   lC::formatTabName( drawing_->name() ) );
 
   QListViewItem* previous_item = parent()->previousItem( drawing_->id() );
@@ -405,7 +406,7 @@ public:
    */
   DrawingViewMetadata ( void )
     : PageMetadata ( lC::STR::DRAWING,
-		     "new_drawing.png",
+		     ":/images/new_drawing.png",
 		     QT_TRANSLATE_NOOP( "lignumCADMainWindow", "&Drawing" ),
 		     "&Drawing...",
 		     "Insert a new Drawing",
