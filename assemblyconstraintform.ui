@@ -186,7 +186,7 @@ Constraints</string>
         </widget>
       </item>
       <item>
-        <widget class="Q3TextBrowser" name="constraintListBrowser"/>
+        <widget class="QTextBrowser" name="constraintListBrowser"/>
       </item>
       <item>
         <spacer name="Spacer4">
@@ -207,7 +207,6 @@ Constraints</string>
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <connections>
     <connection>
       <sender>helpPushButton</sender>

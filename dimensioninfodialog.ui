@@ -17,7 +17,7 @@
       <string>Dimension Information</string>
     </property>
     <property name="windowIcon">
-      <pixmap>image0</pixmap>
+      <pixmap>dimensioninfodialog.png</pixmap>
     </property>
     <layout class="QGridLayout">
       <property name="margin">
@@ -108,7 +108,7 @@
         </layout>
       </item>
       <item row="2" column="0" rowspan="1" colspan="2">
-        <widget class="Q3GroupBox" name="GroupBox1">
+        <widget class="QGroupBox" name="GroupBox1">
           <property name="title">
             <string>Annotation Side</string>
           </property>
@@ -227,7 +227,7 @@
         </widget>
       </item>
       <item row="1" column="0" rowspan="1" colspan="3">
-        <widget class="Q3GroupBox" name="referencesGroupBox">
+        <widget class="QGroupBox" name="referencesGroupBox">
           <property name="title">
             <string>References</string>
           </property>
@@ -393,11 +393,6 @@
     <tabstop>toReferenceLineEdit</tabstop>
     <tabstop>fromReferenceLineEdit</tabstop>
   </tabstops>
-  <images>
-    <image name="image0">
-      <data format="XPM.GZ" length="3198">789c559659537a4710c5dffd1494fd66a5facf5db9b752795071655750349587b90b8282a0202ea97cf7f474f74c2a8594fe383d67cef4cc5cf975d4980e7b8da35f07db9dd92dca463937ef8da3ea63b5fafef3af3ffe3e380cc306fd0451d0080f7f3b381ced1a65a3bf7ead2dc08800a23ccc8226f3bbe538889aca5f9e33e616b38932e5b1e524f4bc572e850d321bc7d0731c8a7f5b386e2ad7965313ab8e3de156901ae6d8722b723a6c8413373ef19c73fd97b01fdf574e84e1c5712b629e29e7ca6fcc058de7e6c150d9d59f7a2ed8ff5bd98dfff0cc3a7c2a57a2e3b367d19b96b3c8d777959d7ee238137f239c05aa2f1c8b8e3fca2edfbd631d7fc94cf36b3fd6c25e7ff42ce35f9473d52bcf32ff52d9e503cfa29f0be781f2d6721e67ae9fc7ca5a8f5361578fc78ef398b954d67c3077ac3ae7c9cb3c178695e792b9af5c69fd8967d1c5bf348132efaf895b749db8fe41d8d56322eceab1726cc47fa59c08c38fb2517dc05c7afd55d9e98f9e25cf8572ad7aed59e61f0a17a1329fd722f67a2aecf557c785f8b59553e5b5b251e6f35a545e9f293b7de4b9e2bcf7cab5ea4f9e458f84cb5099ef47996455c4f71902c7b1f4ff4cd88f4761371e6f1c9709f3463915869cb9ca03f1c78963f1875839511e08fbf1d79e65fe42d9e87c63cfa23f38ae443f57ae55bf732c3af0fe5409cd2fcfaf3761578fd78ed5af255c85aacf1dab1e28a7c286ef6755e7da4f633ccbf3e04cd8043aff85b01b0fa167fe7f82efca6e7db79e45bf54ae953b96ebd468bf71e159e6db29ebfae1c671c2cf630c85bd5f265c87c2f0e4b84e59df2aa7c2c0f9eadaf3ceb3f85d291be55cb956e6e7fb2c2d42cd9739967c30514e95af844ba3cfa38eb0f78b1ccf242f9f87d9ccfb4f1debfa4139d57e158e55ef7a16dd281bd53f3d8bbe57ae85473b043468e87741bf4bacb0c6193ee11c17f613ababa6f3d35ff27ec6175ce20a5f718d1b7cc377dce20e3f542d702f79c8ff13bff01b7ff0184ff014db7886e77881977845af6bec605732a83f600ffb54ff42690638c411de501aeb7e85b738269ae09d4da5fe0555f7f11ea7f8808fd8a4ece7186048d511fd35268eb133da69bdadeeb1fb12134c29cd0db6c837c39c125d03620a6067f0fe941d0cb92fa933941d0aca7ecbd9e7d61d4aa8a0a6954b7eca0e33ce9e50fd883b19c013556fa97a834398e33d2ce019bbf2fd84ea0d2c6105afe43ea21a9b664bd903ce3e20f7353ec306250f7712e650ba4ec21bbcc31676dc993629b6fa03f6b8107ff8a4f52cc93d25b70dcee10bbe697ddc49f88163ca7202a7d08633f9fe44e9ce31810b72e74ec2253cc3158ee11ad7b0e2ec1f54bfd7faff4ec1ccba53dfb7d02177dbc91a00d6d0e5fa9ed677700a7deee4137532a07de55300039aed84b377610823a8e146f68bfa35a0ec23f2a35300d479b0b9a893749e5c9a314e6022f70517dcc91977f2d29e1ab8a3f4f7b4a6b556933b2edcfec294dc677cc6ec298828ff83ed241ec323ed4c93d71a60e1cf8fa1357027354d48ee1156b44f0b971dedaddafbfb55400c899e02e9645b3b3922ef1a523acfffbf5f05cd31219f5c4e01bc92fb085a18d3b9e940c6b7c4f91774bf0c7ed23a7690c306f674e5f6b49f35edf28e3eb5f70fec4d567fbecbfce279e0cc00bd0dd5667c5b2581bd5ffffc7ef02fbec4de29</data>
-    </image>
-  </images>
   <connections>
     <connection>
       <sender>buttonOk</sender>

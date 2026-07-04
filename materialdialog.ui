@@ -51,7 +51,7 @@
         </widget>
       </item>
       <item row="0" column="2" rowspan="1" colspan="3">
-        <widget class="Q3GroupBox" name="detailsGroupBox">
+        <widget class="QGroupBox" name="detailsGroupBox">
           <property name="title">
             <string>Material Details</string>
           </property>
@@ -63,7 +63,7 @@
               <number>6</number>
             </property>
             <item>
-              <widget class="Q3TextEdit" name="MaterialText">
+              <widget class="QTextEdit" name="MaterialText">
                 <property name="sizePolicy">
                   <sizepolicy>
                     <hsizetype>7</hsizetype>
@@ -592,7 +592,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>MaterialList</tabstop>
     <tabstop>buttonOk</tabstop>

@@ -110,7 +110,7 @@ Enter a name for the part.</string>
           </widget>
         </item>
         <item row="1" column="1" rowspan="1" colspan="2">
-          <widget class="Q3GroupBox" name="partLibraryGroupBox">
+          <widget class="QGroupBox" name="partLibraryGroupBox">
             <property name="title">
               <string>&amp;Initial Part Library</string>
             </property>
@@ -228,7 +228,7 @@ This list contains the available template parts. The parts are categorized by gr
           </layout>
         </item>
         <item row="0" column="1">
-          <widget class="Q3GroupBox" name="partParameterFrame">
+          <widget class="QGroupBox" name="partParameterFrame">
             <property name="title">
               <string>&amp;Parameters</string>
             </property>
@@ -246,7 +246,6 @@ This list contains the available template parts. The parts are categorized by gr
     </widget>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <includes>
     <include location="global">q3vbox.h</include>
     <include location="global">q3dict.h</include>

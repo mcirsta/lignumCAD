@@ -93,7 +93,7 @@
         </spacer>
       </item>
       <item row="2" column="0" rowspan="1" colspan="4">
-        <widget class="Q3TextEdit" name="annotationTextEdit">
+        <widget class="QTextEdit" name="annotationTextEdit">
           <property name="textFormat">
             <enum>Qt::RichText</enum>
           </property>
@@ -285,7 +285,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>nameEdit</tabstop>
     <tabstop>annotationTextEdit</tabstop>

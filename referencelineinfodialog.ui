@@ -61,7 +61,7 @@
         </layout>
       </item>
       <item row="1" column="0">
-        <widget class="Q3GroupBox" name="definitionGroupBox">
+        <widget class="QGroupBox" name="definitionGroupBox">
           <property name="title">
             <string>Definition</string>
           </property>
@@ -285,7 +285,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>nameEdit</tabstop>
     <tabstop>referenceLineEdit</tabstop>
