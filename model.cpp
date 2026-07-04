@@ -47,9 +47,7 @@ Model::Model ( const QString name, const QString description )
     created_( QDateTime::currentDateTime() ), modified_( created_ ),
     version_( INITIAL_VERSION ), revision_( INITIAL_REVISION ),
     changed_( false )
-{
-  delay_resolutions_.setAutoDelete( true );
-}
+{}
 
 Model::Model ( const QString file_name, const QDomElement& xml_rep )
   : ModelItem( uniqueID(), QString::null, lC::STR::MODEL ), unique_page_id_( 0 ),
@@ -124,20 +122,19 @@ void Model::restorePages ( const QDomElement& xml_rep )
   }
 
   // Need to consider whether one pass through is enough...
-  delay_resolutions_.first();
+  auto resolution = delay_resolutions_.begin();
 
-  while ( delay_resolutions_.current() != 0 ) {
-    ModelItem* resolvee = lookup( delay_resolutions_.current()->dbPath() );
+  while ( resolution != delay_resolutions_.end() ) {
+    ModelItem* resolvee = lookup( (*resolution)->dbPath() );
     if ( resolvee != 0 ) {
-      delay_resolutions_.current()->item()->
-	resolved( delay_resolutions_.current()->dbPath(), resolvee );
-      delay_resolutions_.remove();
+      (*resolution)->item()->resolved( (*resolution)->dbPath(), resolvee );
+      resolution = delay_resolutions_.erase( resolution );
     }
     else
-      delay_resolutions_.next();
+      ++resolution;
   }
 
-  if ( delay_resolutions_.count() != 0 )
+  if ( !delay_resolutions_.empty() )
     cerr << "Did not resolve all delayed lookups. Model inconsistent." << endl;
 }
 
@@ -146,17 +143,16 @@ void Model::restorePages ( const QDomElement& xml_rep )
  */
 void Model::resolveNow ( void )
 {
-  delay_resolutions_.first();
+  auto resolution = delay_resolutions_.begin();
 
-  while ( delay_resolutions_.current() != 0 ) {
-    ModelItem* resolvee = lookup( delay_resolutions_.current()->dbPath() );
+  while ( resolution != delay_resolutions_.end() ) {
+    ModelItem* resolvee = lookup( (*resolution)->dbPath() );
     if ( resolvee != 0 ) {
-      delay_resolutions_.current()->item()->
-	resolved( delay_resolutions_.current()->dbPath(), resolvee);
-      delay_resolutions_.remove();
+      (*resolution)->item()->resolved( (*resolution)->dbPath(), resolvee);
+      resolution = delay_resolutions_.erase( resolution );
     }
     else
-      delay_resolutions_.next();
+      ++resolution;
   }
 }
 
@@ -514,7 +510,8 @@ QPtrList<PageBase> Model::whereUsed( const DBURL& db_url ) const
 
 void Model::addDelayedResolution ( ModelItem* item, const QString db_path )
 {
-  delay_resolutions_.append( new DelayedResolution( item, db_path ) );
+  delay_resolutions_.push_back( std::make_unique<DelayedResolution>( item,
+								     db_path ) );
 }
 
 void Model::write ( QDomElement& xml_rep ) const

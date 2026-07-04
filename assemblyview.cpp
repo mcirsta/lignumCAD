@@ -1494,10 +1494,8 @@ void AssemblyView::write ( QDomElement& xml_rep ) const
 
   viewData().write( view_element );
 
-  QPtrListIterator< FigureViewBase > fv( figureViews() );
-
-  for ( ; fv.current(); ++fv )
-    fv.current()->write( view_element );
+  for ( FigureViewBase* fv : figureViews() )
+    fv->write( view_element );
 
   xml_rep.appendChild( view_element );
 }
@@ -1672,10 +1670,8 @@ void AssemblyView::draw ( void ) const
   if ( renderStyle() == lC::Render::HIDDEN )
     hidden_drawer_->draw();
 
-  QPtrListIterator< FigureViewBase > f( figureViews() );
-
-  for ( ; f.current(); ++f )
-    (*f)->draw();
+  for ( FigureViewBase* f : figureViews() )
+    f->draw();
 
   glPopAttrib();
 }
@@ -1688,10 +1684,8 @@ void AssemblyView::draw ( void ) const
  */
 void AssemblyView::select ( SelectionType /*select_type*/ ) const
 {
-  QPtrListIterator< FigureViewBase > f( figureViews() );
-
-  for ( ; f.current(); ++f )
-    (*f)->select( selectionType() );
+  for ( FigureViewBase* f : figureViews() )
+    f->select( selectionType() );
 }
 
 void AssemblyView::updateName ( const QString& name )
@@ -2371,7 +2365,7 @@ void AssemblyView::placementComplete ( void )
 void AssemblyView::reeditSubassembly ( const AssemblyConstraint* /*old_constraint*/,
 				       const AssemblyConstraint* /*new_constraint*/)
 {
-  current_view_ = dynamic_cast<SubassemblyView*>( figureViews().toLast() );
+  current_view_ = dynamic_cast<SubassemblyView*>( lastFigureView() );
 
   disconnect( current_view_->subassembly(),
 	      SIGNAL( constraintChanged( const AssemblyConstraint*,

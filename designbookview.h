@@ -23,10 +23,10 @@
 #ifndef DESIGNBOOKVIEW_H
 #define DESIGNBOOKVIEW_H
 
+#include <memory>
 #include <vector>
 
 #include <qobject.h>
-#include <qptrlist.h>
 #include <qptrdict.h>
 #include <qvbox.h>
 #include <qpalette.h>
@@ -70,7 +70,8 @@ Q_OBJECT
   OpenGLView* opengl_view_;
   TabBarContext* page_tabbar_;
 
-  QPtrList< PageView > page_views_;
+  std::vector<std::unique_ptr<PageView>> page_views_;
+  int current_page_view_;
   QPtrDict< PageView > page_tabs_;
 
   NewModelWizard* new_model_wizard_;
@@ -176,6 +177,10 @@ private:
   bool read ( const QString file_name );
   void restoreViews ( const QDomElement& xml_rep );
   bool newModelWizard ( Model* model, uint& initial_page_id );
+  PageView* currentPageView ( void ) const;
+  int pageViewIndex ( PageView* page_view ) const;
+  void setCurrentPageView ( PageView* page_view );
+  void deletePageView ( PageView* page_view );
 
 private slots:
   void setName ( const QString& );

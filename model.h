@@ -25,6 +25,9 @@
 
 #include <Standard_Type.hxx>
 
+#include <memory>
+#include <vector>
+
 #include <qdatetime.h>
 #include <qmap.h>
 
@@ -233,7 +236,7 @@ private:
   static const VERSION_NO INITIAL_REVISION = 0;
 
   //! Transient list of items which need delayed resolution of references
-  QPtrList< DelayedResolution > delay_resolutions_;
+  std::vector<std::unique_ptr<DelayedResolution>> delay_resolutions_;
 };
 
 #endif // MODEL_H

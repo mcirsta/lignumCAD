@@ -24,8 +24,9 @@
 #define PAGEVIEW_H
 
 #include <iostream>
+#include <memory>
+#include <vector>
 
-#include <qptrlist.h>
 #include <QHash>
 #include <QVector>
 #include <qmap.h>
@@ -62,7 +63,7 @@ class PageView : public InputObject, public GraphicsObject, public View {
   Q_OBJECT
   DesignBookView* parent_;
 
-  QPtrList< FigureViewBase > figure_views_;
+  std::vector<std::unique_ptr<FigureViewBase>> figure_views_;
 
   InputObject* input_object_;
 
@@ -123,7 +124,7 @@ public:
   lC::Render::Style renderStyle ( void ) const { return render_style_; }
   void setRenderStyle ( lC::Render::Style render_style );
 
-  QPtrListIterator< FigureViewBase > figureViews ( void ) const;
+  std::vector<FigureViewBase*> figureViews ( void ) const;
   const QHash<GLuint, FigureViewBase*>& figureSelectionNames ( void ) const;
 
   InputObject* inputObject( void ) const { return input_object_; }
@@ -131,7 +132,8 @@ public:
 
   void addFigureView ( FigureViewBase* figure_view );
   void removeFigureView ( FigureViewBase* figure_view );
-  FigureViewBase* lastFigureView ( void ) { return figure_views_.last(); }
+  FigureViewBase* lastFigureView ( void )
+  { return figure_views_.empty() ? 0 : figure_views_.back().get(); }
   void clearFigureViews ( void );
 
   void cut ( void );
@@ -247,6 +249,7 @@ private:
   void activateFigure ( QMouseEvent* me, const SelectedNames& selected );
   void clearHighlighted ( void );
   void clearActivated ( void );
+  void deleteFigureView ( FigureViewBase* figure_view );
   SelectedNames filter ( const SelectedNames& selected );
 };
 

@@ -32,6 +32,9 @@
  * a global attribute.
  */
 #include <cmath>
+#include <memory>
+#include <vector>
+
 #include <qstringlist.h>
 #include <qobject.h>
 
@@ -122,7 +125,7 @@ class PrecisionTable {
 
 protected:
   //! List of available precisions.
-  QPtrList< lCPrecision > precisions_;
+  std::vector<std::unique_ptr<lCPrecision>> precisions_;
 
 public:
   /*!
@@ -131,11 +134,9 @@ public:
    */
   PrecisionTable ( const QString& name )
     : name_( name )
-  {
-    precisions_.setAutoDelete( true );
-  }
+  {}
 
-  //! Clean-up handled by list autodelete
+  //! Clean-up handled by owned precision entries.
   virtual ~PrecisionTable ( void ) {}
 
   /*!
@@ -146,7 +147,7 @@ public:
   /*!
    * \return number of available precisions.
    */
-  int count ( void ) const { return precisions_.count(); }
+  int count ( void ) const { return static_cast<int>( precisions_.size() ); }
 
   /*!
    * Retrieve the given precision without modifying the current
@@ -156,9 +157,10 @@ public:
    */
   lCPrecision* precision ( int index ) const
   {
-    QPtrListIterator< lCPrecision > p( precisions_ );
-    p += index;
-    return p.current();
+    if ( index < 0 || static_cast<size_t>( index ) >= precisions_.size() )
+      return 0;
+
+    return precisions_[index].get();
   }
 
   /*!
@@ -173,10 +175,8 @@ public:
   {
     QStringList labels;
 
-    QPtrListIterator< lCPrecision > p( precisions_ );
-
-    for ( ; p.current() != 0; ++p )
-      labels << p.current()->label();
+    for ( const auto& precision : precisions_ )
+      labels << precision->label();
 
     return labels;
   }
@@ -443,7 +443,10 @@ class UnitsBasis : public QObject {
   Q_OBJECT
 
   //! The list of available length unit representations.
-  QPtrList< LengthUnit > length_units_;
+  std::vector<std::unique_ptr<LengthUnit>> length_units_;
+
+  //! Index of the selected length unit representation.
+  int current_length_unit_;
 
   //! Used in the Unit information dialog to select a length display unit.
   QStringList length_unit_strings_;
@@ -482,7 +485,7 @@ public:
   /*!
    * \return the index of the current length unit representation.
    */
-  int at ( void ) const { return length_units_.at(); }
+  int at ( void ) const { return current_length_unit_; }
 
   /*!
    * Retrieve the precision index of the current length unit representation.
@@ -499,19 +502,19 @@ public:
    * current unit.
    */
   bool canBeFraction ( void ) const {
-    return length_units_.current()->canBeFraction();
+    return length_units_[current_length_unit_]->canBeFraction();
   }
 
   /*!
    * \return the full name of the current length unit.
    */
-  QString name ( void ) const { return length_units_.current()->name(); }
+  QString name ( void ) const { return length_units_[current_length_unit_]->name(); }
 
   /*!
    * \return the abbreviation of the current length unit.
    */
   QString abbreviation ( void ) const
-  { return length_units_.current()->abbreviation(); }
+  { return length_units_[current_length_unit_]->abbreviation(); }
 
   /*!
    * \return the format of the current length unit.
@@ -521,7 +524,8 @@ public:
   /*!
    * \return the current length unit object.
    */
-  LengthUnit* lengthUnit ( void ) const { return length_units_.current(); }
+  LengthUnit* lengthUnit ( void ) const
+  { return length_units_[current_length_unit_].get(); }
 
   /*!
    * Get the index-th length unit. Does not update the current length

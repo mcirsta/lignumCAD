@@ -469,10 +469,8 @@ void PartView::write ( QDomElement& xml_rep ) const
 
   viewData().write( view_element );
 
-  QPtrListIterator< FigureViewBase > fv( figureViews() );
-
-  for ( ; fv.current(); ++fv )
-    fv.current()->write( view_element );
+  for ( FigureViewBase* fv : figureViews() )
+    fv->write( view_element );
 
   xml_rep.appendChild( view_element );
 }
@@ -545,10 +543,8 @@ void PartView::draw ( void ) const
   // Then, draw all the figures on the page (well, technically,
   // there should be only one figure: The Part)
 
-  QPtrListIterator< FigureViewBase > f( figureViews() );
-
-  for ( ; f.current(); ++f )
-    (*f)->draw();
+  for ( FigureViewBase* f : figureViews() )
+    f->draw();
 
   glPopAttrib();
 }
@@ -561,10 +557,8 @@ void PartView::draw ( void ) const
  */
 void PartView::select ( SelectionType /*select_type*/ ) const
 {
-  QPtrListIterator< FigureViewBase > f( figureViews() );
-
-  for ( ; f.current(); ++f )
-    (*f)->select( selectionType() );
+  for ( FigureViewBase* f : figureViews() )
+    f->select( selectionType() );
 }
 
 void PartView::updateName ( const QString& /*name*/ )

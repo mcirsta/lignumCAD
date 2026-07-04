@@ -43,9 +43,7 @@
 PageView::PageView ( DesignBookView* parent )
   : parent_( parent ), input_object_( 0 ),
     valid_view_( false ), render_style_( lC::Render::WIREFRAME )
-{
-  figure_views_.setAutoDelete( true );
-}
+{}
 
 PageView::~PageView ( void )
 {}
@@ -71,9 +69,8 @@ QListViewItem* PageView::previousItem ( ListViewItem* page_item, uint id ) const
 {
   QListViewItem* previous_item = 0;
   QListViewItem* item = page_item->firstChild();
-  QPtrListIterator<FigureViewBase> f( figure_views_ );
-  for ( ; f.current() != 0; ++f ) {
-    if ( f.current()->id() > id ) break;
+  for ( const auto& figure_view : figure_views_ ) {
+    if ( figure_view->id() > id ) break;
 
     previous_item = item;
     item = item->nextSibling();
@@ -86,9 +83,15 @@ void PageView::setRenderStyle ( lC::Render::Style render_style )
   render_style_ = render_style;
 }
 
-QPtrListIterator< FigureViewBase > PageView::figureViews ( void ) const
+std::vector<FigureViewBase*> PageView::figureViews ( void ) const
 {
-  return QPtrListIterator< FigureViewBase >( figure_views_ );
+  std::vector<FigureViewBase*> views;
+  views.reserve( figure_views_.size() );
+
+  for ( const auto& figure_view : figure_views_ )
+    views.push_back( figure_view.get() );
+
+  return views;
 }
 
 const QHash<GLuint, FigureViewBase*>& PageView::figureSelectionNames ( void ) const
@@ -122,9 +125,20 @@ void PageView::setInputObject( InputObject* input_object )
  */
 void PageView::addFigureView ( FigureViewBase* figure_view )
 {
-  figure_views_.append( figure_view );
   figure_selection_names_.insert( figure_view->selectionName(),
 				  figure_view );
+  figure_views_.push_back( std::unique_ptr<FigureViewBase>( figure_view ) );
+}
+
+void PageView::deleteFigureView ( FigureViewBase* figure_view )
+{
+  auto figure_view_item = std::find_if( figure_views_.begin(), figure_views_.end(),
+					       [figure_view]( const auto& item ) {
+						 return item.get() == figure_view;
+					       } );
+
+  if ( figure_view_item != figure_views_.end() )
+    figure_views_.erase( figure_view_item );
 }
 
 void PageView::removeFigureView ( FigureViewBase* figure_view )
@@ -170,9 +184,8 @@ void PageView::removeFigureView ( FigureViewBase* figure_view )
   }
 
   figure_selection_names_.remove( figure_view->selectionName() );
-  // Note: Autodelete causes the figure view to be deleted. The
-  // the figure view destructor in turn deletes the figure itself.
-  figure_views_.removeRef( figure_view );
+  // Deleting the figure view in turn deletes the figure itself.
+  deleteFigureView( figure_view );
 }
 
 void PageView::clearFigureViews ( void )
@@ -227,10 +240,10 @@ void PageView::cut ( void )
 
     ConstraintHistory::instance().init();
 
-    // 3. Delete it (via AutoDelete). This may cause a cascade of changing
+    // 3. Delete it. This may cause a cascade of changing
     // constraints...
 
-    figure_views_.removeRef( fv );
+    deleteFigureView( fv );
 
     // 4. Add the list of constraints which were affected by the
     // deletion to the memento.
@@ -348,16 +361,14 @@ View* PageView::lookup ( QStringList& path_components ) const
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
 
-  QPtrListIterator< FigureViewBase > fv( figure_views_ );
-
-  for ( ; fv.current(); ++fv ) {
-    if ( fv.current()->name() == name && fv.current()->type() == type ) {
+  for ( const auto& fv : figure_views_ ) {
+    if ( fv->name() == name && fv->type() == type ) {
       // Pop the figure name off the list
       path_components.erase( path_components.begin() );
       if ( path_components.empty() )
-	return fv.current();
+	return fv.get();
       else
-	return fv.current()->lookup( path_components );
+	return fv->lookup( path_components );
     }
   }
   return 0;
@@ -369,17 +380,15 @@ std::vector<GLuint> PageView::lookup ( QVector<uint>& id_path ) const
 {
   std::vector<GLuint> name_path;
 
-  QPtrListIterator< FigureViewBase > fv( figure_views_ );
-
-  for ( ; fv.current(); ++fv ) {
-    if ( fv.current()->id() == id_path[0] ) {
-      name_path.push_back( fv.current()->selectionName() );
+  for ( const auto& fv : figure_views_ ) {
+    if ( fv->id() == id_path[0] ) {
+      name_path.push_back( fv->selectionName() );
 
       // Pop the figure name off the list
       id_path.erase( id_path.begin() );
 
       if ( !id_path.empty() )
-	fv.current()->lookup( id_path, name_path );
+	fv->lookup( id_path, name_path );
 
       break;
     }
@@ -416,10 +425,8 @@ void PageView::setViewData ( const ViewData& view_data )
  */
 void PageView::viewAttributeChanged ( void )
 {
-  QPtrListIterator< FigureViewBase > fv( figure_views_ );
-
-  for ( ; fv.current() != 0; ++fv )
-    fv.current()->viewAttributeChanged();
+  for ( const auto& fv : figure_views_ )
+    fv->viewAttributeChanged();
 }
 
 SelectionType PageView::defaultSelectionType ( void ) const
@@ -906,14 +913,12 @@ lC::RenameStatus PageView::uniqueFigureName ( const FigureViewBase* figure_view,
 					      const QString& name,
 					      const QString& type ) const
 {
-  QPtrListIterator<FigureViewBase> fv( figure_views_ );
-
-  for ( ; fv.current() != 0; ++fv ) {
+  for ( const auto& fv : figure_views_ ) {
     // Skip one's self.
-    if ( fv.current() == figure_view ) continue;
+    if ( fv.get() == figure_view ) continue;
 
-    if ( lC::formatName( fv.current()->name() ) == name &&
-	 fv.current()->type() == type ) {
+    if ( lC::formatName( fv->name() ) == name &&
+	 fv->type() == type ) {
       QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
 		      tr( "The name \"%1\" for a figure of type %2 already exists." ).
 		      arg( name ).arg( trC( type ) ),
@@ -944,10 +949,8 @@ QString PageView::uniqueName ( QString (*newName)( void ), const QString& type )
   QString name = newName();
 
  redo:
-  QPtrListIterator<FigureViewBase> fv( figure_views_ );
-
-  for ( ; fv.current() != 0; ++fv ) {
-    if ( fv.current()->name() == name && fv.current()->type() == type ) {
+  for ( const auto& fv : figure_views_ ) {
+    if ( fv->name() == name && fv->type() == type ) {
       name = newName();
       goto redo;
     }

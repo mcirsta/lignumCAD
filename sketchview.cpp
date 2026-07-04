@@ -443,10 +443,8 @@ void SketchView::write ( QDomElement& xml_rep ) const
 
   viewData().write( view_element );
 
-  QPtrListIterator< FigureViewBase > fv( figureViews() );
-
-  for ( ; fv.current(); ++fv )
-    fv.current()->write( view_element );
+  for ( FigureViewBase* fv : figureViews() )
+    fv->write( view_element );
 
   xml_rep.appendChild( view_element );
 }
@@ -569,10 +567,8 @@ void SketchView::draw ( void ) const
 
   // Then, draw all the figures on the page.
 
-  QPtrListIterator< FigureViewBase > f( figureViews() );
-
-  for ( ; f.current(); ++f )
-    (*f)->draw();
+  for ( FigureViewBase* f : figureViews() )
+    f->draw();
 }
 
 /*
@@ -582,10 +578,8 @@ void SketchView::draw ( void ) const
  */
 void SketchView::select ( SelectionType /*select_type*/ ) const
 {
-  QPtrListIterator< FigureViewBase > f( figureViews() );
-
-  for ( ; f.current(); ++f )
-    (*f)->select( selectionType() );
+  for ( FigureViewBase* f : figureViews() )
+    f->select( selectionType() );
 }
 
 
@@ -643,11 +637,9 @@ void SketchView::pasteFigure ( const QDomElement& xml_rep )
   if ( type == lC::STR::RECTANGLE ) {
     // See if there's a rectangle on this page which
     // has the same name and get a new one if necessary.
-    QPtrListIterator< FigureViewBase > f( figureViews() );
-
-    for ( ; f.current(); ++f )
-      if ( f.current()->name() == name &&
-	   f.current()->type() == lC::STR::RECTANGLE ) {
+    for ( FigureViewBase* f : figureViews() )
+      if ( f->name() == name &&
+	   f->type() == lC::STR::RECTANGLE ) {
 	name = uniqueName( &Rectangle::newName, lC::STR::RECTANGLE );
       }
 
@@ -686,11 +678,9 @@ void SketchView::pasteFigure ( const QDomElement& xml_rep )
   else if ( type == lC::STR::REFERENCE_LINE ) {
     // See if there's a reference line on this page which
     // has the same name and get a new one if necessary.
-    QPtrListIterator< FigureViewBase > f( figureViews() );
-
-    for ( ; f.current(); ++f )
-      if ( f.current()->name() == name &&
-	   f.current()->type() == lC::STR::REFERENCE_LINE ) {
+    for ( FigureViewBase* f : figureViews() )
+      if ( f->name() == name &&
+	   f->type() == lC::STR::REFERENCE_LINE ) {
 	name = uniqueName( &ReferenceLine::newName, lC::STR::REFERENCE_LINE );
       }
 
@@ -730,11 +720,9 @@ void SketchView::pasteFigure ( const QDomElement& xml_rep )
   else if ( type == lC::STR::CENTERLINE ) {
     // See if there's a centerline on this page which
     // has the same name and get a new one if necessary.
-    QPtrListIterator< FigureViewBase > f( figureViews() );
-
-    for ( ; f.current(); ++f )
-      if ( f.current()->name() == name &&
-	   f.current()->type() == lC::STR::CENTERLINE ) {
+    for ( FigureViewBase* f : figureViews() )
+      if ( f->name() == name &&
+	   f->type() == lC::STR::CENTERLINE ) {
 	name = uniqueName( &Centerline::newName, lC::STR::CENTERLINE );
       }
 
@@ -775,11 +763,9 @@ void SketchView::pasteFigure ( const QDomElement& xml_rep )
   else if ( type == lC::STR::ANNOTATION ) {
     // See if there's an annotation on this page which
     // has the same name and get a new one if necessary.
-    QPtrListIterator< FigureViewBase > f( figureViews() );
-
-    for ( ; f.current(); ++f )
-      if ( f.current()->name() == name &&
-	   f.current()->type() == lC::STR::ANNOTATION ) {
+    for ( FigureViewBase* f : figureViews() )
+      if ( f->name() == name &&
+	   f->type() == lC::STR::ANNOTATION ) {
 	name = uniqueName( &Annotation::newName, lC::STR::ANNOTATION );
       }
 

@@ -111,7 +111,7 @@ void CreatePage::createPage ( void )
 
 DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
   : QVBox( lCMW, "designbookview" ), lCMW_( lCMW ), gui_visible_( false ),
-    model_( 0 ), printing_( false )
+    current_page_view_( -1 ), model_( 0 ), printing_( false )
 {
   init();
 
@@ -160,7 +160,7 @@ DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
 
 DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW, const QString file_name )
   : QVBox( lCMW, "designbookview" ), lCMW_( lCMW ), gui_visible_( false ),
-    model_( 0 ), printing_( false )
+    current_page_view_( -1 ), model_( 0 ), printing_( false )
 {
   init();
 
@@ -178,13 +178,49 @@ DesignBookView::~DesignBookView ()
   delete opengl_view_;
 }
 
+PageView* DesignBookView::currentPageView ( void ) const
+{
+  if ( current_page_view_ < 0 ||
+       current_page_view_ >= static_cast<int>( page_views_.size() ) )
+    return 0;
+
+  return page_views_[current_page_view_].get();
+}
+
+int DesignBookView::pageViewIndex ( PageView* page_view ) const
+{
+  for ( size_t i = 0; i < page_views_.size(); ++i )
+    if ( page_views_[i].get() == page_view )
+      return static_cast<int>( i );
+
+  return -1;
+}
+
+void DesignBookView::setCurrentPageView ( PageView* page_view )
+{
+  current_page_view_ = pageViewIndex( page_view );
+}
+
+void DesignBookView::deletePageView ( PageView* page_view )
+{
+  int index = pageViewIndex( page_view );
+
+  if ( index < 0 )
+    return;
+
+  page_views_.erase( page_views_.begin() + index );
+
+  if ( current_page_view_ == index )
+    current_page_view_ = -1;
+  else if ( current_page_view_ > index )
+    --current_page_view_;
+}
+
 // Handle the common activities of constructing a Design Book.
 
 void DesignBookView::init ( void )
 {
   app_palette_ = qApp->desktop()->colorGroup();
-
-  page_views_.setAutoDelete( true );
 
   // Recover the user's default settings.
   QSettings settings;
@@ -577,15 +613,16 @@ bool DesignBookView::aboutToExit ( void )
 
 bool DesignBookView::uniquePageName ( const QString name ) const
 {
-  QPtrListIterator< PageView > pv( page_views_ );
+  PageView* current_page = currentPageView();
 
-  for ( ; pv.current(); ++pv ) {
+  for ( const auto& pv : page_views_ ) {
 
-    if ( (*pv) == page_views_.current() )
+    if ( pv.get() == current_page )
       continue;
 
-    else if ( lC::formatName( (*pv)->name() ) == name &&
-	      (*pv)->type() == page_views_.current()->type() )
+    else if ( current_page != 0 &&
+	      lC::formatName( pv->name() ) == name &&
+	      pv->type() == current_page->type() )
       return false;
   }
   return true;
@@ -600,14 +637,12 @@ lC::RenameStatus DesignBookView::uniquePageName ( const PageView* page_view,
 						  const QString& type )
   const
 {
-  QPtrListIterator< PageView > pv( page_views_ );
-
-  for ( ; pv.current(); ++pv ) {
+  for ( const auto& pv : page_views_ ) {
     // Skip one's self.
-    if ( pv.current() == page_view ) continue;
+    if ( pv.get() == page_view ) continue;
 
-    if ( lC::formatName( pv.current()->name() ) == name &&
-	 pv.current()->type() == type ) {
+    if ( lC::formatName( pv->name() ) == name &&
+	 pv->type() == type ) {
       QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
 		      tr( "The name \"%1\" for a page of type %2 already exists." ).
 		      arg( name ).arg( trC( type ) ),
@@ -653,10 +688,14 @@ void DesignBookView::addPageView ( PageView* page_view )
   // This now needs to be a little bit more careful when adding a page
   // view. The order of page ids needs to be maintained.
   uint p = 0;
-  for ( ; p < page_views_.count(); ++p ) {
-    if ( page_views_.at( p )->id() > page_view->id() ) break;
+  for ( ; p < page_views_.size(); ++p ) {
+    if ( page_views_[p]->id() > page_view->id() ) break;
   }
-  page_views_.insert( p, page_view );
+  if ( current_page_view_ >= static_cast<int>( p ) )
+    ++current_page_view_;
+
+  page_views_.insert( page_views_.begin() + p,
+			      std::unique_ptr<PageView>( page_view ) );
   page_tabs_.insert( page_view->tab(), page_view );
   page_tabbar_->insertTab( page_view->tab(), p );
   page_tabbar_->update();
@@ -693,7 +732,7 @@ void DesignBookView::showPageView ( PageView* page_view )
 
   else {
     // Otherwise, we have to do this all ourselves
-    page_views_.find( page_view );
+    setCurrentPageView( page_view );
     page_view->show();
     opengl_view_->setPageView( page_view );
 
@@ -706,14 +745,14 @@ void DesignBookView::showPageView ( PageView* page_view )
 
 void DesignBookView::removePageView ( PageView* page_view )
 {
-  page_views_.removeRef( page_view );
+  deletePageView( page_view );
 }
 
 // Return the "last" PageView in the list. (Used to find it's ListView item.)
 
 PageView* DesignBookView::lastPageView ( void )
 {
-  return page_views_.last();
+  return page_views_.empty() ? 0 : page_views_.back().get();
 }
 
 // Search for the place where this page view goes in the hierarchy list.
@@ -722,9 +761,8 @@ QListViewItem* DesignBookView::previousItem ( uint id ) const
 {
   QListViewItem* previous_item = 0;
   QListViewItem* item = model_list_item_->firstChild();
-  QPtrListIterator<PageView> p( page_views_ );
-  for ( ; p.current() != 0; ++p ) {
-    if ( p.current()->id() > id ) break;
+  for ( const auto& p : page_views_ ) {
+    if ( p->id() > id ) break;
 
     previous_item = item;
     item = item->nextSibling();
@@ -765,15 +803,13 @@ void DesignBookView::clear ( void )
 {
   opengl_view_->setPageView( 0 );
 
-  for ( PageView* page_view = page_views_.first();
-	page_view != 0;
-	page_view = page_views_.current() ) {
-
+  for ( const auto& page_view : page_views_ ) {
     page_tabbar_->removeTab( page_view->tab() );
     page_tabs_.remove( page_view->tab() );
-    page_views_.remove();	// i.e., remove the current page_view
-    //    delete page_view;
   }
+
+  page_views_.clear();
+  current_page_view_ = -1;
 
   if ( model_ != 0 )
     delete model_;
@@ -813,8 +849,10 @@ void DesignBookView::redo ( void )
 
 void DesignBookView::cut ( void )
 {
-  if ( page_views_.current() != 0 ) {
-    page_views_.current()->cut();
+  PageView* page_view = currentPageView();
+
+  if ( page_view != 0 ) {
+    page_view->cut();
     view()->updateGL();
   }
 }
@@ -823,16 +861,20 @@ void DesignBookView::cut ( void )
 
 void DesignBookView::copy ( void )
 {
-  if ( page_views_.current() != 0 )
-    page_views_.current()->copy();
+  PageView* page_view = currentPageView();
+
+  if ( page_view != 0 )
+    page_view->copy();
 }
 
 // Paste. (Well, this will require some care...)
 
 void DesignBookView::paste ( void )
 {
-  if ( page_views_.current() != 0 )
-    page_views_.current()->paste();
+  PageView* page_view = currentPageView();
+
+  if ( page_view != 0 )
+    page_view->paste();
 }
 
 /*
@@ -1151,7 +1193,7 @@ void DesignBookView::pageChanged ( int id )
   if ( page_view == 0 ) return;
 
   // As a side effect: Set this page to be the current item in the list
-  page_views_.find( page_view );
+  setCurrentPageView( page_view );
   page_view->show();
   opengl_view_->setPageView( page_view );
 
@@ -1165,11 +1207,13 @@ void DesignBookView::pageChanged ( int id )
 
 void DesignBookView::renamePage ( void )
 {
-  if ( page_views_.current() == 0 ) return;
+  PageView* page_view = currentPageView();
+
+  if ( page_view == 0 ) return;
 
  RENAME:			// Maybe we can do better than this...
   page_info_dialog_->nameEdit->
-    setText( lC::formatName( page_views_.current()->name() ) );
+    setText( lC::formatName( page_view->name() ) );
 
   page_info_dialog_->nameEdit->selectAll();
   page_info_dialog_->nameEdit->setFocus();
@@ -1182,15 +1226,15 @@ void DesignBookView::renamePage ( void )
 
   if ( page_info_dialog_->nameEdit->edited() ) {
     if ( uniquePageName( page_info_dialog_->nameEdit->text() ) ) {
-      page_views_.current()->setName( page_info_dialog_->nameEdit->text() );
+      page_view->setName( page_info_dialog_->nameEdit->text() );
 
-      emit pageChanged( page_views_.current()->name() );
+      emit pageChanged( page_view->name() );
     }
     else {
       QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
 		      tr( "The name \"%1\" for a page of type %2 already exists." ).
 		      arg( page_info_dialog_->nameEdit->text() ).
-		      arg( trC( page_views_.current()->type() ) ),
+		      arg( trC( page_view->type() ) ),
 		      QMessageBox::Information,
 		      QMessageBox::Yes | QMessageBox::Default,
 		      QMessageBox::Cancel,
@@ -1212,9 +1256,11 @@ void DesignBookView::renamePage ( void )
 
 void DesignBookView::deletePage ( void )
 {
-  if ( page_views_.current() == 0 ) return;
+  PageView* page_view = currentPageView();
 
-  QPtrList<PageBase> usages = model_->whereUsed( page_views_.current()->dbURL() );
+  if ( page_view == 0 ) return;
+
+  QPtrList<PageBase> usages = model_->whereUsed( page_view->dbURL() );
 
   if ( usages.count() > 0 ) {
     QStringList usage_name_list;
@@ -1226,7 +1272,7 @@ void DesignBookView::deletePage ( void )
 		    tr( "<p>You cannot delete \"%1\" because it is referenced by "
 			"other assemblies:<br>"
 			"<ul><li>%2</li></ul></p>" ).
-		    arg( page_views_.current()->name() ).
+		    arg( page_view->name() ).
 		    arg( usage_name_list.join( "</li><li>" ) ),
 		    QMessageBox::Information,
 		    QMessageBox::Ok | QMessageBox::Default,
@@ -1240,10 +1286,10 @@ void DesignBookView::deletePage ( void )
 
   CommandHistory::instance().
     addCommand( new DeleteCommand( QString( "delete %1" ).
-				   arg( page_views_.current()->type() ),
-				   page_views_.current()->memento() ) );
+				   arg( page_view->type() ),
+				   page_view->memento() ) );
 
-  deletePage( page_views_.current() );
+  deletePage( page_view );
 
   // Only mark the model as changed on a page deletion if the user
   // has actually invoked the "Delete Page" action.
@@ -1261,13 +1307,13 @@ void DesignBookView::deletePage ( PageView* page_view )
 
   page_tabbar_->removeTab( page_view->tab() );
   page_tabs_.remove( page_view->tab() );
-  page_views_.removeRef( page_view );
+  deletePageView( page_view );
 
   // Activate whatever page is now current in the TabBar
   QTab* tab = page_tabbar_->tab( page_tabbar_->currentTab() );
   if ( tab != 0 ) {
     page_view = page_tabs_[tab];
-    page_views_.find( page_view );
+    setCurrentPageView( page_view );
     page_view->show();
     page_tabbar_->setCurrentTab( tab );
     opengl_view_->setPageView( page_view );
@@ -1295,8 +1341,6 @@ View* DesignBookView::lookup ( const DBURL& db_url )
   // Pop the model name off the list
   path_components.erase( path_components.begin() );
 
-  QPtrListIterator< PageView > pv( page_views_ );
-
   // The front path component is the name of a page with ".type" appended
   // to it.
   int dot_pos = path_components.front().findRev( '.' );
@@ -1304,16 +1348,16 @@ View* DesignBookView::lookup ( const DBURL& db_url )
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
 
-  for ( ; pv.current(); ++pv ) {
-    if ( pv.current()->name() == name && pv.current()->type() == type ) {
+  for ( const auto& pv : page_views_ ) {
+    if ( pv->name() == name && pv->type() == type ) {
 
       // Pop the page name off the list
       path_components.erase( path_components.begin() );
 
       if ( path_components.empty() )
-	return pv.current();
+	return pv.get();
       else
-	return pv.current()->lookup( path_components );
+	return pv->lookup( path_components );
     }
   }
 
@@ -1344,11 +1388,10 @@ std::vector<GLuint> DesignBookView::lookup ( const QVector<uint>& id_path ) cons
       return p.data()->lookup( my_path );
   }
 #else
-  QPtrListIterator<PageView> p( page_views_ );
-  for ( ; p.current() != 0; ++p ) {
-    if ( p.current()->id() == my_path[0] ) {
+  for ( const auto& p : page_views_ ) {
+    if ( p->id() == my_path[0] ) {
       my_path.erase( my_path.begin() );
-      return p.current()->lookup( my_path );
+      return p->lookup( my_path );
     }
   }
 #endif
@@ -1462,11 +1505,13 @@ void DesignBookView::open ( void )
   if ( !read( file_name ) )
     return;
 
-  page_views_.first();
-  page_tabbar_->setCurrentTab( page_views_.current()->tab() );
+  current_page_view_ = page_views_.empty() ? -1 : 0;
+  PageView* page_view = currentPageView();
+
+  page_tabbar_->setCurrentTab( page_view->tab() );
   page_tabbar_->update();
-  page_views_.current()->show();
-  opengl_view_->setPageView( page_views_.current() );
+  page_view->show();
+  opengl_view_->setPageView( page_view );
 
   showView();
 }
@@ -1530,7 +1575,7 @@ OpenGLView* DesignBookView::view ( void ) const
  */
 void DesignBookView::print ( void )
 {
-  if ( page_views_.count() == 0 ) return;
+  if ( page_views_.empty() ) return;
 
   printer_->setDocName( lC::formatName( model_->name() ) );
   printer_->setCreator( tr( "%1 v%2.%3" ).
@@ -1571,19 +1616,19 @@ void DesignBookView::print ( void )
   // Print the first page...
   uint page_no = 1;
 
-  QPtrListIterator< PageView > pv( page_views_ );
-
-  opengl_printer_->print( *pv, painter, page_no, page_views_.count() );
+  opengl_printer_->print( page_views_.front().get(), painter, page_no,
+				  page_views_.size() );
 
   // ...then any more which happen to be there. (Evidently, painter is
   // not flushed by QPrinter::newPage(); you have to draw some more to get
   // rid of the old stuff. And, you get an extra page if there
   // are residual graphics in painter.)
 
-  for ( ++pv, ++page_no; *pv != 0; ++pv, ++page_no ){
+  for ( size_t i = 1; i < page_views_.size(); ++i, ++page_no ){
     printer_->newPage();
 
-    opengl_printer_->print( *pv, painter, page_no, page_views_.count() );
+    opengl_printer_->print( page_views_[i].get(), painter, page_no,
+				    page_views_.size() );
   }
 
   printing_ = false;
@@ -1594,7 +1639,9 @@ void DesignBookView::print ( void )
  */
 void DesignBookView::exportPage ( void )
 {
-  if ( page_views_.current() == 0 ) return;
+  PageView* page_view = currentPageView();
+
+  if ( page_view == 0 ) return;
 
   QString export_file =
     QFileDialog::getSaveFileName( QString::null,
@@ -1609,8 +1656,8 @@ void DesignBookView::exportPage ( void )
 
   opengl_printer_->makeCurrent();
 
-  opengl_printer_->exportPage( page_views_.current(), opengl_view_, export_file,
-			       page_views_.at()+1, page_views_.count() );
+  opengl_printer_->exportPage( page_view, opengl_view_, export_file,
+			       current_page_view_ + 1, page_views_.size() );
 
   printing_ = false;
   opengl_view_->redisplay();
@@ -1823,10 +1870,8 @@ bool DesignBookView::write ( void )
   QDomElement views_element = document.createElement( lC::STR::VIEWS );
   root.appendChild( views_element );
 
-  QPtrListIterator< PageView > p( page_views_ );
-
-  for ( ; p.current(); ++p )
-    (*p)->write( views_element );
+  for ( const auto& p : page_views_ )
+    p->write( views_element );
 
   // Serialize the XML document to the file
 
@@ -2007,10 +2052,8 @@ QString DesignBookView::uniqueName ( QString (*newName)( void ),const QString& t
   QString name = newName();
 
  redo:
-  QPtrListIterator<PageView> pv( page_views_ );
-
-  for ( ; pv.current() != 0; ++pv ) {
-    if ( pv.current()->name() == name && pv.current()->type() == type ) {
+  for ( const auto& pv : page_views_ ) {
+    if ( pv->name() == name && pv->type() == type ) {
       name = newName();
       goto redo;
     }

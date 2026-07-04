@@ -63,8 +63,6 @@ CommandHistory::CommandHistory ( void )
   : QObject( 0, "command_history" ), current_( -1 ), file_( 0 ), stream_( 0 ),
     document_( 0 )
 {
-  history_.setAutoDelete( true );
-
   file_ = new QFile( "history.xml" );
   if ( file_->open( IO_WriteOnly ) ) {
     stream_ = new QTextStream( file_ );
@@ -103,24 +101,14 @@ void CommandHistory::addCommand ( Command* command )
   // If the current command is not the end of the list, then
   // this command basically truncates the remainder of the history
   // and we now take a new course into the future.
-  if ( current_ < (int)history_.count() - 1 ) {
-    QPtrList< Command > commands;
-
-    for ( int i = 0; i <= current_; i++ ) {
-      commands.append( history_.at( 0 ) );
-      history_.take( 0 );
-    }
-
-    history_.clear();
-    history_ = commands;
-    history_.setAutoDelete( true );
-  }
+  if ( current_ < static_cast<int>( history_.size() ) - 1 )
+    history_.erase( history_.begin() + current_ + 1, history_.end() );
 
   // Can this command be merged into the current command?
-  if ( history_.last() != 0 ) {
-    if ( !history_.last()->merge( command ) ) {
+  if ( !history_.empty() ) {
+    if ( !history_.back()->merge( command ) ) {
 
-      history_.append( command );
+      history_.push_back( std::unique_ptr<Command>( command ) );
 
       current_++;
     }
@@ -128,7 +116,7 @@ void CommandHistory::addCommand ( Command* command )
       delete command;
   }
   else {
-    history_.append( command );
+    history_.push_back( std::unique_ptr<Command>( command ) );
 
     current_++;
   }
@@ -145,9 +133,9 @@ void CommandHistory::undo ( void )
 
   if ( current_ > -1 ) {
 
-    history_.at( current_ )->unexecute();
+    history_[current_]->unexecute();
 
-    *stream_ << "<undo command=\"" << history_.at( current_ )->name() << "\"/>"
+    *stream_ << "<undo command=\"" << history_[current_]->name() << "\"/>"
 	     << endl;
     stream_->device()->flush();
 
@@ -161,12 +149,12 @@ void CommandHistory::redo ( void )
 {
   if ( current_ > -1 ) {
     // current command is somewhere in the middle of the list
-    if ( current_ < (int)history_.count() - 1 ) {
+    if ( current_ < static_cast<int>( history_.size() ) - 1 ) {
       current_++;
 
-      history_.at( current_ )->execute();
+      history_[current_]->execute();
 
-      *stream_ << "<redo command=\"" << history_.at( current_ )->name() << "\"/>"
+      *stream_ << "<redo command=\"" << history_[current_]->name() << "\"/>"
 	       << endl;
       stream_->device()->flush();
     }
@@ -174,12 +162,12 @@ void CommandHistory::redo ( void )
   else {
     // current command is at beginning of list (i.e., no more undoable
     // commands)
-    if ( history_.count() > 0 ) {
+    if ( !history_.empty() ) {
       current_++;
 
-      history_.at( current_ )->execute();
+      history_[current_]->execute();
 
-      *stream_ << "<redo command=\"" << history_.at( current_ )->name() << "\"/>"
+      *stream_ << "<redo command=\"" << history_[current_]->name() << "\"/>"
 	       << endl;
       stream_->device()->flush();
     }
@@ -193,10 +181,10 @@ void CommandHistory::emitUndoRedo ( void )
   bool undo_available = false;
   bool redo_available = false;
 
-  if ( current_ >= 0 && current_ < (int)history_.count() )
+  if ( current_ >= 0 && current_ < static_cast<int>( history_.size() ) )
     undo_available = true;
 
-  if ( current_ + 1 >= 0 && current_ + 1 < (int)history_.count() )
+  if ( current_ + 1 >= 0 && current_ + 1 < static_cast<int>( history_.size() ) )
     redo_available = true;
 
   emit undoRedoChanged( undo_available, redo_available );
@@ -340,9 +328,7 @@ void RenameCommand::write ( QDomDocument* document ) const
 MoveLinesCommand::MoveLinesCommand ( const QString& name,
 				     Model* model )
   : Command( name ), model_( model ), xml_rep_( 0 )
-{
-  lines_.setAutoDelete( true );
-}
+{}
 
 MoveLinesCommand::~MoveLinesCommand ( void )
 {
@@ -353,7 +339,8 @@ bool MoveLinesCommand::merge ( Command* /*command*/ ) { return false; }
 
 void MoveLinesCommand::add ( Space2D::ConstrainedLine* line, double old_offset )
 {
-  lines_.append( new MoveLine( line->dbURL(), old_offset, line->offset() ) );
+  lines_.push_back( std::make_unique<MoveLine>( line->dbURL(), old_offset,
+							line->offset() ) );
 }
 
 void MoveLinesCommand::add ( QDomDocument* xml_rep )
@@ -363,15 +350,14 @@ void MoveLinesCommand::add ( QDomDocument* xml_rep )
 
 void MoveLinesCommand::execute ( void )
 {
-  QPtrListIterator< MoveLine > i( lines_ );
-  for ( ; i.current() != 0; ++i ) {
+  for ( const auto& move_line : lines_ ) {
     Space2D::ConstrainedLine* line =
-      dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( i.current()->db_url_ ) );
+      dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( move_line->db_url_ ) );
     if ( line == 0 ) {
       cerr << "Yikes, line did not exist!" << endl;
       continue;
     }
-    line->setOffset( i.current()->new_offset_ );
+    line->setOffset( move_line->new_offset_ );
   }
 
   if ( xml_rep_ != 0 ) {
@@ -432,16 +418,15 @@ void MoveLinesCommand::unexecute ( void )
     }
   }
 
-  QPtrListIterator< MoveLine > i( lines_ );
-  for ( ; i.current() != 0; ++i ) {
+  for ( const auto& move_line : lines_ ) {
     Space2D::ConstrainedLine* line =
-      dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( i.current()->db_url_ ) );
+      dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( move_line->db_url_ ) );
     if ( line == 0 ) {
       cerr << "Yikes, line did not exist!" << endl;
       continue;
     }
 
-    line->setOffset( i.current()->old_offset_ );
+    line->setOffset( move_line->old_offset_ );
   }
 }
 
@@ -454,15 +439,14 @@ void MoveLinesCommand::write ( QDomDocument* document ) const
   else
     document->appendChild( move_element );
 
-  QPtrListIterator< MoveLine > i( lines_ );
-  for ( ; i.current() != 0; ++i ) {
+  for ( const auto& move_line : lines_ ) {
     QDomElement line_element = document->createElement( lC::STR::MOVE_LINE );
 
-    line_element.setAttribute( lC::STR::URL, i.current()->db_url_ );
+    line_element.setAttribute( lC::STR::URL, move_line->db_url_ );
     line_element.setAttribute( lC::STR::OLD_OFFSET,
-			       lC::format( i.current()->old_offset_ ) );
+			       lC::format( move_line->old_offset_ ) );
     line_element.setAttribute( lC::STR::NEW_OFFSET,
-			       lC::format( i.current()->new_offset_ ) );
+			       lC::format( move_line->new_offset_ ) );
 
     move_element.appendChild( line_element );
   }
