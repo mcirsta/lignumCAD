@@ -3,7 +3,7 @@
  *
  * Header for the AxisView class
  * Copyright (C) 2002 lignum Computing, Inc. <lignumcad@lignumcomputing.com>
- * $Id$
+ * Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

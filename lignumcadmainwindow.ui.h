@@ -3,7 +3,7 @@
  *
  * Header for the lignumCADMainWindow classes
  * Copyright (C) 2002 lignum Computing, Inc. <lignumcad@lignumcomputing.com>
- * $Id$
+ * Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,7 +78,7 @@ void addDisabledIcon ( QAction* action )
 void lignumCADMainWindow::init ()
 {
     // Write the title text
-    titleLabel->setText( tr( "\n%1 Version %2.%3\nCopyright © %4 %5\n%6\ne-mail: %7" ).
+    titleLabel->setText( tr( "\n%1 Version %2.%3\nCopyright Â© %4 %5\n%6\ne-mail: %7" ).
 			 arg( lC::STR::LIGNUMCAD ).
 			 arg( lC::STR::VERSION_MAJOR ).
 			 arg( lC::STR::VERSION_MINOR ).
@@ -120,7 +120,7 @@ void lignumCADMainWindow::init ()
     QToolButton* whatsThis = QWhatsThis::whatsThisButton( toolBar );
     whatsThisAction->setIconSet( whatsThis->iconSet() );
     
-    message_label_ = new QLabel(  tr( "lignumCAD © 2002 lignum Computing, Inc."), statusBar(), "messageLabel" );
+    message_label_ = new QLabel(  tr( "lignumCAD Â© 2002 lignum Computing, Inc."), statusBar(), "messageLabel" );
     QWhatsThis::add( message_label_,
 		     tr( "Lists program status and other messages." ) );
     statusBar()->addWidget( message_label_, 1 );

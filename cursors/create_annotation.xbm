@@ -1,4 +1,5 @@
 /* Copyright (C) 2002 lignum Computing, Inc. <lignumcad@lignumcomputing.com> */
+/* Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com> */
 #define create_annotation_width 32
 #define create_annotation_height 32
 #define create_annotation_x_hot 4

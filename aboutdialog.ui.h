@@ -3,7 +3,7 @@
  *
  * Header for aboutDialog class
  * Copyright (C) 2002 lignum Computing, Inc. <lignumcad@lignumcomputing.com>
- * $Id$
+ * Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ void aboutDialog::init()
 				  arg( lC::STR::LIGNUMCAD ).
 				  arg( lC::STR::VERSION_MAJOR ).
 				  arg( lC::STR::VERSION_MINOR ) );
-    copyrightLabel->setText( tr( "Copyright © %1 %2" ).
+    copyrightLabel->setText( tr( "Copyright Â© %1 %2" ).
 			     arg( lC::STR::COPYRIGHT_DATES ).
 			     arg( lC::STR::LIGNUMCOMPUTINGINC ) );
     contactLabel->setText( tr( "%1\ne-mail: %2" ).

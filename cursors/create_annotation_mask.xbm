@@ -1,4 +1,5 @@
 /* Copyright (C) 2002 lignum Computing, Inc. <lignumcad@lignumcomputing.com> */
+/* Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com> */
 #define create_annotation_mask_width 32
 #define create_annotation_mask_height 32
 static unsigned char create_annotation_mask_bits[] = {

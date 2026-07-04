@@ -1,4 +1,5 @@
 /* Copyright (C) 2002 lignum Computing, Inc. <lignumcad@lignumcomputing.com */
+/* Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com> */
 #define create_asm_constraint_pl_width 32
 #define create_asm_constraint_pl_height 32
 #define create_asm_constraint_pl_x_hot 4

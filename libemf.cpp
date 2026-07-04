@@ -1,7 +1,7 @@
 /*
  * EMF: A library for generating ECMA-234 Enhanced Metafiles
  * Copyright (C) 2002 lignum Computing, Inc. <libemf@lignumcomputing.com>
- * $Id: libemf.cpp,v 1.5 2002/03/28 17:14:43 allen Exp $
+ * Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

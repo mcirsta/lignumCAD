@@ -2,7 +2,7 @@
 /*
  * OGLFT: A library for drawing text with OpenGL using the FreeType library
  * Copyright (C) 2002 lignum Computing, Inc. <oglft@lignumcomputing.com>
- * $Id: OGLFT.h,v 1.13 2002/07/12 11:56:42 allen Exp $
+ * Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

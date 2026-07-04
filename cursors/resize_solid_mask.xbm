@@ -1,4 +1,5 @@
 /* Copyright (C) 2002 lignum Computing, Inc. <lignumcad@lignumcomputing.com */
+/* Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com> */
 #define resize_solid_mask_width 32
 #define resize_solid_mask_height 32
 #define resize_solid_mask_x_hot 4

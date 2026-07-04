@@ -3,7 +3,7 @@
  *
  * Unit classes
  * Copyright (C) 2002 lignum Computing, Inc. <lignumcad@lignumcomputing.com>
- * $Id$
+ * Copyright (C) 2026 Marius Cirsta <mforce2@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ namespace {
   // Do these need to be translated...?
   const QString INCH_QUOTE_ABBREV = "\"";
   const QString INCH_IN_ABBREV    = "in";
-  const QString FOOT_QUOTE_ABBREV = "´";
+  const QString FOOT_QUOTE_ABBREV = "Â´";
   const QString FOOT_FT_ABBREV    = "ft";
   const QString YARD_ABBREV       = "yd";
   const QString MILLIMETER_ABBREV = "mm";
