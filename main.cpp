@@ -21,13 +21,13 @@
  *
  */
 #include <qapplication.h>
-#include <qtextcodec.h>
 #include <qstatusbar.h>
 #include <qlabel.h>
 #include <qtimer.h>
 #include <qmessagebox.h>
 #include <qsettings.h>
 #include <qdir.h>
+#include <QLocale>
 
 #if defined(Q_OS_UNIX)
 #include <signal.h>
@@ -85,9 +85,10 @@ int main( int argc, char ** argv )
 
   // Translations should be in the data directory
 
+  QString locale = QLocale::system().name();
   QTranslator translator( 0 );
-  if ( !translator.load( QString( "lignumCAD_" ) + QTextCodec::locale(), "." ) ) {
-    if ( !translator.load( QString( "lignumCAD_" ) + QTextCodec::locale(),
+  if ( !translator.load( QString( "lignumCAD_" ) + locale, "." ) ) {
+    if ( !translator.load( QString( "lignumCAD_" ) + locale,
 			   home_dir.absPath() + QDir::separator() +
 			   "translations" ) ) {
        
@@ -97,7 +98,7 @@ int main( int argc, char ** argv )
 			     "%1\n"
 			     "Continuing with built-in strings.\n"
 			     "Please check your installation.").
-		      arg( QTextCodec::locale() ),
+		      arg( locale ),
 		      QMessageBox::Warning,
 		      QMessageBox::Ok,
 		      QMessageBox::NoButton, QMessageBox::NoButton,
@@ -113,10 +114,10 @@ int main( int argc, char ** argv )
 
   QTranslator qt_translator( 0 );
 
-  if ( ! QString( QTextCodec::locale() ).startsWith( "en" ) ) {
+  if ( !locale.startsWith( "en" ) ) {
 
-    if ( !qt_translator.load( QString( "qt_" ) + QTextCodec::locale(), "." ) ) {
-      if ( !qt_translator.load( QString( "qt_" ) + QTextCodec::locale(),
+    if ( !qt_translator.load( QString( "qt_" ) + locale, "." ) ) {
+      if ( !qt_translator.load( QString( "qt_" ) + locale,
 				home_dir.absPath() + QDir::separator() +
 				"translations" ) ) {
 	
@@ -126,7 +127,7 @@ int main( int argc, char ** argv )
 			       "%1\n"
 			       "Continuing with built-in strings.\n"
 			       "Please check your installation.").
-			arg( QTextCodec::locale() ),
+			arg( locale ),
 			QMessageBox::Warning,
 			QMessageBox::Ok,
 			QMessageBox::NoButton, QMessageBox::NoButton,

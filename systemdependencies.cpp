@@ -28,7 +28,7 @@
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qmessagebox.h>
-#include <qtextcodec.h>
+#include <QLocale>
 
 #include "configuration.h"
 #include "systemdependencies.h"
@@ -85,8 +85,9 @@ namespace System {
   void showManual ( const QDir& home_dir )
   {
     // Find the manual for the current language (or English otherwise).
+    QString locale = QLocale::system().name();
     QString doc_dir = home_dir.absPath() + QDir::separator() + "doc" +
-      QDir::separator() + QTextCodec::locale();
+      QDir::separator() + locale;
     QString delimiters = "_.@";
     QString help_file;
     while ( true ) {
@@ -131,7 +132,7 @@ namespace System {
 			 "%1\n"
 			 "Please check your installation." ).
 		      arg( home_dir.absPath() + QDir::separator() + "doc" +
-			   QDir::separator() + QTextCodec::locale() ),
+			   QDir::separator() + locale ),
 			QMessageBox::Warning,
 			QMessageBox::Ok,
 			QMessageBox::NoButton, QMessageBox::NoButton,

@@ -24,7 +24,7 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qsettings.h>
-#include <qtextcodec.h>
+#include <QLocale>
 #if 0
 #include <zlib.h>
 #endif
@@ -128,7 +128,7 @@ Material::Material ( const QDomElement& xml_rep, const QString& image_path )
     QDomElement language_element = language_node_list.item(i).toElement();
 
     QString delimiters = "_.@";
-    QString locale = QTextCodec::locale();
+    QString locale = QLocale::system().name();
 
     while ( true ) {
       if ( language_element.attribute( "locale" ) == locale )
