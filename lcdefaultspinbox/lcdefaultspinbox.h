@@ -23,12 +23,12 @@
 #ifndef LCDEFAULTSPINBOX_H
 #define LCDEFAULTSPINBOX_H
 
-#include <qhbox.h>
+#include <QFrame>
 
 class QSpinBox;
 class QToolButton;
 
-class lCDefaultSpinBox : public QHBox
+class lCDefaultSpinBox : public QFrame
 {
   Q_OBJECT
 

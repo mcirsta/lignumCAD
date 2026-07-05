@@ -107,7 +107,7 @@ private:
 
 public:
   OpenGLView ( DesignBookView* parent, const char* name, lignumCADMainWindow* lCMW,
-	       QGLWidget* share_widget );
+	       QOpenGLWidget* share_widget );
   ~OpenGLView ( void );
 
   QPaintDeviceMetrics pdm ( void ) const { return pdm_; }

@@ -24,6 +24,7 @@
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qlistview.h>
+#include <QHBoxLayout>
 
 #include "lcconstraintchooser.h"
 
@@ -68,9 +69,14 @@ QString lCConstraintDialog::constraint ( void ) const
 }
 
 lCConstraintChooser::lCConstraintChooser( QWidget *parent, const char* name )
-  : QHBox( parent, name )
+  : QFrame( parent )
 {
-  setSpacing( 0 );
+  setObjectName( name );
+
+  QHBoxLayout* layout = new QHBoxLayout( this );
+  layout->setContentsMargins( 0, 0, 0, 0 );
+  layout->setSpacing( 0 );
+
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
 
@@ -81,6 +87,9 @@ lCConstraintChooser::lCConstraintChooser( QWidget *parent, const char* name )
   button_->setFixedWidth( button_->fontMetrics().width( "ABC" ) );
 
   line_edit_->setFixedHeight( button_->sizeHint().height() );
+
+  layout->addWidget( line_edit_ );
+  layout->addWidget( button_ );
 
   constraint_dialog_ = new lCConstraintDialog( this, "constraint_dialog" );
 

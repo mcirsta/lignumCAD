@@ -24,7 +24,11 @@
 #ifndef OPENGLBASE_H
 #define OPENGLBASE_H
 
-#include <qgl.h>
+#include <GL/gl.h>
+
+#include <QColor>
+#include <QOpenGLWidget>
+#include <QSurfaceFormat>
 #include <qmap.h>
 
 #include "ratio.h"
@@ -131,7 +135,7 @@ struct FaceData {
  * complicated services, such as input and selection and printing
  * are defined by subclasses.
  */
-class OpenGLBase : public QGLWidget {
+class OpenGLBase : public QOpenGLWidget {
 Q_OBJECT
 
 private:
@@ -161,19 +165,23 @@ public:
    * \param share_widget optional reference to widget with which to share display
    * lists.
    */
-  OpenGLBase ( QWidget* parent, const char* name, QGLWidget* share_widget = 0 );
+  OpenGLBase ( QWidget* parent, const char* name, QOpenGLWidget* share_widget = 0 );
   /*!
    * Construct an OpenGLBase widget. This constructor takes an explicit
-   * QGLFormat object for special applications.
+   * QSurfaceFormat object for special applications.
    * \param parent parent widget.
    * \param name name of widget.
    */
-  OpenGLBase ( const QGLFormat& format, QWidget* parent, const char* name );
+  OpenGLBase ( const QSurfaceFormat& format, QWidget* parent, const char* name );
   /*!
    * Destruct an OpenGLBase widget. Will free the OGLFT::Face objects
    * held in the font cache.
    */
   ~OpenGLBase ( void );
+
+  void updateGL ( void ) { update(); }
+  void qglColor ( const QColor& color ) const;
+  void qglClearColor ( const QColor& color ) const;
 
   /*!
    * Retrieve the scale of the OpenGL view. The scale factor

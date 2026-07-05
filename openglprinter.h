@@ -34,7 +34,7 @@ class OpenGLPrinter : public OpenGLView {
 
 public:
   OpenGLPrinter ( DesignBookView* parent, const char* name,
-		  QGLWidget* share_widget );
+		  QOpenGLWidget* share_widget );
   ~OpenGLPrinter ( void );
 
   /*!

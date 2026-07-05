@@ -23,14 +23,14 @@
 #ifndef LCFONTCHOOSER_H
 #define LCFONTCHOOSER_H
 
-#include <qhbox.h>
+#include <QFrame>
 #include <qfont.h>
 
 class QLineEdit;
 class QPushButton;
 class QToolButton;
 
-class lCFontChooser : public QHBox
+class lCFontChooser : public QFrame
 {
   Q_OBJECT
 

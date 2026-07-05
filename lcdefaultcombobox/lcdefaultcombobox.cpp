@@ -23,15 +23,20 @@
 #include <qcombobox.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
+#include <QHBoxLayout>
 #include <QPixmap>
 
 #include "constants.h"
 #include "lcdefaultcombobox.h"
 
 lCDefaultComboBox::lCDefaultComboBox( QWidget *parent, const char *name )
-  : QHBox( parent, name ), default_value_( 0 )
+  : QFrame( parent ), default_value_( 0 )
 {
-  setSpacing( 0 );
+  setObjectName( name );
+
+  QHBoxLayout* layout = new QHBoxLayout( this );
+  layout->setContentsMargins( 0, 0, 0, 0 );
+  layout->setSpacing( 0 );
 
   // A read only combo box (no reason for the user to type anything)
   combo_box_ = new QComboBox( false, this, "combobox" );
@@ -48,6 +53,9 @@ lCDefaultComboBox::lCDefaultComboBox( QWidget *parent, const char *name )
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( combo_box_->sizeHint().height()-2 );
+
+  layout->addWidget( combo_box_ );
+  layout->addWidget( default_ );
 
   connect( default_, SIGNAL( clicked() ), SLOT( chooseDefault() ) );
   connect( combo_box_, SIGNAL( activated(int) ), SLOT( updateIndex(int) ) );

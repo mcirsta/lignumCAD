@@ -58,7 +58,7 @@ extern "C" {
  * \param name Widget name.
  */
 OpenGLPrinter::OpenGLPrinter ( DesignBookView* parent, const char* name,
-			       QGLWidget* share_widget )
+			       QOpenGLWidget* share_widget )
   : OpenGLView( parent, name, 0, share_widget )
 {
   hide(); // Very shy

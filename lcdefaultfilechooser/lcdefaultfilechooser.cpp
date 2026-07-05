@@ -25,15 +25,21 @@
 #include <qtoolbutton.h>
 #include <qfiledialog.h>
 #include <qtooltip.h>
+#include <QHBoxLayout>
 #include <QPixmap>
 
 #include "constants.h"
 #include "lcdefaultfilechooser.h"
 
 lCDefaultFileChooser::lCDefaultFileChooser( QWidget *parent, const char *name )
-  : QHBox( parent, name )
+  : QFrame( parent )
 {
-  setSpacing( 0 );
+  setObjectName( name );
+
+  QHBoxLayout* layout = new QHBoxLayout( this );
+  layout->setContentsMargins( 0, 0, 0, 0 );
+  layout->setSpacing( 0 );
+
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
 
@@ -58,6 +64,10 @@ lCDefaultFileChooser::lCDefaultFileChooser( QWidget *parent, const char *name )
   default_->setFixedHeight( button_->sizeHint().height()-2 );
 
   line_edit_->setFixedHeight( button_->sizeHint().height() );
+
+  layout->addWidget( line_edit_ );
+  layout->addWidget( button_ );
+  layout->addWidget( default_ );
 #if 0
   connect( line_edit_, SIGNAL( textChanged( const QString & ) ),
 	   this, SIGNAL( fileNameChanged( const QString & ) ) );

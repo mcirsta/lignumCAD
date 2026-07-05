@@ -23,7 +23,7 @@
 #ifndef LCCONSTRAINTCHOOSER_H
 #define LCCONSTRAINTCHOOSER_H
 
-#include <qhbox.h>
+#include <QFrame>
 #include <qdialog.h>
 
 class QListView;
@@ -43,7 +43,7 @@ public:
   QString constraint ( void ) const;
 };
 
-class lCConstraintChooser : public QHBox
+class lCConstraintChooser : public QFrame
 {
   Q_OBJECT
 

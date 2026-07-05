@@ -23,12 +23,12 @@
 #ifndef LCDEFAULTCOMBOBOX_H
 #define LCDEFAULTCOMBOBOX_H
 
-#include <qhbox.h>
+#include <QFrame>
 
 class QComboBox;
 class QToolButton;
 
-class lCDefaultComboBox : public QHBox
+class lCDefaultComboBox : public QFrame
 {
   Q_OBJECT
 

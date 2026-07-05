@@ -24,12 +24,17 @@
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qfiledialog.h>
+#include <QHBoxLayout>
 
 lCFileChooser::lCFileChooser( QWidget *parent, const char *name )
-  : QHBox( parent, name )
+  : QFrame( parent )
 {
-  
-  setSpacing( 0 );
+  setObjectName( name );
+
+  QHBoxLayout* layout = new QHBoxLayout( this );
+  layout->setContentsMargins( 0, 0, 0, 0 );
+  layout->setSpacing( 0 );
+
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
 
@@ -48,6 +53,9 @@ lCFileChooser::lCFileChooser( QWidget *parent, const char *name )
   button->setFixedHeight( lineEdit->sizeHint().height() );
 
   resize( 50, button->fontMetrics().height() );
+
+  layout->addWidget( lineEdit );
+  layout->addWidget( button );
 
   connect( button, SIGNAL( clicked() ), this, SLOT( chooseFile() ) );
 

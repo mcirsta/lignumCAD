@@ -45,6 +45,7 @@
 #include <qslider.h>
 #include <qlayout.h>
 #include <qsimplerichtext.h>
+#include <QVBoxLayout>
 
 #include "configuration.h"
 #include "newmodelwizard.h"
@@ -110,9 +111,11 @@ void CreatePage::createPage ( void )
 // MDI version of lignumCAD?
 
 DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
-  : QVBox( lCMW, "designbookview" ), lCMW_( lCMW ), gui_visible_( false ),
+  : QWidget( lCMW ), lCMW_( lCMW ), gui_visible_( false ),
     current_page_view_( -1 ), model_( 0 ), printing_( false )
 {
+  setObjectName( "designbookview" );
+
   init();
 
   // Can't really display the OpenGL and Tabbar views until there is
@@ -159,9 +162,11 @@ DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
 }
 
 DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW, const QString file_name )
-  : QVBox( lCMW, "designbookview" ), lCMW_( lCMW ), gui_visible_( false ),
+  : QWidget( lCMW ), lCMW_( lCMW ), gui_visible_( false ),
     current_page_view_( -1 ), model_( 0 ), printing_( false )
 {
+  setObjectName( "designbookview" );
+
   init();
 
   if ( !read( file_name ) ) return;
@@ -400,18 +405,22 @@ void DesignBookView::init ( void )
 
   page_info_dialog_ = new PageInfoDialog( lCMW_ );
 
-  setSpacing( 1 );
-
   opengl_view_ = new OpenGLView( this, "openGLView", lCMW_, 0 );
   opengl_view_->setFocus();
 
   page_tabbar_ = new TabBarContext( this, "pageTabBarContext" );
   page_tabbar_->setShape( QTabBar::RoundedBelow );
 
+  QVBoxLayout* layout = new QVBoxLayout( this );
+  layout->setContentsMargins( 0, 0, 0, 0 );
+  layout->setSpacing( 1 );
+  layout->addWidget( opengl_view_ );
+  layout->addWidget( page_tabbar_ );
+
 #ifndef LAYOUT_COMPREHENSION
-  // Without at least one tab, QTabBar starts with an initial height
+  // TODO Without at least one tab, QTabBar starts with an initial height
   // of 0, from which the layout never seems to recover. It's probably
-  // something wrong with the specification of QGLWidget's resizing
+  // something wrong with the specification of the OpenGL widget's resizing
   // preferences. Look at this later. For now...
   page_tabbar_->setMinimumHeight( 32 );
   page_tabbar_->addTab( new QTab( "###dummy###" ) );

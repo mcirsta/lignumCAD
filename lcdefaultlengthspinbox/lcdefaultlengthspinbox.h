@@ -24,7 +24,7 @@
 #define LCDEFAULTLENGTHSPINBOX_H
 
 #include <qspinbox.h>
-#include <qhbox.h>
+#include <QFrame>
 
 #include "units.h"
 
@@ -59,7 +59,7 @@ protected:
   int mapTextToValue ( bool* ok );
 };
 
-class lCDefaultLengthSpinBox : public QHBox
+class lCDefaultLengthSpinBox : public QFrame
 {
   Q_OBJECT
 

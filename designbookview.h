@@ -27,8 +27,8 @@
 #include <vector>
 
 #include <QHash>
+#include <QWidget>
 #include <qobject.h>
-#include <qvbox.h>
 #include <qpalette.h>
 
 #include "constants.h"
@@ -62,7 +62,7 @@ class Printer;
  * interface of lignumCAD. This is Q_OBJECT so it can receive the signals from
  * it's GUI children.
  */
-class DesignBookView : public QVBox, public View {
+class DesignBookView : public QWidget, public View {
 Q_OBJECT
   lignumCADMainWindow* lCMW_;
 

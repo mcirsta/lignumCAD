@@ -23,6 +23,7 @@
 #include <qlineedit.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
+#include <QHBoxLayout>
 #include <QPixmap>
 
 #include "constants.h"
@@ -146,9 +147,13 @@ int lCLengthSpinBox::mapTextToValue ( bool* ok )
 }
 
 lCDefaultLengthSpinBox::lCDefaultLengthSpinBox( QWidget *parent, const char *name )
-  : QHBox( parent, name ), edited_( false )
+  : QFrame( parent ), edited_( false )
 {
-  setSpacing( 0 );
+  setObjectName( name );
+
+  QHBoxLayout* layout = new QHBoxLayout( this );
+  layout->setContentsMargins( 0, 0, 0, 0 );
+  layout->setSpacing( 0 );
 
   spin_box_ = new lCLengthSpinBox( this, "spinbox" );
 
@@ -164,6 +169,9 @@ lCDefaultLengthSpinBox::lCDefaultLengthSpinBox( QWidget *parent, const char *nam
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( spin_box_->sizeHint().height()-2 );
+
+  layout->addWidget( spin_box_ );
+  layout->addWidget( default_ );
 
   connect( default_, SIGNAL( clicked() ), this, SLOT( chooseDefault() ) );
   connect( spin_box_, SIGNAL( valueChanged(int) ), this,

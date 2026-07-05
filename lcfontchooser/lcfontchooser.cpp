@@ -26,15 +26,21 @@
 #include <qtoolbutton.h>
 #include <qtooltip.h>
 #include <qfontdialog.h>
+#include <QHBoxLayout>
 #include <QPixmap>
 
 #include "constants.h"
 #include "lcfontchooser.h"
 
 lCFontChooser::lCFontChooser( QWidget *parent, const char *name )
-  : QHBox( parent, name )
+  : QFrame( parent )
 {
-  setSpacing( 0 );
+  setObjectName( name );
+
+  QHBoxLayout* layout = new QHBoxLayout( this );
+  layout->setContentsMargins( 0, 0, 0, 0 );
+  layout->setSpacing( 0 );
+
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
 
@@ -66,6 +72,10 @@ lCFontChooser::lCFontChooser( QWidget *parent, const char *name )
   default_->setFixedHeight( button_->sizeHint().height()-2 );
 
   line_edit_->setFixedHeight( button_->sizeHint().height() );
+
+  layout->addWidget( line_edit_ );
+  layout->addWidget( button_ );
+  layout->addWidget( default_ );
 
   connect( button_, SIGNAL( clicked() ), this, SLOT( chooseFont() ) );
   connect( default_, SIGNAL( clicked() ), this, SLOT( chooseDefault() ) );

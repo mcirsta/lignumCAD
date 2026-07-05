@@ -155,7 +155,7 @@ GLuint OpenGLView::genSelectionName ( void )
  * might display in a context menu.
  */
 OpenGLView::OpenGLView ( DesignBookView* parent, const char* name,
-			 lignumCADMainWindow* lCMW, QGLWidget* share_widget )
+			 lignumCADMainWindow* lCMW, QOpenGLWidget* share_widget )
   : OpenGLBase( parent, name, share_widget ), pdm_( this ),
     mouse_mode_( MODEL )
 {

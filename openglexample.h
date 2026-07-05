@@ -76,7 +76,7 @@ Q_OBJECT
 
 public:
   /*!
-   * You only get one chance to specify the QGLFormat of an OpenGL widget. In
+   * You only get one chance to specify the QSurfaceFormat of an OpenGL widget. In
    * general the examples don't need a depth buffer, so we can save a little
    * memory space by not allocating one (though, you could always get one
    * anyway).
@@ -85,7 +85,7 @@ public:
    * \param name QObject name of widget.
    * \param parent widget's parent.
    */
-  OpenGLExample ( LengthUnit* length_unit, const QGLFormat& format,
+  OpenGLExample ( LengthUnit* length_unit, const QSurfaceFormat& format,
 		  const char* name, QWidget* parent );
 
   //! Destructor doesn't do much.

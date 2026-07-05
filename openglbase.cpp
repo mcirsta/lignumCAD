@@ -45,18 +45,34 @@ extern "C" {
 };
 
 OpenGLBase::OpenGLBase ( QWidget* parent, const char* name,
-			 QGLWidget* share_widget )
-  : QGLWidget( parent, name, share_widget ), background_texture_( 0 )
-{}
+			 QOpenGLWidget* share_widget )
+  : QOpenGLWidget( parent ), background_texture_( 0 )
+{
+  (void)share_widget;
+  setObjectName( name );
+}
 
-OpenGLBase::OpenGLBase ( const QGLFormat& format, QWidget* parent, const char* name)
-  : QGLWidget( format, parent, name )
-{}
+OpenGLBase::OpenGLBase ( const QSurfaceFormat& format, QWidget* parent, const char* name)
+  : QOpenGLWidget( parent ), background_texture_( 0 )
+{
+  setFormat( format );
+  setObjectName( name );
+}
 
 OpenGLBase::~OpenGLBase ( void )
 {
   makeCurrent();
   clearFontCache();
+}
+
+void OpenGLBase::qglColor ( const QColor& color ) const
+{
+  glColor4f( color.redF(), color.greenF(), color.blueF(), color.alphaF() );
+}
+
+void OpenGLBase::qglClearColor ( const QColor& color ) const
+{
+  glClearColor( color.redF(), color.greenF(), color.blueF(), color.alphaF() );
 }
 
 Space3D::Vector OpenGLBase::viewNormal ( void ) const

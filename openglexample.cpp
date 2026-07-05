@@ -41,7 +41,7 @@ extern "C" {
   extern int lCSymbols_ttf_size;
 };
 
-OpenGLExample::OpenGLExample ( LengthUnit* length_unit, const QGLFormat& format,
+OpenGLExample::OpenGLExample ( LengthUnit* length_unit, const QSurfaceFormat& format,
 			       const char* name, QWidget* parent )
   : OpenGLBase( format, parent, name ), mode_( lC::Render::REGULAR ),
     length_unit_( length_unit )

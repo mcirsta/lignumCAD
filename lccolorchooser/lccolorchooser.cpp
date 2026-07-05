@@ -25,18 +25,23 @@
 #include <qtoolbutton.h>
 #include <qtooltip.h>
 #include <qcolordialog.h>
+#include <QHBoxLayout>
 #include <QPixmap>
 
 #include "constants.h"
 #include "lccolorchooser.h"
 
 lCColorChooser::lCColorChooser( QWidget *parent, const char *name )
-  : QHBox( parent, name ), edited_( false )
+  : QFrame( parent ), edited_( false )
 {
+  setObjectName( name );
+
+  QHBoxLayout* layout = new QHBoxLayout( this );
+  layout->setContentsMargins( 0, 0, 0, 0 );
+  layout->setSpacing( 0 );
+
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
-  setMargin( 0 );
-  setSpacing( 0 );
 
   color_label_ = new QLabel( this, "label" );
   color_label_->setMinimumWidth( color_label_->fontMetrics().width( "COLOR" ) );
@@ -58,6 +63,10 @@ lCColorChooser::lCColorChooser( QWidget *parent, const char *name )
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( button_->sizeHint().height()-2 );
+
+  layout->addWidget( color_label_ );
+  layout->addWidget( button_ );
+  layout->addWidget( default_ );
 
   connect( button_, SIGNAL( clicked() ), this, SLOT( chooseColor() ) );
   connect( default_, SIGNAL( clicked() ), this, SLOT( chooseDefault() ) );

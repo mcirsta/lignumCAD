@@ -23,12 +23,12 @@
 #ifndef LCFILECHOOSER_H
 #define LCFILECHOOSER_H
 
-#include <qhbox.h>
+#include <QFrame>
 
 class QLineEdit;
 class QPushButton;
 
-class lCFileChooser : public QHBox
+class lCFileChooser : public QFrame
 {
     Q_OBJECT
 

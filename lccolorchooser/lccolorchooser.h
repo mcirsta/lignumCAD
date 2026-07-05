@@ -23,14 +23,14 @@
 #ifndef LCCOLORCHOOSER_H
 #define LCCOLORCHOOSER_H
 
-#include <qhbox.h>
+#include <QFrame>
 #include <qcolor.h>
 
 class QLabel;
 class QPushButton;
 class QToolButton;
 
-class lCColorChooser : public QHBox
+class lCColorChooser : public QFrame
 {
   Q_OBJECT
 

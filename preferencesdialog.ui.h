@@ -27,6 +27,8 @@
 ** update this file, preserving your code. Create an init() slot in place of
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
+#include <QSurfaceFormat>
+
 /*!
   * There's quite a bit of initialization in this dialog (since it does so much).
   */
@@ -34,8 +36,8 @@ void PreferencesDialog::init ()
 {    
     // The OpenGLExample is not a designer class, so we have to construct and lay it out
     // ourselves
-    QGLFormat format;
-    format.setDepth( false );
+    QSurfaceFormat format;
+    format.setDepthBufferSize( 0 );
 
     example_ = new OpenGLExample( UnitsBasis::instance()->lengthUnit(),
 				  format, "preferences example", exampleFrame );

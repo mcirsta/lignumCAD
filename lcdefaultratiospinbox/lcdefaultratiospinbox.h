@@ -24,7 +24,7 @@
 #define LCDEFAULTRATIOSPINBOX_H
 
 #include <qspinbox.h>
-#include <qhbox.h>
+#include <QFrame>
 
 #include "ratio.h"
 
@@ -45,7 +45,7 @@ protected:
   int mapTextToValue ( bool* ok );
 };
 
-class lCDefaultRatioSpinBox : public QHBox
+class lCDefaultRatioSpinBox : public QFrame
 {
   Q_OBJECT
 
