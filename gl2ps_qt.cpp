@@ -27,7 +27,6 @@
 #include <qpen.h>
 #include <qcolor.h>
 #include <qpainter.h>
-#include <qpaintdevicemetrics.h>
 #include <qprinter.h>
 
 #include "gl2ps.h"

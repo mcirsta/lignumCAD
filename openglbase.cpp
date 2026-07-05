@@ -22,7 +22,6 @@
  */
 #include <qapplication.h>
 #include <QImage>
-#include <qpaintdevicemetrics.h>
 #include <qregexp.h>
 
 #include "OGLFT.h"
@@ -400,15 +399,13 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
       if ( clear_depth_buffer )
 	glClear( GL_DEPTH_BUFFER_BIT );
 
-      QPaintDeviceMetrics pdm( view );
-
       // Set up a projection/modelview in which vertex coordinates
       // correspond to pixels
 
       glMatrixMode( GL_PROJECTION );
       glPushMatrix();
       glLoadIdentity();
-      glOrtho( 0, pdm.width(), 0, pdm.height(), 1., -1. );
+      glOrtho( 0, view->width(), 0, view->height(), 1., -1. );
       glMatrixMode( GL_MODELVIEW );
       glPushMatrix();
       glLoadIdentity();
@@ -428,11 +425,11 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
 
       view->qglColor( color_scheme_.gradientColor() );
       glVertex2i( 0, 0 );
-      glVertex2i( pdm.width(), 0 );
+      glVertex2i( view->width(), 0 );
 
       view->qglColor( color_scheme_.backgroundColor() );
-      glVertex2i( pdm.width(), pdm.height() );
-      glVertex2i( 0, pdm.height() );
+      glVertex2i( view->width(), view->height() );
+      glVertex2i( 0, view->height() );
   
       glEnd();
 
@@ -470,16 +467,15 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
 
       QImage image = view->backgroundImage();
 
-      QPaintDeviceMetrics pdm( view );
-      double s = (double)pdm.width() / image.width();
-      double t = (double)pdm.height() / image.height();
+      double s = (double)view->width() / image.width();
+      double t = (double)view->height() / image.height();
 
       // Change the projection matrix so that the texture is the correct size,
       // i.e., there is a one-to-one correspondence between pixels and texels.
       glMatrixMode( GL_PROJECTION );
       glPushMatrix();
       glLoadIdentity();
-      glOrtho( 0, pdm.width(), 0, pdm.height(), 1., -1. );
+      glOrtho( 0, view->width(), 0, view->height(), 1., -1. );
       glMatrixMode( GL_MODELVIEW );
       glPushMatrix();
       glLoadIdentity();

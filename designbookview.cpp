@@ -1601,15 +1601,14 @@ void DesignBookView::print ( void )
   opengl_printer_->makeCurrent();
 
   QPainter painter( printer_ );
-  QPaintDeviceMetrics pdm( printer_ );
 
   // OK, deduct 1/2" margin all around. For a QRect, that's 1/2" in
   // from the top and left edges and a width of 'page width - 2 *
   // DPI * 1/2"' and a height of 'page height - 2 * DPI * 1/2"'.
-  QRect margin( (int)rint( pdm.logicalDpiX() * .5 ),
-		(int)rint( pdm.logicalDpiY() * .5 ),
-		pdm.width() - pdm.logicalDpiX(),
-		pdm.height() - pdm.logicalDpiY() );
+  QRect margin( (int)rint( printer_->logicalDpiX() * .5 ),
+		(int)rint( printer_->logicalDpiY() * .5 ),
+		printer_->width() - printer_->logicalDpiX(),
+		printer_->height() - printer_->logicalDpiY() );
 
   painter.setViewport( margin );
 

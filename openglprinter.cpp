@@ -97,7 +97,7 @@ OGLFT::Face* OpenGLPrinter::font ( const FaceData& requested_face )
   // to the face constructor) implies that the point size is
   // effectively in scale inches.
 
-  OGLFT::Face* base_face = new OGLFT::Filled( file, point_size * scale_ * 72 / pdm_.logicalDpiY(), 1 );
+  OGLFT::Face* base_face = new OGLFT::Filled( file, point_size * scale_ * 72 / logicalDpiY(), 1 );
 
   faces_.insert( actual_face, base_face );
 
@@ -152,8 +152,8 @@ QRect OpenGLPrinter::newWindow ( const Space2D::Point& origin,
 			      const Space2D::Vector& size )
 {
   // Compute the size in (OpenGL) screen coordinates.
-  int w = (int)fabs( rint( size[X] * pdm_.logicalDpiX() ) );
-  int h = (int)fabs( rint( size[Y] * pdm_.logicalDpiY() ) );
+  int w = (int)fabs( rint( size[X] * logicalDpiX() ) );
+  int h = (int)fabs( rint( size[Y] * logicalDpiY() ) );
 
   // This is a bit of gloss: don't render outside (below) the bounding box.
   glEnable( GL_CLIP_PLANE0 );
@@ -169,10 +169,10 @@ QRect OpenGLPrinter::newWindow ( const Space2D::Point& origin,
   GLdouble plane[] = { 0, 1, 0, scale_ * fabs(size[Y]) };
   glClipPlane( GL_CLIP_PLANE0, plane );
 
-  glScaled( view_data_.scale_/(double)pdm_.logicalDpiX(),
-	    view_data_.scale_/(double)pdm_.logicalDpiY(), 1. );
+  glScaled( view_data_.scale_/(double)logicalDpiX(),
+	    view_data_.scale_/(double)logicalDpiY(), 1. );
 
-  scale_ = pdm_.logicalDpiX();
+  scale_ = logicalDpiX();
   old_scale_ = view_data_.scale_;
   view_data_.scale_ = scale_;
 
@@ -206,7 +206,7 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
   // This really only needs to happen when the scale is changed...
   clearFontCache();
 
-  QPaintDeviceMetrics p_pdm( painter.device() );
+  QPaintDevice* print_device = painter.device();
 
   // Use the maximum sized viewport on the theory that the OpenGL
   // implementation may use fixed point for the screen coordinates.
@@ -237,9 +237,9 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
     // 2D drawing so that we can draw the frame and the metadata box.
 
     widthIN_ = view_data_.scale_ * painter.viewport().width()
-      / p_pdm.logicalDpiX();
+      / print_device->logicalDpiX();
     heightIN_ = view_data_.scale_ * painter.viewport().height()
-      / p_pdm.logicalDpiY();
+      / print_device->logicalDpiY();
 
     ll_corner_ = view_data_.view_point_;
     ur_corner_ = ll_corner_ + Vector( widthIN_, heightIN_ );
@@ -252,10 +252,10 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
     // There is a slight mismatch between Qt's and OpenGL's idea of
     // the last pixel on a drawing surface, so reduce the size of the
     // bounding box by the equivalent of one pixel.
-    ll_corner_ += Vector( view_data_.scale_ / p_pdm.logicalDpiX(),
-			  view_data_.scale_ / p_pdm.logicalDpiY() );
-    ur_corner_ -= Vector( view_data_.scale_ / p_pdm.logicalDpiX(),
-			  view_data_.scale_ / p_pdm.logicalDpiY() );
+    ll_corner_ += Vector( view_data_.scale_ / print_device->logicalDpiX(),
+			  view_data_.scale_ / print_device->logicalDpiY() );
+    ur_corner_ -= Vector( view_data_.scale_ / print_device->logicalDpiX(),
+			  view_data_.scale_ / print_device->logicalDpiY() );
 
     glGetDoublev( GL_PROJECTION_MATRIX, projection_ );
 
@@ -363,19 +363,18 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   if ( !BusinessInfo::instance().logo().isEmpty() ) {
     if ( QFileInfo( BusinessInfo::instance().logo() ).extension().lower() == "svg"){
       logo.load( BusinessInfo::instance().logo(), "svg" );
-      QPaintDeviceMetrics pcpdm( &logo );
       // Convert the size of the logo from paper inches to scale inches (like
       // the font sizes).
-      logo_width = scale_ * pcpdm.width() / pcpdm.logicalDpiX();
-      logo_height = scale_ * pcpdm.height() / pcpdm.logicalDpiY();
+      logo_width = scale_ * logo.width() / logo.logicalDpiX();
+      logo_height = scale_ * logo.height() / logo.logicalDpiY();
 
       // Scale the logo down so that it is not higher than the business info
       // text.
       double logo_scale = ( medium_face->height() + large_face->height() ) /
 	logo_height;
       logo_width *= logo_scale;
-      logo_scale_x = scale_ * logo_scale / pcpdm.logicalDpiX();
-      logo_scale_y = scale_ * logo_scale / pcpdm.logicalDpiY();
+      logo_scale_x = scale_ * logo_scale / logo.logicalDpiX();
+      logo_scale_y = scale_ * logo_scale / logo.logicalDpiY();
     }
     // A Pixmap logo is ignored for now...
   }
@@ -493,8 +492,6 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
   // This really only needs to happen when the scale is changed...
   clearFontCache();
 
-  QPaintDeviceMetrics p_pdm( view );
-
   // Use the maximum sized viewport on the theory that the OpenGL
   // implementation may use fixed point for the screen coordinates.
 
@@ -508,11 +505,11 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
   // The first thing to do is to set up the paper size viewport for
   // 2D drawing so that we can draw the frame and the metadata box.
 
-  widthIN_ = view_data_.scale_ * p_pdm.width() / p_pdm.logicalDpiX();
-  heightIN_ = view_data_.scale_ * p_pdm.height() / p_pdm.logicalDpiY();
+  widthIN_ = view_data_.scale_ * view->width() / view->logicalDpiX();
+  heightIN_ = view_data_.scale_ * view->height() / view->logicalDpiY();
 
-  emf.width = (GLdouble)p_pdm.width() / p_pdm.logicalDpiX();
-  emf.height = (GLdouble)p_pdm.height() / p_pdm.logicalDpiY();
+  emf.width = (GLdouble)view->width() / view->logicalDpiX();
+  emf.height = (GLdouble)view->height() / view->logicalDpiY();
   emf.scale_x = 2540 * emf.width / max_viewport_dims[0];
   emf.scale_y = 2540 * emf.height / max_viewport_dims[1];
 
@@ -542,10 +539,10 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
     // There is a slight mismatch between Qt's and OpenGL's idea of
     // the last pixel on a drawing surface, so reduce the size of the
     // bounding box by the equivalent of one pixel.
-    ll_corner_ += Vector( view_data_.scale_ / p_pdm.logicalDpiX(),
-			  view_data_.scale_ / p_pdm.logicalDpiY() );
-    ur_corner_ -= Vector( view_data_.scale_ / p_pdm.logicalDpiX(),
-			  view_data_.scale_ / p_pdm.logicalDpiY() );
+    ll_corner_ += Vector( view_data_.scale_ / view->logicalDpiX(),
+			  view_data_.scale_ / view->logicalDpiY() );
+    ur_corner_ -= Vector( view_data_.scale_ / view->logicalDpiX(),
+			  view_data_.scale_ / view->logicalDpiY() );
 
     glGetDoublev( GL_PROJECTION_MATRIX, projection_ );
 

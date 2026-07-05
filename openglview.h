@@ -24,7 +24,6 @@
 #ifndef OPENGLVIEW_H
 #define OPENGLVIEW_H
 
-#include <qpaintdevicemetrics.h>
 #include <qcursor.h>
 
 #include "graphics.h"
@@ -55,9 +54,6 @@ private:
 
   // These data items can be used by subclasses.
 protected:
-  //! This Qt object tracks the size of the window as well as
-  //! containing the DPI and other Display values.
-  QPaintDeviceMetrics pdm_;
   //! The page view to display and deliver input events to.
   PageView* page_view_;
   //! All the info necessary to reconstruct a page's view.
@@ -69,8 +65,7 @@ protected:
   double widthIN_;
   //! The height of the view in scale inches.
   double heightIN_;
-  //! The viewport (duplicated in pdm_, but we need the array
-  //! to call glu[Un]Project.)
+  //! The viewport array is needed to call glu[Un]Project.
   GLint viewport_[4];
   //! The OpenGL PROJECTION matrix. (Actually, this is redundant to
   //! the width and height, but it's faster for restoring the view.)
@@ -109,8 +104,6 @@ public:
   OpenGLView ( DesignBookView* parent, const char* name, lignumCADMainWindow* lCMW,
 	       QOpenGLWidget* share_widget );
   ~OpenGLView ( void );
-
-  QPaintDeviceMetrics pdm ( void ) const { return pdm_; }
 
   //! \return the context menu for this view.
   QPopupMenu* contextMenu ( void ) const { return context_menu_; }

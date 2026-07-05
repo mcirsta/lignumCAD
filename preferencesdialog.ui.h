@@ -101,14 +101,12 @@ void PreferencesDialog::logoFileChooser_fileNameChanged( const QString & file_na
     QPicture picture;
     picture.load( file_name, "svg" );
     
-    QPaintDeviceMetrics lpdm( logoLabel );
-    QPaintDeviceMetrics pcpdm( &picture );
     // Try to center the logo image (as well as rendering at the proper scale)
-    int width = pcpdm.width() * lpdm.logicalDpiX() / pcpdm.logicalDpiX();
-    int height = pcpdm.height() * lpdm.logicalDpiY() / pcpdm.logicalDpiY();
-    painter.translate( ( lpdm.width() - width ) / 2, ( lpdm.height() - height ) / 2 );
-    painter.scale( (double)lpdm.logicalDpiX() / pcpdm.logicalDpiX(),
-		   (double)lpdm.logicalDpiY() / pcpdm.logicalDpiY() );
+    int width = picture.width() * logoLabel->logicalDpiX() / picture.logicalDpiX();
+    int height = picture.height() * logoLabel->logicalDpiY() / picture.logicalDpiY();
+    painter.translate( ( logoLabel->width() - width ) / 2, ( logoLabel->height() - height ) / 2 );
+    painter.scale( (double)logoLabel->logicalDpiX() / picture.logicalDpiX(),
+		   (double)logoLabel->logicalDpiY() / picture.logicalDpiY() );
     
     picture.play( &painter );
 

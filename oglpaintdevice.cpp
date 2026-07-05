@@ -20,7 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qpaintdevicemetrics.h>
 #include <qpainter.h>
 #include <qpen.h>
 
@@ -102,26 +101,27 @@ void OGLPaintDevice::setView ( OpenGLBase* view )
 int OGLPaintDevice::metric ( int n ) const
 {
   // All of these attributes are taken directly from the OpenGL widget.
-  QPaintDeviceMetrics pdm( view_ );
   switch ( n ) {
-  case QPaintDeviceMetrics::PdmWidth:
-    return pdm.width();
-  case QPaintDeviceMetrics::PdmHeight:
-    return pdm.height();
-  case QPaintDeviceMetrics::PdmWidthMM:
-    return pdm.widthMM();
-  case QPaintDeviceMetrics::PdmHeightMM:
-    return pdm.heightMM();
-  case QPaintDeviceMetrics::PdmDpiX:
-  case QPaintDeviceMetrics::PdmPhysicalDpiX:
-    return pdm.logicalDpiX();
-  case QPaintDeviceMetrics::PdmDpiY:
-  case QPaintDeviceMetrics::PdmPhysicalDpiY:
-    return pdm.logicalDpiY();
-  case QPaintDeviceMetrics::PdmNumColors:
-    return pdm.numColors();
-  case QPaintDeviceMetrics::PdmDepth:
-    return pdm.depth();
+  case QPaintDevice::PdmWidth:
+    return view_->width();
+  case QPaintDevice::PdmHeight:
+    return view_->height();
+  case QPaintDevice::PdmWidthMM:
+    return view_->widthMM();
+  case QPaintDevice::PdmHeightMM:
+    return view_->heightMM();
+  case QPaintDevice::PdmDpiX:
+    return view_->logicalDpiX();
+  case QPaintDevice::PdmPhysicalDpiX:
+    return view_->physicalDpiX();
+  case QPaintDevice::PdmDpiY:
+    return view_->logicalDpiY();
+  case QPaintDevice::PdmPhysicalDpiY:
+    return view_->physicalDpiY();
+  case QPaintDevice::PdmNumColors:
+    return view_->colorCount();
+  case QPaintDevice::PdmDepth:
+    return view_->depth();
   default:
     return 0;
   }

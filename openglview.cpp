@@ -156,15 +156,14 @@ GLuint OpenGLView::genSelectionName ( void )
  */
 OpenGLView::OpenGLView ( DesignBookView* parent, const char* name,
 			 lignumCADMainWindow* lCMW, QOpenGLWidget* share_widget )
-  : OpenGLBase( parent, name, share_widget ), pdm_( this ),
-    mouse_mode_( MODEL )
+  : OpenGLBase( parent, name, share_widget ), mouse_mode_( MODEL )
 {
   page_view_ = 0;
 
   scale_ = view_data_.scale_;
 
-  widthIN_ = scale_ * pdm_.width() / pdm_.logicalDpiX();
-  heightIN_ = scale_ * pdm_.height() / pdm_.logicalDpiY();
+  widthIN_ = scale_ * width() / logicalDpiX();
+  heightIN_ = scale_ * height() / logicalDpiY();
 
   ll_corner_ = view_data_.view_point_ +
     Vector( -widthIN_/2., -heightIN_/2., -widthIN_/2. );
@@ -173,8 +172,8 @@ OpenGLView::OpenGLView ( DesignBookView* parent, const char* name,
 
   viewport_[0] = 0;
   viewport_[1] = 0;
-  viewport_[2] = pdm_.width();
-  viewport_[3] = pdm_.height();
+  viewport_[2] = width();
+  viewport_[3] = height();
 
   projection_[0] = 1; projection_[1] = 0; projection_[2] = 0; projection_[3] = 0;
   projection_[4] = 0; projection_[5] = 1; projection_[6] = 0; projection_[7] = 0;
@@ -468,7 +467,7 @@ inline QPoint OpenGLView::toPhase ( const QPoint& p )
  */
 Space2D::Point OpenGLView::unproject2D ( const QPoint& p ) const
 {
-  return mpv_inverse_ * Point( p.x(), pdm_.height()-p.y(), 0 );
+  return mpv_inverse_ * Point( p.x(), height()-p.y(), 0 );
 }
 
 /*
@@ -477,7 +476,7 @@ Space2D::Point OpenGLView::unproject2D ( const QPoint& p ) const
  */
 Space3D::Point OpenGLView::unproject3D ( const QPoint& p ) const
 {
-  return mpv_inverse_ * Point( p.x(), pdm_.height()-p.y(), 0 );
+  return mpv_inverse_ * Point( p.x(), height()-p.y(), 0 );
 }
 
 /*
@@ -508,8 +507,8 @@ QRect OpenGLView::newWindow ( const Space2D::Point& origin,
 {
   // Compute the origin and size in (OpenGL) screen coordinates.
   QPoint o = project2D( origin - Space2D::Vector( 0, scale_ * fabs(size[Y]) ) );
-  int w = (int)fabs( rint( size[X] * pdm_.logicalDpiX() ) );
-  int h = (int)fabs( rint( size[Y] * pdm_.logicalDpiY() ) );
+  int w = (int)fabs( rint( size[X] * logicalDpiX() ) );
+  int h = (int)fabs( rint( size[Y] * logicalDpiY() ) );
 
   // Create the local window coordinate system such that the origin
   // is positioned at the upper left corner in model coordinates
@@ -520,9 +519,9 @@ QRect OpenGLView::newWindow ( const Space2D::Point& origin,
   glLoadIdentity();
   glTranslated( origin[X], origin[Y], 0. );
 
-  scale_ = pdm_.logicalDpiX();
-  glScaled( view_data_.scale_/(double)pdm_.logicalDpiX(),
-	    view_data_.scale_/(double)pdm_.logicalDpiY(), 1. );
+  scale_ = logicalDpiX();
+  glScaled( view_data_.scale_/(double)logicalDpiX(),
+	    view_data_.scale_/(double)logicalDpiY(), 1. );
 
   // This is a bit of gloss: don't render outside the bounding box.
   glEnable( GL_SCISSOR_TEST );
@@ -583,8 +582,8 @@ void OpenGLView::set2DView ( void )
 {
   // The caller must have set the scale and the view point.
 
-  widthIN_ = scale_ * pdm_.width() / pdm_.logicalDpiX();
-  heightIN_ = scale_ * pdm_.height() / pdm_.logicalDpiY();
+  widthIN_ = scale_ * width() / logicalDpiX();
+  heightIN_ = scale_ * height() / logicalDpiY();
 
   // The view point becomes the lower left corner of the window.
 
@@ -596,7 +595,7 @@ void OpenGLView::set2DView ( void )
   glDepthMask( GL_FALSE );
 
   // Use the whole window
-  glViewport( 0, 0, (GLsizei)pdm_.width(), (GLsizei)pdm_.height() );
+  glViewport( 0, 0, (GLsizei)width(), (GLsizei)height() );
   glGetIntegerv( GL_VIEWPORT, viewport_ );
   setViewportInverse();
 
@@ -625,8 +624,8 @@ void OpenGLView::set3DView ( void )
   // The caller must have set the scale, the center (view point),
   // and any required re-orientation.
 
-  widthIN_ = scale_ * pdm_.width() / pdm_.logicalDpiX();
-  heightIN_ = scale_ * pdm_.height() / pdm_.logicalDpiY();
+  widthIN_ = scale_ * width() / logicalDpiX();
+  heightIN_ = scale_ * height() / logicalDpiY();
 
   // The view point becomes the center of the window. Note: the
   // Z near/far coordinates really need to be big enough to not clip
@@ -643,7 +642,7 @@ void OpenGLView::set3DView ( void )
   glDepthMask( GL_TRUE );
 
   // Use the whole window
-  glViewport( 0, 0, (GLsizei)pdm_.width(), (GLsizei)pdm_.height() );
+  glViewport( 0, 0, (GLsizei)width(), (GLsizei)height() );
   glGetIntegerv( GL_VIEWPORT, viewport_ );
   setViewportInverse();
 
@@ -996,8 +995,8 @@ void OpenGLView::wheelEvent ( QWheelEvent* we )
  */
 void OpenGLView::scale2D ( void )
 {
-  widthIN_ = scale_ * pdm_.width() / pdm_.logicalDpiX();
-  heightIN_ = scale_ * pdm_.height() / pdm_.logicalDpiY();
+  widthIN_ = scale_ * width() / logicalDpiX();
+  heightIN_ = scale_ * height() / logicalDpiY();
 
   Vector size( widthIN_, heightIN_, 2. );
 
@@ -1032,8 +1031,8 @@ void OpenGLView::scale2D ( void )
  */
 void OpenGLView::scale3D ( void )
 {
-  widthIN_ = scale_ * pdm_.width() / pdm_.logicalDpiX();
-  heightIN_ = scale_ * pdm_.height() / pdm_.logicalDpiY();
+  widthIN_ = scale_ * width() / logicalDpiX();
+  heightIN_ = scale_ * height() / logicalDpiY();
 
   Vector size( widthIN_, heightIN_, 2. * widthIN_ );
 
