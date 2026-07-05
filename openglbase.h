@@ -24,6 +24,9 @@
 #ifndef OPENGLBASE_H
 #define OPENGLBASE_H
 
+#include <memory>
+#include <vector>
+
 #include <GL/gl.h>
 
 #include <QColor>
@@ -501,7 +504,8 @@ class OpenGLGlobals : public QObject {
   OpenGLAttributes default_;
 
   //! Available display schemes.
-  QPtrList< PageColorScheme > color_schemes_;
+  std::vector<std::unique_ptr<PageColorScheme>> color_schemes_;
+  int current_color_scheme_;
 
   //! Has the user selected a predefined scheme or customized it?
   bool predefined_scheme_;
@@ -603,7 +607,7 @@ public:
    * the defaults.
    * \return index of the current default scheme.
    */
-  int at ( void ) const { return color_schemes_.at(); }
+  int at ( void ) const { return current_color_scheme_; }
 
   /*!
    * Retrieve the i-th predefined scheme without modifying the current

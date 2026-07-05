@@ -520,7 +520,8 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
 OpenGLGlobals* OpenGLGlobals::opengl_globals_ = 0;
 
 OpenGLGlobals::OpenGLGlobals ( void )
-  : QObject( 0, "openGLGlobals" ),
+  : QObject( 0 ),
+    current_color_scheme_( 0 ),
     dimension_minimums_( lC::DEFAULT_FONT, lC::OPEN,
 			 lC::MINIMUM_ARROW_HEAD_LENGTH,
 			 lC::MINIMUM_ARROW_HEAD_WIDTH_RATIO,
@@ -536,14 +537,16 @@ OpenGLGlobals::OpenGLGlobals ( void )
     handle_minimums_( lC::MINIMUM_HANDLE_SIZE ),
     handle_maximums_( lC::MAXIMUM_HANDLE_SIZE )
 {
+  setObjectName( "openGLGlobals" );
+
   predefined_scheme_ = true;
 
   // Make a list of our default display schemata.
-  color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Default (solid)" ) ) );
+  color_schemes_.push_back(
+    std::make_unique<PageColorScheme>( qApp->translate( "", "Default (solid)" ) ) );
 
-  color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Default (gradient)" ),
+  color_schemes_.push_back(
+    std::make_unique<PageColorScheme>( qApp->translate( "", "Default (gradient)" ),
 				 lC::DEFAULT_GEOMETRY_COLOR,
 				 lC::DEFAULT_ANNOTATION_COLOR,
 				 lC::DEFAULT_GRID_COLOR,
@@ -551,8 +554,8 @@ OpenGLGlobals::OpenGLGlobals ( void )
 				 lC::DEFAULT_CONSTRAINT_SECONDARY_COLOR,
 				 lC::Background::GRADIENT ) );
 
-  color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Default (paper)" ),
+  color_schemes_.push_back(
+    std::make_unique<PageColorScheme>( qApp->translate( "", "Default (paper)" ),
 				 lC::DEFAULT_GEOMETRY_COLOR,
 				 lC::DEFAULT_ANNOTATION_COLOR,
 				 lC::DEFAULT_GRID_COLOR,
@@ -562,8 +565,8 @@ OpenGLGlobals::OpenGLGlobals ( void )
 				 Qt::white,
 				 Qt::gray ) );
 
-  color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Monochrome" ),
+  color_schemes_.push_back(
+    std::make_unique<PageColorScheme>( qApp->translate( "", "Monochrome" ),
 				 Qt::black,
 				 Qt::black,
 				 Qt::gray,
@@ -571,8 +574,8 @@ OpenGLGlobals::OpenGLGlobals ( void )
 				 Qt::gray,
 				 lC::Background::SOLID,
 				 Qt::white ) );
-  color_schemes_.
-    append( new PageColorScheme( qApp->translate( "", "Monochrome (reverse)" ),
+  color_schemes_.push_back(
+    std::make_unique<PageColorScheme>( qApp->translate( "", "Monochrome (reverse)" ),
 				 Qt::white,
 				 Qt::white,
 				 Qt::gray,
@@ -582,8 +585,8 @@ OpenGLGlobals::OpenGLGlobals ( void )
 				 Qt::black ) );
 
 
-  default_.setColorScheme( *color_schemes_.at( 0 ) );
-  current_.setColorScheme( *color_schemes_.at( 0 ) );
+  default_.setColorScheme( *color_schemes_[0] );
+  current_.setColorScheme( *color_schemes_[0] );
 }
 
 OpenGLGlobals::~OpenGLGlobals ( void )
@@ -601,10 +604,8 @@ QStringList OpenGLGlobals::schemeStrings ( void ) const
 {
   QStringList strings;
 
-  QPtrListIterator< PageColorScheme > cs( color_schemes_ );
-
-  for ( ; cs.current() != 0; ++cs )
-    strings.append( cs.current()->name() );
+  for ( const auto& scheme : color_schemes_ )
+    strings.append( scheme->name() );
 
   return strings;
 }
@@ -616,22 +617,14 @@ void OpenGLGlobals::setPredefinedScheme ( bool predefined )
 
 PageColorScheme& OpenGLGlobals::scheme ( int index ) const
 {
-  // For some reason, QPtrList doesn't have a direct access method
-  // which does not change the current item, but we can do this
-  // with an iterator:
-  QPtrListIterator< PageColorScheme > pcs( color_schemes_ );
-
-  pcs += index;
-
-  return *pcs.current();
+  return *color_schemes_.at( index );
 }
 
 // Set the attributes of the given scheme as the default scheme.
 
 void OpenGLGlobals::setDefaultScheme ( int index )
 {
-  // The side-effect of using QPtrList::at(index) is to make index the
-  // current entry.
+  current_color_scheme_ = index;
   default_.setColorScheme( *color_schemes_.at( index ) );
 }
 
@@ -639,14 +632,12 @@ void OpenGLGlobals::setDefaultScheme ( int index )
 
 void OpenGLGlobals::setDefaultScheme ( const QString& name )
 {
-  // Advance the current entry to the given point
-  PageColorScheme* pcs = color_schemes_.first();
-  for ( ; pcs != 0; pcs = color_schemes_.next() )
-    if ( pcs->name() == name )
+  for ( size_t i = 0; i < color_schemes_.size(); ++i )
+    if ( color_schemes_[i]->name() == name ) {
+      current_color_scheme_ = static_cast<int>( i );
+      default_.setColorScheme( *color_schemes_[i] );
       break;
-
-  if ( pcs != 0 )
-    default_.setColorScheme( *pcs );
+    }
 }
 
 // Set the attributes of the given scheme into current scheme. For now,

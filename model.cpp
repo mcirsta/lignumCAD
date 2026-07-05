@@ -484,9 +484,9 @@ TopoDS_Shape Model::lookupShape ( const QVector<uint>& id_path ) const
   return TopoDS_Shape();
 }
 
-QPtrList<PageBase> Model::whereUsed( const DBURL& db_url ) const
+std::vector<PageBase*> Model::whereUsed( const DBURL& db_url ) const
 {
-  QPtrList<PageBase> usages;
+  std::vector<PageBase*> usages;
 
   PageBase* page = dynamic_cast<PageBase*>( lookup( db_url ) );
 
@@ -495,7 +495,7 @@ QPtrList<PageBase> Model::whereUsed( const DBURL& db_url ) const
     QMap<uint,PageBase*>::const_iterator p = pages_.begin();
     for ( ; p != pages_.end(); ++p ) {
       if ( p.data() != page && p.data()->used( page ) ) {
-	usages.append( p.data() );
+	usages.push_back( p.data() );
       }
     }
   }

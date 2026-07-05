@@ -23,12 +23,16 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <qdict.h>
+#include <map>
+#include <memory>
+
 #include <qimage.h>
 #include <qcolor.h>
 
 class Material;
 class QDomElement;
+
+using MaterialMap = std::map<QString, std::unique_ptr<Material>>;
 
 class MaterialDatabase {
 public:
@@ -54,15 +58,14 @@ public:
    */
   Material* materialCommon ( const QString& name );
   //! \return an iterator over all material records.
-  QDictIterator<Material> materials ( void ) const
-  { return QDictIterator<Material>( materials_ ); }
+  const MaterialMap& materials ( void ) const { return materials_; }
 private:
   static MaterialDatabase material_database_;
 
-  QDict< Material > materials_;
+  MaterialMap materials_;
 protected:
   MaterialDatabase ( void );
-  //  ~MaterialDatabase ( void );
+  ~MaterialDatabase ( void );
 };
 
 class Material {

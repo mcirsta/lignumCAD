@@ -883,7 +883,7 @@ namespace Space2D {
       reconstraints.appendChild( new_constraints );
     }
 
-    for ( ConstrainedLine* edge = edges_.first(); edge != 0; edge = edges_.next() ){
+    for ( ConstrainedLine* edge : edges_ ){
       if ( x_reference != 0 && edge->isVertical() ) {
 	// Of all the things that can go wrong, this is the only one
 	// which isn't protected against as a result of preventing
@@ -1890,49 +1890,49 @@ namespace Space2D {
   /*!
    * Which edges are involved with the drag resizing?
    */
-  QPtrList< ConstrainedLine > RectangleView::dragEdges ( GLuint selection_name ) const
+  std::vector<ConstrainedLine*> RectangleView::dragEdges ( GLuint selection_name ) const
   {
-    QPtrList< ConstrainedLine > edges;
+    std::vector<ConstrainedLine*> edges;
 
     if ( selection_name == lb_handle_.selectionName() ) {
-      edges.append( rectangle_->left() );
-      edges.append( rectangle_->bottom() );
+      edges.push_back( rectangle_->left() );
+      edges.push_back( rectangle_->bottom() );
     }
     else if ( selection_name == mb_handle_.selectionName() ) {
-      edges.append( rectangle_->bottom() );
+      edges.push_back( rectangle_->bottom() );
     }
     else if ( selection_name == rb_handle_.selectionName() ) {
-      edges.append( rectangle_->right() );
-      edges.append( rectangle_->bottom() );
+      edges.push_back( rectangle_->right() );
+      edges.push_back( rectangle_->bottom() );
     }
     else if ( selection_name == mr_handle_.selectionName() ) {
-      edges.append( rectangle_->right() );
+      edges.push_back( rectangle_->right() );
     }
     else if ( selection_name == rt_handle_.selectionName() ) {
-      edges.append( rectangle_->right() );
-      edges.append( rectangle_->top() );
+      edges.push_back( rectangle_->right() );
+      edges.push_back( rectangle_->top() );
     }
     else if ( selection_name == mt_handle_.selectionName() ) {
-      edges.append( rectangle_->top() );
+      edges.push_back( rectangle_->top() );
     }
     else if ( selection_name == lt_handle_.selectionName() ) {
-      edges.append( rectangle_->left() );
-      edges.append( rectangle_->top() );
+      edges.push_back( rectangle_->left() );
+      edges.push_back( rectangle_->top() );
     }
     else if ( selection_name == ml_handle_.selectionName() ) {
-      edges.append( rectangle_->left() );
+      edges.push_back( rectangle_->left() );
     }
     else if ( selection_name == left_edge_.selectionName() ) {
-      edges.append( rectangle_->left() );
+      edges.push_back( rectangle_->left() );
     }
     else if ( selection_name == right_edge_.selectionName() ) {
-      edges.append( rectangle_->right() );
+      edges.push_back( rectangle_->right() );
     }
     else if ( selection_name == bottom_edge_.selectionName() ) {
-      edges.append( rectangle_->bottom() );
+      edges.push_back( rectangle_->bottom() );
     }
     else if ( selection_name == top_edge_.selectionName() ) {
-      edges.append( rectangle_->top() );
+      edges.push_back( rectangle_->top() );
     }
     return edges;
   }

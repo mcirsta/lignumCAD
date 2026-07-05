@@ -1269,11 +1269,11 @@ void DesignBookView::deletePage ( void )
 
   if ( page_view == 0 ) return;
 
-  QPtrList<PageBase> usages = model_->whereUsed( page_view->dbURL() );
+  std::vector<PageBase*> usages = model_->whereUsed( page_view->dbURL() );
 
-  if ( usages.count() > 0 ) {
+  if ( !usages.empty() ) {
     QStringList usage_name_list;
-    for ( uint i = 0; i < usages.count(); ++i )
+    for ( size_t i = 0; i < usages.size(); ++i )
       usage_name_list << QString( "%1.%2" ).arg( usages.at(i)->name() ).
 	arg( tr( usages.at(i)->type() ) );
 

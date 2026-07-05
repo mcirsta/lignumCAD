@@ -24,6 +24,8 @@
 #define RECTANGLEVIEW_H
 
 #include <map>
+#include <vector>
+
 #include <QHash>
 #include <qdom.h>
 
@@ -84,7 +86,7 @@ namespace Space2D {
     Point last_pnt_;
     Point current_pnt_;
 
-    QPtrList< ConstrainedLine > edges_;
+    std::vector<ConstrainedLine*> edges_;
 
     double old_x0_offset_;
     double old_y0_offset_;
@@ -226,7 +228,7 @@ namespace Space2D {
     void draw ( void ) const;
     void select ( SelectionType select_type ) const;
 
-    QPtrList< ConstrainedLine > dragEdges (  GLuint selection_name ) const;
+    std::vector<ConstrainedLine*> dragEdges (  GLuint selection_name ) const;
 
     lC::ValidDelta adjust ( int selection_name, const Point& last_pnt,
 			    Point& current_pnt );

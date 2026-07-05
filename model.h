@@ -196,7 +196,7 @@ public:
    * the given item.
    * \param db_url path to page.
    */
-  QPtrList<PageBase> whereUsed( const DBURL& db_url ) const;
+  std::vector<PageBase*> whereUsed( const DBURL& db_url ) const;
 
   void addDelayedResolution ( ModelItem* item, const QString db_path );
   void resolveNow ( void );

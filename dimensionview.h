@@ -23,6 +23,8 @@
 #ifndef DIMENSIONVIEW_H
 #define DIMENSIONVIEW_H
 
+#include <vector>
+
 #include <qcolor.h>
 #include <qdom.h>
 #include <QVector>
@@ -52,7 +54,7 @@ namespace Space2D {
 
     uint n_geometries_;
     QVector< Point > points_;
-    QPtrList< ConstrainedLine > lines_;
+    std::vector<ConstrainedLine*> lines_;
 
     ConstrainedLine* from_reference_;
     QDomDocument* xml_rep_;

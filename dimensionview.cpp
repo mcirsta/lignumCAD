@@ -104,7 +104,7 @@ namespace Space2D {
     // Let the first selected figure decide how many selections we need.
     // (This is entirely for the Centerline, which wants 2 additional
     // edges instead of the usual 1.)
-    if ( lines_.count() == 0 )
+    if ( lines_.empty() )
       n_geometries_ = fv->dimensionPickCount();
 
     GLuint g = (*f).second[1]; // (*(*f).second->begin()).first;
@@ -115,24 +115,22 @@ namespace Space2D {
       Point point = parent_->view()->unproject2D( me->pos() );
       UnitsBasis::instance()->round( point );
 
-      QPtrListIterator< ConstrainedLine > l( lines_ );
-
-      for ( ; l.current(); ++l ) {
-	if ( line == l.current() ) {
+      for ( ConstrainedLine* selected_line : lines_ ) {
+	if ( line == selected_line ) {
 	  QWhatsThis::display( "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"70%\">Cannot dimension to self.</td>"
 			       "</tr></table>" );
 	  return;
 	}
-	if ( fabs( fabs( line->e() * l.current()->e() ) - 1. ) > lC::EPSILON ) {
+	if ( fabs( fabs( line->e() * selected_line->e() ) - 1. ) > lC::EPSILON ) {
 	  QWhatsThis::display( "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"70%\">Cannot dimension non-parallel lines.</td>"
 			       "</tr></table>" );
 	  return;
 	}
-	if ( line->dependsOn( l.current() ) ) {
+	if ( line->dependsOn( selected_line ) ) {
 	  QWhatsThis::display( "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"70%\">Dimension would create circular reference.</td>"
@@ -142,10 +140,10 @@ namespace Space2D {
       }
 
       points_.push_back( point );
-      lines_.append( line );
+      lines_.push_back( line );
     }
 
-    if ( lines_.count() == 1 )
+    if ( lines_.size() == 1 )
       parent_->view()->
 	setCursor( CursorFactory::instance().cursor( CursorFactory::DIMENSIONPLUS ) );
 
@@ -164,13 +162,13 @@ namespace Space2D {
     (void)me;
     (void)selected;
 
-    if ( n_geometries_ == 0 || lines_.count() < n_geometries_ )
+    if ( n_geometries_ == 0 || lines_.size() < n_geometries_ )
       return false;
     // This should probably be passed off to the FigureView to do
     // the right thing with...Indeed...
-    if ( lines_.count() == 2 ) {
-      ConstrainedLine* from = lines_.first();
-      ConstrainedLine* to = lines_.next();
+    if ( lines_.size() == 2 ) {
+      ConstrainedLine* from = lines_[0];
+      ConstrainedLine* to = lines_[1];
 
       QDomElement reconstraints = xml_rep_->createElement( lC::STR::RECONSTRAINTS );
       xml_rep_->appendChild( reconstraints );
@@ -229,9 +227,9 @@ namespace Space2D {
 
       xml_rep_ = 0;
     }
-    else if ( lines_.count() == 3 ) {
-      ConstrainedLine* to = lines_.first();
-      ConstrainedLine* from = lines_.next();
+    else if ( lines_.size() == 3 ) {
+      ConstrainedLine* to = lines_[0];
+      ConstrainedLine* from = lines_[1];
 
       QDomElement reconstraints = xml_rep_->createElement( lC::STR::RECONSTRAINTS );
       xml_rep_->appendChild( reconstraints );
@@ -282,7 +280,7 @@ namespace Space2D {
       new_constraints.appendChild( new_xml );
 
       to = from;
-      from = lines_.next();
+      from = lines_[2];
 
       // Note: Obviously, must append these subsequent changes in the
       // REVERSE order of their creation!

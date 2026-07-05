@@ -90,7 +90,7 @@ MaterialDatabase::MaterialDatabase ( void )
 
 void MaterialDatabase::insertMaterial ( Material* material )
 {
-  materials_.insert( material->name(), material );
+  materials_[material->name()] = std::unique_ptr<Material>( material );
 }
 
 Material* MaterialDatabase::material ( const QString& name )
@@ -98,7 +98,11 @@ Material* MaterialDatabase::material ( const QString& name )
   if ( name.isEmpty() )
     return 0;
 
-  return materials_[ name ];
+  MaterialMap::const_iterator material = materials_.find( name );
+  if ( material == materials_.end() )
+    return 0;
+
+  return material->second.get();
 }
 
 Material* MaterialDatabase::materialCommon ( const QString& common_name )
@@ -106,15 +110,15 @@ Material* MaterialDatabase::materialCommon ( const QString& common_name )
   if ( common_name.isEmpty() )
     return 0;
 
-  QDictIterator<Material> material( materials_ );
-
-  for ( ; material.current() != 0; ++material ) {
-    if ( material.current()->commonName() == common_name )
-      return material.current();
+  for ( const auto& material : materials_ ) {
+    if ( material.second->commonName() == common_name )
+      return material.second.get();
   }
 
   return 0;
 }
+
+MaterialDatabase::~MaterialDatabase ( void ) = default;
 
 Material::Material ( const QDomElement& xml_rep, const QString& image_path )
 {

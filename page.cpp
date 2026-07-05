@@ -115,12 +115,6 @@ namespace Space2D {
 
     return 0;			// Really an error...
   }
-#if 0
-  QPtrListIterator< Figure > Page::figures ( void ) const
-  {
-    return QPtrListIterator< Figure > ( figures_ );
-  }
-#endif
   void Page::modelRenamed ( const QString& /*name*/ )
   {
     emit nameChanged( name() );
@@ -231,13 +225,6 @@ namespace Space3D {
 
     return 0;			// Really an error...
   }
-#if 0
-  QPtrListIterator< Figure > Page::figures ( void ) const
-  {
-    return QPtrListIterator< Figure > ( figures_ );
-  }
-#endif
-
   void Page::dumpInfo ( void ) const
   {
     QMap<uint,Figure*>::const_iterator f = figures_.begin();

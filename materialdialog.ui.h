@@ -30,22 +30,23 @@
 
 void MaterialDialog::init()
 {
-  QDictIterator<Material> material = MaterialDatabase::instance().materials();
+  const MaterialMap& materials = MaterialDatabase::instance().materials();
 
-  for ( ; material.current() != 0; ++material ) {
+  for ( const auto& material_entry : materials ) {
+    Material* material = material_entry.second.get();
 
     QListViewItem* class_item = MaterialList->firstChild();
     while ( class_item != 0 ) {
-      if ( class_item->text( 0 ) == material.current()->materialClass() ) break;
+      if ( class_item->text( 0 ) == material->materialClass() ) break;
       class_item = class_item->nextSibling();
     }
     if ( class_item == 0 ) {
       class_item = new QListViewItem( MaterialList,
-				      material.current()->materialClass() );
+				      material->materialClass() );
       class_item->setSelectable( false );
       class_item->setOpen( true );
     }
-    new QListViewItem( class_item, material.current()->name() );
+    new QListViewItem( class_item, material->name() );
   }
 }
 

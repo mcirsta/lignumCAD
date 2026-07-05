@@ -83,9 +83,6 @@ namespace Space2D {
 
     void addFigure ( Figure* figure );
     void removeFigure ( Figure* figure );
-#if 0
-    QPtrListIterator< Figure > figures ( void ) const;
-#endif
     ModelItem* lookup ( QStringList& path_components ) const;
     ModelItem* lookup ( QVector<uint>& /*id_path*/ ) const
     {

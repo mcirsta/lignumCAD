@@ -27,6 +27,8 @@
 ** update this file, preserving your code. Create an init() slot in place of
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
+#include <vector>
+
 void NewModelWizard::init()
 {
     // Alright, admittedly this is kind of convoluted. The purpose of this complexity is
@@ -60,7 +62,7 @@ void NewModelWizard::init()
 	initialPageGroupBox->layout()->add( button );
 	// Keep a list of these around since QButtonGroup doesn't have an iterator and our
 	// ids are not necessarily sequential.
-	initialPageRadioButtons.append( button );
+	initialPageRadioButtons.push_back( button );
     }
     
     connect( initialPageButtonGroup, SIGNAL( clicked(int) ), SLOT(initialPageSelected() ) );
@@ -158,10 +160,9 @@ no new model will be created.</p>" ) );
   */
 void NewModelWizard::selectedPage( uint & type )
 {
-    QPtrListIterator<QRadioButton> rb( initialPageRadioButtons );
-    for ( ; rb.current() != 0; ++rb ) {
-	if ( (*rb)->isChecked() ) {
-	    type = initialPageButtonGroup->id( *rb );
+    for ( QRadioButton* rb : initialPageRadioButtons ) {
+	if ( rb->isChecked() ) {
+	    type = initialPageButtonGroup->id( rb );
 	    return;
 	}
     }
@@ -174,7 +175,6 @@ void NewModelWizard::selectedPage( uint & type )
   */
 void NewModelWizard::unsetInitialPages( void )
 {
-    QPtrListIterator<QRadioButton> rb( initialPageRadioButtons );
-    for ( ; rb.current() != 0; ++rb )
-	(*rb)->setChecked( false );   
+    for ( QRadioButton* rb : initialPageRadioButtons )
+	rb->setChecked( false );
 }
