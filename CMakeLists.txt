@@ -154,7 +154,6 @@ set(LIGNUMCAD_SOURCES
   lcdefaultratiospinbox/lcdefaultratiospinbox.cpp
   viewdata.cpp
   openglprinter.cpp
-  libemf.cpp
   lcconstraintchooser/lcconstraintchooser.cpp
   alignment.cpp
   lcdefaultspinbox/lcdefaultspinbox.cpp
@@ -257,7 +256,6 @@ set(LIGNUMCAD_HEADERS
   lcdefaultratiospinbox/lcdefaultratiospinbox.h
   viewdata.h
   openglprinter.h
-  libemf.h
   lcconstraintchooser/lcconstraintchooser.h
   alignment.h
   selectednames.h
@@ -271,7 +269,6 @@ set(LIGNUMCAD_HEADERS
   constants.h
   ratio.h
   view.h
-  emf.h
   printer.h
   configuration.h
   material.h
@@ -417,8 +414,12 @@ qt_add_resources(lignumCAD "lignumcad_images"
 target_compile_definitions(lignumCAD PRIVATE
   OGLFT_NO_SOLID
   GL2PS_USE_QT
-  GL2PS_USE_EMF
 )
+
+# TODO(Qt6): Revisit EMF export after the application is running again.
+# The old GL2PS_USE_EMF path depends on bundled Winelib headers that do not
+# build cleanly on modern x86_64 Linux; PDF/SVG export would be a better
+# modern cross-platform replacement.
 
 target_include_directories(lignumCAD PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}

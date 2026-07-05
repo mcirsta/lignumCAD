@@ -480,6 +480,7 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
 				 const QString& exportFilename,
 				 int page_no, int pages )
 {
+#ifdef GL2PS_USE_EMF
   GL2PSEMF emf;
   emf.stream = ::fopen( exportFilename, "w" );
 
@@ -593,4 +594,14 @@ void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
   ::fclose( emf.stream );
 
   page_view_->restoreHighlights();
+#else
+  Q_UNUSED( page_view );
+  Q_UNUSED( view );
+  Q_UNUSED( exportFilename );
+  Q_UNUSED( page_no );
+  Q_UNUSED( pages );
+  // TODO(Qt6): Revisit EMF export after the application is running again.
+  // The old GL2PS path depends on bundled Winelib headers that do not build
+  // cleanly on modern x86_64 Linux.
+#endif
 }

@@ -1646,6 +1646,14 @@ void DesignBookView::print ( void )
  */
 void DesignBookView::exportPage ( void )
 {
+#ifndef GL2PS_USE_EMF
+  // TODO(Qt6): Revisit EMF export after the application is running again.
+  // The old path relies on bundled Winelib headers; prefer a modern PDF/SVG
+  // export path before restoring EMF.
+  QMessageBox::information( lCMW_, tr( "Export page" ),
+			    tr( "EMF export is disabled during the Qt6 port." ) );
+  return;
+#else
   PageView* page_view = currentPageView();
 
   if ( page_view == 0 ) return;
@@ -1668,6 +1676,7 @@ void DesignBookView::exportPage ( void )
 
   printing_ = false;
   opengl_view_->redisplay();
+#endif
 }
 
 // Visit all the Elements in the XML file and create the corresponding
