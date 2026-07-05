@@ -125,7 +125,7 @@ namespace Space2D {
     QColor color = view_->constraintPrimaryColor();
 
     if ( mode == lC::Render::HIGHLIGHTED || mode == lC::Render::ACTIVATED )
-      color = color.light();
+      color = color.lighter();
 
     // Avoid changing dimension state so this method remains "const".
     FaceData face_data = dimension_value_.face_data_;
@@ -156,7 +156,7 @@ namespace Space2D {
     }
 
     if ( mode == lC::Render::HIGHLIGHTED || mode == lC::Render::ACTIVATED ) {
-      color = view_->constraintSecondaryColor().light();
+      color = view_->constraintSecondaryColor().lighter();
       glColor3ubv( lC::qCubv( color ) );
     }
 
@@ -610,7 +610,7 @@ namespace Space3D {
     QColor color = view_->constraintPrimaryColor();
 
     if ( mode_ == lC::Render::HIGHLIGHTED || mode_ == lC::Render::ACTIVATED )
-      color = color.light();
+      color = color.lighter();
 
     // Avoid changing dimension state so this method remains "const".
     FaceData face_data = dimension_value_.face_data_;
@@ -642,7 +642,7 @@ namespace Space3D {
     }
 
     if ( mode_ == lC::Render::HIGHLIGHTED || mode_ == lC::Render::ACTIVATED ) {
-      color = view_->constraintSecondaryColor().light();
+      color = view_->constraintSecondaryColor().lighter();
       glColor3ubv( lC::qCubv( color ) );
     }
 

@@ -333,7 +333,7 @@ Handle(Standard_Type) Subassembly::lookupType ( QStringList& path_components ) c
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -366,7 +366,7 @@ TopoDS_Shape Subassembly::lookupShape ( QStringList& path_components ) const
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -442,7 +442,7 @@ void Subassembly::pathID ( QStringList& path_components,
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );

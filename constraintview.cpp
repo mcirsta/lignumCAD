@@ -111,7 +111,7 @@ namespace Space2D {
     reconstraints.appendChild( old_constraints );
 
     QDomElement old_xml = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
-    old_xml.setAttribute( lC::STR::URL, target_->dbURL() );
+    old_xml.setAttribute( lC::STR::URL, target_->dbURL().toString( true ) );
     target_->constraint()->write( old_xml );
     old_constraints.appendChild( old_xml );
 
@@ -127,7 +127,7 @@ namespace Space2D {
 
     if ( from_reference != 0 ) {
       from_ref_xml_ = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
-      from_ref_xml_.setAttribute( lC::STR::URL, from_reference->dbURL() );
+      from_ref_xml_.setAttribute( lC::STR::URL, from_reference->dbURL().toString( true ) );
       from_reference->constraint()->write( from_ref_xml_ );
 
       // If from_reference_'s modifiedConstraint signal is emitted,
@@ -154,7 +154,7 @@ namespace Space2D {
     reconstraints.appendChild( new_constraints );
 
     QDomElement new_xml = xml_rep_->createElement( lC::STR::CONSTRAINED_LINE );
-    new_xml.setAttribute( lC::STR::URL, target_->dbURL() );
+    new_xml.setAttribute( lC::STR::URL, target_->dbURL().toString( true ) );
     target_->constraint()->write( new_xml );
     new_constraints.appendChild( new_xml );
 

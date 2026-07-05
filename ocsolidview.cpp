@@ -835,7 +835,7 @@ namespace Space3D {
 
     bool modified = false;
 
-    if ( part_info_dialog_->nameEdit->edited() ) {
+    if ( part_info_dialog_->nameEdit->isModified() ) {
       parent()->setName( part_info_dialog_->nameEdit->text() );
       modified = true;
     }

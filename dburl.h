@@ -23,7 +23,7 @@
 #ifndef DBURL_H
 #define DBURL_H
 
-#include <qurl.h>
+#include <QUrl>
 
 /*!
  * The DBURL class is just a thin wrapper on the QUrl class. It's
@@ -48,6 +48,11 @@ public:
   DBURL ( const QString& path ) : QUrl ( path )
   {}
   /*!
+   * Preserve construction from a QUrl-like base object after the Qt6 port.
+   */
+  DBURL ( const QUrl& url ) : QUrl( url )
+  {}
+  /*!
    * The two part constructor (hopefully, will not try to ENCODE
    * the protocol:/// part of the url!)
    * \param url some rooted part of the URL (like just the protocol).
@@ -56,6 +61,11 @@ public:
   DBURL ( const QString& url, const QString& relURL )
     : QUrl( QUrl( url ).resolved( QUrl( relURL ) ) )
   {}
+  DBURL ( const QUrl& url, const QString& relURL )
+    : QUrl( url.resolved( QUrl( relURL ) ) )
+  {}
+  using QUrl::toString;
+  QString toString ( bool encoded_path ) const;
   /*!
    * \return the object-name (without the type).
    */

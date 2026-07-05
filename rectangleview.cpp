@@ -32,6 +32,11 @@
 #include <qlabel.h>
 #include <qmessagebox.h>
 #include <QImage>
+#include <iostream>
+
+using std::cerr;
+using std::cout;
+using std::endl;
 
 #include "style.h"
 #include "configuration.h"
@@ -1777,7 +1782,7 @@ namespace Space2D {
   // Is there anything else this could be asked about?
   View* RectangleView::lookup ( QStringList& path_components ) const
   {
-    int dot_pos = path_components.front().findRev( '.' );
+    int dot_pos = path_components.front().lastIndexOf( '.' );
     QString name = path_components.front().left( dot_pos );
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );
@@ -2288,7 +2293,7 @@ namespace Space2D {
     bool modified = false;
     bool dimension_modified = false;
 
-    if ( rectangle_info_dialog_->nameEdit->edited() ) {
+    if ( rectangle_info_dialog_->nameEdit->isModified() ) {
       // Pageview handles checking the name and putting up the error dialog
       // if necessary.
       int ret = parent()->uniqueFigureName( this,
@@ -2387,7 +2392,7 @@ namespace Space2D {
 
     RestyleRectangleCommand* restyle_command = 0;
 
-    if ( rectangle_info_dialog_->aboveButton->isOn() &&
+    if ( rectangle_info_dialog_->aboveButton->isChecked() &&
 	 width_annotation_side_ == lC::BELOW ) {
       if ( restyle_command == 0 )
 	restyle_command = new RestyleRectangleCommand( "restyle rectangle", this );
@@ -2398,7 +2403,7 @@ namespace Space2D {
 
       dimension_modified = true;
     }
-    else if ( rectangle_info_dialog_->belowButton->isOn() &&
+    else if ( rectangle_info_dialog_->belowButton->isChecked() &&
 	      width_annotation_side_ == lC::ABOVE ) {
       if ( restyle_command == 0 )
 	restyle_command = new RestyleRectangleCommand( "restyle rectangle", this );
@@ -2410,7 +2415,7 @@ namespace Space2D {
       dimension_modified = true;
     }
        
-    if ( rectangle_info_dialog_->rightButton->isOn() &&
+    if ( rectangle_info_dialog_->rightButton->isChecked() &&
 	 height_annotation_side_ == lC::BELOW ) {
       if ( restyle_command == 0 )
 	restyle_command = new RestyleRectangleCommand( "restyle rectangle", this );
@@ -2421,7 +2426,7 @@ namespace Space2D {
 
       dimension_modified = true;
     }
-    else if ( rectangle_info_dialog_->leftButton->isOn() &&
+    else if ( rectangle_info_dialog_->leftButton->isChecked() &&
 	      height_annotation_side_ == lC::ABOVE ) {
       if ( restyle_command == 0 )
 	restyle_command = new RestyleRectangleCommand( "restyle rectangle", this );
@@ -2523,7 +2528,7 @@ namespace Space2D {
     if ( style_ != 0 && style_->style() >= lC::Render::WIREFRAME )
       regular_color = style_->wireframeColor();
 
-    QColor highlight_color = regular_color.light();
+    QColor highlight_color = regular_color.lighter();
 
     // Determine if we need to draw a solid rectangle and its color.
 
@@ -2543,7 +2548,7 @@ namespace Space2D {
       QColor solid_color = style_->solidColor();
 
       if ( isActivated() )
-	solid_color = solid_color.light();
+	solid_color = solid_color.lighter();
 
       glColor3ubv( lC::qCubv( solid_color ) );
 

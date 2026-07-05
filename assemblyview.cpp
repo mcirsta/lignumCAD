@@ -1411,7 +1411,7 @@ bool AssemblyView::configure ( void )
 
   if ( ret == QDialog::Rejected ) return false;
 
-  if ( config_dialog_->nameEdit->edited() )
+  if ( config_dialog_->nameEdit->isModified() )
     assembly_->setName( config_dialog_->nameEdit->text() );
 
   // OK, lookup the model and create a view for it attached to this page.

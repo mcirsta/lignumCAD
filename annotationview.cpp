@@ -429,7 +429,7 @@ namespace Space2D {
 	document->replaceChild( move_element, root_node );
       else
 	document->appendChild( move_element );
-      move_element.setAttribute( lC::STR::URL, db_url_ );
+      move_element.setAttribute( lC::STR::URL, db_url_.toString( true ) );
       move_element.setAttribute( lC::STR::OLD_X, lC::format( old_origin_[X] ) );
       move_element.setAttribute( lC::STR::OLD_Y, lC::format( old_origin_[Y] ) );
       move_element.setAttribute( lC::STR::OLD_WIDTH, lC::format( old_size_[X] ) );
@@ -640,7 +640,7 @@ namespace Space2D {
       else
 	document->appendChild( change_element );
 
-      change_element.setAttribute( lC::STR::URL, db_url_ );
+      change_element.setAttribute( lC::STR::URL, db_url_.toString( true ) );
       change_element.setAttribute( lC::STR::OLD_TEXT, old_text_ );
       change_element.setAttribute( lC::STR::NEW_TEXT, new_text_ );
     }
@@ -908,7 +908,7 @@ namespace Space2D {
 
     // Cannot let the user choose a name which is already used for an object
     // of this type on this page.
-    if ( annotation_info_dialog_->nameEdit->edited() ) {
+    if ( annotation_info_dialog_->nameEdit->isModified() ) {
       // Pageview handles checking the name and putting up the error dialog
       // if necessary.
       int ret = parent()->uniqueFigureName( this,
@@ -946,7 +946,7 @@ namespace Space2D {
     // change command so that the rename is merged with the change
     // command (if there was one).
 
-    if ( annotation_info_dialog_->nameEdit->edited() ) {
+    if ( annotation_info_dialog_->nameEdit->isModified() ) {
       // Again, only if this is not the initial activation of this
       // dialog do we want to create an undo-able rename.
       if ( annotation_->isComplete() )
@@ -1007,7 +1007,7 @@ namespace Space2D {
 	 || annotation_->text().isEmpty() ) {
       QColor color = view()->annotationColor();
       if ( isHighlighted() || isActivated() )
-	color = color.light();
+	color = color.lighter();
 
       glEnable( GL_LINE_STIPPLE );
       glLineStipple( 1, 0xaaaa );
@@ -1037,7 +1037,7 @@ namespace Space2D {
       QPalette palette( parent()->parent()->appPalette() );
 
       if ( isHighlighted() || isActivated() )
-	palette.setColor( QPalette::Text, view()->annotationColor().light() );
+	palette.setColor( QPalette::Text, view()->annotationColor().lighter() );
       else
 	palette.setColor( QPalette::Text, view()->annotationColor() );
 

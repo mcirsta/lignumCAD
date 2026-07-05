@@ -452,7 +452,7 @@ namespace Space2D {
       else
 	document->appendChild( move_element );
 
-      move_element.setAttribute( lC::STR::URL, db_url_ );
+      move_element.setAttribute( lC::STR::URL, db_url_.toString( true ) );
       move_element.setAttribute( lC::STR::OLD_EXTENSION_OFFSET,
 				 lC::format( old_extension_offset_ ) );
       move_element.setAttribute( lC::STR::NEW_EXTENSION_OFFSET,
@@ -682,14 +682,14 @@ namespace Space2D {
 	new DimensionInfoDialog( parent()->parent()->lCMW() );
       // Create invisible button groups connecting the Left/Right Above/Below
       // radio buttons, respectively.
-      QButtonGroup* h = new QButtonGroup( dimension_info_dialog_->GroupBox1,"H");
-      h->insert( dimension_info_dialog_->leftButton );
-      h->insert( dimension_info_dialog_->rightButton );
-      h->hide();
-      QButtonGroup* v = new QButtonGroup( dimension_info_dialog_->GroupBox1,"V");
-      v->insert( dimension_info_dialog_->aboveButton );
-      v->insert( dimension_info_dialog_->belowButton );
-      v->hide();
+      QButtonGroup* h = new QButtonGroup( dimension_info_dialog_->GroupBox1 );
+      h->setObjectName( "H" );
+      h->addButton( dimension_info_dialog_->leftButton );
+      h->addButton( dimension_info_dialog_->rightButton );
+      QButtonGroup* v = new QButtonGroup( dimension_info_dialog_->GroupBox1 );
+      v->setObjectName( "V" );
+      v->addButton( dimension_info_dialog_->aboveButton );
+      v->addButton( dimension_info_dialog_->belowButton );
 
       dimension_info_dialog_->offsetLengthSpinBox->
 	setLengthLimits( UnitsBasis::instance()->lengthUnit(),
@@ -815,7 +815,7 @@ namespace Space2D {
 
     bool modified = false;
 
-    if ( dimension_info_dialog_->nameEdit->edited() ) {
+    if ( dimension_info_dialog_->nameEdit->isModified() ) {
 #if 0
       if ( !setName( dimension_info_dialog_->nameEdit->text() ) )
 	goto REDO;
@@ -879,13 +879,13 @@ namespace Space2D {
 
     switch ( orientation_ ) {
     case lC::HORIZONTAL:
-      if ( dimension_info_dialog_->aboveButton->isOn() &&
+      if ( dimension_info_dialog_->aboveButton->isChecked() &&
 	   annotation_side_ == lC::BELOW ) {
 	annotation_side_ = lC::ABOVE;
 	computeLayout();
 	annotation_side_modified = true;
       }
-      else if ( dimension_info_dialog_->belowButton->isOn() &&
+      else if ( dimension_info_dialog_->belowButton->isChecked() &&
 		annotation_side_ == lC::ABOVE ) {
 	annotation_side_ =  lC::BELOW ;
 	computeLayout();
@@ -893,13 +893,13 @@ namespace Space2D {
       }
       break;
     case lC::VERTICAL:
-      if ( dimension_info_dialog_->rightButton->isOn() &&
+      if ( dimension_info_dialog_->rightButton->isChecked() &&
 	   annotation_side_ == lC::BELOW ) {
 	annotation_side_ = lC::ABOVE;
 	computeLayout();
 	annotation_side_modified = true;
       }
-      else if ( dimension_info_dialog_->leftButton->isOn() &&
+      else if ( dimension_info_dialog_->leftButton->isChecked() &&
 		annotation_side_ == lC::ABOVE ) {
 	annotation_side_ = lC::BELOW;
 	computeLayout();

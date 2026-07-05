@@ -281,7 +281,7 @@ void PageView::copy ( void )
 
     FigureViewBase* fv = figure_selection_names_.value( (*f).second[0] );
 
-    figure_element.setAttribute( lC::STR::URL, fv->dbURL() );
+    figure_element.setAttribute( lC::STR::URL, fv->dbURL().toString( true ) );
 
     fv->copyWrite( figure_element );
 
@@ -355,7 +355,7 @@ View* PageView::lookup ( QStringList& path_components ) const
 {
   // The front path component is the name of a figure with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );

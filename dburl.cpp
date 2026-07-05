@@ -22,21 +22,28 @@
  */
 #include "dburl.h"
 
+QString DBURL::toString ( bool /*encoded_path*/ ) const
+{
+  return QUrl::toString();
+}
+
 QString DBURL::name ( void ) const
 {
-  QString name = fileName();
-  return name.left( name.findRev( '.' ) );
+  QString name = path().section( '/', -1 );
+  return name.left( name.lastIndexOf( '.' ) );
 }
 
 QString DBURL::type ( void ) const
 {
-  QString name = fileName();
-  return name.right( name.length() - name.findRev( '.' ) - 1 );
+  QString name = path().section( '/', -1 );
+  return name.right( name.length() - name.lastIndexOf( '.' ) - 1 );
 }
 
 DBURL DBURL::parent ( void ) const
 {
   DBURL parent( *this );
-  parent.setPath( dirPath() );
+  QString parent_path = path();
+  parent_path.truncate( parent_path.lastIndexOf( '/' ) );
+  parent.setPath( parent_path );
   return parent;
 }

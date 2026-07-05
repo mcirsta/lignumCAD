@@ -252,7 +252,7 @@ QVector<uint> Model::pathID ( const DBURL& db_url ) const
 
   // The front path component is the name of a page with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -321,7 +321,7 @@ ModelItem* Model::lookup ( const DBURL& db_url ) const
 
   // The front path component is the name of a page with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -379,7 +379,7 @@ Handle(Standard_Type) Model::lookupType ( const DBURL& db_url ) const
 
   // The front path component is the name of a page with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -436,7 +436,7 @@ TopoDS_Shape Model::lookupShape ( const DBURL& db_url ) const
 
   // The front path component is the name of a page with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );

@@ -385,7 +385,7 @@ bool PartView::configure ( void )
 
   if ( ret == QDialog::Rejected ) return false;
 
-  if ( new_part_wizard_->nameEdit->edited() )
+  if ( new_part_wizard_->nameEdit->isModified() )
     part_->setName( new_part_wizard_->nameEdit->text() );
 
   part_->makeSolidParameters( new_part_wizard_->part(),

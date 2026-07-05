@@ -96,7 +96,7 @@ namespace Space2D {
   {
     // The front path component is the name of a figure with ".type" appended
     // to it.
-    int dot_pos = path_components.front().findRev( '.' );
+    int dot_pos = path_components.front().lastIndexOf( '.' );
     QString name = path_components.front().left( dot_pos );
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );
@@ -191,7 +191,7 @@ namespace Space3D {
   {
     // The front path component is the name of a figure with ".type" appended
     // to it.
-    int dot_pos = path_components.front().findRev( '.' );
+    int dot_pos = path_components.front().lastIndexOf( '.' );
     QString name = path_components.front().left( dot_pos );
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );

@@ -330,7 +330,7 @@ bool SketchView::configure ( void )
 
   if ( ret == QDialog::Rejected ) return false;
 
-  if ( config_dialog_->nameEdit->edited() ) {
+  if ( config_dialog_->nameEdit->isModified() ) {
     // DesignBookView handles checking the name and putting up the error dialog
     // if necessary.
     int ret = parent()->uniquePageName( this,

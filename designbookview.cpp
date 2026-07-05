@@ -904,7 +904,7 @@ void DesignBookView::editPreferences ( void )
 
   // Recover any changes made to the default business information
 
-  if ( preferences_dialog_->businessNameLineEdit->edited() ) {
+  if ( preferences_dialog_->businessNameLineEdit->isModified() ) {
     QString name = preferences_dialog_->businessNameLineEdit->text();
     BusinessInfo::instance().setName( name );
 
@@ -914,7 +914,7 @@ void DesignBookView::editPreferences ( void )
       settings.removeEntry( lC::Setting::Business::NAME );
   }
 
-  if ( preferences_dialog_->businessLocationLineEdit->edited() ) {
+  if ( preferences_dialog_->businessLocationLineEdit->isModified() ) {
     QString location = preferences_dialog_->businessLocationLineEdit->text();
     BusinessInfo::instance().setLocation( location );
 
@@ -947,12 +947,12 @@ void DesignBookView::editPreferences ( void )
     unit_modified = true;
   }
 
-  if ( preferences_dialog_->fractionalRadioButton->isOn() &&
+  if ( preferences_dialog_->fractionalRadioButton->isChecked() &&
        UnitsBasis::instance()->format() != FRACTIONAL ) {
     UnitsBasis::instance()->setFormat( FRACTIONAL );
     unit_modified = true;
   }
-  else if ( preferences_dialog_->decimalRadioButton->isOn() &&
+  else if ( preferences_dialog_->decimalRadioButton->isChecked() &&
 	    UnitsBasis::instance()->format() != DECIMAL ) {
     UnitsBasis::instance()->setFormat( DECIMAL );
     unit_modified = true;
@@ -980,7 +980,7 @@ void DesignBookView::editPreferences ( void )
 
   // Recover any changes made to the default color scheme preference.
 
-  if ( preferences_dialog_->predefinedRadioButton->isOn() ) {
+  if ( preferences_dialog_->predefinedRadioButton->isChecked() ) {
     if ( !OpenGLGlobals::instance()->isPredefinedScheme() ) {
       OpenGLGlobals::instance()->setPredefinedScheme( true );
     }
@@ -1233,7 +1233,7 @@ void DesignBookView::renamePage ( void )
   if ( ret == QDialog::Rejected )
     return;
 
-  if ( page_info_dialog_->nameEdit->edited() ) {
+  if ( page_info_dialog_->nameEdit->isModified() ) {
     if ( uniquePageName( page_info_dialog_->nameEdit->text() ) ) {
       page_view->setName( page_info_dialog_->nameEdit->text() );
 
@@ -1352,7 +1352,7 @@ View* DesignBookView::lookup ( const DBURL& db_url )
 
   // The front path component is the name of a page with ".type" appended
   // to it.
-  int dot_pos = path_components.front().findRev( '.' );
+  int dot_pos = path_components.front().lastIndexOf( '.' );
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
@@ -1926,7 +1926,7 @@ bool DesignBookView::newModelWizard ( Model* model, uint& initial_page_id )
 
   if ( ret == QDialog::Rejected ) return false;
  
-  if ( new_model_wizard_->modelNameEdit->edited() ) {
+  if ( new_model_wizard_->modelNameEdit->isModified() ) {
     model->setName( new_model_wizard_->modelNameEdit->text() );
     //    model_list_item_->setText( lC::NAME, model->name() );
   }
@@ -1975,7 +1975,7 @@ void DesignBookView::editModelInfo ( void )
  
   if ( ret == QDialog::Rejected ) return;
 
-  if ( model_info_dialog_->modelNameEdit->edited() ) {
+  if ( model_info_dialog_->modelNameEdit->isModified() ) {
     setName( model_info_dialog_->modelNameEdit->text() );
   }
 

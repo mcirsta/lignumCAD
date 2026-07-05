@@ -141,7 +141,7 @@ Material::Material ( const QDomElement& xml_rep, const QString& image_path )
       // Incrementally strip off extra localizations.
       int rightmost = 0;
       for ( uint j = 0; j < delimiters.length(); j++ ) {
-	int k = locale.findRev( delimiters[j] );
+	int k = locale.lastIndexOf( delimiters[j] );
 	if ( k > rightmost )
 	  rightmost = k;
       }

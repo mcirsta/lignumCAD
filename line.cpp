@@ -306,7 +306,7 @@ namespace Space2D {
     QDomDocument* xml_doc = ConstraintHistory::instance().history();
     if ( xml_doc != 0 ) {
       QDomElement old_xml_rep = xml_doc->createElement( lC::STR::CONSTRAINED_LINE );
-      old_xml_rep.setAttribute( lC::STR::URL, dbURL() );
+      old_xml_rep.setAttribute( lC::STR::URL, dbURL().toString( true ) );
       constraint_->write( old_xml_rep );
       ConstraintHistory::instance().appendUnconstraint( old_xml_rep );
     }
@@ -321,7 +321,7 @@ namespace Space2D {
 
     if ( xml_doc != 0 ) {
       QDomElement new_xml_rep = xml_doc->createElement( lC::STR::CONSTRAINED_LINE );
-      new_xml_rep.setAttribute( lC::STR::URL, dbURL() );
+      new_xml_rep.setAttribute( lC::STR::URL, dbURL().toString( true ) );
       constraint_->write( new_xml_rep );
       ConstraintHistory::instance().appendContraint( new_xml_rep );
     }

@@ -662,7 +662,7 @@ namespace Space3D {
 	  break;
 	case lC::Render::HIGHLIGHTED:
 	case lC::Render::ACTIVATED:
-	  glColor3ubv( lC::qCubv( view_->geometryColor().light() ) );
+	  glColor3ubv( lC::qCubv( view_->geometryColor().lighter() ) );
 	  glCallList( edge_name_ );
 	  break;
 	}
@@ -685,7 +685,7 @@ namespace Space3D {
 	}
 
 	glDisable( GL_DEPTH_TEST );
-	glColor3ubv( lC::qCubv( view_->geometryColor().light() ) );
+	glColor3ubv( lC::qCubv( view_->geometryColor().lighter() ) );
 	wv = wire_views_.begin();
 	for ( ; wv != wire_views_.end(); ++wv ) {
 
@@ -714,7 +714,7 @@ namespace Space3D {
       glCallList( hlr_fg_name_ );
       glPopMatrix();
 
-      glColor3ubv( lC::qCubv( view_->geometryColor().light() ) );
+      glColor3ubv( lC::qCubv( view_->geometryColor().lighter() ) );
       std::map<GLuint,GV>::const_iterator wv = wire_views_.begin();
       for ( ; wv != wire_views_.end(); ++wv ) {
 
@@ -765,7 +765,7 @@ namespace Space3D {
 	case lC::Render::HIGHLIGHTED:
 	case lC::Render::ACTIVATED:
 	  glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,
-			lC::qCfv( color.light( 110 ) ) );
+			lC::qCfv( color.lighter( 110 ) ) );
 	  for ( ; fv != face_views_.end(); ++fv )
 	    glCallList( (*fv).second.displayList() );
 	  break;
@@ -788,7 +788,7 @@ namespace Space3D {
 	  case lC::Render::HIGHLIGHTED:
 	  case lC::Render::ACTIVATED:
 	    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE,
-			  lC::qCfv( color.light() ) );
+			  lC::qCfv( color.lighter() ) );
 	    glCallList( (*fv).second.displayList() );
 	    break;
 	  }
@@ -866,7 +866,7 @@ namespace Space3D {
 
     case lC::Render::HIGHLIGHTS: {
 
-      glColor3ubv( lC::qCubv( view_->geometryColor().light() ) );
+      glColor3ubv( lC::qCubv( view_->geometryColor().lighter() ) );
       std::map<GLuint,GV>::const_iterator wv = wire_views_.begin();
       for ( ; wv != wire_views_.end(); ++wv ) {
 

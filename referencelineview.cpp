@@ -27,6 +27,10 @@
 #include <qradiobutton.h>
 #include <qlabel.h>
 #include <qcursor.h>
+#include <iostream>
+
+using std::cerr;
+using std::endl;
 
 #include "constants.h"
 #include "dburl.h"
@@ -956,7 +960,7 @@ namespace Space2D {
 
     if ( isHighlighted() || isActivated() ||
 	 line_.isHighlighted() || line_.isActivated() )
-      view()->qglColor( view()->annotationColor().light() );
+      view()->qglColor( view()->annotationColor().lighter() );
     else
       glColor3ubv( lC::qCubv( view()->annotationColor() ) );
 
@@ -1087,7 +1091,7 @@ namespace Space2D {
   View* ReferenceLineView::lookup ( QStringList& path_components ) const
   {
     if ( dimension_view_ != 0 ) {
-      int dot_pos = path_components.front().findRev( '.' );
+      int dot_pos = path_components.front().lastIndexOf( '.' );
       QString name = path_components.front().left( dot_pos );
       QString type = path_components.front().right( path_components.front().length()
 						    - dot_pos - 1 );
@@ -1381,7 +1385,7 @@ namespace Space2D {
 
     bool modified = false;
 
-    if ( reference_line_info_dialog_->nameEdit->edited() ) {
+    if ( reference_line_info_dialog_->nameEdit->isModified() ) {
       // Pageview handles checking the name and putting up the error dialog
       // if necessary.
       int ret = parent()->uniqueFigureName( this,

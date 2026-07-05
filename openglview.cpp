@@ -122,7 +122,7 @@ public:
     else
       document->appendChild( view_element );
 
-    view_element.setAttribute( lC::STR::URL, db_url_ );
+    view_element.setAttribute( lC::STR::URL, db_url_.toString( true ) );
 
     QDomElement old_view_element = document->createElement( lC::STR::OLD_VIEW );
     old_view_.write( old_view_element );

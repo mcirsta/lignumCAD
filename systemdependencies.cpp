@@ -102,7 +102,7 @@ namespace System {
 
       int rightmost = 0;
       for ( int i = 0; i < (int)delimiters.length(); i++ ) {
-	int k = doc_dir.findRev( delimiters[i] );
+	int k = doc_dir.lastIndexOf( delimiters[i] );
 	if ( k > rightmost )
 	  rightmost = k;
       }
