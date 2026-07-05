@@ -21,7 +21,7 @@
  *
  */
 #include <qdom.h>
-#include <qregexp.h>
+#include <QRegularExpression>
 
 #include "constants.h"
 #include "dburl.h"
@@ -55,10 +55,10 @@ namespace Space2D {
   {
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
-    QRegExp regexp( tr( "Annotation\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name() );
-    if ( position >= 0 ) {
-      unique_index_ = QMAX( regexp.cap(1).toUInt(), unique_index_ );
+    QRegularExpression regexp( tr( "Annotation\\[([0-9]+)\\]" ) );
+    QRegularExpressionMatch match = regexp.match( name() );
+    if ( match.hasMatch() ) {
+      unique_index_ = qMax(  match.captured( 1 ).toUInt(), unique_index_ );
     }
 
     origin_[X] = xml_rep.attribute( lC::STR::X ).toDouble();
@@ -77,10 +77,10 @@ namespace Space2D {
 			   Page* parent )
     : Figure( id, name, lC::STR::ANNOTATION, parent )
   {
-    QRegExp regexp( tr( "Annotation\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name );
-    if ( position >= 0 ) {
-      unique_index_ = QMAX( regexp.cap(1).toUInt(), unique_index_ );
+    QRegularExpression regexp( tr( "Annotation\\[([0-9]+)\\]" ) );
+    QRegularExpressionMatch match = regexp.match( name );
+    if ( match.hasMatch() ) {
+      unique_index_ = qMax(  match.captured( 1 ).toUInt(), unique_index_ );
     }
 
     origin_[X] = xml_rep.attribute( lC::STR::X ).toDouble();

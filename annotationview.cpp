@@ -27,7 +27,8 @@
 #include <qtextedit.h>
 #include <qcursor.h>
 #include <qpainter.h>
-#include <qsimplerichtext.h>
+#include <QAbstractTextDocumentLayout>
+#include <QTextDocument>
 #include <qrect.h>
 
 #include "lignumcadmainwindow.h"
@@ -899,6 +900,7 @@ namespace Space2D {
       setText( lC::formatName( annotation_->name() ) );
 
     annotation_info_dialog_->annotationTextEdit->setText( annotation_->text() );
+    annotation_info_dialog_->annotationTextEdit->document()->setModified( false );
   redo:
     int ret = annotation_info_dialog_->exec();
 
@@ -925,7 +927,7 @@ namespace Space2D {
       }
     }
 
-    if ( annotation_info_dialog_->annotationTextEdit->isModified() ) {
+    if ( annotation_info_dialog_->annotationTextEdit->document()->isModified() ) {
       // If this a change applied after the annotation is created,
       // then we need to record this as an undoable modification.
       if ( annotation_->isComplete() ) {
@@ -933,12 +935,12 @@ namespace Space2D {
 	  new ChangeAnnotationCommand( "change annotation", model(),
 				       annotation_->dbURL(),
 				       annotation_->text(),
-		       annotation_info_dialog_->annotationTextEdit->text() );
+		       annotation_info_dialog_->annotationTextEdit->toHtml() );
 
 	CommandHistory::instance().addCommand( change_command );
 
       }
-      annotation_->setText( annotation_info_dialog_->annotationTextEdit->text() );
+      annotation_->setText( annotation_info_dialog_->annotationTextEdit->toHtml() );
       modified = true;
     }
 
@@ -1033,7 +1035,9 @@ namespace Space2D {
       if ( !view()->annotationFont().isEmpty() )
 	font.fromString( view()->annotationFont() );
 
-      QSimpleRichText text( annotation_->text(), font );
+      QTextDocument text;
+      text.setDefaultFont( font );
+      text.setHtml( annotation_->text() );
       QPalette palette( parent()->parent()->appPalette() );
 
       if ( isHighlighted() || isActivated() )
@@ -1046,19 +1050,22 @@ namespace Space2D {
 
       // Note: after this, use width() as the limit on resizing the
       // text box...
-      text.setWidth( clip.width() );
+      text.setTextWidth( clip.width() );
 
       // Note: It might be worthwhile to cache the results of the draw.
       // The OGLPaintDevice gets a lot of commands from the RichText
       // formatter...
-      text.draw( &painter, 0, 0, clip, palette );
+      QAbstractTextDocumentLayout::PaintContext paint_context;
+      paint_context.clip = QRectF( clip );
+      paint_context.palette = palette;
+      text.documentLayout()->draw( &painter, paint_context );
 
       view()->resetWindow();
 
       // If the text was larger than the box, draw a solid line at
       // the bottom of the box. Note: Qt's opinion of size is 1 pixel
       // larger than OpenGL's.
-      if ( (text.height()-1) > clip.height() ) {
+      if ( ( text.size().height() - 1 ) > clip.height() ) {
 	glBegin( GL_LINES );
 	glVertex2dv( lbVertex() );
 	glVertex2dv( rbVertex() );

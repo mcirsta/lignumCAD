@@ -21,7 +21,7 @@
  *
  */
 #include <qdom.h>
-#include <qregexp.h>
+#include <QRegularExpression>
 
 #include "constants.h"
 #include "page.h"
@@ -59,11 +59,11 @@ namespace Space2D {
 
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
-    QRegExp regexp( tr( "Centerline\\[([0-9]+)\\]" ) );
+    QRegularExpression regexp( tr( "Centerline\\[([0-9]+)\\]" ) );
 
-    int position = regexp.search( name() );
-    if ( position >= 0 ) {
-      Centerline::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    QRegularExpressionMatch match = regexp.match( name() );
+    if ( match.hasMatch() ) {
+      Centerline::unique_index_ = qMax(  match.captured( 1 ).toUInt(),
 				       Centerline::unique_index_ );
     }
 
@@ -78,11 +78,11 @@ namespace Space2D {
     : Figure( id, name, lC::STR::CENTERLINE, parent),
       line_( new ConstrainedLine( 0, name, this, 0 ) )
   {
-    QRegExp regexp( tr( "Centerline\\[([0-9]+)\\]" ) );
+    QRegularExpression regexp( tr( "Centerline\\[([0-9]+)\\]" ) );
 
-    int position = regexp.search( name );
-    if ( position >= 0 ) {
-      Centerline::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    QRegularExpressionMatch match = regexp.match( name );
+    if ( match.hasMatch() ) {
+      Centerline::unique_index_ = qMax(  match.captured( 1 ).toUInt(),
 					Centerline::unique_index_ );
     }
 

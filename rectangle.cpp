@@ -22,7 +22,7 @@
  */
 
 #include <qstringlist.h>
-#include <qregexp.h>
+#include <QRegularExpression>
 #include <qmessagebox.h>
 #include <qdom.h>
 
@@ -57,10 +57,10 @@ namespace Space2D {
   {
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
-    QRegExp regexp( tr("Rectangle\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name() );
-    if ( position >= 0 ) {
-      Rectangle::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    QRegularExpression regexp( tr("Rectangle\\[([0-9]+)\\]" ) );
+    QRegularExpressionMatch match = regexp.match( name() );
+    if ( match.hasMatch() ) {
+      Rectangle::unique_index_ = qMax(  match.captured( 1 ).toUInt(),
 				       Rectangle::unique_index_ );
     }
 
@@ -137,10 +137,10 @@ namespace Space2D {
 			 Page* parent )
     : Figure( id, name, lC::STR::RECTANGLE, parent )
   {
-    QRegExp regexp( tr("Rectangle\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name );
-    if ( position >= 0 ) {
-      Rectangle::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    QRegularExpression regexp( tr("Rectangle\\[([0-9]+)\\]" ) );
+    QRegularExpressionMatch match = regexp.match( name );
+    if ( match.hasMatch() ) {
+      Rectangle::unique_index_ = qMax(  match.captured( 1 ).toUInt(),
 				       Rectangle::unique_index_ );
     }
 

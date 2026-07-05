@@ -22,7 +22,7 @@
  */
 
 #include <qdom.h>
-#include <qregexp.h>
+#include <QRegularExpression>
 
 #include <gce_MakeLin.hxx>
 #include <gp_Pln.hxx>
@@ -90,10 +90,10 @@ namespace Space3D {
   {
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
-    QRegExp regexp( tr("Solid\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name() );
-    if ( position >= 0 ) {
-      OCSolid::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    QRegularExpression regexp( tr("Solid\\[([0-9]+)\\]" ) );
+    QRegularExpressionMatch match = regexp.match( name() );
+    if ( match.hasMatch() ) {
+      OCSolid::unique_index_ = qMax(  match.captured( 1 ).toUInt(),
 				     OCSolid::unique_index_ );
     }
 
@@ -118,10 +118,10 @@ namespace Space3D {
 			 Page* parent )
     : Figure( id, name, lC::STR::SOLID, parent )
   {
-    QRegExp regexp( tr("Solid\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name );
-    if ( position >= 0 ) {
-      OCSolid::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    QRegularExpression regexp( tr("Solid\\[([0-9]+)\\]" ) );
+    QRegularExpressionMatch match = regexp.match( name );
+    if ( match.hasMatch() ) {
+      OCSolid::unique_index_ = qMax(  match.captured( 1 ).toUInt(),
 				     OCSolid::unique_index_ );
     }
 
@@ -2495,4 +2495,3 @@ namespace Space3D {
     xml_rep.appendChild( solid_element );
   }
 } // End of Space3D namespace
-

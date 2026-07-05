@@ -23,8 +23,9 @@
 #ifndef GLOBALDATA_H
 #define GLOBALDATA_H
 
+#include <QStringList>
+
 class ModelItem;
-class QStringList;
 
 /*!
  * There are a few items of global data (possibly you might even

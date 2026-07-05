@@ -26,6 +26,9 @@
 #include "model.h"
 #include "page.h"
 
+using std::cout;
+using std::endl;
+
 PageBase::PageBase ( uint id, const QString& name, const QString& type,
 		     Model* parent )
   : ModelItem( id, name, type ), parent_( parent )
@@ -69,7 +72,7 @@ namespace Space2D {
   {
     QMap<uint,Figure*>::iterator f = figures_.begin();
     for ( ; f != figures_.end(); ++f )
-      delete f.data();
+      delete f.value();
   }
 
   uint Page::newID ( void ) { return ++unique_figure_id_; }
@@ -87,7 +90,7 @@ namespace Space2D {
     QMap<uint,Figure*>::iterator f = figures_.find( figure->id() );
 
     if ( f != figures_.end() ) {
-      delete f.data();
+      delete f.value();
       figures_.erase( f );
     }
   }
@@ -104,12 +107,12 @@ namespace Space2D {
     QMap<uint,Figure*>::const_iterator f = figures_.begin();
 
     for ( ; f != figures_.end(); ++f ) {
-      if ( f.data()->name() == name && f.data()->type() == type ) {
+      if ( f.value()->name() == name && f.value()->type() == type ) {
 	path_components.erase( path_components.begin() );
 	if ( path_components.empty() )
-	  return f.data();
+	  return f.value();
 	else
-	  return f.data()->lookup( path_components );
+	  return f.value()->lookup( path_components );
       }
     }
 
@@ -146,7 +149,7 @@ namespace Space2D {
     QMap<uint,Figure*>::const_iterator f = figures_.begin();
     for ( ; f != figures_.end(); ++f ) {
       cout << endl;
-      f.data()->dumpObjectInfo();
+      f.value()->dumpObjectInfo();
     }
   }
 } // End of Space2D namespace
@@ -164,7 +167,7 @@ namespace Space3D {
     QMap<uint,Figure*>::iterator f = figures_.begin();
 
     for ( ; f != figures_.end(); ++f )
-      delete f.data();
+      delete f.value();
   }
 
   uint Page::newID ( void ) { return ++unique_figure_id_; }
@@ -179,10 +182,10 @@ namespace Space3D {
 
   void Page::removeFigure ( Figure* figure )
   {
-    QMapIterator<uint,Figure*> f = figures_.find( figure->id() );
+    QMap<uint,Figure*>::iterator f = figures_.find( figure->id() );
 
     if ( f != figures_.end() ) {
-      delete f.data();
+      delete f.value();
       figures_.erase( f );
     }
   }
@@ -199,12 +202,12 @@ namespace Space3D {
     QMap<uint,Figure*>::const_iterator f = figures_.begin();
 
     for ( ; f != figures_.end(); ++f ) {
-      if ( f.data()->name() == name && f.data()->type() == type ) {
+      if ( f.value()->name() == name && f.value()->type() == type ) {
 	path_components.erase( path_components.begin() );
 	if ( path_components.empty() )
-	  return f.data();
+	  return f.value();
 	else
-	  return f.data()->lookup( path_components );
+	  return f.value()->lookup( path_components );
       }
     }
 
@@ -213,14 +216,14 @@ namespace Space3D {
 
   ModelItem* Page::lookup ( QVector<uint>& id_path ) const
   {
-    QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
+    QMap<uint,Figure*>::const_iterator figure = figures_.find( id_path[0] );
 
     if ( figure != figures_.end() ) {
       id_path.erase( id_path.begin() );
       if ( id_path.empty() )
-	return figure.data();
+	return figure.value();
       else
-	return figure.data()->lookup( id_path );
+	return figure.value()->lookup( id_path );
     }
 
     return 0;			// Really an error...
@@ -229,6 +232,6 @@ namespace Space3D {
   {
     QMap<uint,Figure*>::const_iterator f = figures_.begin();
     for ( ; f != figures_.end(); ++f )
-      f.data()->dumpObjectInfo();
+      f.value()->dumpObjectInfo();
   }
 } // End of Space3D namespace

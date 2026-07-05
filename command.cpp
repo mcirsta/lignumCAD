@@ -24,7 +24,6 @@
 #include <qfile.h>
 #include <qmessagebox.h>
 #include <qtextstream.h>
-#include <qregexp.h>
 
 #if defined(Q_OS_UNIX)
 extern "C" {

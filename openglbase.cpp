@@ -22,7 +22,6 @@
  */
 #include <qapplication.h>
 #include <QImage>
-#include <qregexp.h>
 
 #include "OGLFT.h"
 
@@ -92,7 +91,7 @@ OGLFT::Face* OpenGLBase::font ( const FaceData& requested_face )
   QMap< FaceData, OGLFT::Face* >::const_iterator face = faces_.find( actual_face );
 
   if ( face != faces_.end() )
-      return face.data();
+      return face.value();
 
   QString file;
   double point_size;
@@ -105,7 +104,8 @@ OGLFT::Face* OpenGLBase::font ( const FaceData& requested_face )
   // passes to Xft so the OpenGL font appears to be same size as that
   // shown in the requestor.
 
-  OGLFT::Face* base_face = new OGLFT::Monochrome( file, point_size, 0 );
+  QByteArray file_name = file.toLocal8Bit();
+  OGLFT::Face* base_face = new OGLFT::Monochrome( file_name.constData(), point_size, 0 );
 
   faces_.insert( actual_face, base_face );
 
@@ -214,13 +214,13 @@ GLuint OpenGLBase::texture ( const QString& texture_name )
   QMap< QString, GLuint >::const_iterator t = textures_.find( texture_name );
 
   if ( t != textures_.end() )
-      return t.data();
+      return t.value();
 
   // Note: texture images currently have to be compiled into
   // the program...
   // Compensate for the fact that OpenGL expects images defined
   // bottom-up instead of top-down (as is usually the case).
-  QImage image = QImage( texture_name ).mirror();
+  QImage image = QImage( texture_name ).mirrored();
 
   if ( image.isNull() ) return 0;
 
@@ -229,7 +229,7 @@ GLuint OpenGLBase::texture ( const QString& texture_name )
   int height = nearestPowerCeil( image.height() );
 
   if ( width != image.width() || height != image.height() ) {
-    image = image.smoothScale( width, height );
+    image = image.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
   }
 
   GLuint gl_texture_name;
@@ -283,7 +283,7 @@ void OpenGLBase::clearFontCache ( void )
   QMap< FaceData, OGLFT::Face* >::iterator f;
 
   for ( f = faces_.begin(); f != faces_.end(); ++f )
-    delete f.data();
+    delete f.value();
 
   faces_.clear();
 }
@@ -326,18 +326,18 @@ GLuint OpenGLBase::createBackgroundTexture ( const QString& file,
   // 2, reduced to grayscale and then color0 and color1 are blended in
   // the proportion given by each pixel. Uses the standard OpenGL
   // pixel transfer functions to do the blending.
-  QImage image = QImage( file ).mirror();
+  QImage image = QImage( file ).mirrored();
 
   // Scale such that each dimension is a power of two.
   int width = nearestPowerCeil( image.width() );
   int height = nearestPowerCeil( image.height() );
 
   if ( width != image.width() || height != image.height() ) {
-    image = image.smoothScale( width, height );
+    image = image.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
   }
 
   // Reduce the image to gray scale (conversion factors from ppmtopgm)
-  background_image_.create( width, height, 8, 256 );
+  background_image_ = QImage( width, height, QImage::Format_Indexed8 );
 
   for ( int j = 0; j < height; j++ )
     for ( int i = 0; i < width; i++ ) {
@@ -495,11 +495,11 @@ void OpenGLAttributes::clear ( OpenGLBase* view, bool clear_depth_buffer ) const
       glTexCoord2f( 0, 0 );
       glVertex2i( 0, 0 );
       glTexCoord2f( s, 0 );
-      glVertex2i( pdm.width(), 0 );
+      glVertex2i( view->width(), 0 );
       glTexCoord2f( s, t );
-      glVertex2i( pdm.width(), pdm.height() );
+      glVertex2i( view->width(), view->height() );
       glTexCoord2f( 0, t );
-      glVertex2i( 0, pdm.height() );
+      glVertex2i( 0, view->height() );
       
       glEnd();
 

@@ -1395,14 +1395,14 @@ bool AssemblyView::configure ( void )
 
   for ( ; page != pages.end(); ++page ) {
     // Skip self, of course.
-    if ( page.data()->name() == name() &&
-	 page.data()->type() == lC::STR::ASSEMBLY ) continue;
+    if ( page.value()->name() == name() &&
+	 page.value()->type() == lC::STR::ASSEMBLY ) continue;
 
-    if ( page.data()->type() == lC::STR::PART ||
-	 page.data()->type() == lC::STR::ASSEMBLY )
+    if ( page.value()->type() == lC::STR::PART ||
+	 page.value()->type() == lC::STR::ASSEMBLY )
       new QTreeWidgetItem( config_dialog_->modelListView,
-			   QStringList{ lC::formatName( page.data()->name() ),
-					trC( page.data()->type() ) } );
+			   QStringList{ lC::formatName( page.value()->name() ),
+					trC( page.value()->type() ) } );
   }
 
   config_dialog_->buttonOk->setEnabled( false );
@@ -1419,13 +1419,13 @@ bool AssemblyView::configure ( void )
 
   for ( ; page != pages.end(); ++page ) {
     if ( config_dialog_->modelListView->currentItem()->text(0) ==
-	 lC::formatName( page.data()->name() ) &&
+	 lC::formatName( page.value()->name() ) &&
 	 config_dialog_->modelListView->currentItem()->text(1) ==
-	 trC( page.data()->type() ) ) break;
+	 trC( page.value()->type() ) ) break;
   }
 
   addFigureView( new SubassemblyView( assembly_->
-				      addModel( dynamic_cast<Space3D::Page*>( page.data() ) ),
+				      addModel( dynamic_cast<Space3D::Page*>( page.value() ) ),
 				      this ) );
 
   return true;
@@ -1792,14 +1792,14 @@ void AssemblyView::addModel ( void )
   QMap<uint, PageBase*>::const_iterator page = pages.begin();
   for ( ; page != pages.end(); ++page ) {
     // Skip self, of course.
-    if ( page.data()->name() == name() &&
-	 page.data()->type() == lC::STR::ASSEMBLY ) continue;
+    if ( page.value()->name() == name() &&
+	 page.value()->type() == lC::STR::ASSEMBLY ) continue;
 
-    if ( page.data()->type() == lC::STR::PART ||
-	 page.data()->type() == lC::STR::ASSEMBLY )
+    if ( page.value()->type() == lC::STR::PART ||
+	 page.value()->type() == lC::STR::ASSEMBLY )
       new QTreeWidgetItem( add_dialog_->modelListView,
-			   QStringList{ lC::formatName( page.data()->name() ),
-					trC( page.data()->type() ) } );
+			   QStringList{ lC::formatName( page.value()->name() ),
+					trC( page.value()->type() ) } );
   }
 
   add_dialog_->buttonOk->setEnabled( false );
@@ -1814,14 +1814,14 @@ void AssemblyView::addModel ( void )
   page = pages.begin();
   for ( ; page != pages.end(); ++page ) {
     if ( add_dialog_->modelListView->currentItem()->text(0) ==
-	 lC::formatName( page.data()->name() ) &&
+	 lC::formatName( page.value()->name() ) &&
 	 add_dialog_->modelListView->currentItem()->text(1) ==
-	 trC( page.data()->type() ) ) break;
+	 trC( page.value()->type() ) ) break;
   }
 
   SubassemblyView* sv =
     new SubassemblyView( assembly_->
-			 addModel( dynamic_cast<Space3D::Page*>( page.data() ) ),
+			 addModel( dynamic_cast<Space3D::Page*>( page.value() ) ),
 			 this );
 
   addFigureView( sv );

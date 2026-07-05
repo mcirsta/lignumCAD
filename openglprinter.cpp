@@ -83,7 +83,7 @@ OGLFT::Face* OpenGLPrinter::font ( const FaceData& requested_face )
   QMap< FaceData, OGLFT::Face* >::const_iterator face = faces_.find( actual_face );
 
   if ( face != faces_.end() )
-    return face.data();
+    return face.value();
 
   QString file;
   double point_size;
@@ -380,13 +380,13 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   }
 
   double box_width = 2. * approval_bbox.advance_.dx_;
-  box_width = QMAX( box_width, 2. * page_no_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, 2. * scale_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, 2. * date_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, 2. * model_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, 2. * page_bbox.advance_.dx_ );
-  box_width = QMAX( box_width, business_bbox.advance_.dx_ + logo_width );
-  box_width = QMAX( box_width, location_bbox.advance_.dx_ + logo_width );
+  box_width = qMax(  box_width, 2. * page_no_bbox.advance_.dx_ );
+  box_width = qMax(  box_width, 2. * scale_bbox.advance_.dx_ );
+  box_width = qMax(  box_width, 2. * date_bbox.advance_.dx_ );
+  box_width = qMax(  box_width, 2. * model_bbox.advance_.dx_ );
+  box_width = qMax(  box_width, 2. * page_bbox.advance_.dx_ );
+  box_width = qMax(  box_width, business_bbox.advance_.dx_ + logo_width );
+  box_width = qMax(  box_width, location_bbox.advance_.dx_ + logo_width );
 
   double row_height = regular_face->height();
   double row_cell_width = box_width / 2.;
@@ -394,9 +394,9 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   double row_y = llCorner()[Y];
   double text_y = row_y +
     ( row_height -
-      QMAX( approval_bbox.y_max_ - approval_bbox.y_min_,
+      qMax(  approval_bbox.y_max_ - approval_bbox.y_min_,
 	    page_no_bbox.y_max_ - page_no_bbox.y_min_ ) ) / 2 -
-    QMIN( approval_bbox.y_min_, page_no_bbox.y_min_ );
+    qMin(  approval_bbox.y_min_, page_no_bbox.y_min_ );
 
   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   glRectd( row_x, row_y, row_x + row_cell_width, row_y + row_height );
@@ -409,9 +409,9 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   row_y += row_height;
   text_y = row_y +
     ( row_height -
-      QMAX( scale_bbox.y_max_ - scale_bbox.y_min_,
+      qMax(  scale_bbox.y_max_ - scale_bbox.y_min_,
 	    date_bbox.y_max_ - date_bbox.y_min_ ) ) / 2 -
-    QMIN( scale_bbox.y_min_, date_bbox.y_min_ );
+    qMin(  scale_bbox.y_min_, date_bbox.y_min_ );
 
   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   glRectd( row_x, row_y, row_x + row_cell_width, row_y + row_height );
@@ -424,9 +424,9 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   row_y += row_height;
   text_y = row_y +
     ( row_height -
-      QMAX( model_bbox.y_max_ - model_bbox.y_min_,
+      qMax(  model_bbox.y_max_ - model_bbox.y_min_,
 	    page_bbox.y_max_ - page_bbox.y_min_ ) ) / 2 -
-    QMIN( model_bbox.y_min_, page_bbox.y_min_ );
+    qMin(  model_bbox.y_min_, page_bbox.y_min_ );
 
   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   glRectd( row_x, row_y, row_x + row_cell_width, row_y + row_height );

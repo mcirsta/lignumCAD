@@ -368,7 +368,7 @@ OGLFT::Face* OpenGLExample::font ( const FaceData& requested_face )
   QMap< FaceData, OGLFT::Face* >::const_iterator face = faces_.find( actual_face );
 
   if ( face != faces_.end() )
-      return face.data();
+      return face.value();
 
   QString file;
   double point_size;

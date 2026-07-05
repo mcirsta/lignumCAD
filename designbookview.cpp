@@ -37,7 +37,6 @@
 #include <qstatusbar.h>
 #include <qimage.h>
 #include <qsettings.h>
-#include <qregexp.h>
 #include <qdom.h>
 #include <qpainter.h>
 #include <qpicture.h>
@@ -1342,7 +1341,7 @@ void DesignBookView::deletePage ( PageView* page_view )
 
 View* DesignBookView::lookup ( const DBURL& db_url )
 {
-  QStringList path_components = QStringList::split( "/", db_url.path() );
+  QStringList path_components = db_url.path().split( "/", Qt::SkipEmptyParts );
 
   if ( path_components.front() != model_->name() )
     return 0;			// Not this model!
@@ -1394,7 +1393,7 @@ std::vector<GLuint> DesignBookView::lookup ( const QVector<uint>& id_path ) cons
     my_path.erase( my_path.begin() );
     
     if ( !my_path.empty() )
-      return p.data()->lookup( my_path );
+      return p.value()->lookup( my_path );
   }
 #else
   for ( const auto& p : page_views_ ) {
@@ -1764,8 +1763,8 @@ bool DesignBookView::read ( const QString file_name )
   QMap<uint, PageBase*>::const_iterator p = model_->pages().begin();
   for ( ; p != model_->pages().end(); ++p ) {
     cout << endl;
-    p.data()->dumpObjectInfo();
-    p.data()->dumpInfo();
+    p.value()->dumpObjectInfo();
+    p.value()->dumpInfo();
   }
 #endif
   modelChanged( false );

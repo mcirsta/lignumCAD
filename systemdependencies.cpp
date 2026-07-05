@@ -23,7 +23,6 @@
 #include <qapplication.h>
 #include <qfont.h>
 #include <qstringlist.h>
-#include <qregexp.h>
 #include <qprocess.h>
 #include <qdir.h>
 #include <qfileinfo.h>
@@ -42,42 +41,20 @@ namespace System {
     QFont qfont;
     qfont.fromString( font );
 
-    bool found_file = false, found_point_size = false;
+    point_size = qfont.pointSizeF();
+    if ( point_size <= 0 )
+      point_size = 12;
 
-#if defined( Q_WS_X11 )
-    // This depends on so many things. Currently it will only work
-    // with my modification to Xft. Non-X based implementations are
-    // out of luck for now...
+    // TODO: Once the Qt6 port is running, replace this command-line fallback
+    // with a proper font discovery path for OGLFT/FreeType.
+    QProcess fc_match;
+    fc_match.start( "fc-match", QStringList{ "-f", "%{file}", qfont.family() } );
+    if ( !fc_match.waitForFinished( 3000 ) )
+      return false;
 
-    // Try to extract the name of the file in which the font is stored.
-    // This can fail for a number of reasons, but most especially if the
-    // user has selected a file which is only identified by its XLFD id.
+    file = QString::fromLocal8Bit( fc_match.readAllStandardOutput() ).trimmed();
 
-    QStringList elements = QStringList::split( ":", qfont.rawName() );
-
-    for ( QStringList::Iterator element = elements.begin();
-	  element != elements.end();
-	  ++element ) {
-      QStringList values = QStringList::split( "=", *element );
-      if ( values.front() == "file" ) {
-	// The Xft file string seems to include some extra backquotes
-	file = values.back().replace( QRegExp("\\\\"), "" );
-	found_file = true;
-      }
-      // The value that Xft passes to FT_Set_Char_Size is:
-      // size = point size / 72 * screen Y DPI.
-      // Not entirely sure this is the correct value, but we have
-      // to duplicate it in order for the font requestor and OpenGL
-      // view to show the font at the same size.
-      else if ( values.front() == "pixelsize" ) {
-	point_size = values.back().toDouble();
-	found_point_size = true;
-      }
-    }
-#else
-#error "System::findFontFile() must be defined for this system"
-#endif
-    return found_file && found_point_size;
+    return !file.isEmpty();
   }
 
   // Show the manual in some way.
@@ -86,7 +63,7 @@ namespace System {
   {
     // Find the manual for the current language (or English otherwise).
     QString locale = QLocale::system().name();
-    QString doc_dir = home_dir.absPath() + QDir::separator() + "doc" +
+    QString doc_dir = home_dir.absolutePath() + QDir::separator() + "doc" +
       QDir::separator() + locale;
     QString delimiters = "_.@";
     QString help_file;
@@ -116,7 +93,7 @@ namespace System {
     // Well, maybe the English version is available.
 
     if ( help_file.isEmpty() ) {
-      doc_dir = home_dir.absPath() + QDir::separator() + "doc" + QDir::separator() +
+      doc_dir = home_dir.absolutePath() + QDir::separator() + "doc" + QDir::separator() +
 	"en" + QDir::separator() + "HTML" + QDir::separator() + "index.html";
       QFileInfo manual( doc_dir );
 
@@ -125,27 +102,23 @@ namespace System {
     }
 
     if ( help_file.isEmpty() ) {
-      QMessageBox mb( qApp->translate( "Constants", lC::STR::LIGNUMCAD ),
-	qApp->translate( "Messages",
-			 "lignumCAD cannot access the documentation.\n"
-			 "It should be installed in the directory\n"
-			 "%1\n"
-			 "Please check your installation." ).
-		      arg( home_dir.absPath() + QDir::separator() + "doc" +
+      QMessageBox mb( QMessageBox::Warning,
+		      lC::STR::LIGNUMCAD,
+		      qApp->translate( "Messages",
+				       "lignumCAD cannot access the documentation.\n"
+				       "It should be installed in the directory\n"
+				       "%1\n"
+				       "Please check your installation." ).
+		      arg( home_dir.absolutePath() + QDir::separator() + "doc" +
 			   QDir::separator() + locale ),
-			QMessageBox::Warning,
-			QMessageBox::Ok,
-			QMessageBox::NoButton, QMessageBox::NoButton,
-			0, "no_documentation" );
+		      QMessageBox::Ok );
+      mb.setObjectName( "no_documentation" );
       mb.exec();
       return;
     }
 
 #if defined(Q_OS_UNIX)
-    QProcess show_manual( QString( "kfmclient" ) );
-    show_manual.addArgument( "exec" );
-    show_manual.addArgument( help_file );
-    show_manual.launch( QByteArray() );
+    QProcess::startDetached( "kfmclient", QStringList{ "exec", help_file } );
 #else
 #error "System::showManual() must be defined for this system"
 #endif
@@ -157,7 +130,7 @@ namespace System {
   {
 #if defined(Q_OS_LINUX)
     QFileInfo proc_exe_entry( "/proc/self/exe" );
-    return proc_exe_entry.readLink();
+    return proc_exe_entry.readSymLink();
 #else
 #error "System::executablePath() must be defined for this system"
 #endif

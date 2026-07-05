@@ -21,7 +21,11 @@
  *
  */
 #include <qdom.h>
-#include <qregexp.h>
+#include <QRegularExpression>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 #include "constants.h"
 #include "page.h"
@@ -59,10 +63,10 @@ namespace Space2D {
 
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
-    QRegExp regexp( tr( "ReferenceLine\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name() );
-    if ( position >= 0 ) {
-      ReferenceLine::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    QRegularExpression regexp( tr( "ReferenceLine\\[([0-9]+)\\]" ) );
+    QRegularExpressionMatch match = regexp.match( name() );
+    if ( match.hasMatch() ) {
+      ReferenceLine::unique_index_ = qMax(  match.captured( 1 ).toUInt(),
 					   ReferenceLine::unique_index_ );
     }
 
@@ -77,10 +81,10 @@ namespace Space2D {
     : Figure( id, name, lC::STR::REFERENCE_LINE, parent),
       line_( new ConstrainedLine( 0, name, this, 0 ) )
   {
-    QRegExp regexp( tr( "ReferenceLine\\[([0-9]+)\\]" ) );
-    int position = regexp.search( name );
-    if ( position >= 0 ) {
-      ReferenceLine::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+    QRegularExpression regexp( tr( "ReferenceLine\\[([0-9]+)\\]" ) );
+    QRegularExpressionMatch match = regexp.match( name );
+    if ( match.hasMatch() ) {
+      ReferenceLine::unique_index_ = qMax(  match.captured( 1 ).toUInt(),
 					   ReferenceLine::unique_index_ );
     }
 

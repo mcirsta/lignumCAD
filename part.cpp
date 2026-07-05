@@ -22,7 +22,7 @@
  */
 
 #include <qdom.h>
-#include <qregexp.h>
+#include <QRegularExpression>
 
 #include <BRepTools.hxx>
 
@@ -53,10 +53,10 @@ Part::Part ( uint id, const QDomElement& xml_rep, Model* parent )
 {
   setName( xml_rep.attribute( lC::STR::NAME ) );
 
-  QRegExp regexp( tr( "Part\\[([0-9]+)\\]" ) );
-  int position = regexp.search( name() );
-  if ( position >= 0 ) {
-    Part::unique_index_ = QMAX( regexp.cap(1).toUInt(), Part::unique_index_ );
+  QRegularExpression regexp( tr( "Part\\[([0-9]+)\\]" ) );
+  QRegularExpressionMatch match = regexp.match( name() );
+  if ( match.hasMatch() ) {
+    Part::unique_index_ = qMax(  match.captured( 1 ).toUInt(), Part::unique_index_ );
   }
 
   QDomNode n = xml_rep.firstChild();
@@ -97,7 +97,7 @@ void Part::write ( QDomElement& xml_rep ) const
   QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure )
-    figure.data()->write( part_element );
+    figure.value()->write( part_element );
 
   xml_rep.appendChild( part_element );
 }
@@ -134,10 +134,10 @@ Handle(Standard_Type) Part::lookupType ( QStringList& path_components ) const
   QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure ) {
-    if ( figure.data()->name() == name && figure.data()->type() == type ) {
+    if ( figure.value()->name() == name && figure.value()->type() == type ) {
       path_components.erase( path_components.begin() );
       if ( !path_components.empty() )
-	return figure.data()->lookupType( path_components );
+	return figure.value()->lookupType( path_components );
       else
 	break;
     }
@@ -148,14 +148,14 @@ Handle(Standard_Type) Part::lookupType ( QStringList& path_components ) const
 
 Handle(Standard_Type) Part::lookupType ( QVector<uint>& id_path ) const
 {
-  QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
+  QMap<uint,Figure*>::const_iterator figure = figures_.find( id_path[0] );
 
   if ( figure != figures_.end() ) {
     id_path.erase( id_path.begin() );
     if ( id_path.empty() )
       return Handle(Standard_Type)();
     else
-      return figure.data()->lookupType( id_path );
+      return figure.value()->lookupType( id_path );
   }
 
   return Handle(Standard_Type)();
@@ -169,15 +169,15 @@ TopoDS_Shape Part::lookupShape ( QStringList& path_components ) const
   QString name = path_components.front().left( dot_pos );
   QString type = path_components.front().right( path_components.front().length()
 						- dot_pos - 1 );
-  QMapConstIterator<uint,Figure*> figure = figures_.begin();
+  QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure ) {
-    if ( figure.data()->name() == name && figure.data()->type() == type ) {
+    if ( figure.value()->name() == name && figure.value()->type() == type ) {
       path_components.erase( path_components.begin() );
       if ( path_components.empty() )
 	return TopoDS_Shape();
       else
-	return figure.data()->lookupShape( path_components );
+	return figure.value()->lookupShape( path_components );
     }
   }
 
@@ -186,14 +186,14 @@ TopoDS_Shape Part::lookupShape ( QStringList& path_components ) const
 
 TopoDS_Shape Part::lookupShape ( QVector<uint>& id_path ) const
 {
-  QMapConstIterator<uint,Figure*> figure = figures_.find( id_path[0] );
+  QMap<uint,Figure*>::const_iterator figure = figures_.find( id_path[0] );
 
   if ( figure != figures_.end() ) {
     id_path.erase( id_path.begin() );
     if ( id_path.empty() )
       return TopoDS_Shape();
     else
-      return figure.data()->lookupShape( id_path );
+      return figure.value()->lookupShape( id_path );
   }
 
   return TopoDS_Shape();
@@ -212,10 +212,10 @@ QString Part::idPath ( QVector<uint> id_path ) const
   id_path.erase( id_path.begin() );
 
   if ( id_path.empty() )
-    return f.data()->name() + '.' + f.data()->type();
+    return f.value()->name() + '.' + f.value()->type();
 
-  return f.data()->name() + '.' + f.data()->type() + '/' +
-    f.data()->idPath( id_path );
+  return f.value()->name() + '.' + f.value()->type() + '/' +
+    f.value()->idPath( id_path );
 }
 
 void Part::pathID ( QStringList& path_components, QVector<uint>& id_path )const
@@ -230,13 +230,13 @@ void Part::pathID ( QStringList& path_components, QVector<uint>& id_path )const
   QMap<uint,Figure*>::const_iterator figure = figures_.begin();
 
   for ( ; figure != figures_.end(); ++figure ) {
-    if ( figure.data()->name() == name && figure.data()->type() == type ) {
-      id_path.push_back( figure.data()->id() );
+    if ( figure.value()->name() == name && figure.value()->type() == type ) {
+      id_path.push_back( figure.value()->id() );
 
       path_components.erase( path_components.begin() );
 
       if ( !path_components.empty() ) {
-	figure.data()->pathID( path_components, id_path );
+	figure.value()->pathID( path_components, id_path );
       }
     }
   }

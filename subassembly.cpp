@@ -24,7 +24,7 @@
 #include <algorithm>
 
 #include <qdom.h>
-#include <qregexp.h>
+#include <QRegularExpression>
 
 #include <BRep_Builder.hxx>
 #include <BRepTools.hxx>
@@ -67,10 +67,10 @@ Subassembly::Subassembly ( uint id, const QDomElement& xml_rep,
 {
   setName( xml_rep.attribute( lC::STR::NAME ) );
 
-  QRegExp regexp( tr("Subassembly\\[([0-9]+)\\]" ) );
-  int position = regexp.search( name() );
-  if ( position >= 0 ) {
-    Subassembly::unique_index_ = QMAX( regexp.cap(1).toUInt(),
+  QRegularExpression regexp( tr("Subassembly\\[([0-9]+)\\]" ) );
+  QRegularExpressionMatch match = regexp.match( name() );
+  if ( match.hasMatch() ) {
+    Subassembly::unique_index_ = qMax(  match.captured( 1 ).toUInt(),
 				       Subassembly::unique_index_ );
   }
 
