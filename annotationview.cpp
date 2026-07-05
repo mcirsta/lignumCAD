@@ -1030,12 +1030,12 @@ namespace Space2D {
 	font.fromString( view()->annotationFont() );
 
       QSimpleRichText text( annotation_->text(), font );
-      QColorGroup cg( parent()->parent()->appPalette() );
+      QPalette palette( parent()->parent()->appPalette() );
 
       if ( isHighlighted() || isActivated() )
-	cg.setColor( QColorGroup::Text, view()->annotationColor().light() );
+	palette.setColor( QPalette::Text, view()->annotationColor().light() );
       else
-	cg.setColor( QColorGroup::Text, view()->annotationColor() );
+	palette.setColor( QPalette::Text, view()->annotationColor() );
 
       // ***** NEEDS A RADICAL CHANGE IN THE MODELVIEW MATRIX **** //
       QRect clip = view()->newWindow( ltVertex(), size_ );
@@ -1047,7 +1047,7 @@ namespace Space2D {
       // Note: It might be worthwhile to cache the results of the draw.
       // The OGLPaintDevice gets a lot of commands from the RichText
       // formatter...
-      text.draw( &painter, 0, 0, clip, cg );
+      text.draw( &painter, 0, 0, clip, palette );
 
       view()->resetWindow();
 

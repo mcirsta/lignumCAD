@@ -55,7 +55,7 @@ void AnnotationInfoDialog::init()
         sizesComboBox->insertItem( QString::number( *it ) );
     
     QPixmap sample( 24, 24 );
-    sample.fill( annotationTextEdit->colorGroup().text() );
+    sample.fill( annotationTextEdit->palette().color( QPalette::Text ) );
     colorButton->setPixmap( sample );   
 }
 

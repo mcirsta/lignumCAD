@@ -29,7 +29,7 @@
 #include <QHash>
 #include <QWidget>
 #include <qobject.h>
-#include <qpalette.h>
+#include <QPalette>
 
 #include "constants.h"
 #include "view.h"
@@ -66,7 +66,7 @@ class DesignBookView : public QWidget, public View {
 Q_OBJECT
   lignumCADMainWindow* lCMW_;
 
-  QColorGroup app_palette_;
+  QPalette app_palette_;
 
   OpenGLView* opengl_view_;
   TabBarContext* page_tabbar_;
@@ -104,7 +104,7 @@ public:
 
   ListViewItem* modelListItem ( void ) const { return model_list_item_; }
 
-  QColorGroup appPalette ( void ) const { return app_palette_; }
+  QPalette appPalette ( void ) const { return app_palette_; }
 
   bool aboutToExit ( void );
 

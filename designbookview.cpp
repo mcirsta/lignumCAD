@@ -225,7 +225,7 @@ void DesignBookView::deletePageView ( PageView* page_view )
 
 void DesignBookView::init ( void )
 {
-  app_palette_ = qApp->desktop()->colorGroup();
+  app_palette_ = qApp->palette();
 
   // Recover the user's default settings.
   QSettings settings;
