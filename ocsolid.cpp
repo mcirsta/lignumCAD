@@ -232,8 +232,7 @@ namespace Space3D {
 
   QString OCSolid::idPath ( QVector<uint> id_path ) const
   {
-    __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
-      face_names_.begin();
+    FaceNameMap::const_iterator face = face_names_.begin();
 
     for ( ; face != face_names_.end(); ++face )
       if ( (*face).second == id_path[0] )
@@ -255,8 +254,7 @@ namespace Space3D {
     QString type = path_components.front().right( path_components.front().length()
 						  - dot_pos - 1 );
 
-    __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
-      face_names_.begin();
+    FaceNameMap::const_iterator face = face_names_.begin();
 
     for ( ; face != face_names_.end(); ++face )
       if ( PartFactory::instance()->name( (*face).second ) == name &&

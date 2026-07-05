@@ -25,7 +25,7 @@
 
 #include <functional>
 #include <map>
-#include <hash_map>
+#include <unordered_map>
 
 #include <QVector>
 
@@ -165,7 +165,7 @@ namespace Space3D {
   };
   /*!
    * OpenCASCADE provides a hashing function for its transient entities.
-   * This function is used to "name" faces in a std::hash_map.
+   * This function is used to "name" faces in a std::unordered_map.
    */
   struct lCShapeHasher {
     /*!
@@ -181,6 +181,8 @@ namespace Space3D {
     Q_OBJECT
 
   public:
+    using FaceNameMap = std::unordered_map< TopoDS_Face, uint, lCShapeHasher >;
+
     OCSolid ( uint id, const QString& name, Page* parent );
     OCSolid ( uint id, const QDomElement& xml_rep, Page* parent );
     OCSolid ( uint id, const QString& name,const QDomElement& xml_rep,Page* parent);
@@ -230,7 +232,7 @@ namespace Space3D {
      */
     QString faceName ( const TopoDS_Face& face ) const
     {
-      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face_name;
+      FaceNameMap::const_iterator face_name;
 
       face_name = face_names_.find( face );
 
@@ -246,8 +248,7 @@ namespace Space3D {
     {
       std::pair<QString,uint> name_id = PartFactory::instance()->name( name );
 
-      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
-	face_names_.begin();
+      FaceNameMap::const_iterator face = face_names_.begin();
 
       for ( ; face != face_names_.end(); ++face )
 	if ( (*face).second == name_id.second )
@@ -260,8 +261,7 @@ namespace Space3D {
      */
     const TopoDS_Face face ( uint id ) const
     {
-      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator face =
-	face_names_.begin();
+      FaceNameMap::const_iterator face = face_names_.begin();
       for ( ; face != face_names_.end(); ++face )
 	if ( (*face).second == id )
 	  return (*face).first;
@@ -281,8 +281,7 @@ namespace Space3D {
      */
     uint faceID ( const TopoDS_Face& face ) const
     {
-      __gnu_cxx::hash_map<TopoDS_Face,uint,lCShapeHasher>::const_iterator f =
-	face_names_.find( face );
+      FaceNameMap::const_iterator f = face_names_.find( face );
       if ( f != face_names_.end() )
 	return (*f).second;
 
@@ -485,7 +484,7 @@ signals:
     std::map<QString, const ConstructionDatum*> datums_;
 
     //! The mapping the face data structures to their names.
-    __gnu_cxx::hash_map< TopoDS_Face, uint, lCShapeHasher > face_names_;
+    FaceNameMap face_names_;
 
     //! The list of handles which are associated with each face.
     std::map<QString, QVector<uint> > face_handles_;
