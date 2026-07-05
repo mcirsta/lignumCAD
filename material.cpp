@@ -55,11 +55,11 @@ MaterialDatabase& MaterialDatabase::instance ( void )
 
 MaterialDatabase::MaterialDatabase ( void )
 {
-  materials_.setAutoDelete( true );
-
   QSettings settings;
   bool ok;
-  QString home = settings.readEntry( lC::Setting::HOME, lC::STR::HOME, &ok );
+  QString home =
+    lC::Setting::readString( settings, lC::Setting::HOME, &ok,
+			     lC::STR::HOME );
   QDir materials_dir( QString( "%1%2v%3.%4%5%6" ).
 		      arg( home ).arg( QDir::separator() ).
 		      arg( lC::STR::VERSION_MAJOR ).arg( lC::STR::VERSION_MINOR ).
@@ -68,14 +68,15 @@ MaterialDatabase::MaterialDatabase ( void )
   if ( !materials_dir.exists() ) return;
   QString image_path = materials_dir.filePath( lC::STR::IMAGES );
 
-  const QFileInfoList* files = materials_dir.entryInfoList(lC::STR::XML_FILE_PATERN,
-						      QDir::Files | QDir::Readable);
-  QFileInfoListIterator file( *files );
-  for ( ; file.current() != 0; ++file ) {
-    QFile material_file( file.current()->absFilePath() );
+  const QFileInfoList files =
+    materials_dir.entryInfoList( QStringList( lC::STR::XML_FILE_PATERN ),
+				 QDir::Files | QDir::Readable );
+
+  for ( const QFileInfo& file : files ) {
+    QFile material_file( file.absoluteFilePath() );
     QDomDocument doc( lC::STR::LIGNUMCAD );
  
-    if ( material_file.open( IO_ReadOnly ) ) {
+    if ( material_file.open( QIODevice::ReadOnly ) ) {
       QString errorString;
       int line, column;
       doc.setContent( &material_file, false, &errorString, &line, &column );

@@ -22,8 +22,8 @@
  */
 #include <qlineedit.h>
 #include <qtoolbutton.h>
-#include <qtooltip.h>
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QPixmap>
 
 #include "constants.h"
@@ -32,10 +32,11 @@
 #include "lcdebug.h"
 
 lCLengthSpinBox::lCLengthSpinBox( QWidget *parent, const char *name )
-  : QSpinBox( parent, name ), length_unit_( 0 )
+  : QSpinBox( parent ), length_unit_( 0 )
 {
-  setValidator( 0 );
-  updateDisplay();
+  setObjectName( name );
+  lineEdit()->setValidator( 0 );
+  refreshDisplay();
 }
 
 void lCLengthSpinBox::setLengthUnit ( const LengthUnit* length_unit,
@@ -45,7 +46,7 @@ void lCLengthSpinBox::setLengthUnit ( const LengthUnit* length_unit,
   format_ = format;
   precision_ = length_unit_->precisionTable( format_ )->count() - 1;
 
-  updateDisplay();
+  refreshDisplay();
 }
 
 void lCLengthSpinBox::setLengthLimits ( const LengthUnit* length_unit,
@@ -59,10 +60,10 @@ void lCLengthSpinBox::setLengthLimits ( const LengthUnit* length_unit,
   min_ = length_unit_->round( format_, precision_, min );
   max_ = length_unit_->round( format_, precision_, max );
   double units_per_in = length_unit_->precision( format_, precision_)->unitsPerIn();
-  setMinValue( (int)rint( min_ * units_per_in ) );
-  setMaxValue( (int)rint( max_ * units_per_in ) );
+  setRange( (int)rint( min_ * units_per_in ),
+	    (int)rint( max_ * units_per_in ) );
 
-  updateDisplay();
+  refreshDisplay();
 }
 
 void lCLengthSpinBox::setLengthLimits ( const LengthUnit* length_unit,
@@ -77,10 +78,10 @@ void lCLengthSpinBox::setLengthLimits ( const LengthUnit* length_unit,
   min_ = length_unit_->round( format_, precision_, min );
   max_ = length_unit_->round( format_, precision_, max );
   double units_per_in = length_unit_->precision( format_, precision_)->unitsPerIn();
-  setMinValue( (int)rint( min_ * units_per_in ) );
-  setMaxValue( (int)rint( max_ * units_per_in ) );
+  setRange( (int)rint( min_ * units_per_in ),
+	    (int)rint( max_ * units_per_in ) );
 
-  updateDisplay();
+  refreshDisplay();
 }
 
 void lCLengthSpinBox::setLength ( double length )
@@ -88,7 +89,7 @@ void lCLengthSpinBox::setLength ( double length )
   if ( length_unit_ == 0 ) return;
 
   setValue( (int)rint( ( length - min_ ) / ( max_ - min_ ) *
-		       ( maxValue() - minValue() ) + minValue() ) );
+		       ( maximum() - minimum() ) + minimum() ) );
 }
 
 double lCLengthSpinBox::length ( void ) const
@@ -96,8 +97,8 @@ double lCLengthSpinBox::length ( void ) const
   if ( length_unit_ == 0 ) return 0;
 
   return length_unit_->round( format_, precision_,
-			      (double)( QSpinBox::value() - minValue() ) /
-			      ( maxValue() - minValue() ) *
+			      (double)( QSpinBox::value() - minimum() ) /
+			      ( maximum() - minimum() ) *
 			      ( max_ - min_ ) + min_ );
 }
 
@@ -106,8 +107,8 @@ double lCLengthSpinBox::length ( int value ) const
   if ( length_unit_ == 0 ) return 0;
 
   return length_unit_->round( format_, precision_,
-			      (double)( value - minValue() ) /
-			      ( maxValue() - minValue() ) *
+			      (double)( value - minimum() ) /
+			      ( maximum() - minimum() ) *
 			      ( max_ - min_ ) + min_ );
 }
 
@@ -116,10 +117,10 @@ int lCLengthSpinBox::value ( double length ) const
   if ( length_unit_ == 0 ) return 0;
 
   return (int)rint( ( length - min_ ) / ( max_ - min_ ) *
-		    ( maxValue() - minValue() ) + minValue() );
+		    ( maximum() - minimum() ) + minimum() );
 }
 
-QString lCLengthSpinBox::mapValueToText ( int value )
+QString lCLengthSpinBox::textFromValue ( int value ) const
 {
   if ( length_unit_ == 0 ) return tr( "no units" );
   // Until we can figure how to get the lCSymbols into Qt, have to take
@@ -127,23 +128,28 @@ QString lCLengthSpinBox::mapValueToText ( int value )
   return length_unit_->format( format_, precision_, length( value ), false );
 }
 
-int lCLengthSpinBox::mapTextToValue ( bool* ok )
+int lCLengthSpinBox::valueFromText ( const QString& text ) const
 {
-  if ( length_unit_ == 0 ) {
-    *ok = false;
+  if ( length_unit_ == 0 )
     return 0;
-  }
 
-  *ok = true;
-
-  double length = length_unit_->parse( text(), format_, precision_ );
+  double length = length_unit_->parse( text, format_, precision_ );
 
   if ( length >= min_ && length <= max_ )
     return value( length );
-  else
-    *ok = false;
 
-  return minValue();
+  return minimum();
+}
+
+QValidator::State lCLengthSpinBox::validate ( QString& /*input*/,
+					      int& /*pos*/ ) const
+{
+  return QValidator::Acceptable;
+}
+
+void lCLengthSpinBox::refreshDisplay ( void )
+{
+  lineEdit()->setText( textFromValue( QSpinBox::value() ) );
 }
 
 lCDefaultLengthSpinBox::lCDefaultLengthSpinBox( QWidget *parent, const char *name )
@@ -157,15 +163,15 @@ lCDefaultLengthSpinBox::lCDefaultLengthSpinBox( QWidget *parent, const char *nam
 
   spin_box_ = new lCLengthSpinBox( this, "spinbox" );
 
-  default_ = new QToolButton( this, "default" );
+  default_ = new QToolButton( this );
+  default_->setObjectName( "default" );
 
-  QToolTip::add( default_,
-		 tr( "Click this button to restore the default value" ) );
+  default_->setToolTip( tr( "Click this button to restore the default value" ) );
 
-  QIconSet icon( QPixmap( ":/images/default_active.png" ) );
-  icon.setPixmap( QPixmap( ":/images/default_inactive.png" ),
-		  QIconSet::Automatic, QIconSet::Disabled );
-  default_->setIconSet( icon );
+  QIcon icon;
+  icon.addPixmap( QPixmap( ":/images/default_active.png" ), QIcon::Normal );
+  icon.addPixmap( QPixmap( ":/images/default_inactive.png" ), QIcon::Disabled );
+  default_->setIcon( icon );
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( spin_box_->sizeHint().height()-2 );

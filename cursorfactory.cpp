@@ -22,6 +22,8 @@
  */
 #include <qbitmap.h>
 #include <QtAlgorithms>
+#include <QImage>
+#include <QSize>
 
 #include "cursorfactory.h"
 
@@ -57,8 +59,9 @@ CursorFactory CursorFactory::cursor_factory_;
 namespace {
   inline QCursor* createCursor ( uchar bits[], uchar mask[],
 				 int width, int height, int x_hot, int y_hot ) {
-    QBitmap bits_bm( width, height, bits, true );
-    QBitmap mask_bm( width, height, mask, true );
+    const QSize size( width, height );
+    QBitmap bits_bm = QBitmap::fromData( size, bits, QImage::Format_MonoLSB );
+    QBitmap mask_bm = QBitmap::fromData( size, mask, QImage::Format_MonoLSB );
     return new QCursor( bits_bm, mask_bm, x_hot, y_hot );
   }
 }

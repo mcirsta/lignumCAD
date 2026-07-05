@@ -64,6 +64,10 @@ public:
   DBURL ( const QUrl& url, const QString& relURL )
     : QUrl( url.resolved( QUrl( relURL ) ) )
   {}
+  /*!
+   * Encode model paths for use in DB URLs while preserving path separators.
+   */
+  static QString encodedPath ( const QString& path );
   using QUrl::toString;
   QString toString ( bool encoded_path ) const;
   /*!

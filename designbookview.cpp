@@ -42,6 +42,7 @@
 #include <qpicture.h>
 #include <qslider.h>
 #include <qlayout.h>
+#include <QPrintDialog>
 #include <QSignalBlocker>
 #include <QVBoxLayout>
 
@@ -245,37 +246,38 @@ void DesignBookView::init ( void )
   bool ok;
 
   QString business_name =
-    settings.readEntry( lC::Setting::Business::NAME, QString(), &ok );
+    lC::Setting::readString( settings, lC::Setting::Business::NAME, &ok );
 
   if ( ok )
     BusinessInfo::instance().setName( business_name );
 
   QString business_location =
-    settings.readEntry( lC::Setting::Business::LOCATION, QString(), &ok );
+    lC::Setting::readString( settings, lC::Setting::Business::LOCATION, &ok );
 
   if ( ok )
     BusinessInfo::instance().setLocation( business_location );
 
   QString business_logo =
-    settings.readEntry( lC::Setting::Business::LOGO, QString(), &ok );
+    lC::Setting::readString( settings, lC::Setting::Business::LOGO, &ok );
 
   if ( ok )
     BusinessInfo::instance().setLogo( business_logo );
 
   QStringList length_unit =
-    settings.readListEntry( lC::Setting::LENGTH_UNIT, ',', &ok );
+    lC::Setting::readStringList( settings, lC::Setting::LENGTH_UNIT, &ok );
 
   if ( ok )
     UnitsBasis::instance()->setLengthUnit( length_unit );
 
   QString scheme =
-    settings.readEntry( lC::Setting::ColorScheme::BASE );
+    lC::Setting::readString( settings, lC::Setting::ColorScheme::BASE );
 
   if ( !scheme.isEmpty() )
     OpenGLGlobals::instance()->setDefaultScheme( scheme );
 
   bool custom =
-    settings.readBoolEntry( lC::Setting::ColorScheme::CUSTOM, false, &ok );
+    lC::Setting::readBool( settings, lC::Setting::ColorScheme::CUSTOM, false,
+			   &ok );
 
   if ( ok ) {
     if ( !custom ) {
@@ -287,71 +289,80 @@ void DesignBookView::init ( void )
 
       QString color_name;
 
-      color_name = settings.
-	readEntry( lC::Setting::ColorScheme::GEOMETRY, QString(), &ok );
+      color_name = lC::Setting::readString( settings,
+					    lC::Setting::ColorScheme::GEOMETRY,
+					    &ok );
 
       if ( ok ) {
 	QColor color( color_name );
 	OpenGLGlobals::instance()->setGeometryColor( color );
       }
 
-      color_name = settings.
-	readEntry( lC::Setting::ColorScheme::ANNOTATION, QString(), &ok );
+      color_name = lC::Setting::readString( settings,
+					    lC::Setting::ColorScheme::ANNOTATION,
+					    &ok );
 
       if ( ok ) {
 	QColor color( color_name );
 	OpenGLGlobals::instance()->setAnnotationColor( color );
       }
 
-      color_name = settings.
-	readEntry( lC::Setting::ColorScheme::GRID, QString(), &ok );
+      color_name = lC::Setting::readString( settings,
+					    lC::Setting::ColorScheme::GRID,
+					    &ok );
 
       if ( ok ) {
 	QColor color( color_name );
 	OpenGLGlobals::instance()->setGridColor( color );
       }
 
-      color_name = settings.
-	readEntry( lC::Setting::ColorScheme::CONSTRAINT_PRIMARY, QString(),&ok);
+      color_name = lC::Setting::readString( settings,
+					    lC::Setting::ColorScheme::
+					    CONSTRAINT_PRIMARY, &ok );
 
       if ( ok ) {
 	QColor color( color_name );
 	OpenGLGlobals::instance()->setConstraintPrimaryColor( color );
       }
 
-      color_name = settings.
-	readEntry(lC::Setting::ColorScheme::CONSTRAINT_SECONDARY,QString(),&ok);
+      color_name = lC::Setting::readString( settings,
+					    lC::Setting::ColorScheme::
+					    CONSTRAINT_SECONDARY, &ok );
 
       if ( ok ) {
 	QColor color( color_name );
 	OpenGLGlobals::instance()->setConstraintSecondaryColor( color );
       }
 
-      QString style = settings.
-        readEntry( lC::Setting::ColorScheme::BACKGROUND_STYLE, QString(), &ok );
+      QString style = lC::Setting::readString( settings,
+					       lC::Setting::ColorScheme::
+					       BACKGROUND_STYLE, &ok );
 
       if ( ok )
 	OpenGLGlobals::instance()->
 	  setBackgroundStyle( lC::Background::backgroundStyle( style ) );
 
-      color_name = settings.
-	readEntry( lC::Setting::ColorScheme::BACKGROUND, QString(), &ok );
+      color_name = lC::Setting::readString( settings,
+					    lC::Setting::ColorScheme::BACKGROUND,
+					    &ok );
 
       if ( ok ) {
 	QColor color( color_name );
 	OpenGLGlobals::instance()->setBackgroundColor( color );
       }
 
-      color_name = settings.
-	readEntry( lC::Setting::ColorScheme::GRADIENT, QString(), &ok );
+      color_name = lC::Setting::readString( settings,
+					    lC::Setting::ColorScheme::GRADIENT,
+					    &ok );
 
       if ( ok ) {
 	QColor color( color_name );
 	OpenGLGlobals::instance()->setGradientColor( color );
       }
 
-      QString pattern_file = settings.
-	readEntry( lC::Setting::ColorScheme::PATTERN_FILE, QString(), &ok );
+      QString pattern_file =
+	lC::Setting::readString( settings,
+				 lC::Setting::ColorScheme::PATTERN_FILE, &ok );
 
       if ( ok )
 	OpenGLGlobals::instance()->setPatternFile( pattern_file );
@@ -359,57 +370,66 @@ void DesignBookView::init ( void )
   }
 
   QString dimension_font =
-    settings.readEntry( lC::Setting::Dimension::FONT );
+    lC::Setting::readString( settings, lC::Setting::Dimension::FONT );
 
   if ( !dimension_font.isEmpty() )
     OpenGLGlobals::instance()->setDimensionFont( dimension_font );
 
   double arrow_head_length =
-    settings.readDoubleEntry( lC::Setting::Dimension::ARROW_HEAD_LENGTH, 0, &ok );
+    lC::Setting::readDouble( settings,
+			     lC::Setting::Dimension::ARROW_HEAD_LENGTH, 0,
+			     &ok );
 
   if ( ok )
     OpenGLGlobals::instance()->setArrowHeadLength( arrow_head_length );
 
   int arrow_head_width_ratio =
-    settings.readNumEntry( lC::Setting::Dimension::ARROW_HEAD_WIDTH_RATIO, 0, &ok );
+    lC::Setting::readInt( settings,
+			  lC::Setting::Dimension::ARROW_HEAD_WIDTH_RATIO, 0,
+			  &ok );
 
   if ( ok )
     OpenGLGlobals::instance()->
       setArrowHeadWidthRatio( Ratio( arrow_head_width_ratio ) );
 
   QString arrow_head_style =
-    settings.readEntry( lC::Setting::Dimension::ARROW_HEAD_STYLE,QString(),&ok);
+    lC::Setting::readString( settings,
+			     lC::Setting::Dimension::ARROW_HEAD_STYLE, &ok );
 
   if ( ok )
     OpenGLGlobals::instance()->
       setArrowHeadStyle( lC::arrowHeadStyle( arrow_head_style ) );
 
   double clearance =
-    settings.readDoubleEntry( lC::Setting::Dimension::CLEARANCE, 0, &ok );
+    lC::Setting::readDouble( settings, lC::Setting::Dimension::CLEARANCE, 0,
+			     &ok );
 
   if ( ok )
     OpenGLGlobals::instance()->setClearance( clearance );
 
   double line_thickness =
-    settings.readDoubleEntry( lC::Setting::Dimension::LINE_THICKNESS, 0, &ok );
+    lC::Setting::readDouble( settings, lC::Setting::Dimension::LINE_THICKNESS,
+			     0, &ok );
 
   if ( ok )
     OpenGLGlobals::instance()->setLineThickness( line_thickness );
 
   double extension_line_offset =
-    settings.readDoubleEntry( lC::Setting::Dimension::EXTENSION_LINE_OFFSET, 0,&ok);
+    lC::Setting::readDouble( settings,
+			     lC::Setting::Dimension::EXTENSION_LINE_OFFSET, 0,
+			     &ok );
 
   if ( ok )
     OpenGLGlobals::instance()->setExtensionLineOffset( extension_line_offset );
 
   QString annotation_font =
-    settings.readEntry( lC::Setting::Annotation::FONT );
+    lC::Setting::readString( settings, lC::Setting::Annotation::FONT );
 
   if ( !annotation_font.isEmpty() )
     OpenGLGlobals::instance()->setAnnotationFont( annotation_font );
 
   double handle_size =
-    settings.readDoubleEntry( lC::Setting::Handle::SIZE, 0, &ok );
+    lC::Setting::readDouble( settings, lC::Setting::Handle::SIZE, 0, &ok );
 
   if ( ok )
     OpenGLGlobals::instance()->setHandleSize( handle_size );
@@ -422,7 +442,7 @@ void DesignBookView::init ( void )
   opengl_view_->setFocus();
 
   page_tabbar_ = new TabBarContext( this, "pageTabBarContext" );
-  page_tabbar_->setShape( QTabBar::RoundedBelow );
+  page_tabbar_->setShape( QTabBar::RoundedSouth );
 
   QVBoxLayout* layout = new QVBoxLayout( this );
   layout->setContentsMargins( 0, 0, 0, 0 );
@@ -922,30 +942,24 @@ void DesignBookView::editPreferences ( void )
     QString name = preferences_dialog_->businessNameLineEdit->text();
     BusinessInfo::instance().setName( name );
 
-    if ( !name.isEmpty() )
-      settings.writeEntry( lC::Setting::Business::NAME, name );
-    else
-      settings.removeEntry( lC::Setting::Business::NAME );
+    lC::Setting::setStringOrRemove( settings, lC::Setting::Business::NAME,
+				    name );
   }
 
   if ( preferences_dialog_->businessLocationLineEdit->isModified() ) {
     QString location = preferences_dialog_->businessLocationLineEdit->text();
     BusinessInfo::instance().setLocation( location );
 
-    if ( !location.isEmpty() )
-      settings.writeEntry( lC::Setting::Business::LOCATION, location );
-    else
-      settings.removeEntry( lC::Setting::Business::LOCATION );
+    lC::Setting::setStringOrRemove( settings, lC::Setting::Business::LOCATION,
+				    location );
   }
 
   if ( preferences_dialog_->logoFileChooser->edited() ) {
     QString logo = preferences_dialog_->logoFileChooser->fileName();
     BusinessInfo::instance().setLogo( logo );
 
-    if ( !logo.isEmpty() )
-      settings.writeEntry( lC::Setting::Business::LOGO, logo );
-    else
-      settings.removeEntry( lC::Setting::Business::LOGO );
+    lC::Setting::setStringOrRemove( settings, lC::Setting::Business::LOGO,
+				    logo );
   }
 
   // Recover any changes made to the default unit preference.
@@ -989,7 +1003,7 @@ void DesignBookView::editPreferences ( void )
 
     length_unit << QString::number( UnitsBasis::instance()->precision() );
 
-    settings.writeEntry( lC::Setting::LENGTH_UNIT, length_unit, ',' );
+    settings.setValue( lC::Setting::LENGTH_UNIT, length_unit );
   }
 
   // Recover any changes made to the default color scheme preference.
@@ -1011,16 +1025,16 @@ void DesignBookView::editPreferences ( void )
 	setScheme( preferences_dialog_->colorSchemeListBox->currentRow() );
     }
 
-    settings.writeEntry( lC::Setting::ColorScheme::CUSTOM, false );
+    settings.setValue( lC::Setting::ColorScheme::CUSTOM, false );
 
-    settings.writeEntry( lC::Setting::ColorScheme::BASE,
-			 OpenGLGlobals::instance()->scheme().name() );
+    settings.setValue( lC::Setting::ColorScheme::BASE,
+		       OpenGLGlobals::instance()->scheme().name() );
   }
   else {
-    settings.writeEntry( lC::Setting::ColorScheme::CUSTOM, true );
+    settings.setValue( lC::Setting::ColorScheme::CUSTOM, true );
 
-    settings.writeEntry( lC::Setting::ColorScheme::BASE,
-			 OpenGLGlobals::instance()->scheme().name() );
+    settings.setValue( lC::Setting::ColorScheme::BASE,
+		       OpenGLGlobals::instance()->scheme().name() );
 
     if ( OpenGLGlobals::instance()->isPredefinedScheme() )
       OpenGLGlobals::instance()->setPredefinedScheme( false );
@@ -1029,24 +1043,24 @@ void DesignBookView::editPreferences ( void )
       OpenGLGlobals::instance()->
 	setGeometryColor( preferences_dialog_->geometryColorChooser->color() );
 
-      settings.writeEntry( lC::Setting::ColorScheme::GEOMETRY,
-			   OpenGLGlobals::instance()->geometryColor().name() );
+      settings.setValue( lC::Setting::ColorScheme::GEOMETRY,
+			 OpenGLGlobals::instance()->geometryColor().name() );
     }
 
     if ( preferences_dialog_->annotationColorChooser->edited() ) {
       OpenGLGlobals::instance()->
 	setAnnotationColor( preferences_dialog_->annotationColorChooser->color() );
 
-      settings.writeEntry( lC::Setting::ColorScheme::ANNOTATION,
-			   OpenGLGlobals::instance()->annotationColor().name() );
+      settings.setValue( lC::Setting::ColorScheme::ANNOTATION,
+			 OpenGLGlobals::instance()->annotationColor().name() );
     }
 
     if ( preferences_dialog_->gridColorChooser->edited() ) {
       OpenGLGlobals::instance()->
 	setGridColor( preferences_dialog_->gridColorChooser->color() );
 
-      settings.writeEntry( lC::Setting::ColorScheme::GRID,
-			   OpenGLGlobals::instance()->gridColor().name() );
+      settings.setValue( lC::Setting::ColorScheme::GRID,
+			 OpenGLGlobals::instance()->gridColor().name() );
     }
 
     if ( preferences_dialog_->constraintPrimaryColorChooser->edited() ) {
@@ -1054,9 +1068,9 @@ void DesignBookView::editPreferences ( void )
 	setConstraintPrimaryColor( preferences_dialog_->
 				   constraintPrimaryColorChooser->color() );
 
-      settings.writeEntry( lC::Setting::ColorScheme::CONSTRAINT_PRIMARY,
-			   OpenGLGlobals::instance()->
-			   constraintPrimaryColor().name() );
+      settings.setValue( lC::Setting::ColorScheme::CONSTRAINT_PRIMARY,
+			 OpenGLGlobals::instance()->
+			 constraintPrimaryColor().name() );
     }
 
     if ( preferences_dialog_->constraintSecondaryColorChooser->edited() ) {
@@ -1064,9 +1078,9 @@ void DesignBookView::editPreferences ( void )
 	setConstraintSecondaryColor( preferences_dialog_->
 				     constraintSecondaryColorChooser->color() );
 
-      settings.writeEntry( lC::Setting::ColorScheme::CONSTRAINT_SECONDARY,
-			   OpenGLGlobals::instance()->
-			   constraintSecondaryColor().name() );
+      settings.setValue( lC::Setting::ColorScheme::CONSTRAINT_SECONDARY,
+			 OpenGLGlobals::instance()->
+			 constraintSecondaryColor().name() );
     }
 
     if ( preferences_dialog_->backgroundSlider->value() !=
@@ -1075,9 +1089,10 @@ void DesignBookView::editPreferences ( void )
 	setBackgroundStyle( (lC::Background::Style)preferences_dialog_->
 			    backgroundSlider->value() );
 
-      settings.writeEntry( lC::Setting::ColorScheme::BACKGROUND_STYLE,
-		    lC::Background::backgroundStyleText( OpenGLGlobals::instance()->
-							 backgroundStyle() ) );
+      settings.setValue( lC::Setting::ColorScheme::BACKGROUND_STYLE,
+			 lC::Background::backgroundStyleText( OpenGLGlobals::
+							      instance()->
+							      backgroundStyle() ) );
     }
 
     if ( preferences_dialog_->solidBackgroundColorChooser->edited() ) {
@@ -1085,8 +1100,8 @@ void DesignBookView::editPreferences ( void )
 	setBackgroundColor( preferences_dialog_->solidBackgroundColorChooser->
 			    color() );
 
-      settings.writeEntry( lC::Setting::ColorScheme::BACKGROUND,
-			   OpenGLGlobals::instance()->backgroundColor().name() );
+      settings.setValue( lC::Setting::ColorScheme::BACKGROUND,
+			 OpenGLGlobals::instance()->backgroundColor().name() );
     }
 
     if ( preferences_dialog_->gradientBackgroundColorChooser->edited() ) {
@@ -1094,8 +1109,8 @@ void DesignBookView::editPreferences ( void )
 	setGradientColor( preferences_dialog_->gradientBackgroundColorChooser->
 			  color() );
 
-      settings.writeEntry( lC::Setting::ColorScheme::GRADIENT,
-			   OpenGLGlobals::instance()->gradientColor().name() );
+      settings.setValue( lC::Setting::ColorScheme::GRADIENT,
+			 OpenGLGlobals::instance()->gradientColor().name() );
     }
 
     if ( preferences_dialog_->patternBackgroundFileChooser->edited() ) {
@@ -1103,8 +1118,8 @@ void DesignBookView::editPreferences ( void )
 	setPatternFile( preferences_dialog_->patternBackgroundFileChooser->
 			fileName() );
 
-      settings.writeEntry( lC::Setting::ColorScheme::PATTERN_FILE,
-			   OpenGLGlobals::instance()->patternFile() );
+      settings.setValue( lC::Setting::ColorScheme::PATTERN_FILE,
+			 OpenGLGlobals::instance()->patternFile() );
     }
   }
   // This may be surprising to the user. The attributes themselves
@@ -1121,10 +1136,8 @@ void DesignBookView::editPreferences ( void )
     QString font = preferences_dialog_->dimensionFontChooser->font();
     OpenGLGlobals::instance()->setDimensionFont( font );
 
-    if ( !font.isEmpty() )
-      settings.writeEntry( lC::Setting::Dimension::FONT, font );
-    else
-      settings.removeEntry( lC::Setting::Dimension::FONT );
+    lC::Setting::setStringOrRemove( settings, lC::Setting::Dimension::FONT,
+				    font );
   }
 
   if ( preferences_dialog_->arrowHeadLengthSpinBox->length()
@@ -1132,8 +1145,8 @@ void DesignBookView::editPreferences ( void )
     OpenGLGlobals::instance()->
       setArrowHeadLength( preferences_dialog_->arrowHeadLengthSpinBox->length() );
 
-    settings.writeEntry( lC::Setting::Dimension::ARROW_HEAD_LENGTH,
-			 OpenGLGlobals::instance()->arrowHeadLength() );
+    settings.setValue( lC::Setting::Dimension::ARROW_HEAD_LENGTH,
+		       OpenGLGlobals::instance()->arrowHeadLength() );
   }
 
   if ( preferences_dialog_->arrowHeadWidthRatioSpinBox->ratio()
@@ -1142,8 +1155,8 @@ void DesignBookView::editPreferences ( void )
       setArrowHeadWidthRatio( preferences_dialog_->arrowHeadWidthRatioSpinBox->
 			      ratio() );
 
-    settings.writeEntry( lC::Setting::Dimension::ARROW_HEAD_WIDTH_RATIO,
-			 OpenGLGlobals::instance()->arrowHeadWidthRatio().serial());
+    settings.setValue( lC::Setting::Dimension::ARROW_HEAD_WIDTH_RATIO,
+		       OpenGLGlobals::instance()->arrowHeadWidthRatio().serial());
   }
 
   if ( preferences_dialog_->arrowHeadStyleComboBox->value()
@@ -1152,9 +1165,9 @@ void DesignBookView::editPreferences ( void )
       setArrowHeadStyle( (lC::ArrowHeadStyle)preferences_dialog_->
 			 arrowHeadStyleComboBox->value() );
 
-    settings.writeEntry( lC::Setting::Dimension::ARROW_HEAD_STYLE,
-			 lC::arrowHeadStyleText( OpenGLGlobals::instance()->
-						 arrowHeadStyle() ) );
+    settings.setValue( lC::Setting::Dimension::ARROW_HEAD_STYLE,
+		       lC::arrowHeadStyleText( OpenGLGlobals::instance()->
+					       arrowHeadStyle() ) );
   }
 
   if ( preferences_dialog_->clearanceLengthSpinBox->length()
@@ -1162,8 +1175,8 @@ void DesignBookView::editPreferences ( void )
     OpenGLGlobals::instance()->
       setClearance( preferences_dialog_->clearanceLengthSpinBox->length() );
 
-    settings.writeEntry( lC::Setting::Dimension::CLEARANCE,
-			 OpenGLGlobals::instance()->clearance() );
+    settings.setValue( lC::Setting::Dimension::CLEARANCE,
+		       OpenGLGlobals::instance()->clearance() );
   }
 
   if ( preferences_dialog_->lineThicknessLengthSpinBox->length()
@@ -1171,8 +1184,8 @@ void DesignBookView::editPreferences ( void )
     OpenGLGlobals::instance()->
       setLineThickness( preferences_dialog_->lineThicknessLengthSpinBox->length() );
 
-    settings.writeEntry( lC::Setting::Dimension::LINE_THICKNESS,
-			 OpenGLGlobals::instance()->lineThickness() );
+    settings.setValue( lC::Setting::Dimension::LINE_THICKNESS,
+		       OpenGLGlobals::instance()->lineThickness() );
   }
 
   if ( preferences_dialog_->extensionOffsetLengthSpinBox->length()
@@ -1181,18 +1194,16 @@ void DesignBookView::editPreferences ( void )
       setExtensionLineOffset( preferences_dialog_->extensionOffsetLengthSpinBox->
 			      length() );
 
-    settings.writeEntry( lC::Setting::Dimension::EXTENSION_LINE_OFFSET,
-			OpenGLGlobals::instance()->extensionLineOffset() );
+    settings.setValue( lC::Setting::Dimension::EXTENSION_LINE_OFFSET,
+		       OpenGLGlobals::instance()->extensionLineOffset() );
   }
 
   if ( preferences_dialog_->annotationFontChooser->edited() ) {
     QString font = preferences_dialog_->annotationFontChooser->font();
     OpenGLGlobals::instance()->setAnnotationFont( font );
 
-    if ( !font.isEmpty() )
-      settings.writeEntry( lC::Setting::Annotation::FONT, font );
-    else
-      settings.removeEntry( lC::Setting::Annotation::FONT );
+    lC::Setting::setStringOrRemove( settings, lC::Setting::Annotation::FONT,
+				    font );
   }
 
   if ( preferences_dialog_->handleLengthSpinBox->length()
@@ -1200,8 +1211,8 @@ void DesignBookView::editPreferences ( void )
     OpenGLGlobals::instance()->
       setHandleSize( preferences_dialog_->handleLengthSpinBox->length() );
 
-    settings.writeEntry( lC::Setting::Handle::SIZE,
-			 OpenGLGlobals::instance()->handleSize() );
+    settings.setValue( lC::Setting::Handle::SIZE,
+		       OpenGLGlobals::instance()->handleSize() );
   }
 }
 
@@ -1288,7 +1299,7 @@ void DesignBookView::deletePage ( void )
     QStringList usage_name_list;
     for ( size_t i = 0; i < usages.size(); ++i )
       usage_name_list << QString( "%1.%2" ).arg( usages.at(i)->name() ).
-	arg( tr( usages.at(i)->type() ) );
+	arg( trC( usages.at(i)->type() ) );
 
     QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
 		    tr( "<p>You cannot delete \"%1\" because it is referenced by "
@@ -1517,11 +1528,10 @@ void DesignBookView::open ( void )
   }
 
   QString file_name =
-    QFileDialog::getOpenFileName( QString(),
-                                  tr( "lignumCAD (*.lcad);;All Files (*)" ),
-                                  0,
-                                  "open file dialog",
-                                  tr( "Choose a file" ) );
+    QFileDialog::getOpenFileName( lCMW_,
+                                  tr( "Choose a file" ),
+                                  QString(),
+                                  tr( "lignumCAD (*.lcad);;All Files (*)" ) );
 
   if ( file_name.isEmpty() )
     return;
@@ -1566,11 +1576,10 @@ bool DesignBookView::saveAs ( void )
   else
     file_name = model_->writeFileName();
 
-  file_name = QFileDialog::getSaveFileName( file_name,
-					   tr( "lignumCAD (*.lcad);;All Files (*)"),
-					    0,
-					    "save file dialog",
-					    tr( "Choose a file" ) );
+  file_name = QFileDialog::getSaveFileName( lCMW_,
+					    tr( "Choose a file" ),
+					    file_name,
+					    tr( "lignumCAD (*.lcad);;All Files (*)" ) );
   if ( !file_name.isEmpty() ) {
  
     if ( !file_name.endsWith( lC::STR::LCAD_FILE_EXT ) )
@@ -1607,9 +1616,9 @@ void DesignBookView::print ( void )
 			arg( lC::STR::VERSION_MAJOR ).
 			arg( lC::STR::VERSION_MINOR ) );
 
-  bool ok = printer_->setup();
-
-  if ( !ok ) return;
+  QPrintDialog print_dialog( printer_, lCMW_ );
+  if ( print_dialog.exec() != QDialog::Accepted )
+    return;
 
   printing_ = true;
 
@@ -1631,7 +1640,7 @@ void DesignBookView::print ( void )
   // units of DOTS [aka device units]), but the upper left corner is
   // (0,0) in window coodinates.
 
-  margin.moveBy( -margin.x(), -margin.y() );
+  margin.translate( -margin.x(), -margin.y() );
 
   // Reverse the polarity of the Y axis here.
   painter.setWindow( 0, margin.height(), margin.width(), -margin.height() );
@@ -1675,11 +1684,10 @@ void DesignBookView::exportPage ( void )
   if ( page_view == 0 ) return;
 
   QString export_file =
-    QFileDialog::getSaveFileName( QString(),
-				  tr( "EMF (*.emf)" ),
-				  lCMW_,
-				  "export file dialog",
-				  tr( "Enter a file name for page export" ) );
+    QFileDialog::getSaveFileName( lCMW_,
+				  tr( "Enter a file name for page export" ),
+				  QString(),
+				  tr( "EMF (*.emf)" ) );
 
   if ( export_file.isEmpty() ) return;
 
@@ -1703,11 +1711,11 @@ bool DesignBookView::read ( const QString file_name )
   QFile f( file_name );
   QDomDocument doc( lC::STR::LIGNUMCAD );
  
-  if ( f.open( IO_ReadOnly ) ) {
+  if ( f.open( QIODevice::ReadOnly ) ) {
     QString errorString;
     int line, column;
     if ( !doc.setContent( &f, false, &errorString, &line, &column ) ) {
-      QMessageBox::information( qApp->mainWidget(),
+      QMessageBox::information( lCMW_,
 				tr( "Load model" ),
 				tr( "XML read failed at line %1, column %2." ).
 				arg( line ).arg( column ) );
@@ -1716,7 +1724,7 @@ bool DesignBookView::read ( const QString file_name )
     }
   }
   else {
-    QMessageBox::information( qApp->mainWidget(),
+    QMessageBox::information( lCMW_,
 			      tr( "Load model" ),
 			      tr( "Failed to open file." ) );
     return false;
@@ -1729,7 +1737,7 @@ bool DesignBookView::read ( const QString file_name )
 
   // Well, who wants to wait?
   qApp->setOverrideCursor( Qt::WaitCursor );
-  qApp->processEvents( 1 );
+  qApp->processEvents( QEventLoop::AllEvents );
 
   QDomElement docElement = doc.documentElement();
 
@@ -1774,7 +1782,7 @@ bool DesignBookView::read ( const QString file_name )
       }
     }
 
-    qApp->processEvents( 1 );
+    qApp->processEvents( QEventLoop::AllEvents );
 
     n = n.nextSibling();
   }
@@ -1846,11 +1854,10 @@ bool DesignBookView::write ( void )
 
 	if ( choice == QMessageBox::Yes ) {
 	  QString file_name =
-	    QFileDialog::getSaveFileName( QString(),
-					  tr( "lignumCAD (*.lcad);;All Files (*)" ),
-					  0,
-					  "save file dialog",
-					  tr( "Choose a file" ) );
+	    QFileDialog::getSaveFileName( lCMW_,
+					  tr( "Choose a file" ),
+					  QString(),
+					  tr( "lignumCAD (*.lcad);;All Files (*)" ) );
 	  // If file_name is empty, assume the user picked Cancel and apply
 	  // it to the whole saving process
 	  if ( file_name.isEmpty() )
@@ -1881,8 +1888,8 @@ bool DesignBookView::write ( void )
 
   QFile file( model_->writeFileName() );
  
-  if ( !file.open( IO_WriteOnly ) ) {
-    QMessageBox::information( qApp->mainWidget(),
+  if ( !file.open( QIODevice::WriteOnly ) ) {
+    QMessageBox::information( lCMW_,
                               tr( "Save model" ),
                               tr( "Couldn't save model" ) );
     return false;
@@ -1919,8 +1926,8 @@ bool DesignBookView::write ( void )
 
   modelChanged( false );
 
-  lCMW_->statusBar()->message( tr( "%1 saved." ).
-			       arg( lC::formatName( model_->name() ) ), 4000 );
+  lCMW_->statusBar()->showMessage( tr( "%1 saved." ).
+				   arg( lC::formatName( model_->name() ) ), 4000 );
 
   return true;
 }
@@ -1958,8 +1965,8 @@ bool DesignBookView::newModelWizard ( Model* model, uint& initial_page_id )
   if ( new_model_wizard_->modelFileChooser->edited() )
     model->setWriteFileName( new_model_wizard_->modelFileChooser->fileName() );
  
-  if ( new_model_wizard_->descriptionEdit->isModified() )
-    model->setDescription( new_model_wizard_->descriptionEdit->text() );
+  if ( new_model_wizard_->descriptionEdit->document()->isModified() )
+    model->setDescription( new_model_wizard_->descriptionEdit->toPlainText() );
  
   if ( (uint)new_model_wizard_->versionSpinBox->value() != model->version() )
     model->setVersion( new_model_wizard_->versionSpinBox->value() );
@@ -2006,8 +2013,8 @@ void DesignBookView::editModelInfo ( void )
   if ( model_info_dialog_->modelFileChooser->edited() )
     model_->setWriteFileName( model_info_dialog_->modelFileChooser->fileName() );
  
-  if ( model_info_dialog_->descriptionEdit->isModified() )
-    model_->setDescription( model_info_dialog_->descriptionEdit->text() );
+  if ( model_info_dialog_->descriptionEdit->document()->isModified() )
+    model_->setDescription( model_info_dialog_->descriptionEdit->toPlainText() );
  
   if ( (uint)model_info_dialog_->versionSpinBox->value() != model_->version() )
     model_->setVersion( model_info_dialog_->versionSpinBox->value() );

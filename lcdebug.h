@@ -35,6 +35,9 @@
 
 #include <qdatetime.h>
 
+using std::ostream;
+using std::endl;
+
 /*!
  * Return the current time to millisecond precision. Occasionally
  * useful as a prefix to an output string if the same thing is

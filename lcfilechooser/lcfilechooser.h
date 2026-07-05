@@ -40,7 +40,7 @@ public:
 
     QString fileName() const;
     bool edited() const;
-    void setEdited ( bool edited ) const;
+    void setEdited ( bool edited );
 
 public slots:
     void setFileName( const QString &fn );
@@ -50,10 +50,12 @@ signals:
 
 private slots:
     void chooseFile();
+    void markEdited();
 
 private:
     QLineEdit *lineEdit;
     QPushButton *button;
+    bool edited_;
 };
 
 #endif // LCFILECHOOSER_H

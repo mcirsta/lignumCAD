@@ -56,6 +56,8 @@ private slots:
   void chooseDefault();
 
 private:
+  void updateColorLabel();
+
   QLabel* color_label_;
   QPushButton* button_;
   QToolButton* default_;

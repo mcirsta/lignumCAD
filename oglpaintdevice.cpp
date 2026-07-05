@@ -20,85 +20,184 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qpainter.h>
 #include <qpen.h>
 
+#include <QLineF>
+#include <QPaintEngine>
+#include <QPaintEngineState>
+#include <QPainterPath>
+#include <QPixmap>
+#include <QTextItem>
+#include <QTransform>
+
+#include "constants.h"
 #include "OGLFT.h"
 #include "oglpaintdevice.h"
 
-std::ostream& operator<< ( std::ostream& o, const QPoint& p )
+namespace {
+
+QPointF transformedPoint ( const QTransform& transform, const QPointF& point )
 {
-  return o << "[" << p.x() << ", " << p.y() << "]";
+  return transform.map( point );
 }
 
-std::ostream& operator<< ( std::ostream& o, const QColor& c )
+void glVertexPoint ( const QPointF& point )
 {
-  return o << "[" << c.red() << ", " << c.green() << ", " << c.blue() << "]";
+  glVertex2d( point.x(), point.y() );
 }
 
-std::ostream& operator<< ( std::ostream& o, const QBrush& b )
+} // end of anonymous namespace
+
+class OGLPaintEngine : public QPaintEngine
 {
-  o << "style ";
-  switch ( b.style() ) {
-  case Qt::NoBrush:
-    o << "no brush"; break;
-  case Qt::SolidPattern:
-    o << "solid"; break;
-  default:
-    o << "some pattern";
+  OGLPaintDevice* device_;
+  QPen pen_;
+  QFont font_;
+  QTransform transform_;
+
+public:
+  OGLPaintEngine ( OGLPaintDevice* device )
+    : QPaintEngine( QPaintEngine::PaintOutsidePaintEvent ), device_( device )
+  {}
+
+  bool begin ( QPaintDevice* paint_device ) override
+  {
+    setPaintDevice( paint_device );
+    setActive( true );
+    return true;
   }
-  return o << ", color " << b.color();
-}
 
-std::ostream& operator<< ( std::ostream& o, const QPen& p )
-{
-  o << "style ";
-  switch( p.style() ) {
-  case Qt::NoPen:
-    o << "no pen"; break;
-  case Qt::SolidLine:
-    o << "solid"; break;
-  case Qt::DashLine:
-    o << "dash"; break;
-  case Qt::DotLine:
-    o << "dot"; break;
-  default:
-    o << "UNKNOWN";
+  bool end ( void ) override
+  {
+    setActive( false );
+    return true;
   }
-  return o << ", color " << p.color() << ", width " << p.width();
-}
 
-std::ostream& operator<< ( std::ostream& o, const QFont& f )
-{
-  return o << f.rawName().toLatin1().constData();
-}
+  void updateState ( const QPaintEngineState& state ) override
+  {
+    if ( state.state() & QPaintEngine::DirtyPen ) {
+      pen_ = state.pen();
+      device_->faceData().color_ = pen_.color().rgb();
+    }
 
-std::ostream& operator<< ( std::ostream& o, const QRect& r )
-{
-  return o << r.left() << ", " << r.top() << "; " << r.right() << ", " << r.bottom();
-}
+    if ( state.state() & QPaintEngine::DirtyFont ) {
+      font_ = state.font();
+      device_->faceData().font_ = font_.toString();
+    }
 
-std::ostream& operator<< ( std::ostream& o, const QRegion& r )
-{
-  QMemArray<QRect> rects( r.rects() );
-  for ( uint i = 0; i < rects.size(); i++ )
-    o << "\t" << i << ": " << rects[i] << endl;
-  return o;
-}
+    if ( state.state() & QPaintEngine::DirtyTransform )
+      transform_ = state.transform();
+  }
 
-std::ostream& operator<< ( std::ostream& o, const QWMatrix& m )
-{
-  o << "\t" << m.m11() << ", " << m.m12() << ": " << m.dx() << endl;
-  o << "\t" << m.m21() << ", " << m.m22() << ": " << m.dy() << endl;
-  return o;
-}
+  void drawLines ( const QLineF* lines, int line_count ) override
+  {
+    if ( pen_.style() == Qt::NoPen )
+      return;
+
+    glColor3ubv( lC::qCubv( device_->faceData().color_ ) );
+    glBegin( GL_LINES );
+    for ( int i = 0; i < line_count; ++i ) {
+      glVertexPoint( transformedPoint( transform_, lines[i].p1() ) );
+      glVertexPoint( transformedPoint( transform_, lines[i].p2() ) );
+    }
+    glEnd();
+  }
+
+  void drawLines ( const QLine* lines, int line_count ) override
+  {
+    if ( pen_.style() == Qt::NoPen )
+      return;
+
+    glColor3ubv( lC::qCubv( device_->faceData().color_ ) );
+    glBegin( GL_LINES );
+    for ( int i = 0; i < line_count; ++i ) {
+      glVertexPoint( transformedPoint( transform_, lines[i].p1() ) );
+      glVertexPoint( transformedPoint( transform_, lines[i].p2() ) );
+    }
+    glEnd();
+  }
+
+  void drawPolygon ( const QPointF* points, int point_count,
+		     PolygonDrawMode mode ) override
+  {
+    if ( point_count <= 0 || pen_.style() == Qt::NoPen )
+      return;
+
+    GLenum gl_mode = mode == PolylineMode ? GL_LINE_STRIP : GL_LINE_LOOP;
+
+    glColor3ubv( lC::qCubv( device_->faceData().color_ ) );
+    glBegin( gl_mode );
+    for ( int i = 0; i < point_count; ++i )
+      glVertexPoint( transformedPoint( transform_, points[i] ) );
+    glEnd();
+  }
+
+  void drawPolygon ( const QPoint* points, int point_count,
+		     PolygonDrawMode mode ) override
+  {
+    if ( point_count <= 0 || pen_.style() == Qt::NoPen )
+      return;
+
+    GLenum gl_mode = mode == PolylineMode ? GL_LINE_STRIP : GL_LINE_LOOP;
+
+    glColor3ubv( lC::qCubv( device_->faceData().color_ ) );
+    glBegin( gl_mode );
+    for ( int i = 0; i < point_count; ++i )
+      glVertexPoint( transformedPoint( transform_, points[i] ) );
+    glEnd();
+  }
+
+  void drawPath ( const QPainterPath& path ) override
+  {
+    QPolygonF polygon = path.toFillPolygon( transform_ );
+
+    if ( polygon.isEmpty() || pen_.style() == Qt::NoPen )
+      return;
+
+    glColor3ubv( lC::qCubv( device_->faceData().color_ ) );
+    glBegin( GL_LINE_STRIP );
+    for ( const QPointF& point : polygon )
+      glVertex2d( point.x(), point.y() );
+    glEnd();
+  }
+
+  void drawTextItem ( const QPointF& point, const QTextItem& text_item ) override
+  {
+    device_->faceData().font_ = text_item.font().toString();
+    QPointF draw_point = transformedPoint( transform_, point );
+
+    device_->view()->font( device_->faceData() )->draw( draw_point.x(),
+							-draw_point.y(),
+							text_item.text() );
+  }
+
+  void drawPixmap ( const QRectF&, const QPixmap&, const QRectF& ) override
+  {}
+
+  Type type ( void ) const override
+  {
+    return QPaintEngine::User;
+  }
+};
+
+OGLPaintDevice::OGLPaintDevice ( OpenGLBase* view )
+  : QPaintDevice(), view_( view ),
+    paint_engine_( std::make_unique<OGLPaintEngine>( this ) )
+{}
+
+OGLPaintDevice::~OGLPaintDevice ( void ) = default;
 
 void OGLPaintDevice::setView ( OpenGLBase* view )
 {
   view_ = view;
 }
 
-int OGLPaintDevice::metric ( int n ) const
+QPaintEngine* OGLPaintDevice::paintEngine ( void ) const
+{
+  return paint_engine_.get();
+}
+
+int OGLPaintDevice::metric ( PaintDeviceMetric n ) const
 {
   // All of these attributes are taken directly from the OpenGL widget.
   switch ( n ) {
@@ -122,175 +221,11 @@ int OGLPaintDevice::metric ( int n ) const
     return view_->colorCount();
   case QPaintDevice::PdmDepth:
     return view_->depth();
+  case QPaintDevice::PdmDevicePixelRatio:
+    return view_->devicePixelRatio();
+  case QPaintDevice::PdmDevicePixelRatioScaled:
+    return view_->devicePixelRatio() * QPaintDevice::devicePixelRatioFScale();
   default:
     return 0;
   }
-}
-
-bool OGLPaintDevice::cmd ( int command, QPainter* /*painter*/, QPDevCmdParam* params )
-{
-  switch ( command ) {
-#if 0
-  case PdcNOP:
-    cout << "NOP" << endl; break;
-  case PdcDrawPoint:
-    cout << "Draw point" << endl; break;
-  case PdcMoveTo:
-    cout << "Move to" << endl; break;
-  case PdcLineTo:
-    cout << "Line to" << endl; break;
-#endif
-  case PdcDrawLine:
-    //    cout << "Draw line" << *params[0].point << "; " << *params[1].point << endl;
-    glColor3ubv( lC::qCubv( face_data_.color_ ) );
-    glBegin( GL_LINES );
-    glVertex2i( params[0].point->x(), params[0].point->y() );
-    glVertex2i( params[1].point->x(), params[1].point->y() );
-    glEnd();
-    break;
-#if 0
-  case PdcDrawRect:
-    cout << "Draw rect" << endl; break;
-  case PdcDrawRoundRect:
-    cout << "Draw round rect" << endl; break;
-  case PdcDrawEllipse:
-    cout << "Draw ellipse" << endl; break;
-  case PdcDrawArc:
-    cout << "Draw round arc" << endl; break;
-  case PdcDrawPie:
-    cout << "Draw pie" << endl; break;
-  case PdcDrawChord:
-    cout << "Draw chord" << endl; break;
-  case PdcDrawLineSegments:
-    cout << "Draw line segments" << endl; break;
-#endif
-  case PdcDrawPolyline:
-    //    cout << "Draw polyline with " << params[0].ptarr->size() << " points" << endl;
-    {
-      glColor3ubv( lC::qCubv( face_data_.color_ ) );
-      glBegin( GL_LINE_STRIP );
-      for ( uint i = 0; i < params[0].ptarr->size(); i++ ) {
-	int x, y;
-	params[0].ptarr->point( i, &x, &y );
-	//	cout << i << ": [ " << x << ", " << y << " ]" << endl;
-	glVertex2i( x, y );
-      }
-      glEnd();
-    }
-    break;
-#if 0
-  case PdcDrawPolygon:
-    cout << "Draw polygon" << endl; break;
-  case PdcDrawCubicBezier:
-    cout << "Draw cubic bezier" << endl; break;
-  case PdcDrawText:
-    cout << "Draw text" << endl; break;
-  case PdcDrawTextFormatted:
-    cout << "Draw text formatted" << endl; break;
-  case PdcDrawPixmap:
-    cout << "Draw pixmap" << endl; break;
-#endif
-  case PdcDrawText2:
-    //    cout << "Draw text2" << *params[0].point << ", "
-    //    	 << (const char*)*params[1].str
-    //    	 << endl;
-    view_->font( face_data_ )->draw( params[0].point->x(), -params[0].point->y(),
-				     *params[1].str );
-    break;
-#if 0
-  case PdcDrawText2Formatted:
-    cout << "Draw text2 formatted" << endl; break;
-  case PdcBegin:
-    cout << "Begin" << endl; break;
-  case PdcEnd:
-    cout << "End" << endl; break;
-  case PdcSave:
-    cout << "Save" << endl; break;
-  case PdcRestore:
-    cout << "Restore" << endl; break;
-  case PdcSetdev:
-    cout << "Setdev" << endl; break;
-  case PdcSetBkColor:
-    cout << "Set background color " << *params[0].color << endl; break;
-  case PdcSetBkMode:
-    cout << "Set background mode ";
-    switch( params[0].ival ) {
-    case Qt::TransparentMode:
-      cout << "transparent"; break;
-    case Qt::OpaqueMode:
-      cout << "opaque"; break;
-    default:
-      cout << "UNKNOWN";
-    }
-    cout << endl;
-    break;
-  case PdcSetROP:
-    cout << "Set raster op ";
-    switch( params[0].ival ) {
-    case Qt::CopyROP:
-      cout << "copy (dst=src)"; break;
-    case Qt::OrROP:
-      cout << "or (dst=src|dst)"; break;
-    case Qt::XorROP:
-      cout << "xor (dst=src^dst)"; break;
-    default:
-      cout << "other rop: " << params[0].ival; break;
-    }
-    cout << endl;
-    break;
-  case PdcSetBrushOrigin:
-    cout << "Set brush origin ";
-    if ( params[0].point != 0 )
-      cout << *params[0].point;
-    else
-      cout << "[none]";
-    cout << endl;
-    break;
-#endif
-  case PdcSetFont:
-    //    cout << "Set font" << *params[0].font << endl;
-    face_data_.font_ = params[0].font->toString();
-    break;
-
-  case PdcSetPen:
-    //    cout << "Set pen" << *params[0].pen << endl;
-    face_data_.color_ = params[0].pen->color().rgb();
-    break;
-#if 0
-  case PdcSetBrush:
-    cout << "Set brush" << *params[0].brush << endl; break;
-  case PdcSetTabStops:
-    cout << "Set tab stops" << endl; break;
-  case PdcSetTabArray:
-    cout << "Set tab array" << endl; break;
-  case PdcSetUnit:
-    cout << "Set unit" << endl; break;
-  case PdcSetVXform:
-    cout << "Set view transform(?)" << endl; break;
-  case PdcSetWindow:
-    cout << "Set window" << endl; break;
-  case PdcSetViewport:
-    cout << "Set viewport" << endl; break;
-  case PdcSetWXform:
-    cout << "Set window transform:" << params[0].ival << endl; break;
-#endif
-  case PdcSetWMatrix:
-    //    cout << "Set window matrix" << endl << *params[0].matrix;
-    glTranslated( params[0].matrix->dx(), -params[0].matrix->dy(), 0 );
-    glScaled( params[0].matrix->m11(), params[0].matrix->m22(), 1. );
-    break;
-#if 0
-  case PdcSaveWMatrix:
-    cout << "Save window matrix(?)" << endl; break;
-  case PdcRestoreWMatrix:
-    cout << "Restore window matrix(?)" << endl; break;
-  case PdcSetClip:
-    cout << "Set clip: " << params[0].ival << endl; break;
-  case PdcSetClipRegion:
-    cout << "Set clip region" << endl << *params[0].rgn; break;
-  default:
-    cout << "command unknown: " << command << endl;
-#endif
-  }
-  return true;
 }

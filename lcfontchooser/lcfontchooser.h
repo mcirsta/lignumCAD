@@ -62,6 +62,7 @@ private:
 
   QString default_font_;
   QString font_;
+  bool edited_;
 };
 
 #endif // LCFONTCHOOSER_H

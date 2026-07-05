@@ -22,6 +22,7 @@
  */
 
 #include <qdom.h>
+#include <iostream>
 #include <QRegularExpression>
 
 #include <gce_MakeLin.hxx>
@@ -35,7 +36,7 @@
 #include <BRepBuilderAPI_MakeFace.hxx>
 #include <BRepBuilderAPI_MakePolygon.hxx>
 #include <BRepBuilderAPI_Transform.hxx>
-#include <BRepMesh.hxx>
+#include <BRepMesh_IncrementalMesh.hxx>
 #include <BRepPrimAPI_MakeBox.hxx>
 #include <BRepPrimAPI_MakeCylinder.hxx>
 #include <BRepPrimAPI_MakeCone.hxx>
@@ -72,6 +73,9 @@
 #include "lcdebug.h"
 
 namespace Space3D {
+
+  using std::cout;
+  using std::endl;
 
   uint OCSolid::unique_index_ = 0;
 
@@ -477,7 +481,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, 1. );
+    BRepMesh_IncrementalMesh( solid_, 1. );
 
     // Set the value and dimension end points of the parameters.
     parameter( lC::STR::LENGTH ).setValueEnds( length,
@@ -768,7 +772,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, 1. );
+    BRepMesh_IncrementalMesh( solid_, 1. );
 
     // Set the value and dimension end points of the parameters.
     parameter( lC::STR::LENGTH ).setValueEnds( length,
@@ -1018,7 +1022,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, 1. );
+    BRepMesh_IncrementalMesh( solid_, 1. );
 
     // Set the (cosmetic) ends of the construction axis
     axis_->setMinimum( -1.1 * ( length / 2 ) );
@@ -1396,7 +1400,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, .25 );
+    BRepMesh_IncrementalMesh( solid_, .25 );
 
     // Set the (cosmetic) ends of the construction axis
     axis_->setMinimum( -1.1 * ( length / 2 ) );
@@ -1891,7 +1895,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, 1. );
+    BRepMesh_IncrementalMesh( solid_, 1. );
 
     // Set the value and dimension end points of the parameters.
     parameter( lC::STR::LENGTH ).setValueEnds( length,
@@ -2310,7 +2314,7 @@ namespace Space3D {
     }
 
     // Create the discrete representation. Deflection argument needs more thought...
-    BRepMesh::Mesh( solid_, .0125 );
+    BRepMesh_IncrementalMesh( solid_, .0125 );
 
     // Set the (cosmetic) ends of the construction axis
     axis_->setMinimum( -1.1 * ( length / 2 ) );

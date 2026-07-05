@@ -25,7 +25,7 @@
 #include <config.h>
 #endif
 #ifndef OGLFT_NO_QT
-#include <qregexp.h>
+#include <QRegularExpression>
 #endif
 #include <OGLFT.h>
 
@@ -619,44 +619,30 @@ namespace OGLFT {
     // 2. the optional format (%...), and
     // 3. optionally anything after it.
     // Note that since everything is optional, the match always succeeds.
-    QRegExp format_regexp("((?:[^%]|%%)*)(%[0-9]*\\.?[0-9]*[efgp])?((?:[^%]|%%)*)");
-    /*int pos = */ format_regexp.search( format );
+    QRegularExpression format_regexp(
+      "((?:[^%]|%%)*)(%[0-9]*\\.?[0-9]*[efgp])?((?:[^%]|%%)*)"
+    );
+    QRegularExpressionMatch match = format_regexp.match( format );
 
-    QStringList list = format_regexp.capturedTexts();
-
-    QStringList::Iterator it = list.begin();
-
-    it = list.remove( it );	// Remove the "matched" string, leaving the pieces
-
-    if ( it == list.end() ) return QString(); // Probably an error
-
-    // Extract each piece from the list
+    if ( !match.hasMatch() ) return QString(); // Probably an error
 
     QString prefix, value_format, postfix;
     char type = '\0';
 
-    if ( !(*it).isEmpty() )
-      prefix = *it;
+    prefix = match.captured( 1 );
+    QString specifier = match.captured( 2 );
+    postfix = match.captured( 3 );
 
-    ++it;
-
-    if ( it != list.end() ) {
-      if ( !(*it).isEmpty() ) {
+    if ( !specifier.isEmpty() ) {
 	// Reparse this to extract the details of the format
-	QRegExp specifier_regexp( "([0-9]*)\\.?([0-9]*)([efgp])" );
-	(void)specifier_regexp.search( *it );
-	QStringList specifier_list = specifier_regexp.capturedTexts();
+	QRegularExpression specifier_regexp( "%([0-9]*)\\.?([0-9]*)([efgp])" );
+	QRegularExpressionMatch specifier_match =
+	  specifier_regexp.match( specifier );
 
-	QStringList::Iterator sit = specifier_list.begin();
+	int width = specifier_match.captured( 1 ).toInt();
+	int precision = specifier_match.captured( 2 ).toInt();
 
-	sit = specifier_list.remove( sit );
-
-	int width = (*sit).toInt();
-	++sit;
-	int precision = (*sit).toInt();
-	++sit;
-
-	type = (*sit).at(0).toLatin1();
+	type = specifier_match.captured( 3 ).at(0).toLatin1();
 
 	// The regular formats just use Qt's number formatting capability
 	if ( type == 'e' || type == 'f' || type == 'g' )
@@ -692,29 +678,23 @@ namespace OGLFT {
 	      // Format the numerator and shift to 0xE000 sequence
 	      QString numerator = QString::number( b );
 	      for ( uint i = 0; i < numerator.length(); i++ ) {
-		numerator.at(i) = QChar( numerator.at(i).unicode() -
-					 QChar('0').unicode() +
-					 0xE000 );
+		numerator[i] = QChar( numerator.at(i).unicode() -
+				      QChar('0').unicode() +
+				      0xE000 );
 	      }
 	      value_format += numerator;
 	      value_format += QChar( 0xE00a ); // The '/'
 	      // Format the denominator and shift to 0xE010 sequence
 	      QString denominator = QString::number( c );
 	      for ( uint i = 0; i < denominator.length(); i++ ) {
-		denominator.at(i) = QChar( denominator.at(i).unicode() -
-					   QChar('0').unicode() +
-					   0xE010 );
+		denominator[i] = QChar( denominator.at(i).unicode() -
+					QChar('0').unicode() +
+					0xE010 );
 	      }
 	      value_format += denominator;
 	    }
 	  }
 	}
-      }
-
-      ++it;
-      
-      if ( it != list.end() && !(*it).isEmpty() )
-	postfix = *it;
     }
 
     return prefix + value_format + postfix;

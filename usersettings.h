@@ -22,9 +22,68 @@
  */
 #ifndef USERSETTINGS_H
 #define USERSETTINGS_H
+
+#include <QSettings>
+#include <QString>
+#include <QStringList>
+
 // These are the strings which key the user's preferences in QSettings.
 namespace lC {
   namespace Setting {
+
+    inline bool settingExists ( QSettings& settings, const QString& key,
+				bool* ok = 0 )
+    {
+      const bool exists = settings.contains( key );
+      if ( ok != 0 )
+	*ok = exists;
+      return exists;
+    }
+
+    inline QString readString ( QSettings& settings, const QString& key,
+				bool* ok = 0,
+				const QString& default_value = QString() )
+    {
+      settingExists( settings, key, ok );
+      return settings.value( key, default_value ).toString();
+    }
+
+    inline QStringList readStringList ( QSettings& settings, const QString& key,
+					bool* ok = 0 )
+    {
+      settingExists( settings, key, ok );
+      return settings.value( key ).toStringList();
+    }
+
+    inline bool readBool ( QSettings& settings, const QString& key,
+			   bool default_value, bool* ok = 0 )
+    {
+      settingExists( settings, key, ok );
+      return settings.value( key, default_value ).toBool();
+    }
+
+    inline double readDouble ( QSettings& settings, const QString& key,
+			       double default_value, bool* ok = 0 )
+    {
+      settingExists( settings, key, ok );
+      return settings.value( key, default_value ).toDouble();
+    }
+
+    inline int readInt ( QSettings& settings, const QString& key,
+			 int default_value, bool* ok = 0 )
+    {
+      settingExists( settings, key, ok );
+      return settings.value( key, default_value ).toInt();
+    }
+
+    inline void setStringOrRemove ( QSettings& settings, const QString& key,
+				    const QString& value )
+    {
+      if ( value.isEmpty() )
+	settings.remove( key );
+      else
+	settings.setValue( key, value );
+    }
 
     const QString HOME = "/lignumComputing/lignumCAD/Home";
 

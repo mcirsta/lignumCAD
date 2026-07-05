@@ -2387,12 +2387,12 @@ void AssemblyView::reeditSubassembly ( const AssemblyConstraint* /*old_constrain
     if ( constraint->type() == lC::STR::MATE_OFFSET ||
 	 constraint->type() == lC::STR::ALIGN_OFFSET )
       constraints_text_.back() << QString( tr( "%1 (%2)" ) ).
-	arg( tr( constraint->type() ) ).
+	arg( trC( constraint->type() ) ).
 	arg( UnitsBasis::instance()->format( constraint->offset(), false ) );
     else
-      constraints_text_.back() << tr( constraint->type() );
+      constraints_text_.back() << trC( constraint->type() );
 #else
-    constraints_text_.back() << tr( constraint->type() );
+    constraints_text_.back() << trC( constraint->type() );
 #endif
     if ( !constraint->reference0().empty() )
       constraints_text_.back() << model()->idPath( constraint->reference0() );

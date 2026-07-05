@@ -25,6 +25,7 @@
 
 #include <qspinbox.h>
 #include <QFrame>
+#include <QValidator>
 
 #include "ratio.h"
 
@@ -41,8 +42,12 @@ public:
   Ratio ratio ( void ) const;
 
 protected:
-  QString mapValueToText ( int index );
-  int mapTextToValue ( bool* ok );
+  QString textFromValue ( int value ) const override;
+  int valueFromText ( const QString& text ) const override;
+  QValidator::State validate ( QString& input, int& pos ) const override;
+
+private:
+  void refreshDisplay ( void );
 };
 
 class lCDefaultRatioSpinBox : public QFrame

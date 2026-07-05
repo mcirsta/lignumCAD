@@ -22,10 +22,12 @@
  */
 
 #include <fstream>
+#include <iostream>
 
 #include <qpainter.h>
-#include <qpicture.h>
 #include <qfileinfo.h>
+#include <QColor>
+#include <QSvgRenderer>
 
 #include "OGLFT.h"
 
@@ -97,7 +99,9 @@ OGLFT::Face* OpenGLPrinter::font ( const FaceData& requested_face )
   // to the face constructor) implies that the point size is
   // effectively in scale inches.
 
-  OGLFT::Face* base_face = new OGLFT::Filled( file, point_size * scale_ * 72 / logicalDpiY(), 1 );
+  QByteArray file_name = file.toUtf8();
+  OGLFT::Face* base_face = new OGLFT::Filled( file_name.constData(),
+					      point_size * scale_ * 72 / logicalDpiY(), 1 );
 
   faces_.insert( actual_face, base_face );
 
@@ -228,7 +232,8 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
   while ( state == GL2PS_OVERFLOW ) {
     buffsize += 1024 * 1024;
 
-    gl2psBeginPage( GL2PS_QT, parent()->name(), "lignumCAD",
+    QByteArray page_name = parent()->objectName().toUtf8();
+    gl2psBeginPage( GL2PS_QT, page_name.constData(), "lignumCAD",
 		    page_view_->space() == SPACE2D? GL2PS_NO_SORT : GL2PS_BSP_SORT,
 		    GL2PS_SIMPLE_LINE_OFFSET | GL2PS_SILENT,
 		    GL_RGBA, 0, NULL, buffsize, &painter );
@@ -299,7 +304,8 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
     page_view_->draw();
 
     state = gl2psEndPage();
-    if ( state == GL2PS_OVERFLOW ) cout << "hmm. Gl2PS overflow" << endl;
+    if ( state == GL2PS_OVERFLOW )
+      std::cout << "hmm. Gl2PS overflow" << std::endl;
   }
 
   page_view_->restoreHighlights();
@@ -315,7 +321,7 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   QString model_str = tr( "Model: %1" ).
     arg( model->name() ).prepend(' ').append(' ');
   QString page_str = tr( "%1: %2" ).
-    arg( tr( page_view_->type() ) ).
+    arg( tr( page_view_->type().toUtf8().constData() ) ).
     arg( page_view_->name() ).prepend(' ').append(' ');
   QString date_str = tr( "Date: %1" ).
     arg( model->modified().date().toString(Qt::ISODate) ).prepend(' ').append(' ');
@@ -331,17 +337,19 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   QFont large_font;
   if ( !OpenGLGlobals::instance()->annotationFont().isEmpty() )
     large_font.fromString( OpenGLGlobals::instance()->annotationFont() );
-  large_font.setPointSizeFloat( 1.5 * large_font.pointSizeFloat() );
+  large_font.setPointSizeF( 1.5 * large_font.pointSizeF() );
   large_font.setBold( false );
 
-  FaceData large_face_data( large_font.toString(), 0, Qt::black.rgb(),
+  QRgb black = QColor( Qt::black ).rgb();
+
+  FaceData large_face_data( large_font.toString(), 0, black,
 			    lC::CENTER );
 
   FaceData mid_face_data( OpenGLGlobals::instance()->annotationFont(),
-			  0, Qt::black.rgb(), lC::CENTER );
+			  0, black, lC::CENTER );
 
   FaceData regular_face_data( OpenGLGlobals::instance()->annotationFont(),
-			      0, Qt::black.rgb(), lC::LEFT );
+			      0, black, lC::LEFT );
 
   OGLFT::Face* large_face = font( large_face_data );
   OGLFT::Face* medium_face = font( mid_face_data );
@@ -356,25 +364,31 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   OGLFT::BBox business_bbox = large_face->measure( BusinessInfo::instance().name());
   OGLFT::BBox location_bbox = medium_face->measure(BusinessInfo::instance().location());
 
-  QPicture logo;
+  QSvgRenderer logo;
+  bool logo_loaded = false;
   double logo_width = 0, logo_height = 0;
   double logo_scale_x = 1, logo_scale_y = 1;
 
   if ( !BusinessInfo::instance().logo().isEmpty() ) {
-    if ( QFileInfo( BusinessInfo::instance().logo() ).extension().lower() == "svg"){
-      logo.load( BusinessInfo::instance().logo(), "svg" );
+    if ( QFileInfo( BusinessInfo::instance().logo() ).suffix().toLower() == "svg" ) {
+      logo_loaded = logo.load( BusinessInfo::instance().logo() );
       // Convert the size of the logo from paper inches to scale inches (like
       // the font sizes).
-      logo_width = scale_ * logo.width() / logo.logicalDpiX();
-      logo_height = scale_ * logo.height() / logo.logicalDpiY();
+      QSize logo_size = logo.defaultSize();
+      if ( logo_loaded && logo_size.isValid() && logo_size.height() > 0 ) {
+	logo_width = scale_ * logo_size.width() / logicalDpiX();
+	logo_height = scale_ * logo_size.height() / logicalDpiY();
 
-      // Scale the logo down so that it is not higher than the business info
-      // text.
-      double logo_scale = ( medium_face->height() + large_face->height() ) /
-	logo_height;
-      logo_width *= logo_scale;
-      logo_scale_x = scale_ * logo_scale / logo.logicalDpiX();
-      logo_scale_y = scale_ * logo_scale / logo.logicalDpiY();
+	// Scale the logo down so that it is not higher than the business info
+	// text.
+	double logo_scale = ( medium_face->height() + large_face->height() ) /
+	  logo_height;
+	logo_width *= logo_scale;
+	logo_scale_x = scale_ * logo_scale / logicalDpiX();
+	logo_scale_y = scale_ * logo_scale / logicalDpiY();
+      }
+      else
+	logo_loaded = false;
     }
     // A Pixmap logo is ignored for now...
   }
@@ -442,7 +456,7 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   glRectd( row_x, row_y, urCorner()[X], row_y + row_height );
 
-  if ( !logo.isNull() ) {
+  if ( logo_loaded ) {
     // Highly experimental...
     glPushMatrix(); // Oglpaintdevice should do this...
 
@@ -454,7 +468,7 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
 			   -row_y - medium_face->height() - large_face->height() );
     ogl_painter.scale( logo_scale_x, -logo_scale_y );
 
-    logo.play( &ogl_painter );
+    logo.render( &ogl_painter );
     glPopMatrix(); // Oglpaintdevice should do this too...
   }
 

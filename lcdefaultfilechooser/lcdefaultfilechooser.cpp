@@ -24,15 +24,15 @@
 #include <qpushbutton.h>
 #include <qtoolbutton.h>
 #include <qfiledialog.h>
-#include <qtooltip.h>
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QPixmap>
 
 #include "constants.h"
 #include "lcdefaultfilechooser.h"
 
 lCDefaultFileChooser::lCDefaultFileChooser( QWidget *parent, const char *name )
-  : QFrame( parent )
+  : QFrame( parent ), edited_( false )
 {
   setObjectName( name );
 
@@ -43,22 +43,24 @@ lCDefaultFileChooser::lCDefaultFileChooser( QWidget *parent, const char *name )
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
 
-  line_edit_ = new QLineEdit( this, "lineedit" );
+  line_edit_ = new QLineEdit( this );
+  line_edit_->setObjectName( "lineedit" );
   line_edit_->setReadOnly( true );
   line_edit_->setFrame( false );
 
-  button_ = new QPushButton( tr( "..." ), this, "button" );
-  button_->setFixedWidth( button_->fontMetrics().width( "ABC" ) );
+  button_ = new QPushButton( tr( "..." ), this );
+  button_->setObjectName( "button" );
+  button_->setFixedWidth( button_->fontMetrics().horizontalAdvance( "ABC" ) );
 
-  default_ = new QToolButton( this, "default" );
+  default_ = new QToolButton( this );
+  default_->setObjectName( "default" );
 
-  QToolTip::add( default_,
-		 tr( "Click this button to restore the color to the default" ) );
+  default_->setToolTip( tr( "Click this button to restore the color to the default" ) );
 
-  QIconSet icon( QPixmap( ":/images/default_active.png" ) );
-  icon.setPixmap( QPixmap( ":/images/default_inactive.png" ),
-		  QIconSet::Automatic, QIconSet::Disabled );
-  default_->setIconSet( icon );
+  QIcon icon;
+  icon.addPixmap( QPixmap( ":/images/default_active.png" ), QIcon::Normal );
+  icon.addPixmap( QPixmap( ":/images/default_inactive.png" ), QIcon::Disabled );
+  default_->setIcon( icon );
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( button_->sizeHint().height()-2 );
@@ -80,17 +82,18 @@ lCDefaultFileChooser::lCDefaultFileChooser( QWidget *parent, const char *name )
 
 bool lCDefaultFileChooser::edited ( void ) const
 {
-  return line_edit_->edited();
+  return edited_;
 }
 
 void lCDefaultFileChooser::setEdited ( bool edited )
 {
-  line_edit_->setEdited( edited );
+  edited_ = edited;
 }
 
 void lCDefaultFileChooser::setFileName( const QString &file )
 {
   line_edit_->setText( file );
+  setEdited( false );
 
   if ( file == default_file_ )
     default_->setEnabled( false );
@@ -106,6 +109,7 @@ void lCDefaultFileChooser::setDefaultFileName( const QString &file )
   default_file_ = file;
 
   line_edit_->setText( default_file_ );
+  setEdited( false );
 }
 
 QString lCDefaultFileChooser::fileName() const
@@ -120,14 +124,16 @@ QString lCDefaultFileChooser::filter() const
 
 void lCDefaultFileChooser::chooseFile()
 {
+  QString translated_filter = tr( filter_.toUtf8().constData() );
   QString file_name =
-    QFileDialog::getOpenFileName( line_edit_->text(), tr( filter_ ), this );
+    QFileDialog::getOpenFileName( this, tr( "Choose a file" ),
+				  line_edit_->text(), translated_filter );
 
   if ( !file_name.isEmpty() ) {
     if ( file_name != line_edit_->text() ) {
 
       line_edit_->setText( file_name );
-      line_edit_->setEdited( true );
+      setEdited( true );
 
       if ( file_name != default_file_ )
 	default_->setEnabled( true );
@@ -143,7 +149,7 @@ void lCDefaultFileChooser::chooseDefault ( void )
 {
   line_edit_->setText( default_file_ );
 
-  line_edit_->setEdited( true );
+  setEdited( true );
 
   default_->setEnabled( false );
 

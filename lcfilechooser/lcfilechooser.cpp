@@ -27,7 +27,7 @@
 #include <QHBoxLayout>
 
 lCFileChooser::lCFileChooser( QWidget *parent, const char *name )
-  : QFrame( parent )
+  : QFrame( parent ), edited_( false )
 {
   setObjectName( name );
 
@@ -38,18 +38,22 @@ lCFileChooser::lCFileChooser( QWidget *parent, const char *name )
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
 
-  lineEdit = new QLineEdit( this, "filechooser_lineedit" );
+  lineEdit = new QLineEdit( this );
+  lineEdit->setObjectName( "filechooser_lineedit" );
   lineEdit->setFrame( false );
   lineEdit->setSizePolicy( QSizePolicy( QSizePolicy::Preferred,
    					QSizePolicy::Maximum ) );
 
   connect( lineEdit, SIGNAL( textChanged( const QString & ) ),
 	   this, SIGNAL( fileNameChanged( const QString & ) ) );
+  connect( lineEdit, SIGNAL( textEdited( const QString& ) ),
+	   this, SLOT( markEdited() ) );
 
-  button = new QPushButton( "...", this, "filechooser_button" );
+  button = new QPushButton( "...", this );
+  button->setObjectName( "filechooser_button" );
   //  button->setSizePolicy( QSizePolicy( QSizePolicy::Preferred,
   //				      QSizePolicy::Maximum ) );
-  button->setFixedWidth( button->fontMetrics().width( " ... " ) );
+  button->setFixedWidth( button->fontMetrics().horizontalAdvance( " ... " ) );
   button->setFixedHeight( lineEdit->sizeHint().height() );
 
   resize( 50, button->fontMetrics().height() );
@@ -64,17 +68,18 @@ lCFileChooser::lCFileChooser( QWidget *parent, const char *name )
 
 bool lCFileChooser::edited ( void ) const
 {
-  return lineEdit->edited();
+  return edited_;
 }
 
-void lCFileChooser::setEdited ( bool edited ) const
+void lCFileChooser::setEdited ( bool edited )
 {
-  lineEdit->setEdited( edited );
+  edited_ = edited;
 }
 
 void lCFileChooser::setFileName( const QString &fn )
 {
   lineEdit->setText( fn );
+  setEdited( false );
 }
 
 QString lCFileChooser::fileName() const
@@ -85,9 +90,10 @@ QString lCFileChooser::fileName() const
 void lCFileChooser::chooseFile()
 {
   QString file_name =
-    QFileDialog::getSaveFileName( lineEdit->text(),
-				  tr( "lignumCAD (*.lcad);;All Files (*)" ),
-				  this );
+    QFileDialog::getSaveFileName( this,
+				  tr( "Choose a file" ),
+				  lineEdit->text(),
+				  tr( "lignumCAD (*.lcad);;All Files (*)" ) );
 
   if ( !file_name.isEmpty() ) {
     if ( file_name != lineEdit->text() ) {
@@ -95,9 +101,14 @@ void lCFileChooser::chooseFile()
 	file_name += ".lcad";
 
       lineEdit->setText( file_name );
-      lineEdit->setEdited( true );
+      setEdited( true );
 
       emit fileNameChanged( file_name );
     }
   }
+}
+
+void lCFileChooser::markEdited()
+{
+  setEdited( true );
 }

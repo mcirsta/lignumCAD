@@ -23,9 +23,10 @@
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qtoolbutton.h>
-#include <qtooltip.h>
 #include <qcolordialog.h>
 #include <QHBoxLayout>
+#include <QIcon>
+#include <QPalette>
 #include <QPixmap>
 
 #include "constants.h"
@@ -43,23 +44,25 @@ lCColorChooser::lCColorChooser( QWidget *parent, const char *name )
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
 
-  color_label_ = new QLabel( this, "label" );
-  color_label_->setMinimumWidth( color_label_->fontMetrics().width( "COLOR" ) );
+  color_label_ = new QLabel( this );
+  color_label_->setObjectName( "label" );
+  color_label_->setMinimumWidth( color_label_->fontMetrics().horizontalAdvance( "COLOR" ) );
   color_label_->setFixedHeight( color_label_->fontMetrics().lineSpacing() );
-  color_label_->setFrameStyle( Box + Plain );
+  color_label_->setFrameStyle( QFrame::Box | QFrame::Plain );
 
-  button_ = new QPushButton( tr( "..." ), this, "button" );
-  button_->setFixedWidth( button_->fontMetrics().width( "ABC" ) );
+  button_ = new QPushButton( tr( "..." ), this );
+  button_->setObjectName( "button" );
+  button_->setFixedWidth( button_->fontMetrics().horizontalAdvance( "ABC" ) );
 
-  default_ = new QToolButton( this, "default" );
+  default_ = new QToolButton( this );
+  default_->setObjectName( "default" );
 
-  QToolTip::add( default_,
-		 tr( "Click this button to restore the color to the default" ) );
+  default_->setToolTip( tr( "Click this button to restore the color to the default" ) );
 
-  QIconSet icon( QPixmap( ":/images/default_active.png" ) );
-  icon.setPixmap( QPixmap( ":/images/default_inactive.png" ),
-		  QIconSet::Automatic, QIconSet::Disabled );
-  default_->setIconSet( icon );
+  QIcon icon;
+  icon.addPixmap( QPixmap( ":/images/default_active.png" ), QIcon::Normal );
+  icon.addPixmap( QPixmap( ":/images/default_inactive.png" ), QIcon::Disabled );
+  default_->setIcon( icon );
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( button_->sizeHint().height()-2 );
@@ -87,7 +90,7 @@ void lCColorChooser::setEdited ( bool edited )
 void lCColorChooser::setColor( const QColor& color )
 {
   color_ = color;
-  color_label_->setPaletteBackgroundColor( color_ );
+  updateColorLabel();
 
   edited_ = false;
 
@@ -112,7 +115,7 @@ void lCColorChooser::chooseColor()
   if ( color.isValid() ) {
     color_ = color;
 
-    color_label_->setPaletteBackgroundColor( color_ );
+    updateColorLabel();
 
     edited_ = true;
 
@@ -129,11 +132,19 @@ void lCColorChooser::chooseDefault ( void )
 {
   color_ = default_color_;
 
-  color_label_->setPaletteBackgroundColor( color_ );
+  updateColorLabel();
   
   edited_ = true;
 
   default_->setEnabled( false );
 
   emit colorChanged( color_ );
+}
+
+void lCColorChooser::updateColorLabel()
+{
+  QPalette palette = color_label_->palette();
+  palette.setColor( QPalette::Window, color_ );
+  color_label_->setAutoFillBackground( true );
+  color_label_->setPalette( palette );
 }

@@ -1653,7 +1653,13 @@ GLint gl2psEndPage(GLvoid){
 #if !defined( GL2PS_USE_QT ) && !defined( GL2PS_USE_EMF )
     fflush(gl2ps.stream);
 #else
+#if defined( GL2PS_USE_EMF ) && defined( GL2PS_USE_QT )
     if ( gl2ps.format != GL2PS_EMF && gl2ps.format != GL2PS_QT )
+#elif defined( GL2PS_USE_EMF )
+    if ( gl2ps.format != GL2PS_EMF )
+#else
+    if ( gl2ps.format != GL2PS_QT )
+#endif
       fflush(gl2ps.stream);
 #endif
   }

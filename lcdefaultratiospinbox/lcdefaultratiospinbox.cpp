@@ -21,19 +21,20 @@
  *
  */
 #include <qtoolbutton.h>
-#include <qtooltip.h>
+#include <qlineedit.h>
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QPixmap>
 
 #include "constants.h"
 #include "lcdefaultratiospinbox.h"
 
 lCRatioSpinBox::lCRatioSpinBox( QWidget *parent, const char *name )
-  : QSpinBox( parent, name )
+  : QSpinBox( parent )
 {
-  setMinValue( -20 );
-  setMaxValue( 20 );
-  updateDisplay();
+  setObjectName( name );
+  setRange( -20, 20 );
+  refreshDisplay();
 }
 
 void lCRatioSpinBox::setRatio ( const Ratio& ratio )
@@ -46,18 +47,26 @@ Ratio lCRatioSpinBox::ratio ( void ) const
   return Ratio( value() );
 }
 
-QString lCRatioSpinBox::mapValueToText ( int value )
+QString lCRatioSpinBox::textFromValue ( int value ) const
 {
   Ratio ratio( value );
   return QString( "%1 : %2" ).arg( ratio.numerator() ).arg( ratio.denominator() );
 }
 
-int lCRatioSpinBox::mapTextToValue ( bool* ok )
+int lCRatioSpinBox::valueFromText ( const QString& /*text*/ ) const
 {
-  if ( ok != 0 )
-    *ok = true;
+  return minimum();
+}
 
-  return minValue();
+QValidator::State lCRatioSpinBox::validate ( QString& /*input*/,
+					     int& /*pos*/ ) const
+{
+  return QValidator::Acceptable;
+}
+
+void lCRatioSpinBox::refreshDisplay ( void )
+{
+  lineEdit()->setText( textFromValue( QSpinBox::value() ) );
 }
 
 lCDefaultRatioSpinBox::lCDefaultRatioSpinBox( QWidget *parent, const char *name )
@@ -71,15 +80,15 @@ lCDefaultRatioSpinBox::lCDefaultRatioSpinBox( QWidget *parent, const char *name 
 
   spin_box_ = new lCRatioSpinBox( this, "spinbox" );
 
-  default_ = new QToolButton( this, "default" );
+  default_ = new QToolButton( this );
+  default_->setObjectName( "default" );
 
-  QToolTip::add( default_,
-		 tr( "Click this button to restore the default value" ) );
+  default_->setToolTip( tr( "Click this button to restore the default value" ) );
 
-  QIconSet icon( QPixmap( ":/images/default_active.png" ) );
-  icon.setPixmap( QPixmap( ":/images/default_inactive.png" ),
-		  QIconSet::Automatic, QIconSet::Disabled );
-  default_->setIconSet( icon );
+  QIcon icon;
+  icon.addPixmap( QPixmap( ":/images/default_active.png" ), QIcon::Normal );
+  icon.addPixmap( QPixmap( ":/images/default_inactive.png" ), QIcon::Disabled );
+  default_->setIcon( icon );
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( spin_box_->sizeHint().height()-2 );

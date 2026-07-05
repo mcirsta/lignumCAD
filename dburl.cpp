@@ -22,8 +22,63 @@
  */
 #include "dburl.h"
 
-QString DBURL::toString ( bool /*encoded_path*/ ) const
+namespace {
+
+bool isHexDigit ( QChar ch )
 {
+  return ch.isDigit() ||
+    ( ch >= 'a' && ch <= 'f' ) ||
+    ( ch >= 'A' && ch <= 'F' );
+}
+
+bool isPercentEscape ( const QString& text, qsizetype index )
+{
+  return index + 2 < text.size() &&
+    text[index] == '%' &&
+    isHexDigit( text[index + 1] ) &&
+    isHexDigit( text[index + 2] );
+}
+
+void appendPercentEncodedText ( QString& encoded_path, QString& text )
+{
+  if ( text.isEmpty() )
+    return;
+
+  encoded_path += QString::fromLatin1( QUrl::toPercentEncoding( text ) );
+  text.clear();
+}
+
+} // end of anonymous namespace
+
+QString DBURL::encodedPath ( const QString& path )
+{
+  QString encoded_path;
+  QString text;
+
+  for ( qsizetype i = 0; i < path.size(); ++i ) {
+    if ( path[i] == '/' ) {
+      appendPercentEncodedText( encoded_path, text );
+      encoded_path += '/';
+    }
+    else if ( isPercentEscape( path, i ) ) {
+      appendPercentEncodedText( encoded_path, text );
+      encoded_path += path.mid( i, 3 );
+      i += 2;
+    }
+    else
+      text += path[i];
+  }
+
+  appendPercentEncodedText( encoded_path, text );
+
+  return encoded_path;
+}
+
+QString DBURL::toString ( bool encoded_path ) const
+{
+  if ( encoded_path )
+    return QUrl::toString( QUrl::FullyEncoded );
+
   return QUrl::toString();
 }
 

@@ -21,9 +21,9 @@
  *
  */
 #include <algorithm>
+#include <iostream>
 
 #include <qapplication.h>
-#include <qtabbar.h>
 #include <qclipboard.h>
 #include <qcursor.h>
 #include <qmessagebox.h>
@@ -294,9 +294,8 @@ void PageView::copy ( void )
   QApplication::clipboard()->setText( xml_doc.toString() );
 
   if ( QApplication::clipboard()->supportsSelection() ) {
-    QApplication::clipboard()->setSelectionMode( true );
-    QApplication::clipboard()->setText( xml_doc.toString() );
-    QApplication::clipboard()->setSelectionMode( false );
+    QApplication::clipboard()->setText( xml_doc.toString(),
+					QClipboard::Selection );
   }
 
   // Alert the UI that we can now paste something.
@@ -327,7 +326,8 @@ void PageView::paste ( void )
     if ( !page_element.isElement() ) continue;
 
     if ( page_element.attribute( lC::STR::TYPE ) != type() ) {
-      cout << "selection type not commensurate with current page" << endl;
+      std::cout << "selection type not commensurate with current page"
+		<< std::endl;
       continue;
     }
 
@@ -844,8 +844,10 @@ bool PageView::mouseRelease ( QMouseEvent* me, const SelectedNames& selected )
       // which may have moved between calling this routine and now.
       // (Why? Well, Annotation pops up a dialog forcing the user to
       // let go of the mouse.)
-      QMouseEvent new_me( QEvent::MouseMove,
-			  view()->mapFromGlobal( QCursor::pos() ), 0, 0 );
+      const QPoint local_pos = view()->mapFromGlobal( QCursor::pos() );
+      QMouseEvent new_me( QEvent::MouseMove, QPointF( local_pos ),
+			  QPointF( QCursor::pos() ), Qt::NoButton,
+			  Qt::NoButton, Qt::NoModifier );
       SelectedNames new_selects;
       view()->select( &new_me, new_selects );
       filtered_names = filter( new_selects );
@@ -870,8 +872,10 @@ void PageView::mouseDoubleClick ( QMouseEvent* me )
   if ( input_object_ != 0 ) {
     input_object_->mouseDoubleClick( me );
     // The mouse might have gone on holiday.
-    QMouseEvent new_me( QEvent::MouseMove,
-			view()->mapFromGlobal( QCursor::pos() ), 0, 0 );
+    const QPoint local_pos = view()->mapFromGlobal( QCursor::pos() );
+    QMouseEvent new_me( QEvent::MouseMove, QPointF( local_pos ),
+			QPointF( QCursor::pos() ), Qt::NoButton,
+			Qt::NoButton, Qt::NoModifier );
     SelectedNames new_selects;
     view()->select( &new_me, new_selects );
     input_object_->mousePrepress( &new_me, new_selects );

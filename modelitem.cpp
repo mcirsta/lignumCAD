@@ -36,7 +36,7 @@ void ModelItem::setName ( const QString& name )
 
   for ( uint i = 0; i < name.length(); i++ )
     if ( name[i] == '/' || name[i] == '\\' )
-      name_ += QString( "%%1" ).arg( name[i].unicode(), 0, 16 );
+      name_ += '%' + QString::number( static_cast<uint>( name[i].unicode() ), 16 );
     else
       name_ += name[i];
 
@@ -53,7 +53,7 @@ DBURL ModelItem::dbURL ( void ) const
 {
 #if 1
   QString _path = path();
-  DBURL::encode( _path );
+  _path = DBURL::encodedPath( _path );
   return DBURL( lC::STR::DB_PREFIX, _path );
 #else
   return DBURL( lC::STR::DB_PREFIX, path() );
@@ -64,5 +64,5 @@ DBURL ModelItem::dbURL ( void ) const
 
 const QString ModelItem::trC ( const QString& string ) const
 {
-  return qApp->translate( "Constants", string );
+  return qApp->translate( "Constants", string.toUtf8().constData() );
 }

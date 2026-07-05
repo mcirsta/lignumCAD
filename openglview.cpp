@@ -188,7 +188,7 @@ OpenGLView::OpenGLView ( DesignBookView* parent, const char* name,
   arrow_.setLength( scale_ * arrowHeadLength() );
   arrow_.setViewNormal( Vector( 0, 0, 1 ) );
 
-  setFocusPolicy( StrongFocus );
+  setFocusPolicy( Qt::StrongFocus );
   // Printing view doesn't need this either...
   context_menu_ = new QMenu( this );
   context_menu_->setObjectName( "openglview_context" );
@@ -701,11 +701,12 @@ void OpenGLView::mousePressEvent ( QMouseEvent* me )
   // a view manipulation command.
 
   if ( ( !me->isAccepted() /*&& selected_names.empty()*/ ) &&
-       ( me->button() == LeftButton || me->button() == MidButton ) ) {
+       ( me->button() == Qt::LeftButton ||
+	 me->button() == Qt::MiddleButton ) ) {
     mouse_mode_ = VIEW;
     mouse_position_ = me->pos();
     old_cursor_ = cursor();
-    setCursor( QCursor( SizeAllCursor ) );
+    setCursor( QCursor( Qt::SizeAllCursor ) );
   }
 
   updateGL();
@@ -721,8 +722,8 @@ void OpenGLView::mouseReleaseEvent ( QMouseEvent* me )
   // means that the IO should call mousePrepress with the currently
   // selected figures after responding to mouseRelease with the
   // previously selected figures.
-  if ( mouse_mode_ == VIEW && ( me->button() == LeftButton ||
-				me->button() == MidButton ) ) {
+  if ( mouse_mode_ == VIEW && ( me->button() == Qt::LeftButton ||
+				me->button() == Qt::MiddleButton ) ) {
     mouse_mode_ = MODEL;
     setCursor( old_cursor_ );
   }
@@ -746,7 +747,9 @@ void OpenGLView::mouseMoveEvent ( QMouseEvent* me )
   // mouse release event is eaten. Hard to know if this is right, but
   // if we're in VIEW mode and the mouse is not pressed, then switch back
   // to MODEL mode.
-  if ( mouse_mode_ == VIEW && me->state() == 0 ) {
+  const Qt::MouseButtons buttons = me->buttons();
+
+  if ( mouse_mode_ == VIEW && buttons == Qt::NoButton ) {
     mouse_mode_ = MODEL;
     setCursor( old_cursor_ );
   }
@@ -762,16 +765,16 @@ void OpenGLView::mouseMoveEvent ( QMouseEvent* me )
 
     switch ( page_view_->space() ) {
     case SPACE2D: 
-      if ( me->state() & LeftButton ) {
+      if ( buttons & Qt::LeftButton ) {
 	pan2D( mouse_delta );
       }
       break;
     case SPACE3D:
-      if ( me->state() & LeftButton ) {
+      if ( buttons & Qt::LeftButton ) {
 	spin3D( mouse_delta );
 	emit rotation( modelview_ );
       }
-      else if ( me->state() & MidButton ) {
+      else if ( buttons & Qt::MiddleButton ) {
 	pan3D( mouse_delta );
       }
     }
@@ -785,7 +788,7 @@ void OpenGLView::mouseMoveEvent ( QMouseEvent* me )
 
     select( me, selected_names );
 
-    if ( me->state() & LeftButton )
+    if ( buttons & Qt::LeftButton )
       page_view_->mouseDrag( me, selected_names );
     else
       page_view_->mousePrepress( me, selected_names );
@@ -962,7 +965,7 @@ void OpenGLView::wheelEvent ( QWheelEvent* we )
 
   ViewData old_view_data = view_data_;
 
-  if ( we->delta() < 0 )
+  if ( we->angleDelta().y() < 0 )
     --view_data_.scale_;
   else
     ++view_data_.scale_;
@@ -1120,16 +1123,18 @@ void OpenGLView::keyPressEvent ( QKeyEvent* ke )
   ViewData old_view_data = view_data_;
   bool view_changed = false;
 
+  const Qt::KeyboardModifiers modifiers = ke->modifiers();
+
   switch ( ke->key() ) {
-  case Key_Up:
+  case Qt::Key_Up:
     switch ( page_view_->space() ) {
     case SPACE2D:
       pan2D( QPoint( 0, -1 ) );
       break;
     case SPACE3D:
-      if ( ke->state() == Qt::NoButton )
+      if ( modifiers == Qt::NoModifier )
 	pan3D( QPoint( 0, -1 ) );
-      else if ( ke->state() == Qt::ControlButton ) {
+      else if ( modifiers == Qt::ControlModifier ) {
 	spin3D( QPoint( 0, -1 ) );
 	emit rotation( modelview_ );
       }
@@ -1141,15 +1146,15 @@ void OpenGLView::keyPressEvent ( QKeyEvent* ke )
 					 old_view_data, view_data_ ) );
     view_changed = true;
     break;
-  case Key_Down:
+  case Qt::Key_Down:
     switch ( page_view_->space() ) {
     case SPACE2D:
       pan2D( QPoint( 0, +1 ) );
       break;
     case SPACE3D:
-      if ( ke->state() == Qt::NoButton )
+      if ( modifiers == Qt::NoModifier )
 	pan3D( QPoint( 0, +1 ) );
-      else if ( ke->state() == Qt::ControlButton ) {
+      else if ( modifiers == Qt::ControlModifier ) {
 	spin3D( QPoint( 0, +1 ) );
 	emit rotation( modelview_ );
       }
@@ -1161,15 +1166,15 @@ void OpenGLView::keyPressEvent ( QKeyEvent* ke )
 					 old_view_data, view_data_ ) );
     view_changed = true;
     break;
-  case Key_Left:
+  case Qt::Key_Left:
     switch ( page_view_->space() ) {
     case SPACE2D:
       pan2D( QPoint( -1, 0 ) ); // Should be a fraction of the visible view...
       break;
     case SPACE3D:
-      if ( ke->state() == Qt::NoButton )
+      if ( modifiers == Qt::NoModifier )
 	pan3D( QPoint( -1, 0 ) );
-      else if ( ke->state() == Qt::ControlButton )
+      else if ( modifiers == Qt::ControlModifier )
 	spin3D( QPoint( -1, 0 ) );
 	emit rotation( modelview_ );
       break;
@@ -1180,15 +1185,15 @@ void OpenGLView::keyPressEvent ( QKeyEvent* ke )
 					 old_view_data, view_data_ ) );
     view_changed = true;
     break;
-  case Key_Right:
+  case Qt::Key_Right:
     switch ( page_view_->space() ) {
     case SPACE2D:
       pan2D( QPoint( +1, 0 ) );
       break;
     case SPACE3D:
-      if ( ke->state() == Qt::NoButton )
+      if ( modifiers == Qt::NoModifier )
 	pan3D( QPoint( +1, 0 ) );
-      else if ( ke->state() == Qt::ControlButton )
+      else if ( modifiers == Qt::ControlModifier )
 	spin3D( QPoint( +1, 0 ) );
 	emit rotation( modelview_ );
       break;
@@ -1199,7 +1204,7 @@ void OpenGLView::keyPressEvent ( QKeyEvent* ke )
 					 old_view_data, view_data_ ) );
     view_changed = true;
     break;
-  case Key_PageUp:
+  case Qt::Key_PageUp:
     ++view_data_.scale_;
     scale_ = view_data_.scale_;
     switch ( page_view_->space() ) {
@@ -1220,7 +1225,7 @@ void OpenGLView::keyPressEvent ( QKeyEvent* ke )
     view_changed = true;
     break;
 
-  case Key_PageDown:
+  case Qt::Key_PageDown:
     --view_data_.scale_;
     scale_ = view_data_.scale_;
     switch ( page_view_->space() ) {

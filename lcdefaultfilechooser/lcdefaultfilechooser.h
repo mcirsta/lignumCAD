@@ -65,6 +65,7 @@ private:
 
   QString filter_;
   QString default_file_;
+  bool edited_;
 };
 
 #endif // LCDEFAULTFILECHOOSER_H

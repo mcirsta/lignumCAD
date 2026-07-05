@@ -24,6 +24,8 @@
 #include <qlineedit.h>
 #include <qcursor.h>
 
+#include <iostream>
+
 #include "command.h"
 #include "cursorfactory.h"
 #include "listviewitem.h"
@@ -45,6 +47,10 @@
 #include "lcdebug.h"
 
 namespace Space3D {
+
+  using std::cout;
+  using std::endl;
+
   class OCSolidViewCreate : public CreateObject {
     //! When CommandHistory undoes or redoes the creation of this object,
     //! the Design Book view is the only handle which is required. Everything
@@ -203,13 +209,13 @@ namespace Space3D {
 	// Update the name elements in the object and it's view.
 
 	memento_list.item(0).toElement().setAttribute( lC::STR::NAME,
-						       rename->newDBURL() );
+						       rename->newDBURL().toString( true ) );
 
 	solid_list.item(0).toElement().
 	  setAttribute( lC::STR::NAME, rename->newDBURL().name() );
 
 	solid_view_list.item(0).toElement().setAttribute( lC::STR::SOLID,
-							  rename->newDBURL() );
+							  rename->newDBURL().toString( true ) );
 
 	return true;
       }

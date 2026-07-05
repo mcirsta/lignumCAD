@@ -23,28 +23,34 @@
 #ifndef OGLPAINTDEVICE_H
 #define OGLPAINTDEVICE_H
 
+#include <memory>
+
 #include <qpaintdevice.h>
 
 #include "openglbase.h"
 
+class OGLPaintEngine;
+
 /*!
  * This class implements a very narrow QPaintDevice. It is solely
  * for rendering RichText into the current OpenGL context. It goes
- * without saying that this depends a great deal on undocumented
- * internals of Qt.
+ * through a small QPaintEngine which handles just the primitives
+ * emitted by QTextDocument.
  */
 class OGLPaintDevice : public QPaintDevice
 {
   OpenGLBase* view_;
   FaceData face_data_;
+  std::unique_ptr<OGLPaintEngine> paint_engine_;
 public:
-  OGLPaintDevice ( OpenGLBase* view )
-    : QPaintDevice( QInternal::ExternalDevice ), view_( view )
-  {}
+  OGLPaintDevice ( OpenGLBase* view );
+  ~OGLPaintDevice ( void );
 
   void setView ( OpenGLBase* view );
-  bool cmd ( int command, QPainter* painter, QPDevCmdParam* params );
-  int metric ( int n ) const;
+  OpenGLBase* view ( void ) const { return view_; }
+  FaceData& faceData ( void ) { return face_data_; }
+  QPaintEngine* paintEngine ( void ) const override;
+  int metric ( PaintDeviceMetric n ) const override;
 };
 
 #endif // OGLPAINTDEVICE_H

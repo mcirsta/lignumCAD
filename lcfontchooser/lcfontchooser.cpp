@@ -27,13 +27,14 @@
 #include <qtooltip.h>
 #include <qfontdialog.h>
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QPixmap>
 
 #include "constants.h"
 #include "lcfontchooser.h"
 
 lCFontChooser::lCFontChooser( QWidget *parent, const char *name )
-  : QFrame( parent )
+  : QFrame( parent ), edited_( false )
 {
   setObjectName( name );
 
@@ -44,7 +45,8 @@ lCFontChooser::lCFontChooser( QWidget *parent, const char *name )
   setFrameStyle( Panel | Sunken );
   setLineWidth( 2 );
 
-  line_edit_ = new QLineEdit( this, "lineedit" );
+  line_edit_ = new QLineEdit( this );
+  line_edit_->setObjectName( "lineedit" );
   line_edit_->setReadOnly( true );
   line_edit_->setFrame( false );
   // Just pick something for starters
@@ -55,18 +57,19 @@ lCFontChooser::lCFontChooser( QWidget *parent, const char *name )
 		       .arg( line_edit_->font().pointSize() ) );
   line_edit_->setCursorPosition( 0 );
 
-  button_ = new QPushButton( "...", this, "button" );
-  button_->setFixedWidth( button_->fontMetrics().width( "ABC" ) );
+  button_ = new QPushButton( "...", this );
+  button_->setObjectName( "button" );
+  button_->setFixedWidth( button_->fontMetrics().horizontalAdvance( "ABC" ) );
 
-  default_ = new QToolButton( this, "default" );
+  default_ = new QToolButton( this );
+  default_->setObjectName( "default" );
 
-  QToolTip::add( default_,
-		 tr( "Click this button to restore the font to the default" ) );
+  default_->setToolTip( tr( "Click this button to restore the font to the default" ) );
 
-  QIconSet icon( QPixmap( ":/images/default_active.png" ) );
-  icon.setPixmap( QPixmap( ":/images/default_inactive.png" ),
-		  QIconSet::Automatic, QIconSet::Disabled );
-  default_->setIconSet( icon );
+  QIcon icon;
+  icon.addPixmap( QPixmap( ":/images/default_active.png" ), QIcon::Normal );
+  icon.addPixmap( QPixmap( ":/images/default_inactive.png" ), QIcon::Disabled );
+  default_->setIcon( icon );
 
   default_->setFixedWidth( default_->sizeHint().width() );
   default_->setFixedHeight( button_->sizeHint().height()-2 );
@@ -85,12 +88,12 @@ lCFontChooser::lCFontChooser( QWidget *parent, const char *name )
 
 bool lCFontChooser::edited ( void ) const
 {
-  return line_edit_->edited();
+  return edited_;
 }
 
 void lCFontChooser::setEdited ( bool edited )
 {
-  line_edit_->setEdited( edited );
+  edited_ = edited;
 }
 
 void lCFontChooser::setFont( const QString& font )
@@ -110,6 +113,8 @@ void lCFontChooser::setFont( const QString& font )
 
   if ( font_ == default_font_ )
     default_->setEnabled( false );
+
+  setEdited( false );
 }
 
 void lCFontChooser::setDefaultFont ( const QString& default_font )
@@ -140,7 +145,7 @@ void lCFontChooser::chooseFont()
 			 .arg( qfont.family() )
 			 .arg( qfont.pointSize() ) );
     line_edit_->setCursorPosition( 0 );
-    line_edit_->setEdited( true );
+    setEdited( true );
 
     if ( font_ != default_font_ )
       default_->setEnabled( true );
@@ -164,7 +169,7 @@ void lCFontChooser::chooseDefault ( void )
 		       .arg( qfont.family() )
 		       .arg( qfont.pointSize() ) );
   line_edit_->setCursorPosition( 0 );
-  line_edit_->setEdited( true );
+  setEdited( true );
 
   default_->setEnabled( false );
 

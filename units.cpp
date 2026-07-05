@@ -21,7 +21,7 @@
  *
  */
 #include <qapplication.h>
-#include <qregexp.h>
+#include <QRegularExpression>
 
 #include "constants.h"
 #include "vectoralgebra.h"
@@ -45,6 +45,11 @@ namespace {
   const QString MILLIMETER_ABBREV = "mm";
   const QString CENTIMETER_ABBREV = "cm";
   const QString METER_ABBREV      = "m";
+
+  QString translatePrecision ( const QString& text )
+  {
+    return qApp->translate( "Precision", text.toUtf8().constData() );
+  }
 };
 
 // The tables of valid precisions.
@@ -211,8 +216,8 @@ public:
 	    // Format the numerator and shift to the 0xE000 sequence
 	    QString numerator = QString::number( b );
 	    for ( uint i = 0; i < numerator.length(); i++ )
-	      numerator.at(i) = QChar( numerator.at(i).unicode() +
-				       num_unicode_offset );
+	      numerator[i] = QChar( numerator.at(i).unicode() +
+				    num_unicode_offset );
 	    formatted_value += numerator;
 	    formatted_value += use_unicode ?
 	      QChar( 0xE00a ) // The custom '/' character
@@ -220,8 +225,8 @@ public:
 	    // Format the denominator and shift to the 0xE010 sequence
 	    QString denominator = QString::number( c );
 	    for ( uint i = 0; i < denominator.length(); i++ )
-	      denominator.at(i) = QChar( denominator.at(i).unicode() +
-					 den_unicode_offset );
+	      denominator[i] = QChar( denominator.at(i).unicode() +
+				      den_unicode_offset );
 	    formatted_value += denominator;
 	  }
 	}
@@ -246,39 +251,39 @@ public:
 	QString unit_regexp( "\\s*(?:" + INCH_QUOTE_ABBREV + "|" + INCH_IN_ABBREV +
 			     ")?\\s*$" );
 	// Note: accept a decimal input anyway.
-	QRegExp decimal_regexp( "^\\s*[+-]?(?:\\d+(?:\\.(?:\\d+)?)?|\\.\\d+)" +
-				unit_regexp );
-	QRegExp fraction_regexp( "^\\s*([+-]?)(\\d+)/(\\d+)" + unit_regexp );
-	QRegExp mixed_fraction_regexp( "^\\s*([+-]?)(\\d+)(?:[ -](\\d+)/(\\d+))?" +
-				       unit_regexp );
+	QRegularExpression decimal_regexp( "^\\s*[+-]?(?:\\d+(?:\\.(?:\\d+)?)?|\\.\\d+)" +
+					   unit_regexp );
+	QRegularExpression fraction_regexp( "^\\s*([+-]?)(\\d+)/(\\d+)" + unit_regexp );
+	QRegularExpression mixed_fraction_regexp( "^\\s*([+-]?)(\\d+)(?:[ -](\\d+)/(\\d+))?" +
+						  unit_regexp );
 
 	// First, check to see if it is a regular decimal number
-	int pos = decimal_regexp.search( text );
-	if ( pos >= 0 ) {
+	QRegularExpressionMatch match = decimal_regexp.match( text );
+	if ( match.hasMatch() ) {
 	  value = text.toDouble(); // Just use the regular Qt conversion.
 	  break;
 	}
 	// Next, check to see if it is a pure fraction.
-	pos = fraction_regexp.search( text );
-	if ( pos >= 0 ) {
-	  int numerator = fraction_regexp.cap( 2 ).toInt();
-	  int denominator = fraction_regexp.cap( 3 ).toInt();
+	match = fraction_regexp.match( text );
+	if ( match.hasMatch() ) {
+	  int numerator = match.captured( 2 ).toInt();
+	  int denominator = match.captured( 3 ).toInt();
 	  if ( denominator != 0 )
 	    value = (double)numerator / denominator;
-	  if ( fraction_regexp.cap( 1 ) == "-" )
+	  if ( match.captured( 1 ) == "-" )
 	    value = -value;
 	  break;
 	}
 	// If not a pure fraction, maybe it's a mixed fraction.
-	pos = mixed_fraction_regexp.search( text );
-	if ( pos >= 0 ) {
-	  int whole = mixed_fraction_regexp.cap( 2 ).toInt();
-	  int numerator = mixed_fraction_regexp.cap( 3 ).toInt();
-	  int denominator = mixed_fraction_regexp.cap( 4 ).toInt();
+	match = mixed_fraction_regexp.match( text );
+	if ( match.hasMatch() ) {
+	  int whole = match.captured( 2 ).toInt();
+	  int numerator = match.captured( 3 ).toInt();
+	  int denominator = match.captured( 4 ).toInt();
 	  value = whole;
 	  if ( denominator != 0 )
 	    value += (double)numerator / denominator;
-	  if ( mixed_fraction_regexp.cap( 1 ) == "-" )
+	  if ( match.captured( 1 ) == "-" )
 	    value = -value;
 	}
       }
@@ -298,7 +303,7 @@ public:
 class InchIn : public Inch
 {
 public:
-  InchIn ( void ) : Inch( qApp->translate( "Precision", INCH_IN_ABBREV ),
+  InchIn ( void ) : Inch( translatePrecision( INCH_IN_ABBREV ),
 			  &english_fractional_in, &english_decimal_in )
   {}
 };
@@ -310,7 +315,7 @@ public:
 class InchQuote : public Inch
 {
 public:
-  InchQuote ( void ) : Inch( qApp->translate( "Precision", INCH_QUOTE_ABBREV ),
+  InchQuote ( void ) : Inch( translatePrecision( INCH_QUOTE_ABBREV ),
 			     &english_fractional_quote, &english_decimal_quote )
   {}
 };
@@ -395,25 +400,25 @@ public:
 	// indicator, otherwise it is assumed to be inches. For example:
 	// 1' 2, 2ft 1 1/2
 	// note: accept decimal representation, too.
-	QRegExp decimal_regexp( "^\\s*[+-]?(?:\\d+(?:\\.(?:\\d+)?)?|\\.\\d+)$" );
-	QRegExp foot_regexp( "^\\s*([+-]?)(\\d+)(?:'|ft?)" );
+	QRegularExpression decimal_regexp( "^\\s*[+-]?(?:\\d+(?:\\.(?:\\d+)?)?|\\.\\d+)$" );
+	QRegularExpression foot_regexp( "^\\s*([+-]?)(\\d+)(?:'|ft?)" );
 
 	// First,check to see if is in decimal notation
-	int pos = decimal_regexp.search( text );
-	if ( pos >= 0 ) {
+	QRegularExpressionMatch match = decimal_regexp.match( text );
+	if ( match.hasMatch() ) {
 	  value = INCHES_PER_FOOT * text.toDouble();
 	  break;
 	}
 	// Next, check to see if it has a specified foot length
-	pos = foot_regexp.search( text );
-	if ( pos >= 0 ) {
-	  value = INCHES_PER_FOOT * foot_regexp.cap( 2 ).toDouble();
+	match = foot_regexp.match( text );
+	if ( match.hasMatch() ) {
+	  value = INCHES_PER_FOOT * match.captured( 2 ).toDouble();
 	  // Parse the rest of the string as an integer by chopping
 	  // off the matched part and passing the rest to the inch parser.
-	  QString inch_text = text.mid( foot_regexp.cap(0).length() );
+	  QString inch_text = text.mid( match.capturedLength( 0 ) );
 	  value += inch()->parse( inch_text, format, precision );
 
-	  if ( foot_regexp.cap( 1 ) == "-" )
+	  if ( match.captured( 1 ) == "-" )
 	    value = -value;
 	  break;
 	}
@@ -439,7 +444,7 @@ class FootFt : public Foot
   //! Use for formatting the inch part in fractional mode.
   InchIn* inch_;
 public:
-  FootFt ( void ) : Foot( qApp->translate( "Precision", FOOT_FT_ABBREV ),
+  FootFt ( void ) : Foot( translatePrecision( FOOT_FT_ABBREV ),
 			  &english_fractional_in, &english_decimal_in )
   {
     inch_ = new InchIn;
@@ -462,7 +467,7 @@ class FootQuote : public Foot
   //! Use for formatting the inch part in fractional mode.
   InchQuote* inch_;
 public:
-  FootQuote ( void ) : Foot( qApp->translate( "Precision", FOOT_QUOTE_ABBREV ),
+  FootQuote ( void ) : Foot( translatePrecision( FOOT_QUOTE_ABBREV ),
 			     &english_fractional_quote, &english_decimal_quote )
   {
     inch_ = new InchQuote;
@@ -555,25 +560,25 @@ public:
 	// indicator, otherwise it is assumed to be inches. For example:
 	// 1y 2' 2, 2yd 2ft 1 1/2
 	// note: accept decimal representation, too.
-	QRegExp decimal_regexp( "^\\s*[+-]?(?:\\d+(?:\\.(?:\\d+)?)?|\\.\\d+)$" );
-	QRegExp yard_regexp( "^\\s*([+-]?)(\\d+)yd?" );
+	QRegularExpression decimal_regexp( "^\\s*[+-]?(?:\\d+(?:\\.(?:\\d+)?)?|\\.\\d+)$" );
+	QRegularExpression yard_regexp( "^\\s*([+-]?)(\\d+)yd?" );
 
 	// First, check to see if it is just decimal.
-	int pos = decimal_regexp.search( text );
-	if ( pos >= 0 ) {
+	QRegularExpressionMatch match = decimal_regexp.match( text );
+	if ( match.hasMatch() ) {
 	  value = INCHES_PER_YARD * text.toDouble();
 	  break;
 	}
 	// Next, check to see if it has a specified yard length
-	pos = yard_regexp.search( text );
-	if ( pos >= 0 ) {
-	  value = INCHES_PER_YARD * yard_regexp.cap( 2 ).toDouble();
+	match = yard_regexp.match( text );
+	if ( match.hasMatch() ) {
+	  value = INCHES_PER_YARD * match.captured( 2 ).toDouble();
 	  // Parse the rest of the string as a foot length by chopping
 	  // off the matched part and passing the rest to the foot parser.
-	  QString foot_text = text.mid( yard_regexp.cap(0).length() );
+	  QString foot_text = text.mid( match.capturedLength( 0 ) );
 	  value += foot_->parse( foot_text, format, precision );
 
-	  if ( yard_regexp.cap( 1 ) == "-" )
+	  if ( match.captured( 1 ) == "-" )
 	    value = -value;
 	  break;
 	}
@@ -598,7 +603,7 @@ class Millimeter : public LengthUnit
 public:
   Millimeter ( void ) : LengthUnit( METRIC,
 				    qApp->translate( "Precision", "Millimeters" ),
-				    qApp->translate( "Precision", MILLIMETER_ABBREV ),
+				    translatePrecision( MILLIMETER_ABBREV ),
 				    DECIMAL, MM_PER_INCH, false,
 				    0, &metric_decimal )
   {}
@@ -643,7 +648,7 @@ class Centimeter : public LengthUnit
 public:
   Centimeter ( void ) : LengthUnit( METRIC,
 				    qApp->translate( "Precision", "Centimeters" ),
-				    qApp->translate( "Precision", CENTIMETER_ABBREV ),
+				    translatePrecision( CENTIMETER_ABBREV ),
 				    DECIMAL, CM_PER_INCH, false,
 				    0, &metric_decimal )
   {}
@@ -688,7 +693,7 @@ class Meter : public LengthUnit
 public:
   Meter ( void ) : LengthUnit( METRIC,
 			       qApp->translate( "Precision", "Meters" ),
-			       qApp->translate( "Precision", METER_ABBREV ),
+			       translatePrecision( METER_ABBREV ),
 			       DECIMAL, M_PER_INCH, false,
 			       0, &metric_decimal )
   {}
@@ -735,8 +740,10 @@ UnitsBasis* UnitsBasis::instance ( void )
 }
 
 UnitsBasis::UnitsBasis ( void )
-  : QObject( 0, "unitsBasis" ), current_length_unit_( 0 )
+  : QObject( 0 ), current_length_unit_( 0 )
 {
+  setObjectName( "unitsBasis" );
+
   length_units_.push_back( std::make_unique<InchIn>() );
   length_units_.push_back( std::make_unique<InchQuote>() );
   length_units_.push_back( std::make_unique<FootFt>() );
@@ -786,23 +793,23 @@ void UnitsBasis::setLengthUnit ( int index )
 
 void UnitsBasis::setLengthUnit ( const QStringList& list )
 {
-  QRegExp name_rx( "(.*)\\[(.*)\\]" );
+  QRegularExpression name_rx( "(.*)\\[(.*)\\]" );
   QStringList::const_iterator l = list.begin();
 
   if ( l == list.end() )
     return;
 
-  int position = name_rx.search( *l );
+  QRegularExpressionMatch match = name_rx.match( *l );
 
-  if ( position < 0 )
+  if ( !match.hasMatch() )
     return;
 
   // Don't disturb the current default in case this fails.
   int index = 0;
 
   for ( ; index < static_cast<int>( length_units_.size() ); ++index )
-    if ( name_rx.cap(1) == length_units_[index]->name() &&
-	 name_rx.cap(2) == length_units_[index]->abbreviation() )
+    if ( match.captured(1) == length_units_[index]->name() &&
+	 match.captured(2) == length_units_[index]->abbreviation() )
       break;
 
   if ( index == static_cast<int>( length_units_.size() ) )

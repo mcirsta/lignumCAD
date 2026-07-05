@@ -381,7 +381,8 @@ OGLFT::Face* OpenGLExample::font ( const FaceData& requested_face )
   // passes to Xft so the OpenGL font appears to be same size as that
   // shown in the requestor.
 
-  OGLFT::Face* base_face = new OGLFT::Monochrome( file, point_size, 0 );
+  QByteArray file_name = file.toUtf8();
+  OGLFT::Face* base_face = new OGLFT::Monochrome( file_name.constData(), point_size, 0 );
 
   faces_.insert( actual_face, base_face );
 

@@ -28,6 +28,7 @@
 #include <qcolor.h>
 #include <qpainter.h>
 #include <qprinter.h>
+#include <QPolygon>
 
 #include "gl2ps.h"
 
@@ -42,7 +43,7 @@ inline int F2CI ( double x ) { return (int)( 255. * x ); }
 inline int F2SIX ( double x ) { return (int)rint( SCALE_X * x ); }
 inline int F2SIY ( double y ) { return (int)rint( SCALE_Y * y ); }
 
-inline void PNT ( int i, GL2PSvertex* verts, QPointArray& triangle )
+inline void PNT ( int i, GL2PSvertex* verts, QPolygon& triangle )
 { triangle.setPoint( i, F2SIX( verts[i].xyz[0] ), F2SIY( verts[i].xyz[1] ) ); }
 
 extern "C" {
@@ -126,7 +127,7 @@ extern "C" {
       break;
     case GL2PS_LINE :
       if(gl2ps.shade){
-	std::cout << "somehow, we got a shaded line anyway" << endl;
+	std::cout << "somehow, we got a shaded line anyway" << std::endl;
       }
       else{
 	QColor color( F2CI( prim->verts[0].rgba[0] ),
@@ -166,7 +167,7 @@ extern "C" {
       break;
     case GL2PS_TRIANGLE :
       if(gl2ps.shade){
-	std::cout << "somehow, we got a shaded triangle anyway" << endl;
+	std::cout << "somehow, we got a shaded triangle anyway" << std::endl;
       }
       else{
 #if 0
@@ -187,7 +188,7 @@ extern "C" {
 				   F2CI( prim->verts[0].rgba[1] ),
 				   F2CI( prim->verts[0].rgba[2] ) ) );
 
-	QPointArray triangle(3);
+	QPolygon triangle(3);
 
 	PNT( 0, prim->verts, triangle );
 	PNT( 1, prim->verts, triangle );

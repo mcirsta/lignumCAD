@@ -25,6 +25,8 @@
 #include <qmessagebox.h>
 #include <qtextstream.h>
 
+#include <iostream>
+
 #if defined(Q_OS_UNIX)
 extern "C" {
 #include <stdlib.h>
@@ -59,16 +61,18 @@ CommandHistory& CommandHistory::instance ( void )
 }
 
 CommandHistory::CommandHistory ( void )
-  : QObject( 0, "command_history" ), current_( -1 ), file_( 0 ), stream_( 0 ),
+  : QObject( 0 ), current_( -1 ), file_( 0 ), stream_( 0 ),
     document_( 0 )
 {
+  setObjectName( "command_history" );
+
   file_ = new QFile( "history.xml" );
-  if ( file_->open( IO_WriteOnly ) ) {
+  if ( file_->open( QIODevice::WriteOnly ) ) {
     stream_ = new QTextStream( file_ );
 
     document_ = new QDomDocument( "LIGNUMCAD-HISTORY" );
 
-    *stream_ << "<LIGNUMCAD-HISTORY version=\"1\">" << endl;
+    *stream_ << "<LIGNUMCAD-HISTORY version=\"1\">" << Qt::endl;
   }
 }
 
@@ -78,7 +82,7 @@ CommandHistory::~CommandHistory ( void )
     delete document_;
 
   if ( stream_ != 0 ) {
-    *stream_ << "</LIGNUMCAD-HISTORY>" << endl;
+    *stream_ << "</LIGNUMCAD-HISTORY>" << Qt::endl;
     delete stream_;
   }
 
@@ -95,7 +99,7 @@ void CommandHistory::addCommand ( Command* command )
   // view modifications).
   command->write( document_ );
   *stream_ << document_->firstChild();
-  stream_->device()->flush();
+  stream_->flush();
 
   // If the current command is not the end of the list, then
   // this command basically truncates the remainder of the history
@@ -135,8 +139,8 @@ void CommandHistory::undo ( void )
     history_[current_]->unexecute();
 
     *stream_ << "<undo command=\"" << history_[current_]->name() << "\"/>"
-	     << endl;
-    stream_->device()->flush();
+	     << Qt::endl;
+    stream_->flush();
 
     current_--;
   }
@@ -154,8 +158,8 @@ void CommandHistory::redo ( void )
       history_[current_]->execute();
 
       *stream_ << "<redo command=\"" << history_[current_]->name() << "\"/>"
-	       << endl;
-      stream_->device()->flush();
+	       << Qt::endl;
+      stream_->flush();
     }
   }
   else {
@@ -167,8 +171,8 @@ void CommandHistory::redo ( void )
       history_[current_]->execute();
 
       *stream_ << "<redo command=\"" << history_[current_]->name() << "\"/>"
-	       << endl;
-      stream_->device()->flush();
+	       << Qt::endl;
+      stream_->flush();
     }
   }
 
@@ -193,9 +197,9 @@ void CommandHistory::flushOnSegV ( void )
 {
   // In an emergency, write a stack trace to the history file and then
   // close the dribble file's output stream.
-  cerr << "Got a segv" << endl;
+  std::cerr << "Got a segv" << std::endl;
   if ( stream_ != 0 ) {
-    stream_->device()->flush();
+    stream_->flush();
 #if defined(Q_OS_UNIX)
     {
       const int BTSIZE = 200;
@@ -204,10 +208,10 @@ void CommandHistory::flushOnSegV ( void )
       char** strings;
       size = backtrace( array, BTSIZE );
       strings = backtrace_symbols( array, size );
-      *stream_ << "<backtrace>" << endl;
+      *stream_ << "<backtrace>" << Qt::endl;
       for ( size_t i = 0; i < size; ++i )
-	*stream_ << strings[i] << endl;
-      *stream_ << "</backtrace>" << endl;
+	*stream_ << strings[i] << Qt::endl;
+      *stream_ << "</backtrace>" << Qt::endl;
       free( strings );
     }
 #endif
@@ -293,7 +297,7 @@ void RenameCommand::execute ( void )
 {
   ModelItem* item = model_->lookup( old_db_url_ );
   if ( item == 0 ) {
-    cerr << "Yikes, item did not exist!" << endl;
+    std::cerr << "Yikes, item did not exist!" << std::endl;
     return;
   }
 
@@ -304,7 +308,7 @@ void RenameCommand::unexecute ( void )
 {
   ModelItem* item = model_->lookup( new_db_url_ );
   if ( item == 0 ) {
-    cerr << "Yikes, item did not exist!" << endl;
+    std::cerr << "Yikes, item did not exist!" << std::endl;
     return;
   }
 
@@ -353,7 +357,7 @@ void MoveLinesCommand::execute ( void )
     Space2D::ConstrainedLine* line =
       dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( move_line->db_url_ ) );
     if ( line == 0 ) {
-      cerr << "Yikes, line did not exist!" << endl;
+      std::cerr << "Yikes, line did not exist!" << std::endl;
       continue;
     }
     line->setOffset( move_line->new_offset_ );
@@ -376,7 +380,7 @@ void MoveLinesCommand::execute ( void )
 	dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( db_url ) );
 
       if ( line == 0 ) {
-	cerr << "Yikes, line did not exist!" << endl;
+	std::cerr << "Yikes, line did not exist!" << std::endl;
 	return;
       }
 
@@ -405,7 +409,7 @@ void MoveLinesCommand::unexecute ( void )
 	dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( db_url ) );
 
       if ( line == 0 ) {
-	cerr << "Yikes, line did not exist!" << endl;
+	std::cerr << "Yikes, line did not exist!" << std::endl;
 	return;
       }
 
@@ -421,7 +425,7 @@ void MoveLinesCommand::unexecute ( void )
     Space2D::ConstrainedLine* line =
       dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( move_line->db_url_ ) );
     if ( line == 0 ) {
-      cerr << "Yikes, line did not exist!" << endl;
+      std::cerr << "Yikes, line did not exist!" << std::endl;
       continue;
     }
 
@@ -441,7 +445,7 @@ void MoveLinesCommand::write ( QDomDocument* document ) const
   for ( const auto& move_line : lines_ ) {
     QDomElement line_element = document->createElement( lC::STR::MOVE_LINE );
 
-    line_element.setAttribute( lC::STR::URL, move_line->db_url_ );
+    line_element.setAttribute( lC::STR::URL, move_line->db_url_.toString( true ) );
     line_element.setAttribute( lC::STR::OLD_OFFSET,
 			       lC::format( move_line->old_offset_ ) );
     line_element.setAttribute( lC::STR::NEW_OFFSET,
@@ -484,7 +488,7 @@ void ReconstrainCommand::execute ( void )
       dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( db_url ) );
 
     if ( line == 0 ) {
-      cerr << "Yikes, line did not exist!" << endl;
+      std::cerr << "Yikes, line did not exist!" << std::endl;
       return;
     }
 
@@ -513,7 +517,7 @@ void ReconstrainCommand::unexecute ( void )
       dynamic_cast<Space2D::ConstrainedLine*>( model_->lookup( db_url ) );
 
     if ( line == 0 ) {
-      cerr << "Yikes, line did not exist!" << endl;
+      std::cerr << "Yikes, line did not exist!" << std::endl;
       return;
     }
 
