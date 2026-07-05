@@ -22,7 +22,7 @@
  */
 
 #include <BRep_Tool.hxx>
-#include <BRepMesh.hxx>
+#include <BRepMesh_IncrementalMesh.hxx>
 #include <BRepTools.hxx>
 #include <BRepTools_WireExplorer.hxx>
 #include <GeomLProp_SLProps.hxx>
@@ -120,9 +120,9 @@ namespace Space3D {
 
       glBegin( GL_LINE_STRIP );
       const TColStd_Array1OfInteger& indices( edges_polygon->Nodes() );
-      const TColgp_Array1OfPnt& nodes( triangles->Nodes() );
       for ( int i = indices.Lower(); i <= indices.Upper(); i++ ) {
-	gp_Pnt vertex = nodes( indices(i) ).Transformed( location.Transformation());
+	gp_Pnt vertex =
+	  triangles->Node( indices(i) ).Transformed( location.Transformation());
 	glVertex3f( vertex.X(), vertex.Y(), vertex.Z() );
       }
       glEnd();
@@ -174,9 +174,9 @@ namespace Space3D {
 
 	glBegin( GL_LINE_STRIP );
 	const TColStd_Array1OfInteger& indices( edges_polygon->Nodes() );
-	const TColgp_Array1OfPnt& nodes( triangles->Nodes() );
 	for ( int i = indices.Lower(); i <= indices.Upper(); i++ ) {
-	  gp_Pnt vertex = nodes( indices(i)).Transformed(location.Transformation());
+	  gp_Pnt vertex =
+	    triangles->Node( indices(i)).Transformed(location.Transformation());
 	  glVertex3f( vertex.X(), vertex.Y(), vertex.Z() );
 	}
 	glEnd();
@@ -270,29 +270,27 @@ namespace Space3D {
       Handle( Poly_Triangulation ) triangles =
 	BRep_Tool::Triangulation( face, location );
 
-      // Grab lists of the nodes, parameters and triangles (i.e., indices
-      // in the nodes array).
-      const TColgp_Array1OfPnt& nodes( triangles->Nodes() );
-      const TColgp_Array1OfPnt2d& uvs( triangles->UVNodes() );
-      const Poly_Array1OfTriangle& tris( triangles->Triangles() );
-
       // Waltz over the list of triangles while drawing them.
 
-      for ( Standard_Integer i = tris.Lower(); i <= tris.Upper(); ++i ) {
+      for ( Standard_Integer i = 1; i <= triangles->NbTriangles(); ++i ) {
 	Standard_Integer a, b, c;
 
-	tris(i).Get( a, b, c );
+	triangles->Triangle( i ).Get( a, b, c );
 
 	// Well, back face culling didn't work because the triangles
 	// are not always ordered properly. Maybe we can fix this...
 	gp_Pnt va, vb, vc;
-	va = nodes(a).Transformed( location.Transformation() );
-	vb = nodes(b).Transformed( location.Transformation() );
-	vc = nodes(c).Transformed( location.Transformation() );
+	va = triangles->Node(a).Transformed( location.Transformation() );
+	vb = triangles->Node(b).Transformed( location.Transformation() );
+	vc = triangles->Node(c).Transformed( location.Transformation() );
 	gp_Vec e1( va, vb );
 	gp_Vec e2( va, vc );
 
-	properties.SetParameters( uvs(a).X(), uvs(a).Y() );
+	gp_Pnt2d uva = triangles->UVNode(a);
+	gp_Pnt2d uvb = triangles->UVNode(b);
+	gp_Pnt2d uvc = triangles->UVNode(c);
+
+	properties.SetParameters( uva.X(), uva.Y() );
 	gp_Dir normal = properties.Normal();
 	if ( reverse ) normal.Reverse();
 
@@ -313,21 +311,21 @@ namespace Space3D {
 	// to the current location).
 
 	glNormal3f( normal.X(), normal.Y(), normal.Z() );
-	glTexCoord2fv( texture_function->texCoords( uvs(a), va ) );
+	glTexCoord2fv( texture_function->texCoords( uva, va ) );
 	glVertex3f( va.X(), va.Y(), va.Z() );
 
-	properties.SetParameters( uvs(b).X(), uvs(b).Y() );
+	properties.SetParameters( uvb.X(), uvb.Y() );
 	normal = properties.Normal();
 	if ( reverse ) normal.Reverse();
 	glNormal3f( normal.X(), normal.Y(), normal.Z() );
-	glTexCoord2fv( texture_function->texCoords( uvs(b), vb ) );
+	glTexCoord2fv( texture_function->texCoords( uvb, vb ) );
 	glVertex3f( vb.X(), vb.Y(), vb.Z() );
 
-	properties.SetParameters( uvs(c).X(), uvs(c).Y() );
+	properties.SetParameters( uvc.X(), uvc.Y() );
 	normal = properties.Normal();
 	if ( reverse ) normal.Reverse();
 	glNormal3f( normal.X(), normal.Y(), normal.Z() );
-	glTexCoord2fv( texture_function->texCoords( uvs(c), vc ) );
+	glTexCoord2fv( texture_function->texCoords( uvc, vc ) );
 	glVertex3f( vc.X(), vc.Y(), vc.Z() );
       }
 
@@ -437,8 +435,7 @@ namespace Space3D {
     gp_Trsf transform;
     transform.SetValues( modelview[0], modelview[4], modelview[8], modelview[12],
 			 modelview[1], modelview[5], modelview[9], modelview[13],
-			 modelview[2], modelview[6], modelview[10], modelview[14],
-			 1e-3, 1e-3 );
+			 modelview[2], modelview[6], modelview[10], modelview[14] );
 
     HLRAlgo_Projector projector( transform, false, 0. );
     brep_hlr->Projector( projector );
@@ -464,7 +461,7 @@ namespace Space3D {
 
     if ( !visible_edges.IsNull() ) {
 
-      BRepMesh::Mesh( visible_edges, 1. );
+      BRepMesh_IncrementalMesh( visible_edges, 1. );
 
       edges.Init( visible_edges, TopAbs_EDGE );
     
@@ -485,7 +482,7 @@ namespace Space3D {
     visible_edges = shapes.VCompound();
 
     if ( !visible_edges.IsNull() ) {
-      BRepMesh::Mesh( visible_edges, 1. );
+      BRepMesh_IncrementalMesh( visible_edges, 1. );
 
       edges.Init( visible_edges, TopAbs_EDGE );
     
@@ -516,7 +513,7 @@ namespace Space3D {
 
     if ( !hidden_edges.IsNull() ) {
 
-      BRepMesh::Mesh( hidden_edges, 1. );
+      BRepMesh_IncrementalMesh( hidden_edges, 1. );
 
       edges.Init( hidden_edges, TopAbs_EDGE );
     
@@ -538,7 +535,7 @@ namespace Space3D {
 
     if ( !hidden_edges.IsNull() ) {
 
-      BRepMesh::Mesh( hidden_edges, 1. );
+      BRepMesh_IncrementalMesh( hidden_edges, 1. );
 
       edges.Init( hidden_edges, TopAbs_EDGE );
     
@@ -557,8 +554,6 @@ namespace Space3D {
     }
 
     glEndList();
-
-    delete &brep_hlr;
   }
 
   void OCSolidDraw::updateMaterial ( void )
@@ -708,7 +703,7 @@ namespace Space3D {
       glDisable( GL_DEPTH_TEST );
       glPushMatrix();
       glLoadIdentity();
-      glColor3ubv( lC::qCubv( view_->geometryColor().dark() ) );
+      glColor3ubv( lC::qCubv( view_->geometryColor().darker() ) );
       glCallList( hlr_bg_name_ );
       glColor3ubv( lC::qCubv( view_->geometryColor() ) );
       glCallList( hlr_fg_name_ );

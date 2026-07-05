@@ -619,7 +619,7 @@ View* SubassemblyView::lookup ( QStringList& /*path_components*/ ) const
 
 QString SubassemblyView::geometry ( const std::vector<GLuint>& selection_names ) const
 {
-  QString name = lC::STR::PATH_PATTERN.arg( parent()->dbURL() ).
+  QString name = lC::STR::PATH_PATTERN.arg( parent()->dbURL().toString( true ) ).
     arg( drawer_->geometry( selection_names ) );
 
   return name;

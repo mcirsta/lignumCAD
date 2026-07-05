@@ -157,7 +157,7 @@ public:
 
     if ( material_ != 0 ) {
       GeomAPI_ProjectPointOnSurf project( p, reference_plane_ );
-      Quantity_Parameter u, v;
+      Standard_Real u, v;
       project.LowerDistanceParameters( u, v );
       coords[0] = s_resolution_ * u;
       coords[1] = t_resolution_ * v;
@@ -194,7 +194,7 @@ private:
 class OCPlaneTexture : public OCTextureFunction {
 public:
   OCPlaneTexture ( void ) {
-    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_Plane )->HashCode( IntegerLast() ), this );
+    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_Plane ).get(), this );
   }
   /*!
    * Update the planar surface properties used to in the computation of the
@@ -292,7 +292,7 @@ public:
 
     if ( material_ != 0 ) {
       GeomAPI_ProjectPointOnSurf project( p, reference_plane_ );
-      Quantity_Parameter u, v;
+      Standard_Real u, v;
       project.LowerDistanceParameters( u, v );
       coords[0] = s_resolution_ * u;
       coords[1] = t_resolution_ * v;
@@ -329,7 +329,7 @@ private:
 class OCCylindricalTexture : public OCTextureFunction {
 public:
   OCCylindricalTexture ( void ) {
-    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_CylindricalSurface )->HashCode( IntegerLast() ), this );
+    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_CylindricalSurface ).get(), this );
   }
   /*!
    * Update the cylindrical surface properties used to in the computation of the
@@ -429,7 +429,7 @@ private:
 class OCConicalTexture : public OCTextureFunction {
 public:
   OCConicalTexture ( void ) {
-    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_ConicalSurface )->HashCode( IntegerLast() ), this );
+    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_ConicalSurface ).get(), this );
   }
   /*!
    * Update the cylindrical surface properties used to in the computation of the
@@ -539,7 +539,7 @@ private:
 class OCSORTexture : public OCTextureFunction {
 public:
   OCSORTexture ( void ) {
-    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_SurfaceOfRevolution )->HashCode( IntegerLast() ), this );
+    OCTextureFactory::instance()->addTextureFunction( STANDARD_TYPE( Geom_SurfaceOfRevolution ).get(), this );
   }
   /*!
    * Update the cylindrical surface properties used to in the computation of the
@@ -678,10 +678,10 @@ OCTextureFactory* OCTextureFactory::instance ( void )
   return instance_;
 }
 
-void OCTextureFactory::addTextureFunction( Standard_Integer type_hash_code,
+void OCTextureFactory::addTextureFunction( const Standard_Type* surface_type,
 					   OCTextureFunction* texture_function )
 {
-  texture_functions_[type_hash_code] = texture_function;
+  texture_functions_[surface_type] = texture_function;
 }
 
 OCTextureFunction* OCTextureFactory::function ( OpenGLBase* view,
@@ -696,8 +696,8 @@ OCTextureFunction* OCTextureFactory::function ( OpenGLBase* view,
 
   Handle( Geom_Surface ) surface = BRep_Tool::Surface( face );
 
-  std::map<Standard_Integer, OCTextureFunction*>::iterator tf =
-    texture_functions_.find( surface->DynamicType()->HashCode( IntegerLast() ) );
+  std::map<const Standard_Type*, OCTextureFunction*>::iterator tf =
+    texture_functions_.find( surface->DynamicType().get() );
 
   OCTextureFunction* texture_function;
 

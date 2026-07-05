@@ -22,7 +22,7 @@
  */
 
 #include <BRep_Tool.hxx>
-#include <BRepMesh.hxx>
+#include <BRepMesh_IncrementalMesh.hxx>
 #include <HLRBRep_Algo.hxx>
 #include <HLRBRep_HLRToShape.hxx>
 #include <Poly_Polygon3D.hxx>
@@ -62,7 +62,7 @@ namespace Space3D {
     glDisable( GL_DEPTH_TEST );
     glPushMatrix();
     glLoadIdentity();
-    glColor3ubv( lC::qCubv( view_->geometryColor().dark() ) );
+    glColor3ubv( lC::qCubv( view_->geometryColor().darker() ) );
     glCallList( hlr_bg_name_ );
     glColor3ubv( lC::qCubv( view_->geometryColor() ) );
     glCallList( hlr_fg_name_ );
@@ -87,8 +87,7 @@ namespace Space3D {
     gp_Trsf transform;
     transform.SetValues( modelview[0], modelview[4], modelview[8], modelview[12],
 			 modelview[1], modelview[5], modelview[9], modelview[13],
-			 modelview[2], modelview[6], modelview[10], modelview[14],
-			 1e-3, 1e-3 );
+			 modelview[2], modelview[6], modelview[10], modelview[14] );
 
     HLRAlgo_Projector projector( transform, false, 0. );
     brep_hlr->Projector( projector );
@@ -111,7 +110,7 @@ namespace Space3D {
 
     if ( !visible_edges.IsNull() ) {
 
-      BRepMesh::Mesh( visible_edges, 1. );
+      BRepMesh_IncrementalMesh( visible_edges, 1. );
 
       edges.Init( visible_edges, TopAbs_EDGE );
 
@@ -133,7 +132,7 @@ namespace Space3D {
 
     if ( !visible_edges.IsNull() ) {
 
-      BRepMesh::Mesh( visible_edges, 1. );
+      BRepMesh_IncrementalMesh( visible_edges, 1. );
 
       edges.Init( visible_edges, TopAbs_EDGE );
     
@@ -164,7 +163,7 @@ namespace Space3D {
 
     if ( !hidden_edges.IsNull() ) {
 
-      BRepMesh::Mesh( hidden_edges, 1. );
+      BRepMesh_IncrementalMesh( hidden_edges, 1. );
 
       edges.Init( hidden_edges, TopAbs_EDGE );
     
@@ -186,7 +185,7 @@ namespace Space3D {
 
     if ( !hidden_edges.IsNull() ) {
 
-      BRepMesh::Mesh( hidden_edges, 1. );
+      BRepMesh_IncrementalMesh( hidden_edges, 1. );
 
       edges.Init( hidden_edges, TopAbs_EDGE );
     
@@ -205,7 +204,5 @@ namespace Space3D {
     }
 
     glEndList();
-
-    delete &brep_hlr;
   }
 } // End of Space3D namespace

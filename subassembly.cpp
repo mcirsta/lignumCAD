@@ -78,7 +78,7 @@ Subassembly::Subassembly ( uint id, const QDomElement& xml_rep,
   subassembly_ = dynamic_cast<Space3D::Page*>( parent->model()->lookup( url ) );
 
   if ( subassembly_ == 0 ) {
-    parent->model()->addDelayedResolution( this, url );
+    parent->model()->addDelayedResolution( this, url.toString( true ) );
     delayed_constraints_ = xml_rep;
     return;
   }

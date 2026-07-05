@@ -38,6 +38,7 @@ class gp_Pnt;
 class TopoDS_Face;
 class Material;
 class OpenGLBase;
+class Standard_Type;
 
 class OCTextureFunction {
 public:
@@ -80,10 +81,10 @@ public:
 
   /*!
    * Add a texture function for this kind of surface.
-   * \param type_hash_code the OC hash code for the surface type.
+   * \param surface_type the OC surface type descriptor.
    * \param texture_function the texture function object.
    */
-  void addTextureFunction ( Standard_Integer type_hash_code,
+  void addTextureFunction ( const Standard_Type* surface_type,
 			    OCTextureFunction* texture_function );
 
   /*!
@@ -109,7 +110,7 @@ private:
   static OCTextureFactory* instance_;
 
   //! The available texture function objects.
-  std::map<Standard_Integer, OCTextureFunction*> texture_functions_;
+  std::map<const Standard_Type*, OCTextureFunction*> texture_functions_;
 };
 
 #endif // OCTEXTUREFUNCTION_H
