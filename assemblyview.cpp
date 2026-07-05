@@ -22,7 +22,6 @@
  */
 #include <QMenu>
 #include <qaction.h>
-#include <qtabbar.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
@@ -31,7 +30,6 @@
 #include <qlabel.h>
 #include <QCursor>
 #include <QDockWidget>
-#include <QPixmap>
 #include <QTreeWidgetItem>
 #include <QWhatsThis>
 
@@ -1329,9 +1327,6 @@ void AssemblyView::init ( void )
 
   model_delete_input_ = new ModelDeleteInput( this );
 
-  tab_ = new QTab( QPixmap( ":/images/assembly.png" ),
-		   lC::formatTabName( assembly_->name() ) );
-
   ListViewItem* previous_item = parent()->previousItem( assembly_->id() );
 
   list_view_item_ = new ListViewItem( parent()->modelListItem(), previous_item );
@@ -1709,9 +1704,9 @@ void AssemblyView::select ( SelectionType /*select_type*/ ) const
     f->select( selectionType() );
 }
 
-void AssemblyView::updateName ( const QString& name )
+void AssemblyView::updateName ( const QString& /*name*/ )
 {
-  tab_->setText( lC::formatTabName( name ) );
+  parent()->updatePageTab( this );
   list_view_item_->setText( lC::NAME, lC::formatName( assembly_->name() )
 			    + QString( " <%1>" ).arg( assembly_->id() ) );
 }

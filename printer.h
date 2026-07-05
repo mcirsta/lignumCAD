@@ -23,6 +23,8 @@
 #ifndef PRINTER_H
 #define PRINTER_H
 
+#include <QPageLayout>
+#include <QPageSize>
 #include <qprinter.h>
 
 class Printer : public QPrinter
@@ -31,9 +33,9 @@ public:
   Printer ( PrinterMode m = HighResolution )
     : QPrinter( m )
   {
-    setColorMode( Color );
-    setOrientation( Landscape );
-    setPageSize( Letter );
+    setColorMode( QPrinter::Color );
+    setPageOrientation( QPageLayout::Landscape );
+    setPageSize( QPageSize( QPageSize::Letter ) );
     setFullPage( true );
   }
 };

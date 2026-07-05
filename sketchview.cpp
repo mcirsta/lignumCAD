@@ -22,10 +22,8 @@
  */
 #include <QMenu>
 #include <qaction.h>
-#include <qtabbar.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
-#include <QPixmap>
 
 #include "constants.h"
 #include "command.h"
@@ -287,9 +285,6 @@ void SketchView::init ( void )
   dimension_create_input_ = new DimensionCreateInput( this );
   alignment_create_input_ = new AlignmentCreateInput( this );
   constraint_delete_input_ = new ConstraintDeleteInput( this );
-
-  tab_ = new QTab( QPixmap( ":/images/sketch.png" ),
-		   lC::formatTabName( sketch_->name() ) );
 
   ListViewItem* previous_item = parent()->previousItem( sketch_->id() );
 
@@ -593,7 +588,7 @@ void SketchView::select ( SelectionType /*select_type*/ ) const
 
 void SketchView::updateName ( const QString& /*name*/ )
 {
-  tab_->setText( lC::formatTabName( sketch_->name() ) );
+  parent()->updatePageTab( this );
   list_view_item_->setText( lC::NAME, lC::formatName( sketch_->name() )
 			    + QString( " <%1>" ).arg( sketch_->id() ) );
 }

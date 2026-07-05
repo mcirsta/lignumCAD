@@ -44,7 +44,6 @@ Q_OBJECT
   Space2D::AlignmentCreateInput* alignment_create_input_;
   Space2D::ConstraintDeleteInput* constraint_delete_input_;
 
-  QTab* tab_;
   ListViewItem* list_view_item_;
 
   QMenu* context_menu_;
@@ -79,8 +78,8 @@ public:
 
   // Implementation of PageView interface
 
-  //! \return the tab for this page view.
-  QTab* tab ( void ) const { return tab_; }
+  //! \return the tab icon for this page view.
+  QIcon tabIcon ( void ) const { return QIcon( ":/images/sketch.png" ); }
   //! \return the list view item for this page view.
   ListViewItem* listViewItem ( void ) const { return list_view_item_; }
 

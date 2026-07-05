@@ -50,7 +50,6 @@ class AssemblyView : public PageView {
 
   Assembly* assembly_;
 
-  QTab* tab_;
   ListViewItem* list_view_item_;
 
   SubassemblyView* current_view_;
@@ -90,8 +89,8 @@ public:
  
   // Implementation of PageView interface
 
-  //! \return the tab for this page view.
-  QTab* tab ( void ) const { return tab_; }
+  //! \return the tab icon for this page view.
+  QIcon tabIcon ( void ) const { return QIcon( ":/images/assembly.png" ); }
   //! \return the list view item for this page view.
   ListViewItem* listViewItem ( void ) const { return list_view_item_; }
 

@@ -34,7 +34,6 @@ class DrawingView : public PageView {
 
   Drawing* drawing_;
 
-  QTab* tab_;
   ListViewItem* list_view_item_;
 
 public:
@@ -60,8 +59,8 @@ public:
 
   // Implementation of PageView interface
 
-  //! \return the tab for this page view.
-  QTab* tab ( void ) const { return tab_; }
+  //! \return the tab icon for this page view.
+  QIcon tabIcon ( void ) const { return QIcon( ":/images/drawing.png" ); }
   //! \return the list view item for this page view.
   ListViewItem* listViewItem ( void ) const { return list_view_item_; }
 

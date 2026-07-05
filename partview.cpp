@@ -22,11 +22,9 @@
  */
 #include <QMenu>
 #include <qaction.h>
-#include <qtabbar.h>
 #include <qlineedit.h>
 #include <qradiobutton.h>
 #include <qpushbutton.h>
-#include <QPixmap>
 #include <QTreeWidgetItem>
 
 #include "constants.h"
@@ -337,9 +335,6 @@ PartView::~PartView ( void )
 
 void PartView::init ( void )
 {
-  tab_ = new QTab( QPixmap( ":/images/part.png" ),
-		   lC::formatTabName( part_->name()  ));
-
   ListViewItem* previous_item = parent()->previousItem( part_->id() );
 
   list_view_item_ = new ListViewItem( parent()->modelListItem(), previous_item );
@@ -571,7 +566,7 @@ void PartView::select ( SelectionType /*select_type*/ ) const
 
 void PartView::updateName ( const QString& /*name*/ )
 {
-  tab_->setText( lC::formatTabName( part_->name() ) );
+  parent()->updatePageTab( this );
   list_view_item_->setText( lC::NAME, lC::formatName( part_->name() )
 			    + QString( " <%1>" ).arg( part_->id() ) );
 }

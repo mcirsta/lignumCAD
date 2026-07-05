@@ -22,10 +22,8 @@
  */
 #include <QMenu>
 #include <qaction.h>
-#include <qtabbar.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
-#include <QPixmap>
 
 #include "constants.h"
 #include "command.h"
@@ -228,9 +226,6 @@ DrawingView::~DrawingView ()
 
 void DrawingView::init ( void )
 {
-  tab_ = new QTab( QPixmap( ":/images/drawing.png" ),
-		   lC::formatTabName( drawing_->name() ) );
-
   ListViewItem* previous_item = parent()->previousItem( drawing_->id() );
 
   list_view_item_ = new ListViewItem( parent()->modelListItem(), previous_item );
@@ -374,7 +369,7 @@ void DrawingView::select ( SelectionType /*select_type*/ ) const
 
 void DrawingView::updateName ( const QString& /*name*/ )
 {
-  tab_->setText( lC::formatTabName( drawing_->name() ) );
+  parent()->updatePageTab( this );
   list_view_item_->setText( lC::NAME, lC::formatName( drawing_->name() )
 			    + QString( " <%1>" ).arg( drawing_->id() ) );
 }

@@ -28,6 +28,7 @@
 #include <vector>
 
 #include <QHash>
+#include <QIcon>
 #include <QVector>
 #include <qmap.h>
 
@@ -38,7 +39,6 @@
 #include "figureview.h"
 #include "view.h"
 
-class QTab;
 class QAction;
 class ListViewItem;
 class ListViewItem;
@@ -105,7 +105,8 @@ public:
 
   DesignBookView* parent ( void ) const { return parent_; }
 
-  virtual QTab* tab ( void ) const = 0;
+  virtual QIcon tabIcon ( void ) const = 0;
+  QString tabText ( void ) const { return lC::formatTabName( name() ); }
   virtual ListViewItem* listViewItem ( void ) const = 0;
 
   OpenGLView* view ( void ) const;

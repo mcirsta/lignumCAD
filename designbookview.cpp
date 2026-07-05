@@ -42,7 +42,7 @@
 #include <qpicture.h>
 #include <qslider.h>
 #include <qlayout.h>
-#include <qsimplerichtext.h>
+#include <QSignalBlocker>
 #include <QVBoxLayout>
 
 #include "configuration.h"
@@ -151,7 +151,7 @@ DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
     addCommand( new CreateCommand( QString( "create %1" ).arg( page_view->type() ),
 				   page_view->memento() ) );
 
-  page_tabbar_->setCurrentTab( page_view->tab() );
+  page_tabbar_->setCurrentIndex( pageViewIndex( page_view ) );
   page_tabbar_->update();
   page_view->show();
   opengl_view_->setPageView( page_view );
@@ -183,14 +183,18 @@ DesignBookView::~DesignBookView ()
 
 PageView* DesignBookView::currentPageView ( void ) const
 {
-  if ( current_page_view_ < 0 ||
-       current_page_view_ >= static_cast<int>( page_views_.size() ) )
-    return 0;
-
-  return page_views_[current_page_view_].get();
+  return pageViewAtIndex( current_page_view_ );
 }
 
-int DesignBookView::pageViewIndex ( PageView* page_view ) const
+PageView* DesignBookView::pageViewAtIndex ( int index ) const
+{
+  if ( index < 0 || index >= static_cast<int>( page_views_.size() ) )
+    return 0;
+
+  return page_views_[index].get();
+}
+
+int DesignBookView::pageViewIndex ( const PageView* page_view ) const
 {
   for ( size_t i = 0; i < page_views_.size(); ++i )
     if ( page_views_[i].get() == page_view )
@@ -202,6 +206,17 @@ int DesignBookView::pageViewIndex ( PageView* page_view ) const
 void DesignBookView::setCurrentPageView ( PageView* page_view )
 {
   current_page_view_ = pageViewIndex( page_view );
+}
+
+void DesignBookView::updatePageTab ( PageView* page_view )
+{
+  int index = pageViewIndex( page_view );
+
+  if ( index < 0 )
+    return;
+
+  page_tabbar_->setTabIcon( index, page_view->tabIcon() );
+  page_tabbar_->setTabText( index, page_view->tabText() );
 }
 
 void DesignBookView::deletePageView ( PageView* page_view )
@@ -421,7 +436,7 @@ void DesignBookView::init ( void )
   // something wrong with the specification of the OpenGL widget's resizing
   // preferences. Look at this later. For now...
   page_tabbar_->setMinimumHeight( 32 );
-  page_tabbar_->addTab( new QTab( "###dummy###" ) );
+  page_tabbar_->addTab( "###dummy###" );
 #endif
 
   // Add the available pages to the Insert menu and the Tab Bar context
@@ -453,7 +468,7 @@ void DesignBookView::init ( void )
   connect( opengl_view_, SIGNAL( scale( const Ratio& ) ),
 	   lCMW_, SLOT( scaleChanged( const Ratio& ) ) );
 
-  connect( page_tabbar_, SIGNAL( selected( int ) ), SLOT( pageChanged( int ) ) );
+  connect( page_tabbar_, SIGNAL( currentChanged( int ) ), SLOT( pageChanged( int ) ) );
 
   connect( lCMW_->editPreferencesAction, SIGNAL( triggered(bool) ),
 	   SLOT( editPreferences() ) );
@@ -547,9 +562,8 @@ void DesignBookView::showView ( void )
     gui_visible_ = true;
 #ifndef LAYOUT_COMPREHENSION
     if ( page_tabbar_->count() > 0 ) {
-      QTab* tab0 = page_tabbar_->tabAt( 0 );
-      if ( tab0 != 0 && tab0->text() == "###dummy###" )
-	page_tabbar_->removeTab( tab0 );
+      if ( page_tabbar_->tabText( 0 ) == "###dummy###" )
+	page_tabbar_->removeTab( 0 );
     }
 #endif
   }
@@ -686,9 +700,8 @@ void DesignBookView::addPageView ( PageView* page_view )
 {
 #ifndef LAYOUT_COMPREHENSION
   if ( page_tabbar_->count() > 0 ) {
-    QTab* tab0 = page_tabbar_->tabAt( 0 );
-    if ( tab0 != 0 && tab0->text() == "###dummy###" ) {
-      page_tabbar_->removeTab( tab0 );
+    if ( page_tabbar_->tabText( 0 ) == "###dummy###" ) {
+      page_tabbar_->removeTab( 0 );
     }
   }
 #endif
@@ -703,8 +716,8 @@ void DesignBookView::addPageView ( PageView* page_view )
 
   page_views_.insert( page_views_.begin() + p,
 			      std::unique_ptr<PageView>( page_view ) );
-  page_tabs_.insert( page_view->tab(), page_view );
-  page_tabbar_->insertTab( page_view->tab(), p );
+  page_tabbar_->insertTab( static_cast<int>( p ),
+			   page_view->tabIcon(), page_view->tabText() );
   page_tabbar_->update();
 
   connect( page_view, SIGNAL( cutCopyChanged(bool) ),
@@ -734,8 +747,12 @@ void DesignBookView::showPageView ( PageView* page_view )
 
   // So, if the given page view's tab is not currently selected, just
   // make it current and the QTabBar will fire the pageChanged signal.
-  if ( page_tabbar_->currentTab() != page_view->tab()->identifier() )
-    page_tabbar_->setCurrentTab( page_view->tab() );
+  int tab_index = pageViewIndex( page_view );
+  if ( tab_index < 0 )
+    return;
+
+  if ( page_tabbar_->currentIndex() != tab_index )
+    page_tabbar_->setCurrentIndex( tab_index );
 
   else {
     // Otherwise, we have to do this all ourselves
@@ -810,10 +827,9 @@ void DesignBookView::clear ( void )
 {
   opengl_view_->setPageView( 0 );
 
-  for ( const auto& page_view : page_views_ ) {
-    page_tabbar_->removeTab( page_view->tab() );
-    page_tabs_.remove( page_view->tab() );
-  }
+  const QSignalBlocker blocker( page_tabbar_ );
+  while ( page_tabbar_->count() > 0 )
+    page_tabbar_->removeTab( 0 );
 
   page_views_.clear();
   current_page_view_ = -1;
@@ -1189,13 +1205,12 @@ void DesignBookView::editPreferences ( void )
   }
 }
 
-// Activated when the page's tab is clicked on (or QTabBar::setCurrentTab()
+// Activated when the page's tab is clicked on (or QTabBar::setCurrentIndex()
 // is called!).
 
 void DesignBookView::pageChanged ( int id )
 {
-  QTab* tab = page_tabbar_->tab( id );
-  PageView* page_view = page_tabs_.value( tab );
+  PageView* page_view = pageViewAtIndex( id );
 
   if ( page_view == 0 ) return;
 
@@ -1312,17 +1327,19 @@ void DesignBookView::deletePage ( PageView* page_view )
 
   opengl_view_->setPageView( 0 );
 
-  page_tabbar_->removeTab( page_view->tab() );
-  page_tabs_.remove( page_view->tab() );
-  deletePageView( page_view );
+  {
+    const QSignalBlocker blocker( page_tabbar_ );
+    int tab_index = pageViewIndex( page_view );
+    if ( tab_index >= 0 )
+      page_tabbar_->removeTab( tab_index );
+    deletePageView( page_view );
+  }
 
   // Activate whatever page is now current in the TabBar
-  QTab* tab = page_tabbar_->tab( page_tabbar_->currentTab() );
-  if ( tab != 0 ) {
-    page_view = page_tabs_.value( tab );
+  page_view = pageViewAtIndex( page_tabbar_->currentIndex() );
+  if ( page_view != 0 ) {
     setCurrentPageView( page_view );
     page_view->show();
-    page_tabbar_->setCurrentTab( tab );
     opengl_view_->setPageView( page_view );
 
     emit pageChanged( page_view->name() );
@@ -1464,7 +1481,7 @@ void DesignBookView::newModel ( void )
     return;
   }
 
-  page_tabbar_->setCurrentTab( page_view->tab() );
+  page_tabbar_->setCurrentIndex( pageViewIndex( page_view ) );
   page_view->show();
   opengl_view_->setPageView( page_view );
 
@@ -1515,7 +1532,7 @@ void DesignBookView::open ( void )
   current_page_view_ = page_views_.empty() ? -1 : 0;
   PageView* page_view = currentPageView();
 
-  page_tabbar_->setCurrentTab( page_view->tab() );
+  page_tabbar_->setCurrentIndex( pageViewIndex( page_view ) );
   page_tabbar_->update();
   page_view->show();
   opengl_view_->setPageView( page_view );

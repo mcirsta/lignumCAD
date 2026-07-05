@@ -26,7 +26,6 @@
 #include <memory>
 #include <vector>
 
-#include <QHash>
 #include <QWidget>
 #include <qobject.h>
 #include <QPalette>
@@ -39,7 +38,6 @@ class QLabel;
 class QWidget;
 class DBURL;
 class QPainter;
-class QTab;
 class ListViewItem;
 class ListViewItem;
 class OpenGLView;
@@ -72,7 +70,6 @@ Q_OBJECT
 
   std::vector<std::unique_ptr<PageView>> page_views_;
   int current_page_view_;
-  QHash<QTab*, PageView*> page_tabs_;
 
   NewModelWizard* new_model_wizard_;
   ModelInfoDialog* model_info_dialog_;
@@ -108,6 +105,7 @@ public:
   bool aboutToExit ( void );
 
   void addPageView ( PageView* page_view );
+  void updatePageTab ( PageView* page_view );
   void showPageView ( PageView* page_view );
   void removePageView ( PageView* page_view );
   PageView* lastPageView ( void );
@@ -178,7 +176,8 @@ private:
   void restoreViews ( const QDomElement& xml_rep );
   bool newModelWizard ( Model* model, uint& initial_page_id );
   PageView* currentPageView ( void ) const;
-  int pageViewIndex ( PageView* page_view ) const;
+  PageView* pageViewAtIndex ( int index ) const;
+  int pageViewIndex ( const PageView* page_view ) const;
   void setCurrentPageView ( PageView* page_view );
   void deletePageView ( PageView* page_view );
 
