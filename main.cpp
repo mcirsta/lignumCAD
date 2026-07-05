@@ -27,7 +27,9 @@
 #include <qmessagebox.h>
 #include <qsettings.h>
 #include <qdir.h>
+#include <QCoreApplication>
 #include <QLocale>
+#include <QTranslator>
 
 #if defined(Q_OS_UNIX)
 #include <signal.h>
@@ -43,6 +45,16 @@
 #include "command.h"
 
 namespace {
+  QString trConstant ( const QString& text )
+  {
+    return QCoreApplication::translate( "Constants", text.toUtf8().constData() );
+  }
+
+  QString trMessage ( const char* text )
+  {
+    return QCoreApplication::translate( "Messages", text );
+  }
+
   // A not especially effective segv handler.
 #if defined(Q_OS_UNIX)
   void one_shot_segv_handler ( int )
@@ -62,48 +74,35 @@ int main( int argc, char ** argv )
 
   // First, we have to locate our data directory
   QSettings settings;
-  bool ok;
-  QString home = settings.readEntry( lC::Setting::HOME, lC::STR::HOME, &ok );
+  QString home = settings.value( lC::Setting::HOME, lC::STR::HOME ).toString();
 
   QDir home_dir( QString( "%1%2v%3.%4" ).arg(home).arg(QDir::separator()).
 		 arg( lC::STR::VERSION_MAJOR ).arg( lC::STR::VERSION_MINOR ) );
 
   if ( !home_dir.exists() ) {
-    QMessageBox mb( app.translate( "Constants", lC::STR::LIGNUMCAD ),
-	    app.translate( "Messages",
-			   "The data directory for lignumCAD does not exist in:\n"
-			   "%1\n"
-			   "Please check your installation.").
-		    arg( home_dir.absPath() ),
-		    QMessageBox::Critical,
-		    QMessageBox::Ok,
-		    QMessageBox::NoButton, QMessageBox::NoButton,
-		    0, "no_data_dir", true, Qt::WType_Popup );
-    mb.exec();
+    QMessageBox::critical( 0, trConstant( lC::STR::LIGNUMCAD ),
+                           trMessage( "The data directory for lignumCAD does not exist in:\n"
+                                      "%1\n"
+                                      "Please check your installation." ).
+                           arg( home_dir.absolutePath() ) );
     return 1;
   }
 
   // Translations should be in the data directory
 
   QString locale = QLocale::system().name();
-  QTranslator translator( 0 );
+  QTranslator translator;
   if ( !translator.load( QString( "lignumCAD_" ) + locale, "." ) ) {
     if ( !translator.load( QString( "lignumCAD_" ) + locale,
-			   home_dir.absPath() + QDir::separator() +
-			   "translations" ) ) {
+                           home_dir.absolutePath() + QDir::separator() +
+                           "translations" ) ) {
        
-      QMessageBox mb( app.translate( "Constants", lC::STR::LIGNUMCAD ),
-	      app.translate( "Messages",
-			     "Could not find translation file for locale:\n"
-			     "%1\n"
-			     "Continuing with built-in strings.\n"
-			     "Please check your installation.").
-		      arg( locale ),
-		      QMessageBox::Warning,
-		      QMessageBox::Ok,
-		      QMessageBox::NoButton, QMessageBox::NoButton,
-		      0, "no_data_dir", true, Qt::WType_Popup );
-      mb.exec();
+      QMessageBox::warning( 0, trConstant( lC::STR::LIGNUMCAD ),
+                            trMessage( "Could not find translation file for locale:\n"
+                                       "%1\n"
+                                       "Continuing with built-in strings.\n"
+                                       "Please check your installation." ).
+                            arg( locale ) );
     }
   }
 
@@ -112,27 +111,21 @@ int main( int argc, char ** argv )
   // There are also some Qt internal labels which need to be translated.
   // Only for non-English languages, however.
 
-  QTranslator qt_translator( 0 );
+  QTranslator qt_translator;
 
   if ( !locale.startsWith( "en" ) ) {
 
     if ( !qt_translator.load( QString( "qt_" ) + locale, "." ) ) {
       if ( !qt_translator.load( QString( "qt_" ) + locale,
-				home_dir.absPath() + QDir::separator() +
-				"translations" ) ) {
+                                home_dir.absolutePath() + QDir::separator() +
+                                "translations" ) ) {
 	
-	QMessageBox mb( app.translate( "Constants", lC::STR::LIGNUMCAD ),
-			app.translate( "Messages",
-			       "Could not find Qt translation file for locale:\n"
-			       "%1\n"
-			       "Continuing with built-in strings.\n"
-			       "Please check your installation.").
-			arg( locale ),
-			QMessageBox::Warning,
-			QMessageBox::Ok,
-			QMessageBox::NoButton, QMessageBox::NoButton,
-			0, "no_data_dir", true, Qt::WType_Popup );
-	mb.exec();
+	QMessageBox::warning( 0, trConstant( lC::STR::LIGNUMCAD ),
+			       trMessage( "Could not find Qt translation file for locale:\n"
+					  "%1\n"
+					  "Continuing with built-in strings.\n"
+					  "Please check your installation." ).
+			       arg( locale ) );
       }
     }
 
@@ -142,17 +135,11 @@ int main( int argc, char ** argv )
   // Must be able to write the history file into the current directory.
 
   if ( ! CommandHistory::instance().ready() ) {
-    QMessageBox mb( app.translate( "Constants", lC::STR::LIGNUMCAD ),
-	    app.translate( "Messages",
-			   "lignumCAD cannot write the command history file\n"
-			   "in the current directory. Please make sure that\n"
-			   "you have write permission to the current directory\n"
-			   "and that no old history.xml exists." ),
-		    QMessageBox::Warning,
-		    QMessageBox::Ok,
-		    QMessageBox::NoButton, QMessageBox::NoButton,
-		    0, "no_data_dir", true, Qt::WType_Popup );
-    mb.exec();
+    QMessageBox::warning( 0, trConstant( lC::STR::LIGNUMCAD ),
+                          trMessage( "lignumCAD cannot write the command history file\n"
+                                     "in the current directory. Please make sure that\n"
+                                     "you have write permission to the current directory\n"
+                                     "and that no old history.xml exists." ) );
     return 1;
   }
 
@@ -162,21 +149,17 @@ int main( int argc, char ** argv )
 
   lCMW->show();
 
-  // Make sure that we can actually work. In particular, the
-  // default application font must be a Type1 or TrueType font.
+  // OpenGL text rendering uses FreeType and needs a real font file for
+  // the default application font.
   QString file;
   double point_size;
   if ( !System::findFontFile( app.font().toString(), file, point_size ) ) {
-    QMessageBox::critical( lCMW, app.translate( "Constants", lC::STR::LIGNUMCAD ),
-	   app.translate( "Messages",
-			  "A current limitation of lignumCAD is\n"
-			  "the requirement that the default application\n"
-			  "font be either a Type1 or TrueType font.\n"
-			  "Please run the qtconfig program from\n"
-			  "Qt version 3.0 to set up the proper font. See\n"
-			  "http://www.trolltech.com/developer/download/qt-x11.html" ),
-			   QMessageBox::Ok,
-			   QMessageBox::NoButton, QMessageBox::NoButton );
+    QMessageBox::critical( lCMW, trConstant( lC::STR::LIGNUMCAD ),
+			   trMessage( "A current limitation of lignumCAD is\n"
+				      "the requirement that the default application\n"
+				      "font has a file that FreeType can load.\n"
+				      "Please choose an installed outline font\n"
+				      "using your desktop font settings." ) );
     return 1;
   }
 

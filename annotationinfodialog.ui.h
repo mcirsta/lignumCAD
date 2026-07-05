@@ -27,17 +27,26 @@
 ** update this file, preserving your code. Create an init() slot in place of
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
+#include <QColorDialog>
+#include <QCursor>
+#include <QFontDatabase>
+#include <QIcon>
+#include <QTextCharFormat>
+#include <QWhatsThis>
+
+#include <algorithm>
+
 /*!
  * Initialize the Annotation information dialog.
  */
 void AnnotationInfoDialog::init()
 {
     int width = boldButton->sizeHint().width();
-    width = QMAX( width, boldButton->sizeHint().height() );
-    width = QMAX( width, italicButton->sizeHint().width() );
-    width = QMAX( width, italicButton->sizeHint().height() );
-    width = QMAX( width, underlineButton->sizeHint().width() );
-    width = QMAX( width, underlineButton->sizeHint().height() );
+    width = std::max( width, boldButton->sizeHint().height() );
+    width = std::max( width, italicButton->sizeHint().width() );
+    width = std::max( width, italicButton->sizeHint().height() );
+    width = std::max( width, underlineButton->sizeHint().width() );
+    width = std::max( width, underlineButton->sizeHint().height() );
     
     boldButton->setFixedSize( width, width );
     italicButton->setFixedSize( width, width );
@@ -49,14 +58,13 @@ void AnnotationInfoDialog::init()
     
     annotationTextEdit->setFont( font );
     
-    QValueList<int> sizes = QFontDatabase::standardSizes();
-    QValueList<int>::Iterator it = sizes.begin();
-    for ( ; it != sizes.end(); ++it )
-        sizesComboBox->insertItem( QString::number( *it ) );
+    const QList<int> sizes = QFontDatabase::standardSizes();
+    for ( int size : sizes )
+        sizesComboBox->addItem( QString::number( size ) );
     
     QPixmap sample( 24, 24 );
     sample.fill( annotationTextEdit->palette().color( QPalette::Text ) );
-    colorButton->setPixmap( sample );   
+    colorButton->setIcon( QIcon( sample ) );
 }
 
 /*!
@@ -66,7 +74,9 @@ void AnnotationInfoDialog::init()
  */
 void AnnotationInfoDialog::boldButton_toggled( bool bold )
 {
-    annotationTextEdit->setBold( bold );
+    QTextCharFormat format;
+    format.setFontWeight( bold ? QFont::Bold : QFont::Normal );
+    annotationTextEdit->mergeCurrentCharFormat( format );
 }
 
 /*!
@@ -76,7 +86,9 @@ void AnnotationInfoDialog::boldButton_toggled( bool bold )
  */
 void AnnotationInfoDialog::italicButton_toggled( bool italic )
 {
-    annotationTextEdit->setItalic( italic );
+    QTextCharFormat format;
+    format.setFontItalic( italic );
+    annotationTextEdit->mergeCurrentCharFormat( format );
 }
 
 /*!
@@ -86,7 +98,9 @@ void AnnotationInfoDialog::italicButton_toggled( bool italic )
  */
 void AnnotationInfoDialog::underlineButton_toggled( bool underline )
 {
-    annotationTextEdit->setUnderline( underline );
+    QTextCharFormat format;
+    format.setFontUnderline( underline );
+    annotationTextEdit->mergeCurrentCharFormat( format );
 }
 
 /*!
@@ -96,7 +110,9 @@ void AnnotationInfoDialog::underlineButton_toggled( bool underline )
  */
 void AnnotationInfoDialog::pointSizeSpinBox_valueChanged( int value )
 {
-    annotationTextEdit->setPointSize(value);
+    QTextCharFormat format;
+    format.setFontPointSize( value );
+    annotationTextEdit->mergeCurrentCharFormat( format );
 }
 
 /*!
@@ -105,11 +121,17 @@ void AnnotationInfoDialog::pointSizeSpinBox_valueChanged( int value )
  */
 void AnnotationInfoDialog::colorButton_clicked()
 {
-    QColor color = QColorDialog::getColor( annotationTextEdit->color(), this );
-    annotationTextEdit->setColor( color );
+    QColor color = QColorDialog::getColor( annotationTextEdit->textColor(), this );
+    if ( !color.isValid() )
+        return;
+
+    QTextCharFormat format;
+    format.setForeground( color );
+    annotationTextEdit->mergeCurrentCharFormat( format );
+
     QPixmap sample( 24, 24);
     sample.fill( color );
-    colorButton->setPixmap( sample );   
+    colorButton->setIcon( QIcon( sample ) );
 }
 
 /*!
@@ -121,7 +143,7 @@ void AnnotationInfoDialog::annotationTextEdit_currentColorChanged( const QColor 
 {
     QPixmap sample( 24, 24 );
     sample.fill( color );
-    colorButton->setPixmap( sample );
+    colorButton->setIcon( QIcon( sample ) );
 }
 
 
@@ -132,9 +154,9 @@ void AnnotationInfoDialog::annotationTextEdit_currentColorChanged( const QColor 
  */
 void AnnotationInfoDialog::annotationTextEdit_currentFontChanged( const QFont & font )
 {
-    boldButton->setOn( font.bold() );
-    italicButton->setOn( font.italic() );
-    underlineButton->setOn( font.underline() );
+    boldButton->setChecked( font.bold() );
+    italicButton->setChecked( font.italic() );
+    underlineButton->setChecked( font.underline() );
     sizesComboBox->setCurrentText( QString::number( font.pointSize() ) );
 }
 
@@ -144,7 +166,9 @@ void AnnotationInfoDialog::annotationTextEdit_currentFontChanged( const QFont & 
  */
 void AnnotationInfoDialog::sizesComboBox_activated( const QString & text )
 {
-    annotationTextEdit->setPointSize( text.toInt() );
+    QTextCharFormat format;
+    format.setFontPointSize( text.toInt() );
+    annotationTextEdit->mergeCurrentCharFormat( format );
 }
 
 /*!
@@ -152,7 +176,7 @@ void AnnotationInfoDialog::sizesComboBox_activated( const QString & text )
  */
 void AnnotationInfoDialog::buttonHelp_clicked()
 {
-   QWhatsThis::display( tr("<p><b>Annotation Information</b></p>\
+   QWhatsThis::showText( QCursor::pos(), tr("<p><b>Annotation Information</b></p>\
 <p>This dialog allows you to edit selected properties of a \
 text annotation. These include:\
 <ul>\
@@ -163,6 +187,6 @@ text annotation. These include:\
 <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
 to accept your changes. Clicking the <b>Cancel</b> button \
 (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
-dialog without applying the changes.</p>" ) );
+dialog without applying the changes.</p>" ), this );
 
 }

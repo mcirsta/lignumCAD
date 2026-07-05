@@ -27,6 +27,14 @@
 ** update this file, preserving your code. Create an init() slot in place of
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
+#include "OGLFT.h"
+
+#include <GL/glu.h>
+#include <Standard_Version.hxx>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 /*!
  * Initialize the About dialog.
  */

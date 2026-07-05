@@ -39,9 +39,6 @@ Constraints</string>
       </item>
       <item>
         <widget class="QGroupBox" name="constraintButtonGroup">
-          <property name="lineWidth">
-            <number>0</number>
-          </property>
           <property name="title">
             <string/>
           </property>

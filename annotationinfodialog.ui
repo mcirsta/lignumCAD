@@ -94,9 +94,6 @@
       </item>
       <item row="2" column="0" rowspan="1" colspan="4">
         <widget class="QTextEdit" name="annotationTextEdit">
-          <property name="textFormat">
-            <enum>Qt::RichText</enum>
-          </property>
         </widget>
       </item>
       <item row="3" column="0" rowspan="1" colspan="4">

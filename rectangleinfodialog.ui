@@ -793,7 +793,8 @@
   <customwidgets>
     <customwidget>
       <class>lCDefaultComboBox</class>
-      <extends>QComboBox</extends>
+      <extends>QFrame</extends>
+      <header>lcdefaultcombobox/lcdefaultcombobox.h</header>
     </customwidget>
   </customwidgets>
   <tabstops>

@@ -357,9 +357,6 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                       <property name="title">
                         <string>Format</string>
                       </property>
-                      <property name="exclusive">
-                        <bool>true</bool>
-                      </property>
                       <layout class="QGridLayout">
                         <property name="margin">
                           <number>11</number>
@@ -1248,7 +1245,8 @@ Note that the clearance length specified here is in &lt;i&gt;paper&lt;/i&gt; uni
   <customwidgets>
     <customwidget>
       <class>lCDefaultComboBox</class>
-      <extends>QComboBox</extends>
+      <extends>QFrame</extends>
+      <header>lcdefaultcombobox/lcdefaultcombobox.h</header>
     </customwidget>
   </customwidgets>
   <tabstops>
