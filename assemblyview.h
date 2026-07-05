@@ -55,12 +55,12 @@ class AssemblyView : public PageView {
 
   SubassemblyView* current_view_;
 
-  QPopupMenu* context_menu_;
-  int wireframe_id_;
-  int hidden_id_;
-  int solid_id_;
-  int texture_id_;
-  int separator_id_;
+  QMenu* context_menu_;
+  QAction* wireframe_action_ = nullptr;
+  QAction* hidden_action_ = nullptr;
+  QAction* solid_action_ = nullptr;
+  QAction* texture_action_ = nullptr;
+  QAction* separator_action_ = nullptr;
 
 public:
   AssemblyView ( Assembly* assembly, DesignBookView* parent );
@@ -111,8 +111,8 @@ public:
 
   // Implementation of remaining InputObject interface
   SelectionType defaultSelectionType ( void ) const;
-  void startDisplay ( QPopupMenu* context_menu );
-  void stopDisplay ( QPopupMenu* context_menu );
+  void startDisplay ( QMenu* context_menu );
+  void stopDisplay ( QMenu* context_menu );
 
   // Implementation of GraphicsObject interface
 
@@ -155,7 +155,7 @@ private slots:
    */
   void listNameChanged ( const QString& name );
   void updateName ( const QString& name );
-  void toggleRenderStyle ( int id );
+  void toggleRenderStyle ( lC::Render::Style render_style );
   void cancelOperation ( void );
   void addModel ( void );
   void deleteModel ( void );

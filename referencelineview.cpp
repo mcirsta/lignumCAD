@@ -22,7 +22,7 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qlineedit.h>
 #include <qradiobutton.h>
 #include <qlabel.h>
@@ -298,16 +298,16 @@ namespace Space2D {
       reference_line_view_( reference_line_view )
   {}
 
-  void ReferenceLineCreateInput::startDisplay ( QPopupMenu* context_menu )
+  void ReferenceLineCreateInput::startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 
     QAction* cancel_action =
       reference_line_view_->parent()->lCMW()->cancelReferenceLineAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
+    separator_action_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelOperation() )  );
 
     reference_line_view_->view()->
       setCursor( CursorFactory::instance().cursor( CursorFactory::REFERENCELINE ) );
@@ -387,8 +387,8 @@ namespace Space2D {
 
     QAction* cancel_action = page_view->lCMW()->cancelReferenceLineAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     reference_line_->setComplete( true );
 
@@ -420,8 +420,8 @@ namespace Space2D {
     QAction* cancel_action = page_view->lCMW()->cancelReferenceLineAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     page_view->removeFigureView( reference_line_view_ );
 

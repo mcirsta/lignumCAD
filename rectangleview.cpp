@@ -22,7 +22,7 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qbuttongroup.h>
 #include <qradiobutton.h>
 #include <qcheckbox.h>
@@ -532,16 +532,16 @@ namespace Space2D {
     : rectangle_( rectangle ), rectangle_view_( rectangle_view )
   {}
 
-  void RectangleCreateInput::startDisplay ( QPopupMenu* context_menu )
+  void RectangleCreateInput::startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 
     QAction* cancel_action =
       rectangle_view_->parent()->lCMW()->cancelRectangleAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
+    separator_action_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelOperation() )  );
 
     rectangle_view_->view()->
       setCursor( CursorFactory::instance().cursor( CursorFactory::RECTANGLE ) );
@@ -650,8 +650,8 @@ namespace Space2D {
 
     QAction* cancel_action = page_view->lCMW()->cancelRectangleAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     rectangle_view_->unsetCursor();
 
@@ -681,8 +681,8 @@ namespace Space2D {
     QAction* cancel_action = page_view->lCMW()->cancelRectangleAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     page_view->removeFigureView( rectangle_view_ );
 

@@ -82,8 +82,8 @@ public:
   void pasteFigure ( const QDomElement& xml_rep );
 
   // Implementation of remaining InputObject interface
-  void startDisplay ( QPopupMenu* context_menu );
-  void stopDisplay ( QPopupMenu* context_menu );
+  void startDisplay ( QMenu* context_menu );
+  void stopDisplay ( QMenu* context_menu );
 
   // Implementation of GraphicsObject interface
 

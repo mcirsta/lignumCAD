@@ -22,7 +22,7 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qlineedit.h>
 #include <qtextedit.h>
 #include <qcursor.h>
@@ -253,14 +253,14 @@ namespace Space2D {
   /*
    * Set up UI for creating an annotation.
    */
-  void AnnotationCreateInput::startDisplay ( QPopupMenu* /*context_menu*/ )
+  void AnnotationCreateInput::startDisplay ( QMenu* /*context_menu*/ )
   {
     QAction* cancel_action =
       annotation_view_->parent()->lCMW()->cancelAnnotationAction;
 
-    separator_id_ = annotation_view_->view()->contextMenu()->insertSeparator();
-    cancel_action->addTo( annotation_view_->view()->contextMenu() );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
+    separator_action_ = annotation_view_->view()->contextMenu()->addSeparator();
+    annotation_view_->view()->contextMenu()->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelOperation() )  );
 
     annotation_view_->view()->
       setCursor( CursorFactory::instance().cursor( CursorFactory::ANNOTATION ) );
@@ -314,8 +314,8 @@ namespace Space2D {
 
     QAction* cancel_action = page_view->lCMW()->cancelAnnotationAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( annotation_view_->view()->contextMenu() );
-    annotation_view_->view()->contextMenu()->removeItem( separator_id_ );
+    annotation_view_->view()->contextMenu()->removeAction( cancel_action );
+    annotation_view_->view()->contextMenu()->removeAction( separator_action_ );
 
     annotation_view_->unsetCursor();
 
@@ -351,8 +351,8 @@ namespace Space2D {
     QAction* cancel_action = page_view->lCMW()->cancelAnnotationAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( annotation_view_->view()->contextMenu() );
-    annotation_view_->view()->contextMenu()->removeItem( separator_id_ );
+    annotation_view_->view()->contextMenu()->removeAction( cancel_action );
+    annotation_view_->view()->contextMenu()->removeAction( separator_action_ );
 
     page_view->removeFigureView( annotation_view_ );
 

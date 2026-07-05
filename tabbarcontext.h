@@ -22,9 +22,9 @@
 #ifndef TABBARCONTEXT_H
 #define TABBARCONTEXT_H
 
-#include <qtabbar.h>
+#include <QTabBar>
 
-class QPopupMenu;
+class QMenu;
 
 /*!
  * A QTabBar with an attached context menu.
@@ -32,14 +32,14 @@ class QPopupMenu;
 class TabBarContext : public QTabBar {
   Q_OBJECT
 
-  QPopupMenu* context_menu_;
+  QMenu* context_menu_;
 public:
   TabBarContext ( QWidget* parent = 0, const char* name = 0 );
   ~TabBarContext ( void ) {}
 
-  QPopupMenu* contextMenu ( void ) const { return context_menu_; }
+  QMenu* contextMenu ( void ) const { return context_menu_; }
 
-  void contextMenuEvent ( QContextMenuEvent* cme );
+  void contextMenuEvent ( QContextMenuEvent* cme ) override;
 };
 
 #endif // TABBARCONTEXT_H

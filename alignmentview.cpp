@@ -22,7 +22,7 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qevent.h>
 #include <qcursor.h>
 #include <QCursor>
@@ -59,7 +59,7 @@ namespace Space2D {
   /*
    * Prep for operation.
    */
-  void AlignmentCreateInput::startDisplay ( QPopupMenu* /*context_menu*/ )
+  void AlignmentCreateInput::startDisplay ( QMenu* /*context_menu*/ )
   {
     from_ = to_ = 0;
 
@@ -67,9 +67,9 @@ namespace Space2D {
 
     QAction* cancel_action = parent_->lCMW()->cancelAlignmentAction;
 
-    separator_id_ = parent_->view()->contextMenu()->insertSeparator();
-    cancel_action->addTo( parent_->view()->contextMenu() );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
+    separator_action_ = parent_->view()->contextMenu()->addSeparator();
+    parent_->view()->contextMenu()->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelOperation() )  );
 
     parent_->view()->
       setCursor( CursorFactory::instance().cursor( CursorFactory::ALIGNMENT ) );
@@ -212,8 +212,8 @@ namespace Space2D {
 
     QAction* cancel_action = parent_->lCMW()->cancelAlignmentAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( parent_->view()->contextMenu() );
-    parent_->view()->contextMenu()->removeItem( separator_id_ );
+    parent_->view()->contextMenu()->removeAction( cancel_action );
+    parent_->view()->contextMenu()->removeAction( separator_action_ );
 
     parent_->view()->unsetCursor();
 
@@ -247,8 +247,8 @@ namespace Space2D {
     QAction* cancel_action = parent_->lCMW()->cancelAlignmentAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( parent_->view()->contextMenu() );
-    parent_->view()->contextMenu()->removeItem( separator_id_ );
+    parent_->view()->contextMenu()->removeAction( cancel_action );
+    parent_->view()->contextMenu()->removeAction( separator_action_ );
 
     parent_->cancelOperation();
   }

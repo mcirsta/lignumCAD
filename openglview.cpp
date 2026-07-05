@@ -21,10 +21,11 @@
  *
  */
 #include <qcursor.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qaction.h>
 #include <qpainter.h>
 #include <qprinter.h>
+#include <QIcon>
 #include <QPixmap>
 
 #include "constants.h"
@@ -189,27 +190,30 @@ OpenGLView::OpenGLView ( DesignBookView* parent, const char* name,
 
   setFocusPolicy( StrongFocus );
   // Printing view doesn't need this either...
-  context_menu_ = new QPopupMenu( this, "openglview_context" );
-  view_menu_ = new QPopupMenu( this, "view_menu" );
+  context_menu_ = new QMenu( this );
+  context_menu_->setObjectName( "openglview_context" );
+  view_menu_ = new QMenu( tr( "Quick Views" ), this );
+  view_menu_->setObjectName( "view_menu" );
+  view_menu_->setIcon( QIcon( ":/images/view_orientation2.png" ) );
 
   if ( lCMW != 0 ) { // Note: printing view doesn't have a reference to lCMW!
-    lCMW->viewLeftAction->addTo( view_menu_ );
-    lCMW->viewRightAction->addTo( view_menu_ );
-    lCMW->viewFrontAction->addTo( view_menu_ );
-    lCMW->viewBackAction->addTo( view_menu_ );
-    lCMW->viewBottomAction->addTo( view_menu_ );
-    lCMW->viewTopAction->addTo( view_menu_ );
+    view_menu_->addAction( lCMW->viewLeftAction );
+    view_menu_->addAction( lCMW->viewRightAction );
+    view_menu_->addAction( lCMW->viewFrontAction );
+    view_menu_->addAction( lCMW->viewBackAction );
+    view_menu_->addAction( lCMW->viewBottomAction );
+    view_menu_->addAction( lCMW->viewTopAction );
 
-    connect( lCMW->viewRestoreAction, SIGNAL( activated() ), SLOT( restoreView()));
-    connect( lCMW->zoomInAction, SIGNAL( activated() ), SLOT( zoomIn()));
-    connect( lCMW->zoomOutAction, SIGNAL( activated() ), SLOT( zoomOut()));
-    connect( lCMW->toggleCSysAction, SIGNAL( activated() ), SLOT( toggleCSys()));
-    connect( lCMW->viewLeftAction, SIGNAL( activated() ), SLOT( viewLeft() ) );
-    connect( lCMW->viewRightAction, SIGNAL( activated() ), SLOT( viewRight() ) );
-    connect( lCMW->viewFrontAction, SIGNAL( activated() ), SLOT( viewFront() ) );
-    connect( lCMW->viewBackAction, SIGNAL( activated() ), SLOT( viewBack() ) );
-    connect( lCMW->viewBottomAction, SIGNAL( activated() ), SLOT( viewBottom() ) );
-    connect( lCMW->viewTopAction, SIGNAL( activated() ), SLOT( viewTop() ) );
+    connect( lCMW->viewRestoreAction, SIGNAL( triggered(bool) ), SLOT( restoreView()));
+    connect( lCMW->zoomInAction, SIGNAL( triggered(bool) ), SLOT( zoomIn()));
+    connect( lCMW->zoomOutAction, SIGNAL( triggered(bool) ), SLOT( zoomOut()));
+    connect( lCMW->toggleCSysAction, SIGNAL( triggered(bool) ), SLOT( toggleCSys()));
+    connect( lCMW->viewLeftAction, SIGNAL( triggered(bool) ), SLOT( viewLeft() ) );
+    connect( lCMW->viewRightAction, SIGNAL( triggered(bool) ), SLOT( viewRight() ) );
+    connect( lCMW->viewFrontAction, SIGNAL( triggered(bool) ), SLOT( viewFront() ) );
+    connect( lCMW->viewBackAction, SIGNAL( triggered(bool) ), SLOT( viewBack() ) );
+    connect( lCMW->viewBottomAction, SIGNAL( triggered(bool) ), SLOT( viewBottom() ) );
+    connect( lCMW->viewTopAction, SIGNAL( triggered(bool) ), SLOT( viewTop() ) );
   }
 
   connect( OpenGLGlobals::instance(), SIGNAL( attributeChanged() ),
@@ -330,8 +334,7 @@ void OpenGLView::setPageView ( PageView* page_view )
   // the context menu
 
   context_menu_->clear();
-  dynamic_cast<DesignBookView*>( parentWidget() )->lCMW()->viewRestoreAction->
-    addTo( context_menu_ );
+  context_menu_->addAction( dynamic_cast<DesignBookView*>( parentWidget() )->lCMW()->viewRestoreAction );
 
   mouse_mode_ = VIEW;
 
@@ -356,13 +359,11 @@ void OpenGLView::setPageView ( PageView* page_view )
       set2DView(); break;
     case SPACE3D:
       set3DView();
-      context_menu_->insertItem( QPixmap( ":/images/view_orientation2.png" ),
-				 tr( "Quick Views" ), view_menu_ );
-      context_menu_->insertSeparator();
+      context_menu_->addMenu( view_menu_ );
+      context_menu_->addSeparator();
+      context_menu_->addAction( dynamic_cast<DesignBookView*>( parentWidget() )->lCMW()->toggleCSysAction );
       dynamic_cast<DesignBookView*>( parentWidget() )->lCMW()->toggleCSysAction->
-	addTo( context_menu_ );
-      dynamic_cast<DesignBookView*>( parentWidget() )->lCMW()->toggleCSysAction->
-	setOn( view_data_.show_csys_ );
+	setChecked( view_data_.show_csys_ );
       break;
     }
 
@@ -1409,7 +1410,7 @@ void OpenGLView::toggleCSys ( void )
     view_data_.show_csys_ = true;
 
   dynamic_cast<DesignBookView*>( parentWidget() )->lCMW()->
-    toggleCSysAction->setOn( view_data_.show_csys_ );
+    toggleCSysAction->setChecked( view_data_.show_csys_ );
 
   page_view_->setViewData( view_data_ );
 

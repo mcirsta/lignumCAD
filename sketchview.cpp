@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qaction.h>
 #include <qtabbar.h>
 #include <qlineedit.h>
@@ -392,16 +392,16 @@ void SketchView::listNameChanged ( const QString& name )
 void SketchView::show ( void ) const
 {
   lCMW()->toolMenu->clear();
-  lCMW()->toolRectangleAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolMenu->insertSeparator();
-  lCMW()->toolReferenceLineAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolCenterlineAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolAnnotationAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolMenu->insertSeparator();
-  lCMW()->toolDimensionAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolAlignmentAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolMenu->insertSeparator();
-  lCMW()->toolConstraintDeleteAction->addTo( lCMW()->toolMenu );
+  lCMW()->toolMenu->addAction( lCMW()->toolRectangleAction );
+  lCMW()->toolMenu->addSeparator();
+  lCMW()->toolMenu->addAction( lCMW()->toolReferenceLineAction );
+  lCMW()->toolMenu->addAction( lCMW()->toolCenterlineAction );
+  lCMW()->toolMenu->addAction( lCMW()->toolAnnotationAction );
+  lCMW()->toolMenu->addSeparator();
+  lCMW()->toolMenu->addAction( lCMW()->toolDimensionAction );
+  lCMW()->toolMenu->addAction( lCMW()->toolAlignmentAction );
+  lCMW()->toolMenu->addSeparator();
+  lCMW()->toolMenu->addAction( lCMW()->toolConstraintDeleteAction );
 
   lCMW()->toolRectangleAction->disconnect();
   lCMW()->toolReferenceLineAction->disconnect();
@@ -411,19 +411,19 @@ void SketchView::show ( void ) const
   lCMW()->toolAlignmentAction->disconnect();
   lCMW()->toolConstraintDeleteAction->disconnect();
 
-  connect( lCMW()->toolRectangleAction, SIGNAL( activated() ),
+  connect( lCMW()->toolRectangleAction, SIGNAL( triggered(bool) ),
 	   SLOT( createRectangle() ) );
-  connect( lCMW()->toolCenterlineAction, SIGNAL( activated() ),
+  connect( lCMW()->toolCenterlineAction, SIGNAL( triggered(bool) ),
 	   SLOT( createCenterline() ) );
-  connect( lCMW()->toolReferenceLineAction, SIGNAL( activated() ),
+  connect( lCMW()->toolReferenceLineAction, SIGNAL( triggered(bool) ),
 	   SLOT( createReferenceLine() ) );
-  connect( lCMW()->toolAnnotationAction, SIGNAL( activated() ),
+  connect( lCMW()->toolAnnotationAction, SIGNAL( triggered(bool) ),
 	   SLOT( createAnnotation() ) );
-  connect( lCMW()->toolDimensionAction, SIGNAL( activated() ),
+  connect( lCMW()->toolDimensionAction, SIGNAL( triggered(bool) ),
 	   SLOT( createDimension() ) );
-  connect( lCMW()->toolAlignmentAction, SIGNAL( activated() ),
+  connect( lCMW()->toolAlignmentAction, SIGNAL( triggered(bool) ),
 	   SLOT( createAlignment() ) );
-  connect( lCMW()->toolConstraintDeleteAction, SIGNAL( activated() ),
+  connect( lCMW()->toolConstraintDeleteAction, SIGNAL( triggered(bool) ),
 	   SLOT( deleteConstraint() ) );
 }
 
@@ -452,27 +452,33 @@ void SketchView::write ( QDomElement& xml_rep ) const
 /*
  * Append some useful actions to the OpenGL view context menu.
  */
-void SketchView::startDisplay ( QPopupMenu* context_menu )
+void SketchView::startDisplay ( QMenu* context_menu )
 {
   context_menu_ = context_menu;
 
-  context_menu_->insertSeparator();
-  wireframe_id_ = context_menu_->insertItem( tr( "Wireframe" ), this,
-					     SLOT( toggleRenderStyle( int ) ) );
-  solid_id_ = context_menu_->insertItem( tr( "Solid" ), this,
-					 SLOT( toggleRenderStyle( int ) ) );
-  texture_id_ = context_menu_->insertItem( tr( "Texture" ), this,
-					   SLOT( toggleRenderStyle( int ) ) );
+  context_menu_->addSeparator();
+  wireframe_action_ = context_menu_->addAction( tr( "Wireframe" ) );
+  solid_action_ = context_menu_->addAction( tr( "Solid" ) );
+  texture_action_ = context_menu_->addAction( tr( "Texture" ) );
 
-  context_menu_->setCheckable( true );
+  wireframe_action_->setCheckable( true );
+  solid_action_->setCheckable( true );
+  texture_action_->setCheckable( true );
+
+  connect( wireframe_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::WIREFRAME ); } );
+  connect( solid_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::SOLID ); } );
+  connect( texture_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::TEXTURED ); } );
 
   switch ( renderStyle() ) {
   case lC::Render::WIREFRAME:
-    context_menu_->setItemChecked( wireframe_id_, true ); break;
+    wireframe_action_->setChecked( true ); break;
   case lC::Render::SOLID:
-    context_menu_->setItemChecked( solid_id_, true ); break;
+    solid_action_->setChecked( true ); break;
   case lC::Render::TEXTURED:
-    context_menu_->setItemChecked( texture_id_, true ); break;
+    texture_action_->setChecked( true ); break;
   case lC::Render::PARENT:
   case lC::Render::STIPPLE:
   case lC::Render::HIDDEN:
@@ -486,7 +492,7 @@ void SketchView::startDisplay ( QPopupMenu* context_menu )
 
 // Clean up since we are not visible any more.
 
-void SketchView::stopDisplay ( QPopupMenu* /*context_menu*/ )
+void SketchView::stopDisplay ( QMenu* /*context_menu*/ )
 {
   disconnect( sketch_, SIGNAL( nameChanged( const QString& ) ),
 	      lCMW(), SLOT( pageChanged( const QString& ) ) );
@@ -597,29 +603,33 @@ void SketchView::updateName ( const QString& /*name*/ )
  * Only wireframe and solid are allowed here (though textured might
  * be kind of fun, too.)
  */
-void SketchView::toggleRenderStyle ( int id )
+void SketchView::toggleRenderStyle ( lC::Render::Style render_style )
 {
-  if ( id == wireframe_id_ and renderStyle() != lC::Render::WIREFRAME ) {
-    context_menu_->setItemChecked( wireframe_id_, true );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, false );
+  if ( render_style == lC::Render::WIREFRAME && renderStyle() != lC::Render::WIREFRAME ) {
+    wireframe_action_->setChecked( true );
+    solid_action_->setChecked( false );
+    texture_action_->setChecked( false );
 
     setRenderStyle( lC::Render::WIREFRAME );
   }
-  else if ( id == solid_id_ and renderStyle() != lC::Render::SOLID ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( solid_id_, true );
-    context_menu_->setItemChecked( texture_id_, false );
+  else if ( render_style == lC::Render::SOLID && renderStyle() != lC::Render::SOLID ) {
+    wireframe_action_->setChecked( false );
+    solid_action_->setChecked( true );
+    texture_action_->setChecked( false );
 
     setRenderStyle( lC::Render::SOLID );
   }
-  else if ( id == texture_id_ and renderStyle() != lC::Render::TEXTURED ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, true );
+  else if ( render_style == lC::Render::TEXTURED && renderStyle() != lC::Render::TEXTURED ) {
+    wireframe_action_->setChecked( false );
+    solid_action_->setChecked( false );
+    texture_action_->setChecked( true );
 
     setRenderStyle( lC::Render::TEXTURED );
   }
+
+  wireframe_action_->setChecked( renderStyle() == lC::Render::WIREFRAME );
+  solid_action_->setChecked( renderStyle() == lC::Render::SOLID );
+  texture_action_->setChecked( renderStyle() == lC::Render::TEXTURED );
 
   view()->updateGL();
 }

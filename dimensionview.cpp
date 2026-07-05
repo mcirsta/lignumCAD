@@ -23,7 +23,7 @@
 
 #include <qapplication.h>
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <QCursor>
 #include <QWhatsThis>
 #include <qlineedit.h>
@@ -59,7 +59,7 @@ namespace Space2D {
     if ( xml_rep_ != 0 ) delete xml_rep_;
   }
 
-  void DimensionCreateInput::startDisplay ( QPopupMenu* context_menu )
+  void DimensionCreateInput::startDisplay ( QMenu* context_menu )
   {
     n_geometries_ = 0;
     points_.clear();
@@ -71,9 +71,9 @@ namespace Space2D {
 
     QAction* cancel_action = parent_->lCMW()->cancelDimensionAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() ) );
+    separator_action_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelOperation() ) );
 
     parent_->view()->
       setCursor( CursorFactory::instance().cursor( CursorFactory::DIMENSION ) );
@@ -335,8 +335,8 @@ namespace Space2D {
 
     QAction* cancel_action = parent_->lCMW()->cancelDimensionAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     parent_->view()->unsetCursor();
 
@@ -364,8 +364,8 @@ namespace Space2D {
     QAction* cancel_action = parent_->lCMW()->cancelDimensionAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     parent_->cancelOperation();
   }
@@ -478,7 +478,7 @@ namespace Space2D {
       old_extension_offset_( 0 ), free_( false )
   {}
 
-  void DimensionModifyInput::startDisplay ( QPopupMenu* /*context_menu*/ )
+  void DimensionModifyInput::startDisplay ( QMenu* /*context_menu*/ )
   {
     free_ = false;
   }

@@ -23,7 +23,7 @@
 #include <qapplication.h>
 #include <qmainwindow.h>
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qlineedit.h>
 #include <qfiledialog.h>
 #include <qmessagebox.h>
@@ -438,30 +438,30 @@ void DesignBookView::init ( void )
   for ( int index = 0; id != page_ids.end(); ++id, ++index ) {
     QAction* insertAction = PageFactory::instance()->action( *id, lCMW_ );
 
-    insertAction->addTo( page_tabbar_->contextMenu() );
-    insertAction->addTo( lCMW_->insertMenu );
-    insertAction->addTo( lCMW_->insertToolbar );
+    page_tabbar_->contextMenu()->addAction( insertAction );
+    lCMW_->insertMenu->addAction( insertAction );
+    lCMW_->insertToolbar->addAction( insertAction );
 
-    connect( insertAction, SIGNAL( activated() ),
+    connect( insertAction, SIGNAL( triggered(bool) ),
 	     new CreatePage( this, *id ), SLOT( createPage() ) );
 
     insertAction->setEnabled( false );
   }
 
-  page_tabbar_->contextMenu()->insertSeparator();
-  lCMW_->renamePageAction->addTo( page_tabbar_->contextMenu() );
-  lCMW_->deletePageAction->addTo( page_tabbar_->contextMenu() );
+  page_tabbar_->contextMenu()->addSeparator();
+  page_tabbar_->contextMenu()->addAction( lCMW_->renamePageAction );
+  page_tabbar_->contextMenu()->addAction( lCMW_->deletePageAction );
 
   connect( opengl_view_, SIGNAL( scale( const Ratio& ) ),
 	   lCMW_, SLOT( scaleChanged( const Ratio& ) ) );
 
   connect( page_tabbar_, SIGNAL( selected( int ) ), SLOT( pageChanged( int ) ) );
 
-  connect( lCMW_->editPreferencesAction, SIGNAL( activated() ),
+  connect( lCMW_->editPreferencesAction, SIGNAL( triggered(bool) ),
 	   SLOT( editPreferences() ) );
 
-  connect( lCMW_->renamePageAction, SIGNAL( activated() ), SLOT( renamePage() ) );
-  connect( lCMW_->deletePageAction, SIGNAL( activated() ), SLOT( deletePage() ) );
+  connect( lCMW_->renamePageAction, SIGNAL( triggered(bool) ), SLOT( renamePage() ) );
+  connect( lCMW_->deletePageAction, SIGNAL( triggered(bool) ), SLOT( deletePage() ) );
 
   connect( this, SIGNAL( setCaption( const QString& ) ),
 	   lCMW_, SLOT( setCaption( const QString& ) ) );

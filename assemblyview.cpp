@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qaction.h>
 #include <qtabbar.h>
 #include <qlineedit.h>
@@ -455,15 +455,15 @@ public:
    *
    * \param context_menu main OpenGL view's context menu.
    */
-  void startDisplay ( QPopupMenu* context_menu )
+  void startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 
     QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelCurrent() )  );
+    separator_action_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelCurrent() )  );
 
     status_ = subassembly_->constraints().status();
 
@@ -491,13 +491,13 @@ public:
    * When changing the current page remove the context dialog action and
    * undo any cursor changes.
    */
-  void stopDisplay ( QPopupMenu* /*context_menu*/ )
+  void stopDisplay ( QMenu* /*context_menu*/ )
   {
     QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     assembly_view_->view()->unsetCursor();
   }
@@ -638,8 +638,8 @@ public slots:
     QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     disconnect( subassembly_, SIGNAL( constraintCanceled() ),
 		this, SLOT( cancelOperation() ) );
@@ -699,8 +699,8 @@ private slots:
       QAction* cancel_action=assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
       cancel_action->disconnect();
-      cancel_action->removeFrom( context_menu_ );
-      context_menu_->removeItem( separator_id_ );
+      context_menu_->removeAction( cancel_action );
+      context_menu_->removeAction( separator_action_ );
 
       assembly_view_->view()->unsetCursor();
 
@@ -724,9 +724,9 @@ private slots:
 
 private:
   //! OpenGL view context menu.
-  QPopupMenu* context_menu_;
+  QMenu* context_menu_;
   //! Separator for Cancel action.
-  int separator_id_;
+  QAction* separator_action_ = nullptr;
   //! Parent assembly view.
   AssemblyView* assembly_view_;
   //! Current subassembly being constrained.
@@ -774,15 +774,15 @@ public:
    *
    * \param context_menu main OpenGL view's context menu.
    */
-  void startDisplay ( QPopupMenu* context_menu )
+  void startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 
     QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelCurrent() )  );
+    separator_action_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelCurrent() )  );
 
     status_ = subassembly_->constraints().status();
 
@@ -811,13 +811,13 @@ public:
    * When changing the current page, remove the context dialog action and
    * undo any cursor changes.
    */
-  void stopDisplay ( QPopupMenu* /*context_menu*/ )
+  void stopDisplay ( QMenu* /*context_menu*/ )
   {
     QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     assembly_view_->view()->unsetCursor();
   }
@@ -973,8 +973,8 @@ public slots:
     QAction* cancel_action = assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     disconnect( subassembly_, SIGNAL( constraintCanceled() ),
 		this, SLOT( cancelOperation() ) );
@@ -1034,8 +1034,8 @@ private slots:
       QAction* cancel_action=assembly_view_->lCMW()->cancelAssemblyConstraintAction;
 
       cancel_action->disconnect();
-      cancel_action->removeFrom( context_menu_ );
-      context_menu_->removeItem( separator_id_ );
+      context_menu_->removeAction( cancel_action );
+      context_menu_->removeAction( separator_action_ );
 
       assembly_view_->view()->unsetCursor();
 
@@ -1059,9 +1059,9 @@ private slots:
 
 private:
   //! OpenGL view context menu.
-  QPopupMenu* context_menu_;
+  QMenu* context_menu_;
   //! Separator for Cancel action.
-  int separator_id_;
+  QAction* separator_action_ = nullptr;
   //! Parent assembly view.
   AssemblyView* assembly_view_;
   //! Current subassembly being constrained.
@@ -1095,15 +1095,15 @@ public:
   //! \return true does need selection scan.
   bool needsPrepressMouseCoordinates ( void ) const { return true; }
 
-  void startDisplay ( QPopupMenu* context_menu )
+  void startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 
     QAction* cancel_action = assembly_view_->lCMW()->cancelConstraintDeleteAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
+    separator_action_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelOperation() )  );
 
     assembly_view_->view()->
       setCursor( CursorFactory::instance().cursor( CursorFactory::DELETE_CONSTRAINT ) );
@@ -1112,15 +1112,15 @@ public:
    * When changing the current page remove the context dialog action and
    * undo any cursor changes.
    */
-  void stopDisplay ( QPopupMenu* /*context_menu*/ )
+  void stopDisplay ( QMenu* /*context_menu*/ )
   {
     // Not the only stopDisplay which needs a make-over...
 #if 0
     QAction* cancel_action = parent_->lCMW()->cancelAssemblyConstraintAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     assembly_view_->view()->unsetCursor();
 #endif
@@ -1180,8 +1180,8 @@ public:
     // cancelOperation! So, this needs some more thought...
     QAction* cancel_action = assembly_view_->lCMW()->cancelConstraintDeleteAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 #endif
     assembly_view_->view()->unsetCursor();
 
@@ -1207,16 +1207,16 @@ public slots:
     QAction* cancel_action = assembly_view_->lCMW()->cancelConstraintDeleteAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     assembly_view_->cancelDeleteOperation();
   }
 private:
   //! OpenGL view context menu.
-  QPopupMenu* context_menu_;
+  QMenu* context_menu_;
   //! Separator for Cancel action.
-  int separator_id_;
+  QAction* separator_action_ = nullptr;
   //! Parent assembly view.
   AssemblyView* assembly_view_;
   //! Subassembly to remove.
@@ -1451,17 +1451,17 @@ void AssemblyView::show ( void ) const
 {
   lCMW()->toolMenu->clear();
 
-  lCMW()->toolAddModelAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolDeleteModelAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolMenu->insertSeparator();
-  lCMW()->toolJointAction->addTo( lCMW()->toolMenu );
+  lCMW()->toolMenu->addAction( lCMW()->toolAddModelAction );
+  lCMW()->toolMenu->addAction( lCMW()->toolDeleteModelAction );
+  lCMW()->toolMenu->addSeparator();
+  lCMW()->toolMenu->addAction( lCMW()->toolJointAction );
 
   lCMW()->toolAddModelAction->disconnect();
   lCMW()->toolDeleteModelAction->disconnect();
   lCMW()->toolJointAction->disconnect();
 
-  connect( lCMW()->toolAddModelAction, SIGNAL( activated() ), SLOT( addModel() ) );
-  connect( lCMW()->toolDeleteModelAction, SIGNAL( activated() ),
+  connect( lCMW()->toolAddModelAction, SIGNAL( triggered(bool) ), SLOT( addModel() ) );
+  connect( lCMW()->toolDeleteModelAction, SIGNAL( triggered(bool) ),
 	   SLOT( deleteModel() ) );
 
   // Save our sanity by not allowing the user to delete the first model.
@@ -1503,37 +1503,45 @@ SelectionType AssemblyView::defaultSelectionType ( void ) const
 /*
  * Append some useful actions to the OpenGL view context menu.
  */
-void AssemblyView::startDisplay ( QPopupMenu* context_menu )
+void AssemblyView::startDisplay ( QMenu* context_menu )
 {
   context_menu_ = context_menu;
 
-  context_menu_->insertSeparator();
-  wireframe_id_ = context_menu_->insertItem( tr( "Wireframe" ), this,
-					     SLOT( toggleRenderStyle( int ) ) );
-  hidden_id_ = context_menu_->insertItem( tr( "Hidden Line" ), this,
-					  SLOT( toggleRenderStyle( int ) ) );
-  solid_id_ = context_menu_->insertItem( tr( "Solid" ), this,
-					 SLOT( toggleRenderStyle( int ) ) );
-  texture_id_ = context_menu_->insertItem( tr( "Texture" ), this,
-					   SLOT( toggleRenderStyle( int ) ) );
+  context_menu_->addSeparator();
+  wireframe_action_ = context_menu_->addAction( tr( "Wireframe" ) );
+  hidden_action_ = context_menu_->addAction( tr( "Hidden Line" ) );
+  solid_action_ = context_menu_->addAction( tr( "Solid" ) );
+  texture_action_ = context_menu_->addAction( tr( "Texture" ) );
 
-  context_menu_->setCheckable( true );
+  wireframe_action_->setCheckable( true );
+  hidden_action_->setCheckable( true );
+  solid_action_->setCheckable( true );
+  texture_action_->setCheckable( true );
+
+  connect( wireframe_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::WIREFRAME ); } );
+  connect( hidden_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::HIDDEN ); } );
+  connect( solid_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::SOLID ); } );
+  connect( texture_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::TEXTURED ); } );
 
   connect( view(), SIGNAL( rotation( const GLdouble* ) ),
 	   SIGNAL( orientationChanged( const GLdouble* ) ) );
 
   switch ( renderStyle() ) {
   case lC::Render::WIREFRAME:
-    context_menu_->setItemChecked( wireframe_id_, true ); break;
+    wireframe_action_->setChecked( true ); break;
   case lC::Render::HIDDEN:
-    context_menu_->setItemChecked( hidden_id_, true );
+    hidden_action_->setChecked( true );
     connect( view(), SIGNAL( rotation( const GLdouble* ) ),
 	     SLOT( updateHiddenOrientation( const GLdouble* ) ) );
     break;
   case lC::Render::SOLID:
-    context_menu_->setItemChecked( solid_id_, true ); break;
+    solid_action_->setChecked( true ); break;
   case lC::Render::TEXTURED:
-    context_menu_->setItemChecked( texture_id_, true ); break;
+    texture_action_->setChecked( true ); break;
   }
 
   connect( assembly_, SIGNAL( nameChanged( const QString& ) ),
@@ -1583,7 +1591,7 @@ void AssemblyView::startDisplay ( QPopupMenu* context_menu )
 /*
  * Clean up when are not the current page.
  */
-void AssemblyView::stopDisplay ( QPopupMenu* /*context_menu*/ )
+void AssemblyView::stopDisplay ( QMenu* /*context_menu*/ )
 {
   if ( current_view_ != 0 &&
        current_view_->subassembly()->constraints().status() != PlacementComplete ) {
@@ -1621,8 +1629,8 @@ void AssemblyView::stopDisplay ( QPopupMenu* /*context_menu*/ )
     QAction* cancel_action = lCMW()->cancelAddModelAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     disconnect( constraint_form_->matePushButton, SIGNAL( clicked() ),
 		this, SLOT( mate() ) );
@@ -1690,26 +1698,16 @@ void AssemblyView::updateName ( const QString& name )
 
 // Allow the user to switch among the various rendering styles.
 
-void AssemblyView::toggleRenderStyle ( int id )
+void AssemblyView::toggleRenderStyle ( lC::Render::Style render_style )
 {
-  if ( renderStyle() == lC::Render::HIDDEN && id != hidden_id_ )
+  if ( renderStyle() == lC::Render::HIDDEN && render_style != lC::Render::HIDDEN )
     disconnect( view(), SIGNAL( rotation( const GLdouble* ) ),
 		this, SLOT( updateHiddenOrientation( const GLdouble* ) ) );
 
-  if ( id == wireframe_id_ and renderStyle() != lC::Render::WIREFRAME ) {
-    context_menu_->setItemChecked( wireframe_id_, true );
-    context_menu_->setItemChecked( hidden_id_, false );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, false );
-
+  if ( render_style == lC::Render::WIREFRAME && renderStyle() != lC::Render::WIREFRAME ) {
     setRenderStyle( lC::Render::WIREFRAME );
   }
-  else if ( id == hidden_id_ and renderStyle() != lC::Render::HIDDEN ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( hidden_id_, true );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, false );
-
+  else if ( render_style == lC::Render::HIDDEN && renderStyle() != lC::Render::HIDDEN ) {
     setRenderStyle( lC::Render::HIDDEN );
 
     connect( view(), SIGNAL( rotation( const GLdouble* ) ),
@@ -1717,22 +1715,17 @@ void AssemblyView::toggleRenderStyle ( int id )
 
     updateHiddenOrientation( view()->viewOrientation() );
   }
-  else if ( id == solid_id_ and renderStyle() != lC::Render::SOLID ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( hidden_id_, false );
-    context_menu_->setItemChecked( solid_id_, true );
-    context_menu_->setItemChecked( texture_id_, false );
-
+  else if ( render_style == lC::Render::SOLID && renderStyle() != lC::Render::SOLID ) {
     setRenderStyle( lC::Render::SOLID );
   }
-  else if ( id == texture_id_ and renderStyle() != lC::Render::TEXTURED ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( hidden_id_, false );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, true );
-
+  else if ( render_style == lC::Render::TEXTURED && renderStyle() != lC::Render::TEXTURED ) {
     setRenderStyle( lC::Render::TEXTURED );
   }
+
+  wireframe_action_->setChecked( renderStyle() == lC::Render::WIREFRAME );
+  hidden_action_->setChecked( renderStyle() == lC::Render::HIDDEN );
+  solid_action_->setChecked( renderStyle() == lC::Render::SOLID );
+  texture_action_->setChecked( renderStyle() == lC::Render::TEXTURED );
 
   view()->updateGL();
 }
@@ -1851,9 +1844,9 @@ void AssemblyView::editConstraints ( SubassemblyView* subassembly_view )
 
   QAction* cancel_action = lCMW()->cancelAddModelAction;
 
-  separator_id_ = context_menu_->insertSeparator();
-  cancel_action->addTo( context_menu_ );
-  connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
+  separator_action_ = context_menu_->addSeparator();
+  context_menu_->addAction( cancel_action );
+  connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelOperation() )  );
 
   constraint_form_->constraintsTextLabel->
     setText( tr( "<p>Defined Constraints for %1</p>" ).
@@ -1865,10 +1858,10 @@ void AssemblyView::editConstraints ( SubassemblyView* subassembly_view )
 
   constraint_complete_ = true;
 
-  constraint_form_->matePushButton->setOn( false );
-  constraint_form_->alignPushButton->setOn( false );
-  constraint_form_->mateOffsetPushButton->setOn( false );
-  constraint_form_->alignOffsetPushButton->setOn( false );
+  constraint_form_->matePushButton->setChecked( false );
+  constraint_form_->alignPushButton->setChecked( false );
+  constraint_form_->mateOffsetPushButton->setChecked( false );
+  constraint_form_->alignOffsetPushButton->setChecked( false );
 
   connect( constraint_form_->matePushButton, SIGNAL( clicked() ),
 	   SLOT( mate() ) );
@@ -1894,7 +1887,7 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
   constraint_complete_ = false;
 
   if ( constraint->type() == lC::STR::MATE ) {
-    constraint_form_->matePushButton->setOn( true );
+    constraint_form_->matePushButton->setChecked( true );
 
     if ( constraint_input_ == 0 )
       constraint_input_ = new ConstraintInput( this );
@@ -1904,12 +1897,12 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
     constraint_input_->startDisplay( context_menu_ );
 
     connect( constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->matePushButton, SLOT( setOn( bool ) ) );
+	     constraint_form_->matePushButton, SLOT( setChecked( bool ) ) );
 
     setInputObject( constraint_input_ );
   }
   else if ( constraint->type() == lC::STR::ALIGN ) {
-    constraint_form_->alignPushButton->setOn( true );
+    constraint_form_->alignPushButton->setChecked( true );
 
     if ( constraint_input_ == 0 )
       constraint_input_ = new ConstraintInput( this );
@@ -1919,12 +1912,12 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
     constraint_input_->startDisplay( context_menu_ );
 
     connect( constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->alignPushButton, SLOT( setOn( bool ) ) );
+	     constraint_form_->alignPushButton, SLOT( setChecked( bool ) ) );
 
     setInputObject( constraint_input_ );
   }
   else if ( constraint->type() == lC::STR::MATE_OFFSET ) {
-    constraint_form_->mateOffsetPushButton->setOn( true );
+    constraint_form_->mateOffsetPushButton->setChecked( true );
 
     if ( offset_constraint_input_ == 0 )
       offset_constraint_input_ = new OffsetConstraintInput( this );
@@ -1934,12 +1927,12 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
     offset_constraint_input_->startDisplay( context_menu_ );
 
     connect( offset_constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->mateOffsetPushButton, SLOT( setOn( bool ) ) );
+	     constraint_form_->mateOffsetPushButton, SLOT( setChecked( bool ) ) );
 
     setInputObject( offset_constraint_input_ );
   }
   else if ( constraint->type() == lC::STR::ALIGN_OFFSET ) {
-    constraint_form_->alignOffsetPushButton->setOn( true );
+    constraint_form_->alignOffsetPushButton->setChecked( true );
 
     if ( offset_constraint_input_ == 0 )
       offset_constraint_input_ = new OffsetConstraintInput( this );
@@ -1949,7 +1942,7 @@ void AssemblyView::editConstraint ( const AssemblyConstraint* constraint )
     offset_constraint_input_->startDisplay( context_menu_ );
 
     connect( offset_constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->alignOffsetPushButton, SLOT( setOn( bool ) ) );
+	     constraint_form_->alignOffsetPushButton, SLOT( setChecked( bool ) ) );
 
     setInputObject( offset_constraint_input_ );
   }
@@ -1975,7 +1968,7 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
   InputObject* constraint_input = 0;
 
   if ( constraint->type() == lC::STR::MATE ) {
-    constraint_form_->matePushButton->setOn( true );
+    constraint_form_->matePushButton->setChecked( true );
 
     if ( constraint_input_ == 0 )
       constraint_input_ = new ConstraintInput( this );
@@ -1986,10 +1979,10 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
 				       current_view_->selectionName() );
 
     connect( constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->matePushButton, SLOT( setOn( bool ) ) );
+	     constraint_form_->matePushButton, SLOT( setChecked( bool ) ) );
   }
   else if ( constraint->type() == lC::STR::ALIGN ) {
-    constraint_form_->alignPushButton->setOn( true );
+    constraint_form_->alignPushButton->setChecked( true );
 
     if ( constraint_input_ == 0 )
       constraint_input_ = new ConstraintInput( this );
@@ -2000,10 +1993,10 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
 				       current_view_->selectionName() );
 
     connect( constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->alignPushButton, SLOT( setOn( bool ) ) );
+	     constraint_form_->alignPushButton, SLOT( setChecked( bool ) ) );
   }
   else if ( constraint->type() == lC::STR::MATE_OFFSET ) {
-    constraint_form_->mateOffsetPushButton->setOn( true );
+    constraint_form_->mateOffsetPushButton->setChecked( true );
 
     if ( offset_constraint_input_ == 0 )
       offset_constraint_input_ = new OffsetConstraintInput( this );
@@ -2014,10 +2007,10 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
 					      current_view_->selectionName() );
 
     connect( offset_constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->mateOffsetPushButton, SLOT( setOn( bool ) ) );
+	     constraint_form_->mateOffsetPushButton, SLOT( setChecked( bool ) ) );
   }
   else if ( constraint->type() == lC::STR::ALIGN_OFFSET ) {
-    constraint_form_->alignOffsetPushButton->setOn( true );
+    constraint_form_->alignOffsetPushButton->setChecked( true );
 
     if ( offset_constraint_input_ == 0 )
       offset_constraint_input_ = new OffsetConstraintInput( this );
@@ -2028,7 +2021,7 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
 					      current_view_->selectionName() );
 
     connect( offset_constraint_input_, SIGNAL( done( bool ) ),
-	     constraint_form_->alignOffsetPushButton, SLOT( setOn( bool ) ) );
+	     constraint_form_->alignOffsetPushButton, SLOT( setChecked( bool ) ) );
   }
 
   constraint_input->startDisplay( context_menu_ );
@@ -2335,8 +2328,8 @@ void AssemblyView::placementComplete ( void )
   QAction* cancel_action = lCMW()->cancelAddModelAction;
 
   cancel_action->disconnect();
-  cancel_action->removeFrom( context_menu_ );
-  context_menu_->removeItem( separator_id_ );
+  context_menu_->removeAction( cancel_action );
+  context_menu_->removeAction( separator_action_ );
 
   disconnect( constraint_form_->matePushButton, SIGNAL( clicked() ),
 	      this, SLOT( mate() ) );

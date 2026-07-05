@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qaction.h>
 #include <qtabbar.h>
 #include <qlineedit.h>
@@ -436,12 +436,12 @@ void PartView::show ( void ) const
 {
   lCMW()->toolMenu->clear();
 
-  lCMW()->toolStraightCutAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolFreeCutAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolHoleAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolEdgeTreatmentAction->addTo( lCMW()->toolMenu );
-  lCMW()->toolMenu->insertSeparator();
-  lCMW()->toolMaterialAction->addTo( lCMW()->toolMenu );
+  lCMW()->toolMenu->addAction( lCMW()->toolStraightCutAction );
+  lCMW()->toolMenu->addAction( lCMW()->toolFreeCutAction );
+  lCMW()->toolMenu->addAction( lCMW()->toolHoleAction );
+  lCMW()->toolMenu->addAction( lCMW()->toolEdgeTreatmentAction );
+  lCMW()->toolMenu->addSeparator();
+  lCMW()->toolMenu->addAction( lCMW()->toolMaterialAction );
 
   lCMW()->toolStraightCutAction->disconnect();
   lCMW()->toolFreeCutAction->disconnect();
@@ -449,7 +449,7 @@ void PartView::show ( void ) const
   lCMW()->toolEdgeTreatmentAction->disconnect();
   lCMW()->toolMaterialAction->disconnect();
 
-  connect( lCMW()->toolMaterialAction, SIGNAL( activated() ),
+  connect( lCMW()->toolMaterialAction, SIGNAL( triggered(bool) ),
 	   SLOT( setMaterial() ) );
 }
 
@@ -477,37 +477,45 @@ void PartView::write ( QDomElement& xml_rep ) const
 /*
  * Append some useful actions to the OpenGL view context menu.
  */
-void PartView::startDisplay ( QPopupMenu* context_menu )
+void PartView::startDisplay ( QMenu* context_menu )
 {
   context_menu_ = context_menu;
 
-  context_menu_->insertSeparator();
-  wireframe_id_ = context_menu_->insertItem( tr( "Wireframe" ), this,
-					     SLOT( toggleRenderStyle( int ) ) );
-  hidden_id_ = context_menu_->insertItem( tr( "Hidden Line" ), this,
-					  SLOT( toggleRenderStyle( int ) ) );
-  solid_id_ = context_menu_->insertItem( tr( "Solid" ), this,
-					 SLOT( toggleRenderStyle( int ) ) );
-  texture_id_ = context_menu_->insertItem( tr( "Texture" ), this,
-					   SLOT( toggleRenderStyle( int ) ) );
+  context_menu_->addSeparator();
+  wireframe_action_ = context_menu_->addAction( tr( "Wireframe" ) );
+  hidden_action_ = context_menu_->addAction( tr( "Hidden Line" ) );
+  solid_action_ = context_menu_->addAction( tr( "Solid" ) );
+  texture_action_ = context_menu_->addAction( tr( "Texture" ) );
 
-  context_menu_->setCheckable( true );
+  wireframe_action_->setCheckable( true );
+  hidden_action_->setCheckable( true );
+  solid_action_->setCheckable( true );
+  texture_action_->setCheckable( true );
+
+  connect( wireframe_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::WIREFRAME ); } );
+  connect( hidden_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::HIDDEN ); } );
+  connect( solid_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::SOLID ); } );
+  connect( texture_action_, &QAction::triggered,
+	   this, [this]() { toggleRenderStyle( lC::Render::TEXTURED ); } );
 
   connect( view(), SIGNAL( rotation( const GLdouble* ) ),
 	   SIGNAL( orientationChanged( const GLdouble* ) ) );
 
   switch ( renderStyle() ) {
   case lC::Render::WIREFRAME:
-    context_menu_->setItemChecked( wireframe_id_, true ); break;
+    wireframe_action_->setChecked( true ); break;
   case lC::Render::HIDDEN:
-    context_menu_->setItemChecked( hidden_id_, true );
+    hidden_action_->setChecked( true );
     connect( view(), SIGNAL( rotation( const GLdouble* ) ),
 	     SIGNAL( orientationChangedHidden( const GLdouble* ) ) );
     break;
   case lC::Render::SOLID:
-    context_menu_->setItemChecked( solid_id_, true ); break;
+    solid_action_->setChecked( true ); break;
   case lC::Render::TEXTURED:
-    context_menu_->setItemChecked( texture_id_, true ); break;
+    texture_action_->setChecked( true ); break;
   }
 
   connect( part_, SIGNAL( nameChanged( const QString& ) ),
@@ -516,7 +524,7 @@ void PartView::startDisplay ( QPopupMenu* context_menu )
 /*
  * Clean up when are not the current page.
  */
-void PartView::stopDisplay ( QPopupMenu* /*context_menu*/ )
+void PartView::stopDisplay ( QMenu* /*context_menu*/ )
 {
   /*
    * When we are not the current page, don't respond to changes in the view
@@ -570,26 +578,16 @@ void PartView::updateName ( const QString& /*name*/ )
 
 // Allow the user to switch among the various rendering styles.
 
-void PartView::toggleRenderStyle ( int id )
+void PartView::toggleRenderStyle ( lC::Render::Style render_style )
 {
-  if ( renderStyle() == lC::Render::HIDDEN && id != hidden_id_ )
+  if ( renderStyle() == lC::Render::HIDDEN && render_style != lC::Render::HIDDEN )
     disconnect( view(), SIGNAL( rotation( const GLdouble* ) ),
 		this, SIGNAL( orientationChangedHidden( const GLdouble* ) ) );
 
-  if ( id == wireframe_id_ and renderStyle() != lC::Render::WIREFRAME ) {
-    context_menu_->setItemChecked( wireframe_id_, true );
-    context_menu_->setItemChecked( hidden_id_, false );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, false );
-
+  if ( render_style == lC::Render::WIREFRAME && renderStyle() != lC::Render::WIREFRAME ) {
     setRenderStyle( lC::Render::WIREFRAME );
   }
-  else if ( id == hidden_id_ and renderStyle() != lC::Render::HIDDEN ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( hidden_id_, true );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, false );
-
+  else if ( render_style == lC::Render::HIDDEN && renderStyle() != lC::Render::HIDDEN ) {
     setRenderStyle( lC::Render::HIDDEN );
 
     connect( view(), SIGNAL( rotation( const GLdouble* ) ),
@@ -597,22 +595,17 @@ void PartView::toggleRenderStyle ( int id )
 
     emit orientationChangedHidden( view()->viewOrientation() );
   }
-  else if ( id == solid_id_ and renderStyle() != lC::Render::SOLID ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( hidden_id_, false );
-    context_menu_->setItemChecked( solid_id_, true );
-    context_menu_->setItemChecked( texture_id_, false );
-
+  else if ( render_style == lC::Render::SOLID && renderStyle() != lC::Render::SOLID ) {
     setRenderStyle( lC::Render::SOLID );
   }
-  else if ( id == texture_id_ and renderStyle() != lC::Render::TEXTURED ) {
-    context_menu_->setItemChecked( wireframe_id_, false );
-    context_menu_->setItemChecked( hidden_id_, false );
-    context_menu_->setItemChecked( solid_id_, false );
-    context_menu_->setItemChecked( texture_id_, true );
-
+  else if ( render_style == lC::Render::TEXTURED && renderStyle() != lC::Render::TEXTURED ) {
     setRenderStyle( lC::Render::TEXTURED );
   }
+
+  wireframe_action_->setChecked( renderStyle() == lC::Render::WIREFRAME );
+  hidden_action_->setChecked( renderStyle() == lC::Render::HIDDEN );
+  solid_action_->setChecked( renderStyle() == lC::Render::SOLID );
+  texture_action_->setChecked( renderStyle() == lC::Render::TEXTURED );
 
   view()->updateGL();
 }

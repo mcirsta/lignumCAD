@@ -22,7 +22,7 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qevent.h>
 #include <qcursor.h>
 
@@ -46,7 +46,7 @@ namespace Space2D {
     if ( xml_rep_ != 0 ) delete xml_rep_;
   }
 
-  void ConstraintDeleteInput::startDisplay ( QPopupMenu* context_menu )
+  void ConstraintDeleteInput::startDisplay ( QMenu* context_menu )
   {
     target_ = 0;
 
@@ -56,9 +56,9 @@ namespace Space2D {
 
     QAction* cancel_action = parent_->lCMW()->cancelConstraintDeleteAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
+    separator_action_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelOperation() )  );
 
     parent_->view()->
       setCursor( CursorFactory::instance().cursor( CursorFactory::DELETE_CONSTRAINT ) );
@@ -167,8 +167,8 @@ namespace Space2D {
 
     QAction* cancel_action = parent_->lCMW()->cancelConstraintDeleteAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     parent_->view()->unsetCursor();
 
@@ -196,8 +196,8 @@ namespace Space2D {
     QAction* cancel_action = parent_->lCMW()->cancelConstraintDeleteAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     parent_->cancelOperation();
   }

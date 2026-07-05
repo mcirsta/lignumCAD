@@ -22,7 +22,7 @@
  */
 
 #include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qlineedit.h>
 #include <qradiobutton.h>
 #include <qlabel.h>
@@ -295,16 +295,16 @@ namespace Space2D {
     : centerline_( centerline ), centerline_view_( centerline_view )
   {}
 
-  void CenterlineCreateInput::startDisplay ( QPopupMenu* context_menu )
+  void CenterlineCreateInput::startDisplay ( QMenu* context_menu )
   {
     context_menu_ = context_menu;
 
     QAction* cancel_action =
       centerline_view_->parent()->lCMW()->cancelCenterlineAction;
 
-    separator_id_ = context_menu_->insertSeparator();
-    cancel_action->addTo( context_menu_ );
-    connect( cancel_action, SIGNAL( activated() ), SLOT( cancelOperation() )  );
+    separator_action_ = context_menu_->addSeparator();
+    context_menu_->addAction( cancel_action );
+    connect( cancel_action, SIGNAL( triggered(bool) ), SLOT( cancelOperation() )  );
 
     centerline_view_->view()->
       setCursor( CursorFactory::instance().cursor( CursorFactory::CENTERLINE ) );
@@ -384,8 +384,8 @@ namespace Space2D {
 
     QAction* cancel_action = page_view->lCMW()->cancelCenterlineAction;
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     centerline_->setComplete( true );
 
@@ -417,8 +417,8 @@ namespace Space2D {
     QAction* cancel_action = page_view->lCMW()->cancelCenterlineAction;
 
     cancel_action->disconnect();
-    cancel_action->removeFrom( context_menu_ );
-    context_menu_->removeItem( separator_id_ );
+    context_menu_->removeAction( cancel_action );
+    context_menu_->removeAction( separator_action_ );
 
     page_view->removeFigureView( centerline_view_ );
 
