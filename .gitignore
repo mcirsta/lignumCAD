@@ -2,3 +2,9 @@ build/
 build-qt6/
 .qtcreator/
 orig/
+.ui/
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h

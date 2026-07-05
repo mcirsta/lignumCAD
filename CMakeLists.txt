@@ -98,6 +98,7 @@ list(REMOVE_DUPLICATES LIGNUMCAD_OPENCASCADE_LIBRARIES)
 
 set(LIGNUMCAD_SOURCES
   main.cpp
+  uiformwrappers.cpp
   designbookview.cpp
   sketchview.cpp
   openglview.cpp
@@ -181,6 +182,25 @@ set(LIGNUMCAD_SOURCES
 )
 
 set(LIGNUMCAD_HEADERS
+  aboutdialog.h
+  annotationinfodialog.h
+  assemblyadddialog.h
+  assemblyconfigdialog.h
+  assemblyconstraintform.h
+  centerlineinfodialog.h
+  dimensioninfodialog.h
+  lignumcadmainwindow.h
+  materialdialog.h
+  modelinfodialog.h
+  newmodelwizard.h
+  newpartwizard.h
+  offsetinfodialog.h
+  pageinfodialog.h
+  parameterinfodialog.h
+  partinfodialog.h
+  preferencesdialog.h
+  rectangleinfodialog.h
+  referencelineinfodialog.h
   designbookview.h
   graphics.h
   sketchview.h
