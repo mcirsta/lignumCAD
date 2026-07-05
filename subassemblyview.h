@@ -23,7 +23,7 @@
 #ifndef SUBASSEMBLYVIEW_H
 #define SUBASSEMBLYVIEW_H
 
-#include <qptrlist.h>
+#include <vector>
 
 #include "figureview.h"
 
@@ -145,7 +145,7 @@ private:
   //! Modify input object.
   SubassemblyModifyInput* modify_input_;
   //! List of other subassemblies this subassembly depends on via constraints.
-  QPtrList<const ModelItem> dependencies_;
+  std::vector<const ModelItem*> dependencies_;
   //! Offset constraint size editor.
   static OffsetInfoDialog* offset_info_dialog_;
 };

@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
+#include <algorithm>
+
 #include <qdom.h>
 
 #include "constants.h"
@@ -850,14 +852,14 @@ void SubassemblyView::addDependency ( const QVector<uint>& surface_id )
     id_path.push_back( surface_id[i] );
     ModelItem* item = model()->lookup( id_path );
     // The first order check is that we don't already depend on this item.
-    if ( dependencies_.findRef( item ) != -1 ) {
+    if ( std::find( dependencies_.begin(), dependencies_.end(), item ) != dependencies_.end() ) {
       continue;
     }
     // If it's a model, part or assembly, then it can be renamed by the user.
     else if ( dynamic_cast<Model*>( item ) != 0 ||
 	      dynamic_cast<Assembly*>( item ) != 0 ||
 	      dynamic_cast<Part*>( item ) != 0 ) {
-      dependencies_.append( item );
+      dependencies_.push_back( item );
       connect( item, SIGNAL( nameChanged(const QString&) ),
 	       SLOT( updateConstraintName( const QString&) ) );
     }

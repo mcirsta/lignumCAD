@@ -21,6 +21,8 @@
  *
  */
 
+#include <algorithm>
+
 #include <qdom.h>
 #include <qregexp.h>
 
@@ -169,13 +171,13 @@ void Subassembly::addDependency ( const QVector<uint>& surface_id )
     id_path.push_back( surface_id[i] );
     ModelItem* item = model()->lookup( id_path );
     // The first order check is that we don't already depend on this item.
-    if ( dependencies_.findRef( item ) != -1 ) {
+    if ( std::find( dependencies_.begin(), dependencies_.end(), item ) != dependencies_.end() ) {
       continue;
     }
     // If it's a subassembly, then our location may depend on its location
     // (unless it is ourself)
     else if ( dynamic_cast<Subassembly*>( item ) != 0 && item != this ) {
-      dependencies_.append( item );
+      dependencies_.push_back( item );
       connect( item, SIGNAL( locationChanged() ), SLOT( updateLocation() ) );
     }
     // If it's a solid, then we probably depend on the exact geometry
@@ -186,7 +188,7 @@ void Subassembly::addDependency ( const QVector<uint>& surface_id )
 	   dynamic_cast<Part*>( subassembly_ )->solid() == item )
 	continue;
 
-      dependencies_.append( item );
+      dependencies_.push_back( item );
       connect( dynamic_cast<Space3D::OCSolid*>(item), SIGNAL( modified() ),
 	       SLOT( updateLocation() ) );
     }
@@ -204,13 +206,13 @@ void Subassembly::addDependency ( const QVector<uint>& surface_id )
     id_path.push_back( surface_id[i] );
     ModelItem* item = model()->lookup( id_path );
     // The first order check is that we don't already depend on this item.
-    if ( dependencies_.findRef( item ) != -1 ) {
+    if ( std::find( dependencies_.begin(), dependencies_.end(), item ) != dependencies_.end() ) {
       continue;
     }
     // If it's the top level subassembly of the reference, then our location
     // may depend on its location (unless it is ourself)
     else if ( dynamic_cast<Subassembly*>( item ) != 0 && item != this ) {
-      dependencies_.append( item );
+      dependencies_.push_back( item );
       connect( item, SIGNAL( locationChanged() ), SLOT( updateLocation() ) );
       break;			// And that's it. Don't look any more.
     }
@@ -223,7 +225,7 @@ void Subassembly::addDependency ( const QVector<uint>& surface_id )
 	   dynamic_cast<Part*>( subassembly_ )->solid() == item )
 	continue;
 
-      dependencies_.append( item );
+      dependencies_.push_back( item );
       connect( dynamic_cast<Space3D::OCSolid*>(item), SIGNAL( modified() ),
 	       SLOT( updateLocation() ) );
     }
