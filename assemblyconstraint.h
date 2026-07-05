@@ -23,10 +23,12 @@
 #ifndef ASSEMBLYCONSTRAINT_H
 #define ASSEMBLYCONSTRAINT_H
 
+#include <memory>
+#include <vector>
+
 #include <gp_Ax2.hxx>
 
 #include <qstringlist.h>
-#include <qptrlist.h>
 
 class Subassembly;
 class Handle( Geom_Surface );
@@ -244,12 +246,10 @@ public:
    * \param parent parent subassembly.
    */
   AssemblyConstraintManager ( Subassembly* parent )
-    : parent_( parent )
-  {
-    constraints_.setAutoDelete( true );
-  }
+    : parent_( parent ), current_constraint_( -1 ), old_constraint_( 0 )
+  {}
   //! \return a pointer to the current constraint.
-  const AssemblyConstraint* current ( void ) const { return constraints_.current(); }
+  const AssemblyConstraint* current ( void ) const { return currentConstraint(); }
   /*!
    * Return a pointer to the constraint at the given phase. (Should not
    * change the "current" constraint.)
@@ -258,9 +258,13 @@ public:
    */
   AssemblyConstraint* constraint ( uint phase ) const;
 
-  //! \return an iterator over the defined constaints.
-  QPtrListIterator<AssemblyConstraint> constraints ( void ) const
-  { return QPtrListIterator<AssemblyConstraint>( constraints_ ); }
+  //! \return the number of defined constraints.
+  int constraintCount ( void ) const
+  { return static_cast<int>( constraints_.size() ); }
+  //! \return the most recently added constraint.
+  AssemblyConstraint* lastConstraint ( void ) const;
+  //! \return non-owning pointers to the defined constaints.
+  std::vector<AssemblyConstraint*> constraints ( void ) const;
   //! \return the status of the current constraint.
   AssemblyConstraintStatus status ( void ) const;
   /*!
@@ -387,9 +391,16 @@ private:
   //! There are some methods of the parent we need to invoke.
   Subassembly* parent_;
   //! List of constraints defining this subassembly.
-  QPtrList<AssemblyConstraint> constraints_;
+  std::vector<std::unique_ptr<AssemblyConstraint>> constraints_;
+  //! Index of the active constraint.
+  int current_constraint_;
   //! Current constraint before change.
   AssemblyConstraint* old_constraint_;
+
+  AssemblyConstraint* currentConstraint ( void ) const;
+  AssemblyConstraint* previousConstraint ( void ) const;
+  void appendConstraint ( std::unique_ptr<AssemblyConstraint> constraint );
+  void updateOffsetConstraints ( void );
 };
 
 #endif // ASSEMBLYCONSTRAINT_H

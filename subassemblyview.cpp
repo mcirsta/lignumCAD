@@ -122,11 +122,11 @@ public:
 	  // Highly experimental...
 
 	  // Move yourself a little bit just in case.
-	  if ( subassembly->constraints().constraints().count() == 0 )
-	    subassembly->translate( gp_Vec( 20, 0, 0 ) );
+      if ( subassembly->constraints().constraintCount() == 0 )
+	subassembly->translate( gp_Vec( 20, 0, 0 ) );
 	  
-	  if ( subassembly->constraints().constraints().count() < 3 )
-	    assembly_view->editConstraints( subassembly_view );
+      if ( subassembly->constraints().constraintCount() < 3 )
+	assembly_view->editConstraints( subassembly_view );
 	}
       }
     }
@@ -470,22 +470,19 @@ void SubassemblyView::init ( void )
 		    arg( lC::idToString( subassembly_->subassembly()->ID() ) ) );
   list_view_item_->listView()->ensureItemVisible( list_view_item_ );
 
-  QPtrListIterator<AssemblyConstraint> constraint =
-    subassembly_->constraints().constraints();
-
   QListViewItem* constraint_item = 0;
-  for ( ; constraint.current(); ++constraint ) {
+  for ( AssemblyConstraint* constraint : subassembly_->constraints().constraints() ) {
     constraint_item = new ListViewItem( list_view_item_, constraint_item );
     constraint_item->setText( lC::NAME, trC( lC::STR::CONSTRAINT ) );
-    constraint_item->setText( lC::TYPE, trC( constraint.current()->type() ) );
+    constraint_item->setText( lC::TYPE, trC( constraint->type() ) );
     constraint_item->setText( lC::DETAIL, QString::null );
 
-    updateChangedConstraint( 0, constraint.current() );
+    updateChangedConstraint( 0, constraint );
 
     // Are there any offset constraints which need dimensions?
-    if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	 constraint.current()->type() == lC::STR::ALIGN_OFFSET )
-      updateChangedOffset( constraint.current() );
+    if ( constraint->type() == lC::STR::MATE_OFFSET ||
+	 constraint->type() == lC::STR::ALIGN_OFFSET )
+      updateChangedOffset( constraint );
   }
 
 #if 0
@@ -873,23 +870,20 @@ void SubassemblyView::updateConstraintName ( const QString& /*name*/ )
   // Not sure what being more selective would avail us.
   QListViewItem* list_item = list_view_item_->firstChild();
 
-  QPtrListIterator<AssemblyConstraint> constraint( subassembly_->constraints().
-						   constraints() );
-
-  for ( ; constraint.current() != 0; ++constraint ) {
+  for ( AssemblyConstraint* constraint : subassembly_->constraints().constraints() ) {
     QString text;
-    if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	 constraint.current()->type() == lC::STR::ALIGN_OFFSET )
+    if ( constraint->type() == lC::STR::MATE_OFFSET ||
+	 constraint->type() == lC::STR::ALIGN_OFFSET )
       text = tr( "Offset %1: " ).
-	arg( UnitsBasis::instance()->format( constraint.current()->offset(),false));
+	arg( UnitsBasis::instance()->format( constraint->offset(),false));
 
-    if ( constraint.current()->reference1().empty() ) {
-      text += lC::formatName( model()->idPath( constraint.current()->reference0()));
+    if ( constraint->reference1().empty() ) {
+      text += lC::formatName( model()->idPath( constraint->reference0()));
     }
     else {
       text += tr( "%1 to %2" ).
-	arg( lC::formatName( model()->idPath( constraint.current()->reference0()))).
-	arg( lC::formatName( model()->idPath( constraint.current()->reference1())));
+	arg( lC::formatName( model()->idPath( constraint->reference0()))).
+	arg( lC::formatName( model()->idPath( constraint->reference1())));
     }
 
     list_item->setText( lC::DETAIL, text );

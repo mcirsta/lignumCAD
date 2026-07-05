@@ -403,9 +403,8 @@ bool Subassembly::referenced ( const Subassembly* target ) const
   // if target is a prefix match of the reference?
   QVector<uint> target_id = target->ID();
 
-  QPtrListIterator<AssemblyConstraint> constraint = constraints_.constraints();
-  for ( ; constraint.current() != 0; ++constraint ) {
-    QVector<uint> reference1 = constraint.current()->reference1();
+  for ( AssemblyConstraint* constraint : constraints_.constraints() ) {
+    QVector<uint> reference1 = constraint->reference1();
     if ( !reference1.empty() && reference1.size() >= target_id.size() ) {
       bool equal = true;
       for ( uint i = 0; i < target_id.size(); i++ ) {

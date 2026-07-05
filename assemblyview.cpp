@@ -245,16 +245,13 @@ public:
     : Command( name ), design_book_view_( design_book_view ),
       db_url_( subassembly->dbURL() )
   {
-    QPtrListIterator<AssemblyConstraint> constraints =
-      subassembly->constraints().constraints();
+    AssemblyConstraint* constraint = subassembly->constraints().lastConstraint();
 
-    constraints.toLast();
-
-    if ( constraints.current() != 0 ) {
+    if ( constraint != 0 ) {
       QDomElement constraint_element =
 	xml_doc_.createElement( lC::STR::CREATE_CONSTRAINT);
 
-      constraints.current()->write( constraint_element );
+      constraint->write( constraint_element );
 
       xml_doc_.appendChild( constraint_element );
     }
@@ -339,16 +336,13 @@ public:
     : Command( name ), design_book_view_( design_book_view ),
       db_url_( subassembly->dbURL() )
   {
-    QPtrListIterator<AssemblyConstraint> constraints =
-      subassembly->constraints().constraints();
+    AssemblyConstraint* constraint = subassembly->constraints().lastConstraint();
 
-    constraints.toLast();
-
-    if ( constraints.current() != 0 ) {
+    if ( constraint != 0 ) {
       QDomElement constraint_element =
 	xml_doc_.createElement( lC::STR::DELETE_CONSTRAINT);
 
-      constraints.current()->write( constraint_element );
+      constraint->write( constraint_element );
 
       xml_doc_.appendChild( constraint_element );
     }
@@ -1554,24 +1548,22 @@ void AssemblyView::startDisplay ( QPopupMenu* context_menu )
        current_view_->subassembly()->constraints().status() != PlacementComplete ) {
     editConstraints( current_view_ );
 
-    QPtrListIterator<AssemblyConstraint> constraint =
-      current_view_->subassembly()->constraints().constraints();
-
-    for ( ; constraint.current() != 0; ++constraint ) {
+    for ( AssemblyConstraint* constraint :
+	    current_view_->subassembly()->constraints().constraints() ) {
       constraints_text_.push_back( QStringList() );
-      if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	   constraint.current()->type() == lC::STR::ALIGN_OFFSET )
+      if ( constraint->type() == lC::STR::MATE_OFFSET ||
+	   constraint->type() == lC::STR::ALIGN_OFFSET )
 	constraints_text_.back() << QString( tr( "%1 (%2)" ) ).
-	  arg( trC( constraint.current()->type() ) ).
-	  arg( UnitsBasis::instance()->format( constraint.current()->offset(), false ) );
+	  arg( trC( constraint->type() ) ).
+	  arg( UnitsBasis::instance()->format( constraint->offset(), false ) );
       else
-	constraints_text_.back() << trC( constraint.current()->type() );
+	constraints_text_.back() << trC( constraint->type() );
 
-      if ( !constraint.current()->reference0().empty() )
-	constraints_text_.back() << model()->idPath( constraint.current()->reference0() );
+      if ( !constraint->reference0().empty() )
+	constraints_text_.back() << model()->idPath( constraint->reference0() );
 
-      if ( !constraint.current()->reference1().empty() )
-	constraints_text_.back() << model()->idPath( constraint.current()->reference1() );
+      if ( !constraint->reference1().empty() )
+	constraints_text_.back() << model()->idPath( constraint->reference1() );
     }
 
     updateConstraintLabel();
@@ -1579,10 +1571,11 @@ void AssemblyView::startDisplay ( QPopupMenu* context_menu )
     if ( current_view_->subassembly()->constraints().status() !=
 	 ConstraintComplete ) { 
 
-      constraint.toLast();
+      AssemblyConstraint* constraint =
+	current_view_->subassembly()->constraints().lastConstraint();
 
-      if ( constraint.current() != 0 ) {
-	editConstraint( constraint.current() );
+      if ( constraint != 0 ) {
+	editConstraint( constraint );
       }
     }
   }
@@ -2378,34 +2371,35 @@ void AssemblyView::reeditSubassembly ( const AssemblyConstraint* /*old_constrain
 
   editConstraints( current_view_ );
 
-  QPtrListIterator<AssemblyConstraint> constraint =
-    current_view_->subassembly()->constraints().constraints();
-
-  for ( ; constraint.current() != 0; ++constraint ) {
+  for ( AssemblyConstraint* constraint :
+	  current_view_->subassembly()->constraints().constraints() ) {
     constraints_text_.push_back( QStringList() );
 #if 1
-    if ( constraint.current()->type() == lC::STR::MATE_OFFSET ||
-	 constraint.current()->type() == lC::STR::ALIGN_OFFSET )
+    if ( constraint->type() == lC::STR::MATE_OFFSET ||
+	 constraint->type() == lC::STR::ALIGN_OFFSET )
       constraints_text_.back() << QString( tr( "%1 (%2)" ) ).
-	arg( tr( constraint.current()->type() ) ).
-	arg( UnitsBasis::instance()->format( constraint.current()->offset(), false ) );
+	arg( tr( constraint->type() ) ).
+	arg( UnitsBasis::instance()->format( constraint->offset(), false ) );
     else
-      constraints_text_.back() << tr( constraint.current()->type() );
+      constraints_text_.back() << tr( constraint->type() );
 #else
-    constraints_text_.back() << tr( constraint.current()->type() );
+    constraints_text_.back() << tr( constraint->type() );
 #endif
-    if ( !constraint.current()->reference0().empty() )
-      constraints_text_.back() << model()->idPath( constraint.current()->reference0() );
+    if ( !constraint->reference0().empty() )
+      constraints_text_.back() << model()->idPath( constraint->reference0() );
 
-    if ( !constraint.current()->reference1().empty() )
-      constraints_text_.back() << model()->idPath( constraint.current()->reference1() );
+    if ( !constraint->reference1().empty() )
+      constraints_text_.back() << model()->idPath( constraint->reference1() );
   }
 
   updateConstraintLabel();
 
-  editConstraint( constraint.toLast() );
+  AssemblyConstraint* constraint =
+    current_view_->subassembly()->constraints().lastConstraint();
 
-  activateFigure( parent()->lookup( constraint.toLast()->reference0() ) );
+  editConstraint( constraint );
+
+  activateFigure( parent()->lookup( constraint->reference0() ) );
 }
 
 void AssemblyView::cancelConstraint ( void )
