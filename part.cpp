@@ -23,7 +23,6 @@
 
 #include <qdom.h>
 #include <qregexp.h>
-#include <qlistview.h>
 
 #include <BRepTools.hxx>
 

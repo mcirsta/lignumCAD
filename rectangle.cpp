@@ -23,7 +23,6 @@
 
 #include <qstringlist.h>
 #include <qregexp.h>
-#include <qlistview.h>
 #include <qmessagebox.h>
 #include <qdom.h>
 

@@ -28,7 +28,14 @@
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
 #include <QButtonGroup>
+#include <QFileInfo>
+#include <QImageReader>
+#include <QPainter>
+#include <QPixmap>
 #include <QSurfaceFormat>
+#include <QSvgRenderer>
+
+#include "businessinfo.h"
 
 /*!
   * There's quite a bit of initialization in this dialog (since it does so much).
@@ -70,9 +77,9 @@ void PreferencesDialog::init ()
 
     
     // Configure the dimension arrow head style default.
-    arrowHeadStyleComboBox->insertItem( tr( arrowHeadStyleText( lC::OPEN ) ) );
-    arrowHeadStyleComboBox->insertItem( tr( arrowHeadStyleText( lC::HOLLOW ) ) );
-    arrowHeadStyleComboBox->insertItem( tr( arrowHeadStyleText( lC::FILLED ) ) );
+    arrowHeadStyleComboBox->insertItem( arrowHeadStyleText( lC::OPEN ) );
+    arrowHeadStyleComboBox->insertItem( arrowHeadStyleText( lC::HOLLOW ) );
+    arrowHeadStyleComboBox->insertItem( arrowHeadStyleText( lC::FILLED ) );
     arrowHeadStyleComboBox->setDefaultValue( OpenGLGlobals::instance()->defaultArrowHeadStyle() );
 
     // And set the arrow head width to length ratio spin box default.
@@ -89,27 +96,28 @@ void PreferencesDialog::logoFileChooser_fileNameChanged( const QString & file_na
   if ( file_name.isEmpty() ) {
     logoLabel->setText( tr( "No Logo" ) );
     logoLabel->setEnabled( false );
+    return;
   }
-  else if ( QImageIO::imageFormat( file_name ) != 0 ) {
-    logoLabel->setPixmap( file_name );
+
+  QImageReader image_reader( file_name );
+  if ( image_reader.canRead() ) {
+    logoLabel->setPixmap( QPixmap::fromImageReader( &image_reader ) );
     logoLabel->setEnabled( true );
   }
-  else if ( QFileInfo( file_name ).extension().lower() == "svg" ) {
-    QPixmap pixmap( logoLabel->size() );
-    QPainter painter( &pixmap, true );
-    painter.fillRect( pixmap.rect(), logoLabel->paletteBackgroundColor() );
+  else if ( QFileInfo( file_name ).suffix().compare( "svg", Qt::CaseInsensitive ) == 0 ) {
+    QSvgRenderer renderer( file_name );
+    if ( !renderer.isValid() )
+      return;
 
-    QPicture picture;
-    picture.load( file_name, "svg" );
-    
-    // Try to center the logo image (as well as rendering at the proper scale)
-    int width = picture.width() * logoLabel->logicalDpiX() / picture.logicalDpiX();
-    int height = picture.height() * logoLabel->logicalDpiY() / picture.logicalDpiY();
-    painter.translate( ( logoLabel->width() - width ) / 2, ( logoLabel->height() - height ) / 2 );
-    painter.scale( (double)logoLabel->logicalDpiX() / picture.logicalDpiX(),
-		   (double)logoLabel->logicalDpiY() / picture.logicalDpiY() );
-    
-    picture.play( &painter );
+    QPixmap pixmap( logoLabel->size() );
+    pixmap.fill( logoLabel->palette().color( QPalette::Window ) );
+
+    QPainter painter( &pixmap );
+    QSize svg_size = renderer.defaultSize();
+    svg_size.scale( logoLabel->size(), Qt::KeepAspectRatio );
+    QRect target_rect( QPoint( 0, 0 ), svg_size );
+    target_rect.moveCenter( pixmap.rect().center() );
+    renderer.render( &painter, target_rect );
 
     logoLabel->setPixmap( pixmap );
     logoLabel->setEnabled( true );
@@ -189,7 +197,7 @@ void PreferencesDialog::precisionComboBox_valueChanged( int value )
 
   UnitFormat format;
 
-  if ( fractionalRadioButton->isOn() )
+  if ( fractionalRadioButton->isChecked() )
     format = FRACTIONAL;
   else
     format = DECIMAL;
@@ -622,7 +630,7 @@ void PreferencesDialog::updateUnitsDisplays( LengthUnit* length_unit, UnitFormat
   */
 void PreferencesDialog::buttonHelp_clicked()
 {
-    if (  preferencesTabWidget->currentPage() == identificationPage ) {
+    if (  preferencesTabWidget->currentWidget() == identificationPage ) {
 	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Identification</b></p> \
 <p><i>lignumCAD</i> allows you to identify yourself with \
 a Business name and location. Of course, a user can \
@@ -646,7 +654,7 @@ or <b>Alt+C</b>).<p>\
 and are restored on the next invocation of \
 <i>lignumCAD</i></p>" ), this );
     }
-    else if ( preferencesTabWidget->currentPage() == unitsPage ) {
+    else if ( preferencesTabWidget->currentWidget() == unitsPage ) {
 	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Length Units Display Representation</b></p>\
 <p>First a confession: Every length in <i>lignumCAD</i> is \
 stored in inches. Even if you change the length unit, \
@@ -682,7 +690,7 @@ or <b>Alt+C</b>).<p>\
 and are restored on the next invocation of \
 <i>lignumCAD</i></p>" ), this );
     }	
-    else if ( preferencesTabWidget->currentPage() == colorSchemePage ) {
+    else if ( preferencesTabWidget->currentWidget() == colorSchemePage ) {
 	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Color Scheme</b></p>\
 <p>All of the colors used in <i>lignumCAD</i> are selectable \
 by the user. You can either select from a set of predefined \
@@ -703,7 +711,7 @@ or <b>Alt+C</b>).<p>\
 and are restored on the next invocation of \
 <i>lignumCAD</i></p>" ), this );
     }
-    else if ( preferencesTabWidget->currentPage() == otherStylesPage ) {
+    else if ( preferencesTabWidget->currentWidget() == otherStylesPage ) {
 	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Other Styles</b></p>\
 <p>There are a number of stylistic properties related to the \
 technical drawing <i>lignumCAD</i> tries to emulate. \

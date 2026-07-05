@@ -231,15 +231,15 @@ void DrawingView::init ( void )
   tab_ = new QTab( QPixmap( ":/images/drawing.png" ),
 		   lC::formatTabName( drawing_->name() ) );
 
-  QListViewItem* previous_item = parent()->previousItem( drawing_->id() );
+  ListViewItem* previous_item = parent()->previousItem( drawing_->id() );
 
   list_view_item_ = new ListViewItem( parent()->modelListItem(), previous_item );
 
   list_view_item_->setText( lC::NAME, lC::formatName( drawing_->name() )
 			    + QString( " <%1>" ).arg( drawing_->id() ) );
   list_view_item_->setText( lC::TYPE, trC( lC::STR::DRAWING ) );
-  list_view_item_->setOpen( true );
-  list_view_item_->setRenameEnabled( lC::NAME, true );
+  list_view_item_->setExpanded( true );
+  list_view_item_->setNameEditable( true );
 
   connect( list_view_item_, SIGNAL( nameChanged( const QString& ) ),
 	   SLOT( listNameChanged( const QString& ) ) );
@@ -316,7 +316,7 @@ void DrawingView::listNameChanged ( const QString& name )
     setName( name );
     break;
   case lC::Redo:
-    list_view_item_->startRename( lC::NAME );
+    list_view_item_->startEditingName();
   case lC::Rejected:
     updateName( drawing_->name() ); // Repaint list item with old name.
   }

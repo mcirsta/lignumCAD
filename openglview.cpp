@@ -25,7 +25,6 @@
 #include <qaction.h>
 #include <qpainter.h>
 #include <qprinter.h>
-#include <qwhatsthis.h>
 #include <QPixmap>
 
 #include "constants.h"
@@ -221,7 +220,7 @@ OpenGLView::OpenGLView ( DesignBookView* parent, const char* name,
   connect( OpenGLGlobals::instance(), SIGNAL( backgroundAttributeChanged() ),
 	   SLOT( updateBackground() ) );
 
-  QWhatsThis::add( this, tr( "This is the main window which displays the \
+  setWhatsThis( tr( "This is the main window which displays the \
 pages of the model. Select a current page by clicking on the tabs below \
 this window." ) );
 }

@@ -22,7 +22,6 @@
  */
 #include <qdom.h>
 #include <qregexp.h>
-#include <qlistview.h>
 
 #include "constants.h"
 #include "page.h"

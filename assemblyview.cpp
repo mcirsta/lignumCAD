@@ -25,14 +25,15 @@
 #include <qtabbar.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
-#include <qdockwindow.h>
 #include <qlayout.h>
-#include <qwhatsthis.h>
 #include <qtextbrowser.h>
 #include <qbuttongroup.h>
 #include <qlabel.h>
+#include <QCursor>
+#include <QDockWidget>
 #include <QPixmap>
 #include <QTreeWidgetItem>
+#include <QWhatsThis>
 
 #include <BRepTools.hxx>
 #include <TopoDS_Compound.hxx>
@@ -539,7 +540,7 @@ public:
     status_ = subassembly_->constraints().validate( sv->geomPath( (*f).second ) );
 
     if ( status_ == Invalid ) {
-      QWhatsThis::display( tr( "The selected face is invalid." ) );
+      QWhatsThis::showText( QCursor::pos(),  tr( "The selected face is invalid." ) );
       //      me->ignore();
     }
   }
@@ -859,7 +860,7 @@ public:
     status_ = subassembly_->constraints().validate( sv->geomPath( (*f).second ) );
 
     if ( status_ == Invalid ) {
-      QWhatsThis::display( tr( "The selected face is invalid." ) );
+      QWhatsThis::showText( QCursor::pos(),  tr( "The selected face is invalid." ) );
 #if 0
       me->ignore();
 #endif
@@ -1152,7 +1153,7 @@ public:
 	return;
       }
       else
-	QWhatsThis::display( tr( "<p>Cannot delete subassembly '%1' because it is "
+	QWhatsThis::showText( QCursor::pos(),  tr( "<p>Cannot delete subassembly '%1' because it is "
 				 "referenced by other subassemblies in this "
 				 "assembly</p>" ).arg( sv->name() ) );
     }
@@ -1226,7 +1227,7 @@ private:
 
 AssemblyConfigDialog* AssemblyView::config_dialog_ = 0;
 
-QDockWindow* AssemblyView::constraint_dock_ = 0;
+QDockWidget* AssemblyView::constraint_dock_ = 0;
 
 AssemblyAddDialog* AssemblyView::add_dialog_ = 0;
 
@@ -1313,15 +1314,15 @@ void AssemblyView::init ( void )
   tab_ = new QTab( QPixmap( ":/images/assembly.png" ),
 		   lC::formatTabName( assembly_->name() ) );
 
-  QListViewItem* previous_item = parent()->previousItem( assembly_->id() );
+  ListViewItem* previous_item = parent()->previousItem( assembly_->id() );
 
   list_view_item_ = new ListViewItem( parent()->modelListItem(), previous_item );
 
   list_view_item_->setText( lC::NAME, lC::formatName( assembly_->name() )
 			    + QString( " <%1>" ).arg( assembly_->id() ) );
   list_view_item_->setText( lC::TYPE, trC( lC::STR::ASSEMBLY ) );
-  list_view_item_->setOpen( true );
-  list_view_item_->setRenameEnabled( lC::NAME, true );
+  list_view_item_->setExpanded( true );
+  list_view_item_->setNameEditable( true );
 
   connect( this, SIGNAL( newInformation( const QString& ) ),
 	   lCMW(), SLOT( updateInformation( const QString& ) ) );
@@ -1338,12 +1339,11 @@ void AssemblyView::init ( void )
     config_dialog_ = new AssemblyConfigDialog( lCMW() );
 
   if ( constraint_dock_ == 0 ) {
-    constraint_dock_ = new QDockWindow( QDockWindow::InDock, lCMW(),
-					"constraint_dock" );
-    constraint_dock_->setResizeEnabled( true );
-    constraint_dock_->setCaption( tr( "Assembly Constraints" ) );
-    lCMW()->addDockWindow( constraint_dock_, DockRight );
-    lCMW()->setAppropriate( constraint_dock_, false );
+    constraint_dock_ = new QDockWidget( tr( "Assembly Constraints" ), lCMW() );
+    constraint_dock_->setObjectName( "constraint_dock" );
+    constraint_dock_->setAllowedAreas( Qt::RightDockWidgetArea );
+    lCMW()->addDockWidget( Qt::RightDockWidgetArea, constraint_dock_ );
+    constraint_dock_->toggleViewAction()->setVisible( false );
     constraint_dock_->hide();
   }
 
@@ -1441,7 +1441,7 @@ void AssemblyView::listNameChanged ( const QString& name )
     setName( name );
     break;
   case lC::Redo:
-    list_view_item_->startRename( lC::NAME );
+    list_view_item_->startEditingName();
   case lC::Rejected:
     updateName( assembly_->name() ); // Repaint list item with old name.
   }

@@ -458,7 +458,7 @@ void SubassemblyView::init ( void )
 
   dimension_name_ = view()->genSelectionName();
 
-  QListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
+  ListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
 							 subassembly_->id() );
 
   list_view_item_ = new ListViewItem( parent()->listViewItem(), previous_item );
@@ -470,9 +470,9 @@ void SubassemblyView::init ( void )
 		    arg( lC::formatName( subassembly_->subassembly()->name()) ).
 		    arg( trC( subassembly_->subassembly()->type() ) ).
 		    arg( lC::idToString( subassembly_->subassembly()->ID() ) ) );
-  list_view_item_->listView()->ensureItemVisible( list_view_item_ );
+  list_view_item_->treeWidget()->scrollToItem( list_view_item_ );
 
-  QListViewItem* constraint_item = 0;
+  ListViewItem* constraint_item = 0;
   for ( AssemblyConstraint* constraint : subassembly_->constraints().constraints() ) {
     constraint_item = new ListViewItem( list_view_item_, constraint_item );
     constraint_item->setText( lC::NAME, trC( lC::STR::CONSTRAINT ) );
@@ -735,7 +735,7 @@ void SubassemblyView::updateViewNormal ( const GLdouble* modelview )
 
 void SubassemblyView::updateNewConstraint ( const AssemblyConstraint* constraint )
 {
-  QListViewItem* last_item = list_view_item_->firstChild();
+  ListViewItem* last_item = list_view_item_->firstChild();
   if ( last_item != 0 )
     for ( ; last_item->nextSibling() != 0; last_item = last_item->nextSibling() );
 
@@ -743,15 +743,15 @@ void SubassemblyView::updateNewConstraint ( const AssemblyConstraint* constraint
   constraint_item->setText( lC::NAME, trC( lC::STR::CONSTRAINT ) );
   constraint_item->setText( lC::TYPE, trC( constraint->type() ) );
   constraint_item->setText( lC::DETAIL, QString() );
-  constraint_item->setOpen( true );
-  constraint_item->listView()->ensureItemVisible( constraint_item );
+  constraint_item->setExpanded( true );
+  constraint_item->treeWidget()->scrollToItem( constraint_item );
 }
 
 void SubassemblyView::updateChangedConstraint (
 				       const AssemblyConstraint* /*old_constraint*/,
 				       const AssemblyConstraint* new_constraint )
 {
-  QListViewItem* last_item = list_view_item_->firstChild();
+  ListViewItem* last_item = list_view_item_->firstChild();
   if ( last_item != 0 )
     for ( ; last_item->nextSibling() != 0; last_item = last_item->nextSibling() );
 
@@ -805,7 +805,7 @@ void SubassemblyView::updateChangedOffset ( const AssemblyConstraint* constraint
     dimensions_[ constraint->phase() ]->setMode( lC::Render::REGULAR );
   }
 
-  QListViewItem* last_item = list_view_item_->firstChild();
+  ListViewItem* last_item = list_view_item_->firstChild();
   if ( last_item != 0 )
     for ( int phase = 0; phase < constraint->phase(); phase++ )
       last_item = last_item->nextSibling();
@@ -821,7 +821,7 @@ void SubassemblyView::updateChangedOffset ( const AssemblyConstraint* constraint
 
 void SubassemblyView::updateCanceledConstraint ( void )
 {
-  QListViewItem* last_item = list_view_item_->firstChild();
+  ListViewItem* last_item = list_view_item_->firstChild();
   int phase = 0;
 
   if ( last_item != 0 ) {
@@ -870,7 +870,7 @@ void SubassemblyView::updateConstraintName ( const QString& /*name*/ )
 {
   // The budget approach is just to recompute all of the list view strings.
   // Not sure what being more selective would avail us.
-  QListViewItem* list_item = list_view_item_->firstChild();
+  ListViewItem* list_item = list_view_item_->firstChild();
 
   for ( AssemblyConstraint* constraint : subassembly_->constraints().constraints() ) {
     QString text;

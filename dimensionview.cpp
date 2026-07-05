@@ -24,7 +24,8 @@
 #include <qapplication.h>
 #include <qaction.h>
 #include <qpopupmenu.h>
-#include <qwhatsthis.h>
+#include <QCursor>
+#include <QWhatsThis>
 #include <qlineedit.h>
 #include <qradiobutton.h>
 #include <qbuttongroup.h>
@@ -117,21 +118,21 @@ namespace Space2D {
 
       for ( ConstrainedLine* selected_line : lines_ ) {
 	if ( line == selected_line ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+	  QWhatsThis::showText( QCursor::pos(),  "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"70%\">Cannot dimension to self.</td>"
 			       "</tr></table>" );
 	  return;
 	}
 	if ( fabs( fabs( line->e() * selected_line->e() ) - 1. ) > lC::EPSILON ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+	  QWhatsThis::showText( QCursor::pos(),  "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"70%\">Cannot dimension non-parallel lines.</td>"
 			       "</tr></table>" );
 	  return;
 	}
 	if ( line->dependsOn( selected_line ) ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+	  QWhatsThis::showText( QCursor::pos(),  "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"70%\">Dimension would create circular reference.</td>"
 			       "</tr></table>" );

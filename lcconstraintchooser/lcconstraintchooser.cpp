@@ -20,23 +20,33 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qlineedit.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <qlistview.h>
+#include <QGridLayout>
 #include <QHBoxLayout>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QTreeWidget>
 
 #include "lcconstraintchooser.h"
 
 lCConstraintDialog::lCConstraintDialog ( QWidget* parent, const char* name,
 					 bool modal )
-  : QDialog( parent, name, modal )
+  : QDialog( parent )
 {
-  QGridLayout* dialog_layout_ = new QGridLayout( this, 1, 1, 11, 6, "grid_layout" );
+  setObjectName( name );
+  setModal( modal );
 
-  QHBoxLayout* layout = new QHBoxLayout( 0, 0, 6, "button_layout" );
+  QGridLayout* dialog_layout_ = new QGridLayout( this );
+  dialog_layout_->setObjectName( "grid_layout" );
+  dialog_layout_->setContentsMargins( 11, 11, 11, 11 );
+  dialog_layout_->setSpacing( 6 );
 
-  help_button_ = new QPushButton( this, "helpButton" );
+  QHBoxLayout* layout = new QHBoxLayout;
+  layout->setObjectName( "button_layout" );
+  layout->setSpacing( 6 );
+
+  help_button_ = new QPushButton( this );
+  help_button_->setObjectName( "helpButton" );
   help_button_->setText( tr( "Help" ) );
   layout->addWidget( help_button_ );
 
@@ -44,18 +54,21 @@ lCConstraintDialog::lCConstraintDialog ( QWidget* parent, const char* name,
 					 QSizePolicy::Minimum );
   layout->addItem( spacer );
 
-  ok_button_ = new QPushButton( this, "okButton" );
+  ok_button_ = new QPushButton( this );
+  ok_button_->setObjectName( "okButton" );
   ok_button_->setText( tr( "OK" ) );
   layout->addWidget( ok_button_ );
 
-  cancel_button_ = new QPushButton( this, "cancelButton" );
+  cancel_button_ = new QPushButton( this );
+  cancel_button_->setObjectName( "cancelButton" );
   cancel_button_->setText( tr( "Cancel" ) );
   layout->addWidget( cancel_button_ );
 
   dialog_layout_->addLayout( layout, 1, 0 );
 
-  constraint_list_ = new QListView( this, "constraint_list" );
-  constraint_list_->addColumn( tr( "Name" ) );
+  constraint_list_ = new QTreeWidget( this );
+  constraint_list_->setObjectName( "constraint_list" );
+  constraint_list_->setHeaderLabel( tr( "Name" ) );
 
   dialog_layout_->addWidget( constraint_list_, 0, 0 );
 
@@ -77,14 +90,16 @@ lCConstraintChooser::lCConstraintChooser( QWidget *parent, const char* name )
   layout->setContentsMargins( 0, 0, 0, 0 );
   layout->setSpacing( 0 );
 
-  setFrameStyle( Panel | Sunken );
+  setFrameStyle( QFrame::Panel | QFrame::Sunken );
   setLineWidth( 2 );
 
-  line_edit_ = new QLineEdit( this, "constraintchooser_lineedit" );
+  line_edit_ = new QLineEdit( this );
+  line_edit_->setObjectName( "constraintchooser_lineedit" );
   line_edit_->setFrame( false );
 
-  button_ = new QPushButton( "...", this, "constraintchooser_button" );
-  button_->setFixedWidth( button_->fontMetrics().width( "ABC" ) );
+  button_ = new QPushButton( "...", this );
+  button_->setObjectName( "constraintchooser_button" );
+  button_->setFixedWidth( button_->fontMetrics().horizontalAdvance( "ABC" ) );
 
   line_edit_->setFixedHeight( button_->sizeHint().height() );
 
@@ -102,12 +117,12 @@ lCConstraintChooser::lCConstraintChooser( QWidget *parent, const char* name )
 
 bool lCConstraintChooser::edited ( void ) const
 {
-  return line_edit_->edited();
+  return line_edit_->isModified();
 }
 
 void lCConstraintChooser::setEdited ( bool edited ) const
 {
-  line_edit_->setEdited( edited );
+  line_edit_->setModified( edited );
 }
 
 void lCConstraintChooser::setConstraint( const QString &constraint )
@@ -134,7 +149,7 @@ void lCConstraintChooser::chooseConstraint()
       if ( constraint != line_edit_->text() ) {
 
 	line_edit_->setText( constraint );
-	line_edit_->setEdited( true );
+	line_edit_->setModified( true );
 
 	emit constraintChanged( constraint );
       }

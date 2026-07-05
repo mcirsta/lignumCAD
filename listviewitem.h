@@ -23,21 +23,45 @@
 #ifndef LISTVIEWITEM_H
 #define LISTVIEWITEM_H
 
-#include <qlistview.h>
+#include <QTreeWidget>
 
-// Subclass of QListViewItem to act on changes to the name of an object
+// Subclass of QTreeWidgetItem to act on changes to the name of an object
 // in the model hierarchy view. Emits a signal when the user completes
 // a valid name change.
 
-class ListViewItem : public QObject, public QListViewItem {
+class ListViewItem;
+
+class ModelHierarchyTreeWidget : public QTreeWidget {
+public:
+  explicit ModelHierarchyTreeWidget ( QWidget* parent = 0 );
+
+protected:
+  bool edit ( const QModelIndex& index, EditTrigger trigger, QEvent* event ) override;
+
+private:
+  ListViewItem* editing_item_ = 0;
+  int editing_column_ = -1;
+};
+
+class ListViewItem : public QObject, public QTreeWidgetItem {
   Q_OBJECT
 public:
-  ListViewItem ( QListView* parent );
-  ListViewItem ( QListViewItem* parent, QListViewItem* after );
+  ListViewItem ( ModelHierarchyTreeWidget* parent );
+  ListViewItem ( ListViewItem* parent, ListViewItem* after );
   ~ListViewItem ();
-protected:
-  void okRename ( int col );
+
+  ListViewItem* firstChild ( void ) const;
+  ListViewItem* nextSibling ( void ) const;
+
+  void setNameEditable ( bool editable );
+  bool isNameEditable ( void ) const;
+  void startEditingName ( void );
+  void finishEditing ( int column );
   void activate ( void );
+
+private:
+  bool name_editable_ = false;
+
 signals:
   void nameChanged ( const QString& name );
   void picked ( void );

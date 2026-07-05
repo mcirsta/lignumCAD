@@ -1459,7 +1459,7 @@ namespace Space2D {
     if ( rectangle_info_dialog_ == 0 )
       rectangle_info_dialog_ = new RectangleInfoDialog( parent()->lCMW() );
 
-    QListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
+    ListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
 							   rectangle_->id() );
 
     list_view_item_ = new ListViewItem( parent()->listViewItem(), previous_item );
@@ -1473,38 +1473,38 @@ namespace Space2D {
 #endif
     list_view_item_->setText( lC::TYPE, trC( lC::STR::RECTANGLE ) );
     list_view_item_->setText( lC::DETAIL, trC( lC::STR::UNDEFINED ) );
-    list_view_item_->setOpen( true );
-    list_view_item_->setRenameEnabled( lC::NAME, true );
+    list_view_item_->setExpanded( true );
+    list_view_item_->setNameEditable( true );
 
     x0_list_view_ = new ListViewItem( list_view_item_, 0 );
     x0_list_view_->setText( lC::NAME, lC::formatName( rectangle_->x0()->name() ) );
     x0_list_view_->setText( lC::TYPE, trC( lC::STR::CONSTRAINED_LINE ) );
     x0_list_view_->setText( lC::DETAIL, trC( lC::STR::CONSTRAINT_UNDEFINED ) );
-    x0_list_view_->setOpen( true );
-    x0_list_view_->setRenameEnabled( lC::NAME, true );
+    x0_list_view_->setExpanded( true );
+    x0_list_view_->setNameEditable( true );
 
     y0_list_view_ = new ListViewItem( list_view_item_, x0_list_view_ );
     y0_list_view_->setText( lC::NAME, lC::formatName( rectangle_->y0()->name() ) );
     y0_list_view_->setText( lC::TYPE, trC( lC::STR::CONSTRAINED_LINE ) );
     y0_list_view_->setText( lC::DETAIL, trC( lC::STR::CONSTRAINT_UNDEFINED ) );
-    y0_list_view_->setOpen( true );
-    y0_list_view_->setRenameEnabled( lC::NAME, true );
+    y0_list_view_->setExpanded( true );
+    y0_list_view_->setNameEditable( true );
 
     x1_list_view_ = new ListViewItem( list_view_item_, y0_list_view_ );
     x1_list_view_->setText( lC::NAME, lC::formatName( rectangle_->x1()->name() ) );
     x1_list_view_->setText( lC::TYPE, trC( lC::STR::CONSTRAINED_LINE ) );
     x1_list_view_->setText( lC::DETAIL, trC( lC::STR::CONSTRAINT_UNDEFINED ) );
-    x1_list_view_->setOpen( true );
-    x1_list_view_->setRenameEnabled( lC::NAME, true );
+    x1_list_view_->setExpanded( true );
+    x1_list_view_->setNameEditable( true );
 
     y1_list_view_ = new ListViewItem( list_view_item_, x1_list_view_ );
     y1_list_view_->setText( lC::NAME, lC::formatName( rectangle_->y1()->name() ) );
     y1_list_view_->setText( lC::TYPE, trC( lC::STR::CONSTRAINED_LINE ) );
     y1_list_view_->setText( lC::DETAIL, trC( lC::STR::CONSTRAINT_UNDEFINED ) );
-    y1_list_view_->setOpen( true );
-    y1_list_view_->setRenameEnabled( lC::NAME, true );
+    y1_list_view_->setExpanded( true );
+    y1_list_view_->setNameEditable( true );
 
-    y1_list_view_->listView()->ensureItemVisible( y1_list_view_ );
+    y1_list_view_->treeWidget()->scrollToItem( y1_list_view_ );
 
     connect( list_view_item_, SIGNAL( nameChanged( const QString& ) ),
 	     SLOT( listNameChanged( const QString& ) ) );
@@ -4341,7 +4341,7 @@ namespace Space2D {
       setName( name );
       break;
     case lC::Redo:
-      list_view_item_->startRename( lC::NAME );
+      list_view_item_->startEditingName();
     case lC::Rejected:
       updateName( rectangle_->name() ); // Repaint list item with old name.
     }
@@ -4387,7 +4387,7 @@ namespace Space2D {
   {
     switch ( uniqueEdgeName( name, lC::STR::X0 ) ) {
     case lC::Redo:
-      x0_list_view_->startRename( lC::NAME );
+      x0_list_view_->startEditingName();
     case lC::Rejected:
       x0UpdateName( rectangle_->x0()->name() );
       return;
@@ -4410,7 +4410,7 @@ namespace Space2D {
   {
     switch ( uniqueEdgeName( name, lC::STR::Y0 ) ) {
     case lC::Redo:
-      y0_list_view_->startRename( lC::NAME );
+      y0_list_view_->startEditingName();
     case lC::Rejected:
       y0UpdateName( rectangle_->y0()->name() );
       return;
@@ -4433,7 +4433,7 @@ namespace Space2D {
   {
     switch ( uniqueEdgeName( name, lC::STR::X1 ) ) {
     case lC::Redo:
-      x1_list_view_->startRename( lC::NAME );
+      x1_list_view_->startEditingName();
     case lC::Rejected:
       x1UpdateName( rectangle_->x1()->name() );
       return;
@@ -4456,7 +4456,7 @@ namespace Space2D {
   {
     switch ( uniqueEdgeName( name, lC::STR::Y1 ) ) {
     case lC::Redo:
-      y1_list_view_->startRename( lC::NAME );
+      y1_list_view_->startEditingName();
     case lC::Rejected:
       y1UpdateName( rectangle_->y1()->name() );
       return;

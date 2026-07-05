@@ -560,8 +560,8 @@ void DesignBookView::showView ( void )
 			     arg( lC::formatName( model_->name() ) ).
 			     arg( model_->id() ) );
   model_list_item_->setText( lC::TYPE, trC( lC::STR::MODEL ) );
-  model_list_item_->setOpen( true );
-  model_list_item_->setRenameEnabled( lC::NAME, true );
+  model_list_item_->setExpanded( true );
+  model_list_item_->setNameEditable( true );
 
   connect( model_, SIGNAL( nameChanged( const QString& ) ),
 	   SLOT( updateName( const QString& ) ) );
@@ -766,10 +766,10 @@ PageView* DesignBookView::lastPageView ( void )
 
 // Search for the place where this page view goes in the hierarchy list.
 
-QListViewItem* DesignBookView::previousItem ( uint id ) const
+ListViewItem* DesignBookView::previousItem ( uint id ) const
 {
-  QListViewItem* previous_item = 0;
-  QListViewItem* item = model_list_item_->firstChild();
+  ListViewItem* previous_item = 0;
+  ListViewItem* item = model_list_item_->firstChild();
   for ( const auto& p : page_views_ ) {
     if ( p->id() > id ) break;
 
@@ -1207,7 +1207,7 @@ void DesignBookView::pageChanged ( int id )
   opengl_view_->setPageView( page_view );
 
   // Scroll the model hierarchy to show the page, too.
-  model_list_item_->listView()->ensureItemVisible( page_view->listViewItem() );
+  model_list_item_->treeWidget()->scrollToItem( page_view->listViewItem() );
 
   emit pageChanged( page_view->name() );
 }

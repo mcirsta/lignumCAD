@@ -27,7 +27,7 @@
 #include "pageview.h"
 #include "assembly.h"
 
-class QDockWindow;
+class QDockWidget;
 class AssemblyAddDialog;
 class AssemblyConfigDialog;
 class AssemblyConstraint;
@@ -181,7 +181,7 @@ private:
   QVector<QStringList> constraints_text_;
 
   static AssemblyConfigDialog* config_dialog_;
-  static QDockWindow* constraint_dock_;
+  static QDockWidget* constraint_dock_;
   static AssemblyAddDialog* add_dialog_;
   static AssemblyConstraintForm* constraint_form_;
   static OffsetInfoDialog* offset_info_dialog_;

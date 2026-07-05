@@ -499,7 +499,7 @@ namespace Space3D {
   {
     setObjectName( solid_->name() );
 
-    QListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
+    ListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
 							   solid_->id() );
 
     list_view_item_ = new ListViewItem( parent()->listViewItem(), previous_item );
@@ -516,7 +516,7 @@ namespace Space3D {
 	arg( (*parameter).second.value() );
     detail.append( param_strings.join( tr( "," ) ) );
     list_view_item_->setText( lC::DETAIL, detail );
-    list_view_item_->setOpen( true );
+    list_view_item_->setExpanded( true );
 
     connect( solid_, SIGNAL( modified() ), SLOT( updateTessellation() ) );
 

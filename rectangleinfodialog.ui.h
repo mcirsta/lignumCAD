@@ -32,14 +32,14 @@ void RectangleInfoDialog::init ()
 {
       // Create invisible button groups connecting the Left/Right, Above/Below
       // radio buttons, respectively.
-      QButtonGroup* h = new QButtonGroup( dimDisplaySideGroupBox, "H" );
-      h->insert( leftButton );
-      h->insert( rightButton );
-      h->hide();
-      QButtonGroup* v = new QButtonGroup( dimDisplaySideGroupBox, "V" );
-      v->insert( aboveButton );
-      v->insert( belowButton );
-      v->hide();
+      QButtonGroup* h = new QButtonGroup( dimDisplaySideGroupBox );
+      h->setObjectName( "H" );
+      h->addButton( leftButton );
+      h->addButton( rightButton );
+      QButtonGroup* v = new QButtonGroup( dimDisplaySideGroupBox );
+      v->setObjectName( "V" );
+      v->addButton( aboveButton );
+      v->addButton( belowButton );
       
       // Populate the edge stipple combo box. Maybe make a Designer widget?
       edgeStyleComboBox->insertItem( QPixmap( ":/images/edge_solid.png" ), tr( "Solid" ) );

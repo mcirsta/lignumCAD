@@ -28,6 +28,14 @@
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
 
+void setMaterialColorSwatch( QLabel* label, const QColor& color )
+{
+    QPalette swatch_palette = label->palette();
+    swatch_palette.setColor( QPalette::Window, color );
+    label->setAutoFillBackground( true );
+    label->setPalette( swatch_palette );
+}
+
 void MaterialDialog::init()
 {
   const MaterialMap& materials = MaterialDatabase::instance().materials();
@@ -56,7 +64,7 @@ void MaterialDialog::MaterialList_selectionChanged( QTreeWidgetItem * item )
     if ( item == 0 || item->childCount() > 0 ) {
 	MaterialText->setText( QString() );
 	
-	SolidColor->setPaletteBackgroundColor( palette().color( QPalette::Window ) );
+	setMaterialColorSwatch( SolidColor, palette().color( QPalette::Window ) );
     
 	FaceGrainPixmap->setPixmap( QPixmap() );
 	EndGrainPixmap->setPixmap( QPixmap() );
@@ -95,7 +103,7 @@ void MaterialDialog::MaterialList_selectionChanged( QTreeWidgetItem * item )
     
     MaterialText->setText( material_text );
     
-    SolidColor->setPaletteBackgroundColor( material->color() );
+    setMaterialColorSwatch( SolidColor, material->color() );
     
     FaceGrainPixmap->setPixmap( QPixmap( material->faceGrainFile() ) );
     EndGrainPixmap->setPixmap( QPixmap( material->endGrainFile() ) );

@@ -19,6 +19,7 @@ find_package(Qt6 REQUIRED COMPONENTS
   OpenGLWidgets
   Xml
   PrintSupport
+  Svg
 )
 
 find_package(Freetype REQUIRED)
@@ -445,5 +446,6 @@ target_link_libraries(lignumCAD PRIVATE
   Qt6::OpenGLWidgets
   Qt6::Xml
   Qt6::PrintSupport
+  Qt6::Svg
   ${LIGNUMCAD_OPENCASCADE_LIBRARIES}
 )

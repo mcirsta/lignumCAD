@@ -25,7 +25,6 @@
 #include <qdom.h>
 #include <qstringlist.h>
 #include <qregexp.h>
-#include <qlistview.h>
 #include <qobjectlist.h>
 
 #include "constants.h"

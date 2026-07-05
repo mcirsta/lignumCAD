@@ -27,7 +27,6 @@
 #include <qclipboard.h>
 #include <qcursor.h>
 #include <qmessagebox.h>
-#include <qwhatsthis.h>
 
 #include "configuration.h"
 #include "command.h"
@@ -65,10 +64,10 @@ lignumCADMainWindow* PageView::lCMW ( void ) const
 
 // Search for the place where this page view goes in the hierarchy list.
 
-QListViewItem* PageView::previousItem ( ListViewItem* page_item, uint id ) const
+ListViewItem* PageView::previousItem ( ListViewItem* page_item, uint id ) const
 {
-  QListViewItem* previous_item = 0;
-  QListViewItem* item = page_item->firstChild();
+  ListViewItem* previous_item = 0;
+  ListViewItem* item = page_item->firstChild();
   for ( const auto& figure_view : figure_views_ ) {
     if ( figure_view->id() > id ) break;
 

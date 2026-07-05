@@ -25,7 +25,8 @@
 #include <qpopupmenu.h>
 #include <qevent.h>
 #include <qcursor.h>
-#include <qwhatsthis.h>
+#include <QCursor>
+#include <QWhatsThis>
 
 #include "command.h"
 #include "lignumcadmainwindow.h"
@@ -109,28 +110,28 @@ namespace Space2D {
       else {
 	// Make a few basic checks to see if this comensurate with from_
 	if ( line == from_ ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+	  QWhatsThis::showText( QCursor::pos(),  "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"80%\">Cannot align to self.</td>"
 			       "</tr></table>" );
 	  return;
 	}
 	if ( fabs( fabs( line->e() * from_->e() ) - 1. ) > lC::EPSILON ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+	  QWhatsThis::showText( QCursor::pos(),  "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"80%\">Cannot align non-parallel lines.</td>"
 			       "</tr></table>" );
 	  return;
 	}
 	if ( from_->parent() == line->parent() ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+	  QWhatsThis::showText( QCursor::pos(),  "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"80%\">Cannot align two edges in the same figure.</td>"
 			       "</tr></table>" );
 	  return;
 	}
 	if ( line->dependsOn( from_ ) ) {
-	  QWhatsThis::display( "<table cellpadding=10><tr>"
+	  QWhatsThis::showText( QCursor::pos(),  "<table cellpadding=10><tr>"
 			       "<td><img source=\"not_allowed.png\"></td>"
 			       "<td width=\"80%\">Alignment would create circular reference.</td>"
 			       "</tr></table>" );

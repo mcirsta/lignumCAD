@@ -25,7 +25,6 @@
 #include <qpopupmenu.h>
 #include <qevent.h>
 #include <qcursor.h>
-#include <qwhatsthis.h>
 
 #include "command.h"
 #include "lignumcadmainwindow.h"

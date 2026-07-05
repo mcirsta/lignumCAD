@@ -9,9 +9,9 @@
 
 class QCloseEvent;
 class QLabel;
-class QListView;
-class QDockWindow;
+class QDockWidget;
 class DesignBookView;
+class ModelHierarchyTreeWidget;
 class aboutDialog;
 
 class lignumCADMainWindow : public QMainWindow, public Ui::lignumCADMainWindow
@@ -46,7 +46,7 @@ public slots:
   virtual void scaleChanged( const Ratio& scale );
   virtual void pageChanged( const QString& name );
   virtual void updateInformation( const QString& information );
-  virtual QListView* modelHierarchyList();
+  virtual ModelHierarchyTreeWidget* modelHierarchyList();
   virtual void showView();
   void setHomeDir( QDir& home_dir );
 
@@ -55,14 +55,14 @@ protected:
 
 private:
   QDir home_dir_;
-  QDockWindow* model_hierarchy_view_ = nullptr;
+  QDockWidget* model_hierarchy_view_ = nullptr;
   QLabel* page_label_ = nullptr;
   QLabel* scale_label_ = nullptr;
   static aboutDialog* about_dialog_;
   DesignBookView* design_book_view_ = nullptr;
   QLabel* message_label_ = nullptr;
   QLabel* information_label_ = nullptr;
-  QListView* model_hierarchy_list_ = nullptr;
+  ModelHierarchyTreeWidget* model_hierarchy_list_ = nullptr;
 };
 
 #endif // LIGNUMCADMAINWINDOW_H

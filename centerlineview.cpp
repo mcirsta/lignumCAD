@@ -755,7 +755,7 @@ namespace Space2D {
     centerline_objects_.insert( handle0_.selectionName(), &handle0_ );
     centerline_objects_.insert( handle1_.selectionName(), &handle1_ );
 
-    QListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
+    ListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
 							   centerline_->id() );
 
     list_view_item_ = new ListViewItem( parent()->listViewItem(), previous_item );
@@ -764,16 +764,16 @@ namespace Space2D {
 			    + QString( " <%1>" ).arg( centerline_->id() ) );
     list_view_item_->setText( lC::TYPE, trC( lC::STR::CENTERLINE ) );
     list_view_item_->setText( lC::DETAIL, trC( lC::STR::UNDEFINED ) );
-    list_view_item_->setOpen( true );
-    list_view_item_->setRenameEnabled( lC::NAME, true );
+    list_view_item_->setExpanded( true );
+    list_view_item_->setNameEditable( true );
 
     line_list_view_ = new ListViewItem( list_view_item_, 0 );
     line_list_view_->setText( lC::NAME, lC::formatName( centerline_->name() ) );
     line_list_view_->setText( lC::TYPE, trC( lC::STR::CONSTRAINED_LINE ) );
     line_list_view_->setText( lC::DETAIL, trC( lC::STR::CONSTRAINT_UNDEFINED ) );
-    line_list_view_->setOpen( true );
+    line_list_view_->setExpanded( true );
 
-    line_list_view_->listView()->ensureItemVisible( line_list_view_ );
+    line_list_view_->treeWidget()->scrollToItem( line_list_view_ );
 
     connect( centerline_->line(), SIGNAL( modifiedConstraint() ),
 	     SLOT( modifiedConstraint() ) );
@@ -905,7 +905,7 @@ namespace Space2D {
       setName( name );
       break;
     case lC::Redo:
-      list_view_item_->startRename( lC::NAME );
+      list_view_item_->startEditingName();
     case lC::Rejected:
       updateName( centerline_->name() ); // Repaint list item with old name.
     }

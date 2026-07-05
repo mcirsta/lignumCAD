@@ -28,51 +28,24 @@
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
 
+#include <QByteArray>
+#include <QCoreApplication>
+#include <QDockWidget>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QSettings>
+#include <QStatusBar>
+#include <QStyle>
+#include <QStringList>
+
+#include "listviewitem.h"
+
 aboutDialog* lignumCADMainWindow::about_dialog_ = 0;
 
 
-void toGrayScale ( QImage image )
+QString trMainWindowConstant ( const QString& text )
 {
-    for ( int j = 0; j < image.height(); j++ ) {
-	for ( int i = 0; i < image.width(); i++ ) {
-	    QRgb pixel = image.pixel(i,j);
-	    uchar gray = qGray( pixel );
-	    uchar alpha = qAlpha( pixel )/4;
-	    image.setPixel( i, j, qRgba(gray,gray,gray,alpha) );
-	}
-    }
-}
-
-QImage trimTransparent ( QImage image )
-{
-  int i, j;
-  for ( j = image.height()-1; j > 0; j-- ) {
-    for ( i = 0; i < image.width(); i++ ) {
-      if ( qAlpha( image.pixel( i, j ) ) != 0 ) goto done_height;
-    }
-  }
- done_height:
-  int height = j + 1;
-
-  for ( i = image.width()-1; i > 0; i-- ) {
-    for ( j = 0; j < image.height(); j++ ) {
-      if ( qAlpha( image.pixel( i, j ) ) != 0 ) goto done_width;
-    }
-  }
- done_width:
-  int width = i + 1;
-
-  return image.copy( 0, 0, width, height );
-}
-
-void addDisabledIcon ( QAction* action )
-{
-    QIconSet icon_set( action->iconSet().pixmap() );
-    QImage image = icon_set.pixmap().convertToImage();
-    toGrayScale( image );
-    icon_set.setPixmap(QPixmap( image ), QIconSet::Small,
-		       QIconSet::Disabled );
-    action->setIconSet( icon_set );
+    return QCoreApplication::translate( "Constants", text.toUtf8().constData() );
 }
 
 void lignumCADMainWindow::init ()
@@ -86,48 +59,28 @@ void lignumCADMainWindow::init ()
 			 arg( lC::STR::LIGNUMCOMPUTINGINC ).
 			 arg( lC::STR::LIGNUMCOMPUTINGURL ).
 			 arg( lC::STR::LIGNUMCOMPUTINGEMAIL ) );
-    // Make disabled iconSets by converting the loaded pixmaps into
-    // grayscale images.
-    addDisabledIcon( fileSaveAction );
-    addDisabledIcon( fileSaveAsAction );
-    addDisabledIcon( filePrintAction );
-    addDisabledIcon( exportPageAction );
-    addDisabledIcon( modelInfoAction );
-    addDisabledIcon( editUndoAction );
-    addDisabledIcon( editRedoAction );
-    addDisabledIcon( editCutAction );
-    addDisabledIcon( editCopyAction );
-    addDisabledIcon( editPasteAction );
-    addDisabledIcon( editFindAction );
-    addDisabledIcon( insertSketchAction );
-    addDisabledIcon( insertPartAction );
-    addDisabledIcon( insertAssemblyAction );
-    addDisabledIcon( insertDrawingAction );
-    addDisabledIcon( toolDeleteModelAction );
-
-    // (Request: should be able to do this in Designer)
-    QToolButton* whatsThis = QWhatsThis::whatsThisButton( toolBar );
-    whatsThisAction->setIconSet( whatsThis->iconSet() );
+    if ( whatsThisAction->icon().isNull() )
+	whatsThisAction->setIcon( style()->standardIcon( QStyle::SP_TitleBarContextHelpButton ) );
     
-    message_label_ = new QLabel(  tr( "lignumCAD © 2002 lignum Computing, Inc."), statusBar(), "messageLabel" );
-    QWhatsThis::add( message_label_,
-		     tr( "Lists program status and other messages." ) );
+    message_label_ = new QLabel(  tr( "lignumCAD © 2002 lignum Computing, Inc."), statusBar() );
+    message_label_->setObjectName( "messageLabel" );
+    message_label_->setWhatsThis( tr( "Lists program status and other messages." ) );
     statusBar()->addWidget( message_label_, 1 );
     
-    information_label_ = new QLabel( tr( "none" ), statusBar(), "informationLabel" );
-    QWhatsThis::add( information_label_,
-		     tr( "Shows the status of the current user interface action."));
-    statusBar()->addWidget( information_label_, 0, true );
+    information_label_ = new QLabel( tr( "none" ), statusBar() );
+    information_label_->setObjectName( "informationLabel" );
+    information_label_->setWhatsThis( tr( "Shows the status of the current user interface action."));
+    statusBar()->addPermanentWidget( information_label_, 0 );
 
-    page_label_ = new QLabel( tr( "Page: %1" ).arg( "none" ), statusBar(), "pageLabel" );
-    QWhatsThis::add( page_label_,
-		     tr( "Shows the name of the current page." ) );
-    statusBar()->addWidget( page_label_, 0, true );
+    page_label_ = new QLabel( tr( "Page: %1" ).arg( "none" ), statusBar() );
+    page_label_->setObjectName( "pageLabel" );
+    page_label_->setWhatsThis( tr( "Shows the name of the current page." ) );
+    statusBar()->addPermanentWidget( page_label_, 0 );
 
-    scale_label_ = new QLabel( tr( "Scale: 1 : 1" ), statusBar(), "scaleLabel" );
-    QWhatsThis::add( scale_label_,
-		     tr( "Shows the scale of the current page." ) );
-    statusBar()->addWidget( scale_label_, 0, true );
+    scale_label_ = new QLabel( tr( "Scale: 1 : 1" ), statusBar() );
+    scale_label_->setObjectName( "scaleLabel" );
+    scale_label_->setWhatsThis( tr( "Shows the scale of the current page." ) );
+    statusBar()->addPermanentWidget( scale_label_, 0 );
 }
 
 // The MainWindow delegates most of its actions to DesignBookView.
@@ -168,10 +121,8 @@ void lignumCADMainWindow::fileExit()
   // Save the window layout
 
   QSettings settings;
-  QString buffer;
-  QTextOStream layout_settings( &buffer );
-  layout_settings << *this;
-  settings.writeEntry( "/lignumComputing/lignumCAD/Geometries/Layout", buffer);
+  settings.setValue( lC::Setting::DOCK_GEOMETRIES,
+		     QString::fromLatin1( saveState().toBase64() ) );
 
   delete design_book_view_;
 
@@ -245,12 +196,12 @@ void lignumCADMainWindow::showView( const char * file_name )
 	// Apply a modest amount of checking to a command-line file name
 	QFileInfo info( new_file_name );
 	if ( !info.exists() ) {
-	    QMessageBox mb( tr( lC::STR::LIGNUMCAD ),
+	    QMessageBox mb( QMessageBox::Information,
+			    trMainWindowConstant( lC::STR::LIGNUMCAD ),
 			    tr( "The file \"%1\" does not exist." ).arg( new_file_name ),
-			    QMessageBox::Information,
-			    QMessageBox::Yes | QMessageBox::Default,
-			    QMessageBox::No,
-			    QMessageBox::Cancel );
+			    QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+			    this );
+	    mb.setDefaultButton( QMessageBox::Yes );
 	    mb.setButtonText( QMessageBox::Yes, tr( "Select another file" ) );
 	    mb.setButtonText( QMessageBox::No, tr( "Create a new model" ) );
 	    mb.setButtonText( QMessageBox::Cancel, tr( "Exit lignumCAD" ) );
@@ -258,11 +209,10 @@ void lignumCADMainWindow::showView( const char * file_name )
 	    switch ( mb.exec() ) {
 		case QMessageBox::Yes:
 			new_file_name =
-			QFileDialog::getOpenFileName( QString(),
-						  tr( "lignumCAD (*.lcad);;All Files (*)" ),
-						  0,
-						  "open file dialog",
-						  tr( "Choose a file" ) );
+			QFileDialog::getOpenFileName( this,
+						  tr( "Choose a file" ),
+						  QString(),
+						  tr( "lignumCAD (*.lcad);;All Files (*)" ) );
 		break;
 		case QMessageBox::No:
 			new_file_name = QString();
@@ -273,38 +223,34 @@ void lignumCADMainWindow::showView( const char * file_name )
 	}
     }    
     
-    model_hierarchy_view_ = new QDockWindow( QDockWindow::InDock, this, "modelHierarchyView" );
-    model_hierarchy_view_->setResizeEnabled( true );
-    model_hierarchy_view_->setCaption( tr( "Model Hierarchy" ) );
-    addDockWindow( model_hierarchy_view_, DockBottom );
+    model_hierarchy_view_ = new QDockWidget( tr( "Model Hierarchy" ), this );
+    model_hierarchy_view_->setObjectName( "modelHierarchyView" );
+    addDockWidget( Qt::BottomDockWidgetArea, model_hierarchy_view_ );
     
     // See if the user has already set up a layout that they like.
     // NOTE: THE Qt CODE FOR THIS EXPECTS THE DOCKWINDOW TO HAVE
     // ALREADY BEEN CREATED! IT EXPECTS THE CAPTION NAME TO BE THE
     // SAME AS WHAT'S IN THE SETTINGS FILE.
     QSettings settings;
-    QString buffer; 
-    buffer = settings.readEntry( lC::Setting::DOCK_GEOMETRIES );
-    if ( !buffer.isEmpty() ) {
-	QTextIStream ts( &buffer );
-	ts >> *this;
-    }
+    QString buffer = settings.value( lC::Setting::DOCK_GEOMETRIES ).toString();
+    if ( !buffer.isEmpty() )
+	restoreState( QByteArray::fromBase64( buffer.toLatin1() ) );
     
-    model_hierarchy_list_ = new QListView( model_hierarchy_view_, "modelHierarchyList" );
+    model_hierarchy_list_ = new ModelHierarchyTreeWidget( model_hierarchy_view_ );
+    model_hierarchy_list_->setObjectName( "modelHierarchyList" );
     model_hierarchy_list_->setRootIsDecorated( true );
-    model_hierarchy_list_->addColumn( tr( "Name" ) );
-    model_hierarchy_list_->addColumn( tr( "Type" ) );
-    model_hierarchy_list_->addColumn( tr( "Detail" ) );
-    model_hierarchy_list_->setSorting( -1 );
-    
-    model_hierarchy_view_->boxLayout()->addWidget( model_hierarchy_list_ );
-    model_hierarchy_list_->show();
-    QWhatsThis::add( model_hierarchy_list_,
+    model_hierarchy_list_->setHeaderLabels( QStringList()
+					      << tr( "Name" )
+					      << tr( "Type" )
+					      << tr( "Detail" ) );
+    model_hierarchy_list_->setSortingEnabled( false );
+    model_hierarchy_list_->setWhatsThis(
 		     tr( "<p><b>Model Hierarchy</b></p>\
 <p>Shows a list of the pages and figures which compose \
 the model.</p><p>You can rename some items by click-pause-clicking on the \
 name field. Also note that you have to press <b>Enter</b> after typing in \
 the name in order for the name change to be detected.</p>" ) );
+    model_hierarchy_view_->setWidget( model_hierarchy_list_ );
 
     if ( !new_file_name.isEmpty() )
 	design_book_view_ = new DesignBookView( this, new_file_name );
@@ -340,7 +286,7 @@ void lignumCADMainWindow::updateInformation( const QString& information )
   information_label_->setText( information );
 }
 
-QListView* lignumCADMainWindow::modelHierarchyList()
+ModelHierarchyTreeWidget* lignumCADMainWindow::modelHierarchyList()
 {
     return model_hierarchy_list_;
 }

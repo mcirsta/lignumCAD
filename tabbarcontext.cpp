@@ -22,8 +22,6 @@
  */
 
 #include <qpopupmenu.h>
-#include <qwhatsthis.h>
-
 #include "tabbarcontext.h"
 
 TabBarContext::TabBarContext ( QWidget* parent, const char* name )
@@ -31,7 +29,7 @@ TabBarContext::TabBarContext ( QWidget* parent, const char* name )
 {
   context_menu_ = new QPopupMenu( this, "page_context" );
 
-  QWhatsThis::add( this, tr( "<p><b>Page Tab Bar</b></p>\
+  setWhatsThis( tr( "<p><b>Page Tab Bar</b></p>\
 <p>This tab bar shows the pages in the model.\
  Clicking on a tab makes that the current page. The type of page is symbolized by\
  the icons:<ul>\

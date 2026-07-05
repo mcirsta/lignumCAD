@@ -340,16 +340,16 @@ void PartView::init ( void )
   tab_ = new QTab( QPixmap( ":/images/part.png" ),
 		   lC::formatTabName( part_->name()  ));
 
-  QListViewItem* previous_item = parent()->previousItem( part_->id() );
+  ListViewItem* previous_item = parent()->previousItem( part_->id() );
 
   list_view_item_ = new ListViewItem( parent()->modelListItem(), previous_item );
 
   list_view_item_->setText( lC::NAME, lC::formatName( part_->name() )
 			    + QString( " <%1>" ).arg( part_->id() ) );
   list_view_item_->setText( lC::TYPE, trC( lC::STR::PART ) );
-  list_view_item_->setOpen( true );
-  list_view_item_->setRenameEnabled( lC::NAME, true );
-  list_view_item_->listView()->ensureItemVisible( list_view_item_ );
+  list_view_item_->setExpanded( true );
+  list_view_item_->setNameEditable( true );
+  list_view_item_->treeWidget()->scrollToItem( list_view_item_ );
 
   connect( this, SIGNAL( newInformation( const QString& ) ),
 	   lCMW(), SLOT( updateInformation( const QString& ) ) );
@@ -426,7 +426,7 @@ void PartView::listNameChanged ( const QString& name )
     setName( name );
     break;
   case lC::Redo:
-    list_view_item_->startRename( lC::NAME );
+    list_view_item_->startEditingName();
   case lC::Rejected:
     updateName( part_->name() ); // Repaint list item with old name.
   }

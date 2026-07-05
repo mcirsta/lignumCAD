@@ -26,15 +26,15 @@
 #include <QFrame>
 #include <qdialog.h>
 
-class QListView;
 class QLineEdit;
 class QPushButton;
+class QTreeWidget;
 
 class lCConstraintDialog : public QDialog 
 {
   Q_OBJECT
 
-  QListView* constraint_list_;
+  QTreeWidget* constraint_list_;
   QPushButton* help_button_;
   QPushButton* ok_button_;
   QPushButton* cancel_button_;

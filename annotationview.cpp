@@ -800,7 +800,7 @@ namespace Space2D {
     if ( annotation_info_dialog_ == 0 )
       annotation_info_dialog_ = new AnnotationInfoDialog( parent()->lCMW() );
 
-    QListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
+    ListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
 							   annotation_->id() );
 
     list_view_item_ = new ListViewItem( parent()->listViewItem(), previous_item );
@@ -809,10 +809,10 @@ namespace Space2D {
 			      + QString( " <%1>" ).arg( annotation_->id() ) );
     list_view_item_->setText( lC::TYPE, trC( lC::STR::ANNOTATION ) );
     list_view_item_->setText( lC::DETAIL, trC( lC::STR::UNDEFINED ) );
-    list_view_item_->setOpen( true );
-    list_view_item_->setRenameEnabled( lC::NAME, true );
+    list_view_item_->setExpanded( true );
+    list_view_item_->setNameEditable( true );
 
-    list_view_item_->listView()->ensureItemVisible( list_view_item_ );
+    list_view_item_->treeWidget()->scrollToItem( list_view_item_ );
 
     connect( list_view_item_, SIGNAL( nameChanged( const QString& ) ),
 	     SLOT( listNameChanged( const QString& ) ) );
@@ -1507,7 +1507,7 @@ namespace Space2D {
       setName( name );
       break;
     case lC::Redo:
-      list_view_item_->startRename( lC::NAME );
+      list_view_item_->startEditingName();
     case lC::Rejected:
       updateName( annotation_->name() ); // Repaint list item with old name.
     }
