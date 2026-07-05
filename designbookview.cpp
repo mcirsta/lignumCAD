@@ -1712,13 +1712,13 @@ bool DesignBookView::read ( const QString file_name )
   QDomDocument doc( lC::STR::LIGNUMCAD );
  
   if ( f.open( QIODevice::ReadOnly ) ) {
-    QString errorString;
-    int line, column;
-    if ( !doc.setContent( &f, false, &errorString, &line, &column ) ) {
+    const QDomDocument::ParseResult parse_result = doc.setContent( &f );
+    if ( !parse_result ) {
       QMessageBox::information( lCMW_,
 				tr( "Load model" ),
 				tr( "XML read failed at line %1, column %2." ).
-				arg( line ).arg( column ) );
+				arg( parse_result.errorLine ).
+				arg( parse_result.errorColumn ) );
       f.close();
       return false;
     }

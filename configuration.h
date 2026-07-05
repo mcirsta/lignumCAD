@@ -31,7 +31,7 @@ namespace lC {
     
     const QString LIGNUMCAD = QT_TRANSLATE_NOOP( "Constants", "lignumCAD" );
     const QString VERSION_MAJOR = "0";
-    const QString VERSION_MINOR = "2";
+    const QString VERSION_MINOR = "3";
     const QString COPYRIGHT_DATES = "2002";
 #if defined(Q_OS_UNIX)
     const QString HOME                = "/opt/lignumCAD";

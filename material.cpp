@@ -77,12 +77,13 @@ MaterialDatabase::MaterialDatabase ( void )
     QDomDocument doc( lC::STR::LIGNUMCAD );
  
     if ( material_file.open( QIODevice::ReadOnly ) ) {
-      QString errorString;
-      int line, column;
-      doc.setContent( &material_file, false, &errorString, &line, &column );
-      QDomElement root = doc.documentElement();
-      if ( root.tagName() == lC::STR::MATERIAL ) {
-	new Material( root, image_path );
+      const QDomDocument::ParseResult parse_result =
+	doc.setContent( &material_file );
+      if ( parse_result ) {
+	QDomElement root = doc.documentElement();
+	if ( root.tagName() == lC::STR::MATERIAL ) {
+	  new Material( root, image_path );
+	}
       }
       material_file.close();	
     }
@@ -260,7 +261,7 @@ Material::Material ( const QDomElement& xml_rep, const QString& image_path )
 	  QDomElement ce = c.toElement();
 	  if ( !ce.isNull() ) {
 	    if ( ce.tagName() == "color" )
-	      color_.setNamedColor( ce.attribute( lC::STR::VALUE ) );
+	      color_ = QColor::fromString( ce.attribute( lC::STR::VALUE ) );
 	    else if ( ce.tagName() == "face-grain" )
 	      face_grain_file_ = materialImagePath( image_path, ce.attribute( "file" ) );
 	    else if ( ce.tagName() == "end-grain" )
