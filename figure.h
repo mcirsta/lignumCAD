@@ -25,11 +25,12 @@
 
 #include <Standard_Type.hxx>
 
+#include <QStringList>
+
 #include "modelitem.h"
 #include "vectoralgebra.h"
 
 class Model;
-class QStringList;
 class QDomElement;
 class TopoDS_Shape;
 

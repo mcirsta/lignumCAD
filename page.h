@@ -25,6 +25,7 @@
 
 #include <Standard_Type.hxx>
 
+#include <QMap>
 #include <qstringlist.h>
 
 #include "modelitem.h"

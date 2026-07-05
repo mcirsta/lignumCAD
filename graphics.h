@@ -25,6 +25,7 @@
 
 #include <GL/gl.h>
 
+#include <QKeyEvent>
 #include <qobject.h>
 
 //#include "constants.h"
