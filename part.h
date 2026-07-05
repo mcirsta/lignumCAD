@@ -24,8 +24,9 @@
 #define PART_H
 
 #include <map>
+#include <vector>
 
-#include <qdict.h>
+#include <QMap>
 
 #include "page.h"
 
@@ -36,6 +37,9 @@ namespace Space3D {
   class OCSolid;
 }
 class PartMetadata;
+
+using PartParameterMap = QMap<QString, lCDefaultLengthConstraint*>;
+using PartMetadataList = std::vector<PartMetadata*>;
 
 /*!
  * This is a part: A 3D dimensional representation of a piece of
@@ -136,11 +140,11 @@ public:
    * template library constructor to create the initial solid geometry
    * of the part.
    * \param part reference to part template's metadata.
-   * \param parameters a QDict containing the lCDefaultLengthConstraint
+   * \param parameters a map containing the lCDefaultLengthConstraint
    * widgets which collected the initial parameter data from the user.
    */
   void makeSolidParameters ( const PartMetadata* part,
-			     const QDict<lCDefaultLengthConstraint>& parameters );
+			     const PartParameterMap& parameters );
 
   /*!
    * Set the (optional) material out of which this part is made.
@@ -199,7 +203,7 @@ public:
    * the user is filling out.
    * \return true if everything is OK with the input.
    */
-  virtual bool valid ( const QDict<lCDefaultLengthConstraint>& initial_values ) const = 0;
+  virtual bool valid ( const PartParameterMap& initial_values ) const = 0;
   /*!
    * Create the starting solid part requested by the user.
    * \param name new solid name.
@@ -209,7 +213,7 @@ public:
    * \return the solid.
    */
   virtual Space3D::OCSolid* create ( const QString& name,
-				     const QDict<lCDefaultLengthConstraint>& initial_values,
+				     const PartParameterMap& initial_values,
 				     Part* parent ) const = 0;
   /*!
    * Create the solid from its XML representation.
@@ -257,8 +261,7 @@ public:
   void addPartMetadata ( PartMetadata* part_data );
 
   //! \return an iterator to the parts in the library.
-  QPtrListIterator< PartMetadata > parts ( void ) const
-  { return QPtrListIterator<PartMetadata>( part_data_ ); }
+  const PartMetadataList& parts ( void ) const { return part_data_; }
 
   /*!
    * Return a specific part's metadata
@@ -301,7 +304,7 @@ private:
   //! Singleton instance of the part factory. Constructed lazily.
   static PartFactory* instance_;
   //! List of parts in the library.
-  QPtrList< PartMetadata > part_data_;
+  PartMetadataList part_data_;
   //! Global list of geometry names and ids.
   std::map<QString, uint> names_;
   //! Last unique name index used.

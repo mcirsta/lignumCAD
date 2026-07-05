@@ -27,6 +27,8 @@
 ** update this file, preserving your code. Create an init() slot in place of
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
+#include <vector>
+
 void NewPartWizard::init()
 {    
     scroll_view_ = 0;
@@ -34,19 +36,19 @@ void NewPartWizard::init()
     nextButton()->setEnabled( false );
     finishButton()->setEnabled( false );
     
-    QPtrListIterator<PartMetadata> part = PartFactory::instance()->parts();
-    for ( ; part.current() != 0; ++part ) {
-	QListViewItem* group = groups_.find( trC( part.current()->group() ) );
+    const PartMetadataList& parts = PartFactory::instance()->parts();
+    for ( PartMetadata* part : parts ) {
+	QListViewItem* group = groups_.find( trC( part->group() ) );
 	if ( group == 0 ) {
-	    group = new QListViewItem( partLibraryListView, trC( part.current()->group() ) );
+	    group = new QListViewItem( partLibraryListView, trC( part->group() ) );
 	    group->setOpen( true );
 	    group->setSelectable( false );
-	    groups_.insert( trC( part.current()->group() ), group);
+	    groups_.insert( trC( part->group() ), group);
 	}
-	QListViewItem* item = new QListViewItem( group, trC( part.current()->name() ) );
+	QListViewItem* item = new QListViewItem( group, trC( part->name() ) );
 	item->setOpen( true );
-	item->setPixmap( 1, QPixmap( part.current()->icon() ) );
-	parts_.insert( item, part.current() );
+	item->setPixmap( 1, QPixmap( part->icon() ) );
+	parts_.insert( item, part );
     }
     
     connect( nextButton(), SIGNAL( clicked() ), SLOT( validateName() ) );
@@ -94,7 +96,7 @@ void NewPartWizard::NewPartWizard_selected( const QString& /*page_name*/ )
 	    scroll_view_->show();
 	}
 	
-	for ( uint n = labels_.count(); n < n_parameters; n++ ) {
+	for ( size_t n = labels_.size(); n < n_parameters; n++ ) {
 	    lCDefaultLengthConstraint* length_constraint =
 		    new lCDefaultLengthConstraint( scroll_vbox_, "parameterLabel" );
 	    length_constraint->setLengthLimits( UnitsBasis::instance()->lengthUnit(),
@@ -108,13 +110,13 @@ void NewPartWizard::NewPartWizard_selected( const QString& /*page_name*/ )
 	    length_constraint->setSpecifiedSpinBoxWhatsThis( tr( "<p><b>Specified Size</b></p> <p>Enter the size of the parameter. The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).</p> <p>If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:</p> <p><code>1.234</code></p> <p>If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:</p> <p><code>1</code> (equals 1.0)</p> <p><code>1/2</code> (equals 0.5)</p> <p><code>1 1/2</code> (equals 1.5, note the blank separating the whole number and the fraction)</p> <p>If you modify the value, you can always go back to the default value when the dialog was opened by clicking the <img src=\"default_active.png\"> button</p>" ) );
 	    connect( length_constraint, SIGNAL( valueChanged( double ) ),
 		     this, SLOT(updateValidity( double ) ) );
-	    labels_.append( length_constraint );
+	    labels_.push_back( length_constraint );
 	}
 	QStringList::const_iterator parameter = part->parameters();
-	QPtrListIterator<lCDefaultLengthConstraint> label( labels_ );
+	std::vector<lCDefaultLengthConstraint*>::iterator label = labels_.begin();
 	parameter_labels_.clear();
 	for ( uint n = 0; n < n_parameters; n++ ) {
-	    lCDefaultLengthConstraint* parameter_label = label.current();
+	    lCDefaultLengthConstraint* parameter_label = *label;
 	    parameter_label->setTitle( trC( *parameter ) );
 	    parameter_label->setDefaultLength( 0 );
 	    parameter_label->setLength( 0 );
@@ -123,18 +125,18 @@ void NewPartWizard::NewPartWizard_selected( const QString& /*page_name*/ )
 	    ++parameter;
 	    ++label;
 	}
-	for ( ; label.current() != 0; ++label ) {
-	    label.current()->hide();
+	for ( ; label != labels_.end(); ++label ) {
+	    (*label)->hide();
 	}
 	scroll_view_->ensureVisible( 0, 0 );
-	if ( n_parameters > 0 && labels_.count() > 0 )
-	    labels_.at(0)->setFocus();
+	if ( n_parameters > 0 && !labels_.empty() )
+	    labels_.front()->setFocus();
 	finishButton()->setDefault( true );
     }
 }
 
 
-const QDict<lCDefaultLengthConstraint>& NewPartWizard::parameters( void )
+const PartParameterMap& NewPartWizard::parameters( void )
 {
     return parameter_labels_;
 }

@@ -106,7 +106,7 @@ void Part::write ( QDomElement& xml_rep ) const
 // Use the PartFactory interface to create the initial solid geometry
 
 void Part::makeSolidParameters ( const PartMetadata* part,
-				 const QDict<lCDefaultLengthConstraint>&
+				 const PartParameterMap&
 				 parameters )
 {
   solid_ = part->create( name(), parameters, this );
@@ -283,7 +283,7 @@ PartFactory* PartFactory::instance ( void )
 
 void PartFactory::addPartMetadata ( PartMetadata* part_data )
 {
-  part_data_.append( part_data );
+  part_data_.push_back( part_data );
 }
 
 // Look up a part template's metadata
@@ -291,11 +291,10 @@ void PartFactory::addPartMetadata ( PartMetadata* part_data )
 PartMetadata* PartFactory::part ( const QString& group, const QString& name )
 {
   // Perhaps something more clever is in order...
-  QPtrListIterator< PartMetadata > part( part_data_ );
-  for ( ; part.current() != 0; ++part ) {
-    if ( part.current()->group() == group &&
-	 part.current()->name() == name )
-      return part.current();
+  for ( PartMetadata* part : part_data_ ) {
+    if ( part->group() == group &&
+	 part->name() == name )
+      return part;
   }
   return 0;
 }
@@ -313,10 +312,9 @@ Space3D::OCSolid* PartFactory::create ( Part* parent,
     if ( !e.isNull() ) {
       QString solid = e.tagName();
 
-      QPtrListIterator< PartMetadata > part( part_data_ );
-      for ( ; part.current() != 0; ++part ) {
-	if ( part.current()->solid() == solid ) {
-	  Space3D::OCSolid* ocsolid =  part.current()->create( name, e, parent );
+      for ( PartMetadata* part : part_data_ ) {
+	if ( part->solid() == solid ) {
+	  Space3D::OCSolid* ocsolid =  part->create( name, e, parent );
 	  if ( !material.isEmpty() )
 	    ocsolid->setMaterial( MaterialDatabase::instance().
 				  materialCommon( material ) );
