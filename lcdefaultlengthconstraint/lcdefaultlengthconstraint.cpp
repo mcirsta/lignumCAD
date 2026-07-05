@@ -20,49 +20,54 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <qlayout.h>
-#include <qradiobutton.h>
-#include <qframe.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
+#include <QButtonGroup>
+#include <QFrame>
+#include <QGridLayout>
+#include <QRadioButton>
 
 #include "lcdefaultlengthspinbox/lcdefaultlengthspinbox.h"
 #include "lcconstraintchooser/lcconstraintchooser.h"
 #include "lcdefaultlengthconstraint.h"
 
 lCDefaultLengthConstraint::lCDefaultLengthConstraint( QWidget *parent,
-						      const char *name )
-  : QButtonGroup( parent, name ), edited_( false )
+					      const char *name )
+  : QGroupBox( parent ), button_group_( new QButtonGroup( this ) ),
+    edited_( false )
 {
+  if ( name != 0 )
+    setObjectName( QString::fromLatin1( name ) );
+
   setTitle( "Temporary label" );
 
-  setColumnLayout( 0, Qt::Vertical );
-  layout()->setSpacing( 6 );
-  layout()->setMargin( 11 );
-
-  QGridLayout* g_layout = new QGridLayout( layout() );
+  QGridLayout* g_layout = new QGridLayout( this );
+  g_layout->setSpacing( 6 );
+  g_layout->setContentsMargins( 11, 11, 11, 11 );
 
   specified_button_ = new QRadioButton( this );
   specified_button_->setText( tr( "Specified" ) );
+  button_group_->addButton( specified_button_, 0 );
 
   specified_spin_box_ = new lCDefaultLengthSpinBox( this, "specifiedLength" );
 
   imported_button_ = new QRadioButton( this );
   imported_button_->setText( tr( "Imported" ) );
+  button_group_->addButton( imported_button_, 1 );
 
   imported_constraint_chooser_ = new lCConstraintChooser( this, "constrainedLength" );
 
-  QFrame* separator = new QFrame( this, "separator" );
+  QFrame* separator = new QFrame( this );
+  separator->setObjectName( "separator" );
   separator->setFrameShape( QFrame::HLine );
   separator->setFrameShadow( QFrame::Sunken );
 
   g_layout->addWidget( specified_button_, 0, 0 );
   g_layout->addWidget( specified_spin_box_, 0, 1 );
-  g_layout->addMultiCellWidget( separator, 1, 1, 0, 1 );
+  g_layout->addWidget( separator, 1, 0, 1, 2 );
   g_layout->addWidget( imported_button_, 2, 0 );
   g_layout->addWidget( imported_constraint_chooser_, 2, 1 );
 
-  connect( this, SIGNAL( clicked(int) ), SLOT( updateChooser(int) ) );
+  button_group_->setExclusive( true );
+  connect( button_group_, SIGNAL( idClicked(int) ), SLOT( updateChooser(int) ) );
   connect( specified_spin_box_, SIGNAL( valueChanged(double) ),
 	   this, SIGNAL( valueChanged(double ) ) );
 
@@ -75,7 +80,7 @@ lCDefaultLengthConstraint::lCDefaultLengthConstraint( QWidget *parent,
 
 bool lCDefaultLengthConstraint::edited ( void ) const
 {
-  if ( specified_button_->isOn() )
+  if ( specified_button_->isChecked() )
     return specified_spin_box_->edited();
   else
     return imported_constraint_chooser_->edited();
@@ -89,16 +94,16 @@ void lCDefaultLengthConstraint::setEdited ( bool edited )
 
 bool lCDefaultLengthConstraint::isSpecified ( void ) const
 {
-  return specified_button_->isOn();
+  return specified_button_->isChecked();
 }
 
 void lCDefaultLengthConstraint::updateChooser ( int _id )
 {
-  if ( _id == id( specified_button_ ) ) {
+  if ( _id == button_group_->id( specified_button_ ) ) {
     specified_spin_box_->setEnabled( true );
     imported_constraint_chooser_->setEnabled( false );
   }
-  else if ( _id == id( imported_button_ ) ) {
+  else if ( _id == button_group_->id( imported_button_ ) ) {
     specified_spin_box_->setEnabled( false );
     imported_constraint_chooser_->setEnabled( true );
   }
@@ -150,40 +155,40 @@ QString lCDefaultLengthConstraint::importedLength() const
 
 QString lCDefaultLengthConstraint::specifiedButtonToolTip ( void ) const
 {
-  return QToolTip::textFor( specified_button_ );
+  return specified_button_->toolTip();
 }
 
 void lCDefaultLengthConstraint::setSpecifiedButtonToolTip ( const QString& tooltip )
 {
-  QToolTip::add( specified_button_, tooltip );
+  specified_button_->setToolTip( tooltip );
 }
 
 QString lCDefaultLengthConstraint::specifiedButtonWhatsThis ( void ) const
 {
-  return QWhatsThis::textFor( specified_button_ );
+  return specified_button_->whatsThis();
 }
 
 void lCDefaultLengthConstraint::setSpecifiedButtonWhatsThis ( const QString& whatsthis )
 {
-  QWhatsThis::add( specified_button_, whatsthis );
+  specified_button_->setWhatsThis( whatsthis );
 }
 
 QString lCDefaultLengthConstraint::specifiedSpinBoxToolTip ( void ) const
 {
-  return QToolTip::textFor( specified_spin_box_ );
+  return specified_spin_box_->toolTip();
 }
 
 void lCDefaultLengthConstraint::setSpecifiedSpinBoxToolTip ( const QString& tooltip)
 {
-  QToolTip::add( specified_spin_box_, tooltip );
+  specified_spin_box_->setToolTip( tooltip );
 }
 
 QString lCDefaultLengthConstraint::specifiedSpinBoxWhatsThis ( void ) const
 {
-  return QWhatsThis::textFor( specified_spin_box_ );
+  return specified_spin_box_->whatsThis();
 }
 
 void lCDefaultLengthConstraint::setSpecifiedSpinBoxWhatsThis ( const QString& whatsthis )
 {
-  QWhatsThis::add( specified_spin_box_, whatsthis );
+  specified_spin_box_->setWhatsThis( whatsthis );
 }

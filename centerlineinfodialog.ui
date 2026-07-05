@@ -130,7 +130,7 @@
               </widget>
             </item>
             <item row="1" column="0" rowspan="1" colspan="2">
-              <widget class="Q3ButtonGroup" name="offsetButtonGroup">
+              <widget class="QGroupBox" name="offsetButtonGroup">
                 <property name="title">
                   <string>Offset</string>
                 </property>
@@ -244,7 +244,7 @@
         </layout>
       </item>
       <item row="1" column="1">
-        <widget class="Q3ButtonGroup" name="orientationButtonGroup">
+        <widget class="QGroupBox" name="orientationButtonGroup">
           <property name="title">
             <string>Orientation</string>
           </property>
@@ -297,24 +297,4 @@
     <tabstop>buttonOk</tabstop>
     <tabstop>buttonCancel</tabstop>
   </tabstops>
-  <connections>
-    <connection>
-      <sender>buttonOk</sender>
-      <signal>clicked()</signal>
-      <receiver>CenterlineInfoDialog</receiver>
-      <slot>accept()</slot>
-    </connection>
-    <connection>
-      <sender>buttonCancel</sender>
-      <signal>clicked()</signal>
-      <receiver>CenterlineInfoDialog</receiver>
-      <slot>reject()</slot>
-    </connection>
-    <connection>
-      <sender>buttonHelp</sender>
-      <signal>clicked()</signal>
-      <receiver>CenterlineInfoDialog</receiver>
-      <slot>buttonHelp_clicked()</slot>
-    </connection>
-  </connections>
 </ui>

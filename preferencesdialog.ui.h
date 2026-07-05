@@ -27,6 +27,7 @@
 ** update this file, preserving your code. Create an init() slot in place of
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
+#include <QButtonGroup>
 #include <QSurfaceFormat>
 
 /*!
@@ -51,21 +52,21 @@ void PreferencesDialog::init ()
     QStringList::iterator unit_string = unit_strings.begin();
 
     for ( ; unit_string != unit_strings.end(); ++unit_string )
-	unitsListBox->insertItem( *unit_string );
+	unitsListBox->addItem( *unit_string );
     
     // Wire up the predefined/custom color scheme radio buttons as exclusive.
-    QButtonGroup* pcbg = new QButtonGroup( colorSchemePage, "PCBG" );
-    pcbg->insert( predefinedRadioButton );
-    pcbg->insert( customRadioButton );
-    pcbg->hide();
-    connect( pcbg, SIGNAL( clicked(int) ), SLOT(updatePredefinedScheme(int)));
+    QButtonGroup* pcbg = new QButtonGroup( colorSchemePage );
+    pcbg->setObjectName( "PCBG" );
+    pcbg->addButton( predefinedRadioButton, 0 );
+    pcbg->addButton( customRadioButton, 1 );
+    connect( pcbg, SIGNAL( idClicked(int) ), SLOT(updatePredefinedScheme(int)));
     
     // Populate the predefined color scheme listbox
     QStringList scheme_strings = OpenGLGlobals::instance()->schemeStrings();
     QStringList::iterator scheme_string = scheme_strings.begin();
 
     for ( ; scheme_string != scheme_strings.end(); ++scheme_string )
-      colorSchemeListBox->insertItem( *scheme_string );
+      colorSchemeListBox->addItem( *scheme_string );
 
     
     // Configure the dimension arrow head style default.
@@ -121,9 +122,9 @@ void PreferencesDialog::logoFileChooser_fileNameChanged( const QString & file_na
   * which depend on the current length unit.
   * \param item the currently selected item in the list box.
   */
-void PreferencesDialog::unitsListBox_currentChanged( QListBoxItem * item )
+void PreferencesDialog::unitsListBox_currentChanged( QListWidgetItem * item )
 {
-  int i = unitsListBox->index( item );
+  int i = unitsListBox->row( item );
 
   LengthUnit* length_unit = UnitsBasis::instance()->lengthUnit( i );
 
@@ -164,7 +165,7 @@ void PreferencesDialog::formatButtonGroup_clicked( int id )
   else if ( id == 1 )
     format = DECIMAL;
 
-  int i = unitsListBox->currentItem();
+  int i = unitsListBox->currentRow();
 
   LengthUnit* length_unit = UnitsBasis::instance()->lengthUnit( i );
 
@@ -182,7 +183,7 @@ void PreferencesDialog::formatButtonGroup_clicked( int id )
   */
 void PreferencesDialog::precisionComboBox_valueChanged( int value )
 {
-  int i = unitsListBox->currentItem();
+  int i = unitsListBox->currentRow();
 
   LengthUnit* length_unit = UnitsBasis::instance()->lengthUnit( i );
 
@@ -227,9 +228,9 @@ void PreferencesDialog::updatePredefinedScheme( int id )
   * The chose a new predefined scheme. Update the custom defaults and the example.
   * (The listbox item argument is ignored.)
   */
-void PreferencesDialog::colorSchemeListBox_currentChanged( QListBoxItem * )
+void PreferencesDialog::colorSchemeListBox_currentChanged( QListWidgetItem * )
 {
-  int i = colorSchemeListBox->currentItem();
+  int i = colorSchemeListBox->currentRow();
 
   PageColorScheme scheme = OpenGLGlobals::instance()->scheme( i );
 
@@ -498,7 +499,7 @@ void PreferencesDialog::update( void )
 
 
     // Set up the default units dialog
-    unitsListBox->setCurrentItem( UnitsBasis::instance()->at() );
+    unitsListBox->setCurrentRow( UnitsBasis::instance()->at() );
 
     if ( UnitsBasis::instance()->canBeFraction() ) {
 	fractionalRadioButton->setEnabled( true );
@@ -538,7 +539,7 @@ void PreferencesDialog::update( void )
 	backgroundGroupBox->setEnabled( true );
     }
 
-    colorSchemeListBox->setCurrentItem( OpenGLGlobals::instance()->at() );
+    colorSchemeListBox->setCurrentRow( OpenGLGlobals::instance()->at() );
 
     geometryColorChooser->setColor( OpenGLGlobals::instance()->geometryColor() );
     annotationColorChooser->setColor( OpenGLGlobals::instance()->annotationColor() );

@@ -5,7 +5,7 @@
 
 #include "ui_materialdialog.h"
 
-class QListViewItem;
+class QTreeWidgetItem;
 class Material;
 
 class MaterialDialog : public QDialog, public Ui::MaterialDialog
@@ -20,7 +20,7 @@ public:
 
 public slots:
   virtual void init();
-  virtual void MaterialList_selectionChanged( QListViewItem* item );
+  virtual void MaterialList_selectionChanged( QTreeWidgetItem* item );
   virtual void setMaterial( const Material* material );
   virtual void buttonHelp_clicked();
 };

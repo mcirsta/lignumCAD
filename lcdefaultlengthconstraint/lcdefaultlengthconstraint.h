@@ -23,17 +23,18 @@
 #ifndef LCDEFAULTLENGTHCONSTRAINT_H
 #define LCDEFAULTLENGTHCONSTRAINT_H
 
-#include <qbuttongroup.h>
+#include <QGroupBox>
 
 #include "units.h"
 
 class QRadioButton;
+class QButtonGroup;
 class lCDefaultLengthSpinBox;
 class lCConstraintChooser;
 class LengthUnit;
 enum UnitFormat;
 
-class lCDefaultLengthConstraint : public QButtonGroup
+class lCDefaultLengthConstraint : public QGroupBox
 {
   Q_OBJECT
 
@@ -83,6 +84,7 @@ private slots:
     void updateChooser ( int );
 
 private:
+  QButtonGroup* button_group_;
   QRadioButton* specified_button_;
   QRadioButton* imported_button_;
   lCDefaultLengthSpinBox* specified_spin_box_;

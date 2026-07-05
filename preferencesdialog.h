@@ -7,7 +7,7 @@
 #include "units.h"
 #include "ui_preferencesdialog.h"
 
-class QListBoxItem;
+class QListWidgetItem;
 class LengthUnit;
 class OpenGLExample;
 
@@ -29,11 +29,11 @@ public slots:
 private slots:
   virtual void init();
   void logoFileChooser_fileNameChanged( const QString& file_name );
-  void unitsListBox_currentChanged( QListBoxItem* item );
+  void unitsListBox_currentChanged( QListWidgetItem* item );
   void formatButtonGroup_clicked( int id );
   void precisionComboBox_valueChanged( int value );
   void updatePredefinedScheme( int id );
-  void colorSchemeListBox_currentChanged( QListBoxItem* );
+  void colorSchemeListBox_currentChanged( QListWidgetItem* );
   void geometryColorChooser_colorChanged( const QColor& color );
   void annotationColorChooser_colorChanged( const QColor& color );
   void gridColorChooser_colorChanged( const QColor& color );

@@ -27,6 +27,7 @@
 #include <qradiobutton.h>
 #include <qpushbutton.h>
 #include <QPixmap>
+#include <QTreeWidgetItem>
 
 #include "constants.h"
 #include "units.h"
@@ -374,12 +375,11 @@ void PartView::init ( void )
 bool PartView::configure ( void )
 {
   new_part_wizard_->setPartView( this );
-  new_part_wizard_->showPage( new_part_wizard_->initialPartPage );
+  new_part_wizard_->showInitialPartPage();
 
   new_part_wizard_->nameEdit->setText( lC::formatName( part_->name() ) );
 
   new_part_wizard_->partLibraryListView->setFocus();
-  new_part_wizard_->nextButton()->setDefault( true );
 
   int ret = new_part_wizard_->exec();
 
@@ -644,7 +644,7 @@ void PartView::setMaterial ( void )
 
   if ( ret == QDialog::Rejected ) return;
 
-  QListViewItem* current_item =  material_dialog_->MaterialList->selectedItem();
+  QTreeWidgetItem* current_item = material_dialog_->MaterialList->currentItem();
 
   if ( current_item != 0 ) {
 

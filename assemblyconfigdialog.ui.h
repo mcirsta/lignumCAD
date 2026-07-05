@@ -30,10 +30,10 @@
 
 void AssemblyConfigDialog::init()
 {
-    modelListView->setSorting( -1 );
+    modelListView->setSortingEnabled( false );
 }
 
-void AssemblyConfigDialog::modelListView_selectionChanged( QListViewItem* item )
+void AssemblyConfigDialog::modelListView_selectionChanged( QTreeWidgetItem* item )
 {
     if ( item != 0 )
 	buttonOk->setEnabled( true );

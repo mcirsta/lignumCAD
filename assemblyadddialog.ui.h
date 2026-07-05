@@ -29,7 +29,7 @@
 *****************************************************************************/
 
 
-void AssemblyAddDialog::modelListView_selectionChanged( QListViewItem* item )
+void AssemblyAddDialog::modelListView_selectionChanged( QTreeWidgetItem* item )
 {
     if ( item != 0 )
 	buttonOk->setEnabled( true );

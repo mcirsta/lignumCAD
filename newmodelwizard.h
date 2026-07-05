@@ -9,6 +9,7 @@
 
 class QButtonGroup;
 class QRadioButton;
+class QWizardPage;
 
 class NewModelWizard : public QWizard, public Ui::NewModelWizard
 {
@@ -25,13 +26,19 @@ public slots:
   virtual void NewModelWizard_helpClicked();
   void selectedPage( uint& type );
   void unsetInitialPages();
+  void showNewModelPage();
 
 private slots:
   void modelNameEdit_textChanged( const QString& text );
-  void initialPageSelected();
-  void NewModelWizard_selected( const QString& );
+  void initialPageSelected( int id );
+  void NewModelWizard_currentIdChanged( int id );
 
 private:
+  void focusInitialPage();
+  void focusModelPage();
+  bool hasInitialPageSelection() const;
+  int pageId( const QWizardPage* wizard_page ) const;
+
   QButtonGroup* initialPageButtonGroup = nullptr;
   std::vector<QRadioButton*> initialPageRadioButtons;
 };

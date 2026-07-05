@@ -27,6 +27,11 @@
 ** update this file, preserving your code. Create an init() slot in place of
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
+#include <QAbstractButton>
+#include <QButtonGroup>
+#include <QRadioButton>
+#include <QWizardPage>
+
 #include <vector>
 
 void NewModelWizard::init()
@@ -36,10 +41,13 @@ void NewModelWizard::init()
     // in the code for where to add or delete switches. So, we dynamically construct
     // radio buttons for each page type. The (invisible) button group makes them exclusive.
     
-    initialPageGroupBox->setColumnLayout( 0, Qt::Vertical );
-    
-    initialPageButtonGroup = new QButtonGroup( this, "pageButtonGroup" );
-    initialPageButtonGroup->hide();
+    setOption( QWizard::HaveHelpButton, true );
+    setStartId( pageId( NewModelPage ) );
+
+    button( QWizard::FinishButton )->setEnabled( false );
+
+    initialPageButtonGroup = new QButtonGroup( this );
+    initialPageButtonGroup->setObjectName( "pageButtonGroup" );
     // Aquire the list of id's which identify the various page types. This list should be ordered
     // in a "logical" order.
     QVector<uint> page_ids = PageFactory::instance()->pageIDs();
@@ -47,25 +55,23 @@ void NewModelWizard::init()
     QVector<uint>::const_iterator id = page_ids.begin();
     for ( ; id != page_ids.end(); ++id ) {
 	QString text = qApp->translate( "lignumCADMainWindow",
-					PageFactory::instance()->selection( *id ) );
+					PageFactory::instance()->selection( *id ).toUtf8().constData() );
 	// Note: radio buttons are a child of the GroupBox
 	QRadioButton* button = new QRadioButton( text, initialPageGroupBox );
 	// But their exclusivity is controlled by the ButtonGroup (this is entirely so
 	// that they can use their own id's).
-	initialPageButtonGroup->insert( button, *id );
-	QToolTip::add( button,
-		       qApp->translate( "lignumCADMainWindow",
-					PageFactory::instance()->toolTip( *id ) ) );
-	QWhatsThis::add( button,
-			 qApp->translate( "lignumCADMainWindow",
-					  PageFactory::instance()->whatsThis( *id ) ) );
-	initialPageGroupBox->layout()->add( button );
+	initialPageButtonGroup->addButton( button, *id );
+	button->setToolTip( qApp->translate( "lignumCADMainWindow",
+					       PageFactory::instance()->toolTip( *id ).toUtf8().constData() ) );
+	button->setWhatsThis( qApp->translate( "lignumCADMainWindow",
+						 PageFactory::instance()->whatsThis( *id ).toUtf8().constData() ) );
+	initialPageGroupBox->layout()->addWidget( button );
 	// Keep a list of these around since QButtonGroup doesn't have an iterator and our
 	// ids are not necessarily sequential.
 	initialPageRadioButtons.push_back( button );
     }
     
-    connect( initialPageButtonGroup, SIGNAL( clicked(int) ), SLOT(initialPageSelected() ) );
+    connect( initialPageButtonGroup, SIGNAL( idClicked(int) ), SLOT(initialPageSelected(int) ) );
 }
 /*!
   * This is a little gloss on entering a new model name. The file name string is
@@ -81,10 +87,9 @@ void NewModelWizard::modelNameEdit_textChanged( const QString & text )
 /*!
  * Allow the user to finish the new model wizard now.
  */
-void NewModelWizard::initialPageSelected( void )
+void NewModelWizard::initialPageSelected( int )
 {
-  finishButton()->setEnabled( true );
-  finishButton()->setDefault( true );
+  button( QWizard::FinishButton )->setEnabled( true );
 }
 
 /*!
@@ -92,16 +97,12 @@ void NewModelWizard::initialPageSelected( void )
  * The focus can get stuck in the description TextEdit widget. (The page
  * title parameter is ignored.)
  */
-void NewModelWizard::NewModelWizard_selected( const QString & )
+void NewModelWizard::NewModelWizard_currentIdChanged( int )
 {
-  if ( currentPage() == NewModelPage ) {
-    modelNameEdit->setFocus();
-    nextButton()->setDefault( true );
-  }
-  else if ( currentPage() == InitialPagePage ) {
-    initialPageButtonGroup->setFocus();
-    finishButton()->setDefault( true );
-  }
+  if ( currentPage() == NewModelPage )
+    focusModelPage();
+  else if ( currentPage() == InitialPagePage )
+    focusInitialPage();
 }
 
 
@@ -175,6 +176,48 @@ void NewModelWizard::selectedPage( uint & type )
   */
 void NewModelWizard::unsetInitialPages( void )
 {
+    initialPageButtonGroup->setExclusive( false );
     for ( QRadioButton* rb : initialPageRadioButtons )
 	rb->setChecked( false );
+    initialPageButtonGroup->setExclusive( true );
+    button( QWizard::FinishButton )->setEnabled( false );
+}
+
+void NewModelWizard::showNewModelPage( void )
+{
+    setStartId( pageId( NewModelPage ) );
+    restart();
+    NewModelWizard_currentIdChanged( currentId() );
+}
+
+void NewModelWizard::focusModelPage( void )
+{
+    modelNameEdit->setFocus();
+}
+
+void NewModelWizard::focusInitialPage( void )
+{
+    QAbstractButton* focus_button = initialPageButtonGroup->checkedButton();
+    if ( focus_button == 0 && !initialPageRadioButtons.empty() )
+      focus_button = initialPageRadioButtons.front();
+    if ( focus_button != 0 )
+      focus_button->setFocus();
+
+    button( QWizard::FinishButton )->setEnabled( hasInitialPageSelection() );
+}
+
+bool NewModelWizard::hasInitialPageSelection( void ) const
+{
+    return initialPageButtonGroup->checkedButton() != 0;
+}
+
+int NewModelWizard::pageId( const QWizardPage* wizard_page ) const
+{
+    const QList<int> ids = pageIds();
+    for ( int id : ids ) {
+        if ( page( id ) == wizard_page )
+            return id;
+    }
+
+    return -1;
 }

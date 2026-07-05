@@ -176,7 +176,7 @@
         </widget>
       </item>
       <item row="2" column="2">
-        <widget class="Q3ButtonGroup" name="orientationGroup">
+        <widget class="QGroupBox" name="orientationGroup">
           <property name="enabled">
             <bool>true</bool>
           </property>
@@ -281,7 +281,7 @@
               </widget>
             </item>
             <item row="2" column="0" rowspan="1" colspan="2">
-              <widget class="Q3ButtonGroup" name="offsetButtonGroup">
+              <widget class="QGroupBox" name="offsetButtonGroup">
                 <property name="title">
                   <string>Offset</string>
                 </property>
@@ -393,24 +393,4 @@
     <tabstop>toReferenceLineEdit</tabstop>
     <tabstop>fromReferenceLineEdit</tabstop>
   </tabstops>
-  <connections>
-    <connection>
-      <sender>buttonOk</sender>
-      <signal>clicked()</signal>
-      <receiver>DimensionInfoDialog</receiver>
-      <slot>accept()</slot>
-    </connection>
-    <connection>
-      <sender>buttonCancel</sender>
-      <signal>clicked()</signal>
-      <receiver>DimensionInfoDialog</receiver>
-      <slot>reject()</slot>
-    </connection>
-    <connection>
-      <sender>buttonHelp</sender>
-      <signal>clicked()</signal>
-      <receiver>DimensionInfoDialog</receiver>
-      <slot>buttonHelp_clicked()</slot>
-    </connection>
-  </connections>
 </ui>

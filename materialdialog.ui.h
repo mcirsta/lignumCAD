@@ -35,25 +35,25 @@ void MaterialDialog::init()
   for ( const auto& material_entry : materials ) {
     Material* material = material_entry.second.get();
 
-    QListViewItem* class_item = MaterialList->firstChild();
-    while ( class_item != 0 ) {
+    QTreeWidgetItem* class_item = 0;
+    for ( int i = 0; i < MaterialList->topLevelItemCount(); ++i ) {
+      class_item = MaterialList->topLevelItem( i );
       if ( class_item->text( 0 ) == material->materialClass() ) break;
-      class_item = class_item->nextSibling();
+      class_item = 0;
     }
     if ( class_item == 0 ) {
-      class_item = new QListViewItem( MaterialList,
-				      material->materialClass() );
-      class_item->setSelectable( false );
-      class_item->setOpen( true );
+      class_item = new QTreeWidgetItem( MaterialList, QStringList( material->materialClass() ) );
+      class_item->setFlags( class_item->flags() & ~Qt::ItemIsSelectable );
+      class_item->setExpanded( true );
     }
-    new QListViewItem( class_item, material->name() );
+    new QTreeWidgetItem( class_item, QStringList( material->name() ) );
   }
 }
 
 
-void MaterialDialog::MaterialList_selectionChanged( QListViewItem * item )
+void MaterialDialog::MaterialList_selectionChanged( QTreeWidgetItem * item )
 {
-    if ( item == 0 ) {
+    if ( item == 0 || item->childCount() > 0 ) {
 	MaterialText->setText( QString() );
 	
 	SolidColor->setPaletteBackgroundColor( palette().color( QPalette::Window ) );
@@ -107,22 +107,25 @@ void MaterialDialog::setMaterial( const Material * material )
 {
     if ( material == 0 ) {
 	MaterialList->clearSelection(); // In single selection mode, the signal is not emitted.
+	MaterialList->setCurrentItem( 0 );
 	MaterialList_selectionChanged( 0 );
     }
     else {
-	QListViewItem* class_item = MaterialList->firstChild();
-	while ( class_item != 0 ) {
+	QTreeWidgetItem* class_item = 0;
+	for ( int i = 0; i < MaterialList->topLevelItemCount(); ++i ) {
+	    class_item = MaterialList->topLevelItem( i );
 	    if ( class_item->text( 0 ) == material->materialClass() ) break;
-	    class_item = class_item->nextSibling();
+	    class_item = 0;
 	}
 	if ( class_item != 0 ) {
-	    QListViewItem* material_item = class_item->firstChild();
-	    while ( material_item != 0 ) {
+	    for ( int i = 0; i < class_item->childCount(); ++i ) {
+		QTreeWidgetItem* material_item = class_item->child( i );
 		if ( material_item->text( 0 ) == material->name() ) {
-		    MaterialList->setSelected( material_item, true );
+		    MaterialList->setCurrentItem( material_item );
+		    material_item->setSelected( true );
+		    MaterialList_selectionChanged( material_item );
 		    return;
 		}
-		material_item = material_item->nextSibling();
 	    }
 	}
 	MaterialList_selectionChanged( 0 );

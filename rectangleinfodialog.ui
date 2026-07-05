@@ -76,7 +76,7 @@
               </widget>
             </item>
             <item row="1" column="0" rowspan="1" colspan="2">
-              <widget class="Q3ButtonGroup" name="xOriginButtonGroup">
+              <widget class="QGroupBox" name="xOriginButtonGroup">
                 <property name="title">
                   <string>Offset</string>
                 </property>
@@ -189,7 +189,7 @@
               </widget>
             </item>
             <item row="1" column="0" rowspan="1" colspan="2">
-              <widget class="Q3ButtonGroup" name="yOriginButtonGroup">
+              <widget class="QGroupBox" name="yOriginButtonGroup">
                 <property name="title">
                   <string>Offset</string>
                 </property>
@@ -262,7 +262,7 @@
         </widget>
       </item>
       <item row="1" column="2" rowspan="1" colspan="3">
-        <widget class="Q3ButtonGroup" name="heightButtonGroup">
+        <widget class="QGroupBox" name="heightButtonGroup">
           <property name="title">
             <string>Height</string>
           </property>
@@ -477,7 +477,7 @@
         </widget>
       </item>
       <item row="1" column="0" rowspan="1" colspan="2">
-        <widget class="Q3ButtonGroup" name="widthButtonGroup">
+        <widget class="QGroupBox" name="widthButtonGroup">
           <property name="title">
             <string>Width</string>
           </property>
@@ -829,30 +829,4 @@
     <tabstop>heightImportedRadioButton</tabstop>
     <tabstop>heightConstraintChooser</tabstop>
   </tabstops>
-  <connections>
-    <connection>
-      <sender>buttonOk</sender>
-      <signal>clicked()</signal>
-      <receiver>RectangleInfoDialog</receiver>
-      <slot>accept()</slot>
-    </connection>
-    <connection>
-      <sender>buttonCancel</sender>
-      <signal>clicked()</signal>
-      <receiver>RectangleInfoDialog</receiver>
-      <slot>reject()</slot>
-    </connection>
-    <connection>
-      <sender>rectangleStyleSlider</sender>
-      <signal>valueChanged(int)</signal>
-      <receiver>RectangleInfoDialog</receiver>
-      <slot>rectangleStyleSlider_valueChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>buttonHelp</sender>
-      <signal>clicked()</signal>
-      <receiver>RectangleInfoDialog</receiver>
-      <slot>buttonHelp_clicked()</slot>
-    </connection>
-  </connections>
 </ui>

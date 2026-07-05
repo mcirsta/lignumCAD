@@ -5,7 +5,7 @@
 
 #include "ui_assemblyconfigdialog.h"
 
-class QListViewItem;
+class QTreeWidgetItem;
 
 class AssemblyConfigDialog : public QDialog, public Ui::AssemblyConfigDialog
 {
@@ -19,7 +19,7 @@ public:
 
 public slots:
   virtual void init();
-  virtual void modelListView_selectionChanged( QListViewItem* item );
+  virtual void modelListView_selectionChanged( QTreeWidgetItem* item );
   virtual void buttonHelp_clicked();
 };
 

@@ -940,10 +940,10 @@ void DesignBookView::editPreferences ( void )
 
   bool unit_modified = false;
 
-  if ( preferences_dialog_->unitsListBox->currentItem() !=
+  if ( preferences_dialog_->unitsListBox->currentRow() !=
        UnitsBasis::instance()->at() ) {
     UnitsBasis::instance()->
-      setLengthUnit( preferences_dialog_->unitsListBox->currentItem() );
+      setLengthUnit( preferences_dialog_->unitsListBox->currentRow() );
     unit_modified = true;
   }
 
@@ -985,7 +985,7 @@ void DesignBookView::editPreferences ( void )
       OpenGLGlobals::instance()->setPredefinedScheme( true );
     }
 
-    if ( preferences_dialog_->colorSchemeListBox->currentItem() !=
+    if ( preferences_dialog_->colorSchemeListBox->currentRow() !=
 	 OpenGLGlobals::instance()->at() ) {
       // This effectively discards any modifications which the user
       // made to the custom settings. So, I guess the question is:
@@ -994,7 +994,7 @@ void DesignBookView::editPreferences ( void )
       // saying I want the attributes of the selected predefined entry
       // and there is only one current set of values.
       OpenGLGlobals::instance()->
-	setScheme( preferences_dialog_->colorSchemeListBox->currentItem() );
+	setScheme( preferences_dialog_->colorSchemeListBox->currentRow() );
     }
 
     settings.writeEntry( lC::Setting::ColorScheme::CUSTOM, false );
@@ -1095,10 +1095,10 @@ void DesignBookView::editPreferences ( void )
   }
   // This may be surprising to the user. The attributes themselves
   // will be the same, but the (hidden) defaults may change.
-  if ( preferences_dialog_->colorSchemeListBox->currentItem() !=
+  if ( preferences_dialog_->colorSchemeListBox->currentRow() !=
        OpenGLGlobals::instance()->at() ) {
     OpenGLGlobals::instance()->
-      setDefaultScheme( preferences_dialog_->colorSchemeListBox->currentItem() );
+      setDefaultScheme( preferences_dialog_->colorSchemeListBox->currentRow() );
   }
 
   // Recover any changes made to the *other* attribute preferences.
@@ -1905,7 +1905,7 @@ bool DesignBookView::write ( void )
 
 bool DesignBookView::newModelWizard ( Model* model, uint& initial_page_id )
 {
-  new_model_wizard_->showPage( new_model_wizard_->NewModelPage );
+  new_model_wizard_->showNewModelPage();
 
   new_model_wizard_->modelNameEdit->setText( model->name() );
   new_model_wizard_->modelFileChooser->setFileName( model->writeFileName() );
@@ -1921,7 +1921,6 @@ bool DesignBookView::newModelWizard ( Model* model, uint& initial_page_id )
   new_model_wizard_->unsetInitialPages();
 
   new_model_wizard_->modelNameEdit->setFocus();
-  new_model_wizard_->nextButton()->setDefault( true );
 
   int ret = new_model_wizard_->exec();
 

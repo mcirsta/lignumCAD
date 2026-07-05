@@ -40,7 +40,6 @@ class QWidget;
 class DBURL;
 class QPainter;
 class QTab;
-class QListBoxItem;
 class QListViewItem;
 class ListViewItem;
 class OpenGLView;

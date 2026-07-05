@@ -75,7 +75,7 @@ lignumCAD Version x.y</string>
       </layout>
     </widget>
     <widget class="QToolBar" name="toolBar">
-      <property name="label">
+      <property name="windowTitle">
         <string>Tools</string>
       </property>
       <addaction name="fileNewAction"/>
@@ -93,7 +93,7 @@ lignumCAD Version x.y</string>
       <addaction name="helpContentsAction"/>
     </widget>
     <widget class="QToolBar" name="insertToolbar">
-      <property name="label">
+      <property name="windowTitle">
         <string>Insert</string>
       </property>
     </widget>
@@ -169,9 +169,6 @@ lignumCAD Version x.y</string>
       <addaction name="helpMenu"/>
     </widget>
     <action name="fileNewAction">
-      <property name="name">
-        <cstring>fileNewAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_file.png</iconset>
       </property>
@@ -189,9 +186,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="fileOpenAction">
-      <property name="name">
-        <cstring>fileOpenAction</cstring>
-      </property>
       <property name="icon">
         <iconset>open_file.png</iconset>
       </property>
@@ -209,9 +203,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="fileSaveAction">
-      <property name="name">
-        <cstring>fileSaveAction</cstring>
-      </property>
       <property name="icon">
         <iconset>save_file.png</iconset>
       </property>
@@ -229,9 +220,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="fileSaveAsAction">
-      <property name="name">
-        <cstring>fileSaveAsAction</cstring>
-      </property>
       <property name="icon">
         <iconset>saveas_file.png</iconset>
       </property>
@@ -249,9 +237,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="filePrintAction">
-      <property name="name">
-        <cstring>filePrintAction</cstring>
-      </property>
       <property name="icon">
         <iconset>print.png</iconset>
       </property>
@@ -269,9 +254,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="fileExitAction">
-      <property name="name">
-        <cstring>fileExitAction</cstring>
-      </property>
       <property name="icon">
         <iconset>exit.png</iconset>
       </property>
@@ -289,9 +271,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="editUndoAction">
-      <property name="name">
-        <cstring>editUndoAction</cstring>
-      </property>
       <property name="icon">
         <iconset>undo.png</iconset>
       </property>
@@ -309,9 +288,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="editRedoAction">
-      <property name="name">
-        <cstring>editRedoAction</cstring>
-      </property>
       <property name="icon">
         <iconset>redo.png</iconset>
       </property>
@@ -329,9 +305,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="editCutAction">
-      <property name="name">
-        <cstring>editCutAction</cstring>
-      </property>
       <property name="icon">
         <iconset>edit_cut.png</iconset>
       </property>
@@ -349,9 +322,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="editCopyAction">
-      <property name="name">
-        <cstring>editCopyAction</cstring>
-      </property>
       <property name="icon">
         <iconset>edit_copy.png</iconset>
       </property>
@@ -369,9 +339,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="editPasteAction">
-      <property name="name">
-        <cstring>editPasteAction</cstring>
-      </property>
       <property name="icon">
         <iconset>edit_paste.png</iconset>
       </property>
@@ -389,9 +356,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="editFindAction">
-      <property name="name">
-        <cstring>editFindAction</cstring>
-      </property>
       <property name="icon">
         <iconset>find.png</iconset>
       </property>
@@ -409,9 +373,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="helpContentsAction">
-      <property name="name">
-        <cstring>helpContentsAction</cstring>
-      </property>
       <property name="icon">
         <iconset>help_contents.png</iconset>
       </property>
@@ -429,9 +390,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="helpAboutAction">
-      <property name="name">
-        <cstring>helpAboutAction</cstring>
-      </property>
       <property name="icon">
         <iconset>lignumCAD.png</iconset>
       </property>
@@ -449,9 +407,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="insertSketchAction">
-      <property name="name">
-        <cstring>insertSketchAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_sketch.png</iconset>
       </property>
@@ -466,9 +421,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="insertPartAction">
-      <property name="name">
-        <cstring>insertPartAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_part.png</iconset>
       </property>
@@ -483,9 +435,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="insertAssemblyAction">
-      <property name="name">
-        <cstring>insertAssemblyAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_assembly.png</iconset>
       </property>
@@ -500,9 +449,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="insertDrawingAction">
-      <property name="name">
-        <cstring>insertDrawingAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_drawing.png</iconset>
       </property>
@@ -517,9 +463,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolRectangleAction">
-      <property name="name">
-        <cstring>toolRectangleAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_rectangle.png</iconset>
       </property>
@@ -537,9 +480,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolDimensionAction">
-      <property name="name">
-        <cstring>toolDimensionAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_dimension.png</iconset>
       </property>
@@ -557,9 +497,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolReferenceLineAction">
-      <property name="name">
-        <cstring>toolReferenceLineAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_reference_line.png</iconset>
       </property>
@@ -577,9 +514,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolCenterlineAction">
-      <property name="name">
-        <cstring>toolCenterlineAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_centerline.png</iconset>
       </property>
@@ -597,9 +531,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="deletePageAction">
-      <property name="name">
-        <cstring>deletePageAction</cstring>
-      </property>
       <property name="icon">
         <iconset>delete_page.png</iconset>
       </property>
@@ -614,9 +545,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="renamePageAction">
-      <property name="name">
-        <cstring>renamePageAction</cstring>
-      </property>
       <property name="icon">
         <iconset>rename_page.png</iconset>
       </property>
@@ -634,9 +562,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolStraightCutAction">
-      <property name="name">
-        <cstring>toolStraightCutAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_straight_cut.png</iconset>
       </property>
@@ -651,9 +576,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolHoleAction">
-      <property name="name">
-        <cstring>toolHoleAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_hole.png</iconset>
       </property>
@@ -668,9 +590,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolFreeCutAction">
-      <property name="name">
-        <cstring>toolFreeCutAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_free_cut.png</iconset>
       </property>
@@ -685,9 +604,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolAddModelAction">
-      <property name="name">
-        <cstring>toolAddModelAction</cstring>
-      </property>
       <property name="icon">
         <iconset>add_model.png</iconset>
       </property>
@@ -702,9 +618,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolViewAction">
-      <property name="name">
-        <cstring>toolViewAction</cstring>
-      </property>
       <property name="icon">
         <iconset>add_view.png</iconset>
       </property>
@@ -719,9 +632,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="exportPageAction">
-      <property name="name">
-        <cstring>exportPageAction</cstring>
-      </property>
       <property name="icon">
         <iconset>export_page.png</iconset>
       </property>
@@ -736,9 +646,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="modelInfoAction">
-      <property name="name">
-        <cstring>modelInfoAction</cstring>
-      </property>
       <property name="icon">
         <iconset>model_info.png</iconset>
       </property>
@@ -753,9 +660,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolEdgeTreatmentAction">
-      <property name="name">
-        <cstring>toolEdgeTreatmentAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_edge_treatment.png</iconset>
       </property>
@@ -770,9 +674,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolMaterialAction">
-      <property name="name">
-        <cstring>toolMaterialAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_material.png</iconset>
       </property>
@@ -790,9 +691,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolJointAction">
-      <property name="name">
-        <cstring>toolJointAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_joint.png</iconset>
       </property>
@@ -807,9 +705,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="viewRestoreAction">
-      <property name="name">
-        <cstring>viewRestoreAction</cstring>
-      </property>
       <property name="icon">
         <iconset>restore_view2.png</iconset>
       </property>
@@ -824,9 +719,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="editPreferencesAction">
-      <property name="name">
-        <cstring>editPreferencesAction</cstring>
-      </property>
       <property name="icon">
         <iconset>edit_properties.png</iconset>
       </property>
@@ -841,9 +733,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolAlignmentAction">
-      <property name="name">
-        <cstring>toolAlignmentAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_alignment.png</iconset>
       </property>
@@ -861,9 +750,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="cancelReferenceLineAction">
-      <property name="name">
-        <cstring>cancelReferenceLineAction</cstring>
-      </property>
       <property name="icon">
         <iconset>cancel_reference_line.png</iconset>
       </property>
@@ -875,9 +761,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="cancelRectangleAction">
-      <property name="name">
-        <cstring>cancelRectangleAction</cstring>
-      </property>
       <property name="icon">
         <iconset>cancel_rectangle.png</iconset>
       </property>
@@ -889,9 +772,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="cancelCenterlineAction">
-      <property name="name">
-        <cstring>cancelCenterlineAction</cstring>
-      </property>
       <property name="icon">
         <iconset>cancel_centerline.png</iconset>
       </property>
@@ -903,9 +783,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="cancelDimensionAction">
-      <property name="name">
-        <cstring>cancelDimensionAction</cstring>
-      </property>
       <property name="icon">
         <iconset>cancel_dimension.png</iconset>
       </property>
@@ -917,9 +794,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="cancelAlignmentAction">
-      <property name="name">
-        <cstring>cancelAlignmentAction</cstring>
-      </property>
       <property name="icon">
         <iconset>cancel_alignment.png</iconset>
       </property>
@@ -931,9 +805,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolAnnotationAction">
-      <property name="name">
-        <cstring>toolAnnotationAction</cstring>
-      </property>
       <property name="icon">
         <iconset>new_annotation.png</iconset>
       </property>
@@ -951,9 +822,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="cancelAnnotationAction">
-      <property name="name">
-        <cstring>cancelAnnotationAction</cstring>
-      </property>
       <property name="icon">
         <iconset>cancel_annotation.png</iconset>
       </property>
@@ -965,9 +833,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolConstraintDeleteAction">
-      <property name="name">
-        <cstring>toolConstraintDeleteAction</cstring>
-      </property>
       <property name="icon">
         <iconset>delete_constraint.png</iconset>
       </property>
@@ -982,9 +847,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="cancelConstraintDeleteAction">
-      <property name="name">
-        <cstring>cancelConstraintDeleteAction</cstring>
-      </property>
       <property name="icon">
         <iconset>delete_constraint.png</iconset>
       </property>
@@ -999,9 +861,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="whatsThisAction">
-      <property name="name">
-        <cstring>whatsThisAction</cstring>
-      </property>
       <property name="iconText">
         <string>What's This?</string>
       </property>
@@ -1016,9 +875,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="viewLeftAction">
-      <property name="name">
-        <cstring>viewLeftAction</cstring>
-      </property>
       <property name="checkable">
         <bool>false</bool>
       </property>
@@ -1033,9 +889,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="viewRightAction">
-      <property name="name">
-        <cstring>viewRightAction</cstring>
-      </property>
       <property name="checkable">
         <bool>false</bool>
       </property>
@@ -1050,9 +903,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="viewFrontAction">
-      <property name="name">
-        <cstring>viewFrontAction</cstring>
-      </property>
       <property name="checkable">
         <bool>false</bool>
       </property>
@@ -1067,9 +917,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="viewBackAction">
-      <property name="name">
-        <cstring>viewBackAction</cstring>
-      </property>
       <property name="checkable">
         <bool>false</bool>
       </property>
@@ -1084,9 +931,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="viewBottomAction">
-      <property name="name">
-        <cstring>viewBottomAction</cstring>
-      </property>
       <property name="checkable">
         <bool>false</bool>
       </property>
@@ -1101,9 +945,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="viewTopAction">
-      <property name="name">
-        <cstring>viewTopAction</cstring>
-      </property>
       <property name="checkable">
         <bool>false</bool>
       </property>
@@ -1118,9 +959,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toggleCSysAction">
-      <property name="name">
-        <cstring>toggleCSysAction</cstring>
-      </property>
       <property name="checkable">
         <bool>true</bool>
       </property>
@@ -1135,9 +973,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="cancelAddModelAction">
-      <property name="name">
-        <cstring>cancelAddModelAction</cstring>
-      </property>
       <property name="icon">
         <iconset>cancel_add_model.png</iconset>
       </property>
@@ -1149,9 +984,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="cancelAssemblyConstraintAction">
-      <property name="name">
-        <cstring>cancelAssemblyConstraintAction</cstring>
-      </property>
       <property name="icon">
         <iconset>cancel_assembly_constraint.png</iconset>
       </property>
@@ -1163,9 +995,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="toolDeleteModelAction">
-      <property name="name">
-        <cstring>toolDeleteModelAction</cstring>
-      </property>
       <property name="icon">
         <iconset>cancel_add_model.png</iconset>
       </property>
@@ -1183,9 +1012,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="zoomInAction">
-      <property name="name">
-        <cstring>zoomInAction</cstring>
-      </property>
       <property name="icon">
         <iconset>zoom_in4.png</iconset>
       </property>
@@ -1203,9 +1029,6 @@ lignumCAD Version x.y</string>
       </property>
     </action>
     <action name="zoomOutAction">
-      <property name="name">
-        <cstring>zoomOutAction</cstring>
-      </property>
       <property name="icon">
         <iconset>zoom_out4.png</iconset>
       </property>
@@ -1228,108 +1051,4 @@ lignumCAD Version x.y</string>
     <include location="global">qdir.h</include>
     <include location="local">ratio.h</include>
   </includes>
-  <connections>
-    <connection>
-      <sender>fileNewAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>fileNew()</slot>
-    </connection>
-    <connection>
-      <sender>fileOpenAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>fileOpen()</slot>
-    </connection>
-    <connection>
-      <sender>fileSaveAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>fileSave()</slot>
-    </connection>
-    <connection>
-      <sender>fileSaveAsAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>fileSaveAs()</slot>
-    </connection>
-    <connection>
-      <sender>filePrintAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>filePrint()</slot>
-    </connection>
-    <connection>
-      <sender>fileExitAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>fileExit()</slot>
-    </connection>
-    <connection>
-      <sender>editUndoAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>editUndo()</slot>
-    </connection>
-    <connection>
-      <sender>editRedoAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>editRedo()</slot>
-    </connection>
-    <connection>
-      <sender>editCutAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>editCut()</slot>
-    </connection>
-    <connection>
-      <sender>editCopyAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>editCopy()</slot>
-    </connection>
-    <connection>
-      <sender>editPasteAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>editPaste()</slot>
-    </connection>
-    <connection>
-      <sender>editFindAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>editFind()</slot>
-    </connection>
-    <connection>
-      <sender>helpContentsAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>helpContents()</slot>
-    </connection>
-    <connection>
-      <sender>helpAboutAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>helpAbout()</slot>
-    </connection>
-    <connection>
-      <sender>exportPageAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>fileExport()</slot>
-    </connection>
-    <connection>
-      <sender>modelInfoAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>fileModelInfo()</slot>
-    </connection>
-    <connection>
-      <sender>whatsThisAction</sender>
-      <signal>activated()</signal>
-      <receiver>lignumCADMainWindow</receiver>
-      <slot>whatsThis()</slot>
-    </connection>
-  </connections>
 </ui>

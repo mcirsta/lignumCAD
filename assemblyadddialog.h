@@ -5,7 +5,7 @@
 
 #include "ui_assemblyadddialog.h"
 
-class QListViewItem;
+class QTreeWidgetItem;
 
 class AssemblyAddDialog : public QDialog, public Ui::AssemblyAddDialog
 {
@@ -18,7 +18,7 @@ public:
   ~AssemblyAddDialog() override;
 
 public slots:
-  virtual void modelListView_selectionChanged( QListViewItem* item );
+  virtual void modelListView_selectionChanged( QTreeWidgetItem* item );
   virtual void buttonHelp_clicked();
 };
 

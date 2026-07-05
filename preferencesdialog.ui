@@ -353,7 +353,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                     <number>6</number>
                   </property>
                   <item>
-                    <widget class="Q3ButtonGroup" name="formatButtonGroup">
+                    <widget class="QGroupBox" name="formatButtonGroup">
                       <property name="title">
                         <string>Format</string>
                       </property>
@@ -456,7 +456,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                       <number>6</number>
                     </property>
                     <item row="0" column="0">
-                      <widget class="Q3ListBox" name="unitsListBox">
+                      <widget class="QListWidget" name="unitsListBox">
                         <property name="toolTip" stdset="0">
                           <string>Length units and their abbreviations.</string>
                         </property>
@@ -537,7 +537,7 @@ This string appears on printed pages in the revision control box.&lt;/p&gt;</str
                     </widget>
                   </item>
                   <item>
-                    <widget class="Q3ListBox" name="colorSchemeListBox">
+                    <widget class="QListWidget" name="colorSchemeListBox">
                       <property name="sizePolicy">
                         <sizepolicy>
                           <hsizetype>1</hsizetype>
@@ -1288,162 +1288,4 @@ Note that the clearance length specified here is in &lt;i&gt;paper&lt;/i&gt; uni
   <includes>
     <include location="local">openglexample.h</include>
   </includes>
-  <connections>
-    <connection>
-      <sender>buttonOk</sender>
-      <signal>clicked()</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>accept()</slot>
-    </connection>
-    <connection>
-      <sender>buttonCancel</sender>
-      <signal>clicked()</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>reject()</slot>
-    </connection>
-    <connection>
-      <sender>logoFileChooser</sender>
-      <signal>fileNameChanged(QString)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>logoFileChooser_fileNameChanged(QString)</slot>
-    </connection>
-    <connection>
-      <sender>unitsListBox</sender>
-      <signal>currentChanged(Q3ListBoxItem*)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>unitsListBox_currentChanged(Q3ListBoxItem*)</slot>
-    </connection>
-    <connection>
-      <sender>formatButtonGroup</sender>
-      <signal>clicked(int)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>formatButtonGroup_clicked(int)</slot>
-    </connection>
-    <connection>
-      <sender>precisionComboBox</sender>
-      <signal>valueChanged(int)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>precisionComboBox_valueChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>colorSchemeListBox</sender>
-      <signal>currentChanged(Q3ListBoxItem*)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>colorSchemeListBox_currentChanged(Q3ListBoxItem*)</slot>
-    </connection>
-    <connection>
-      <sender>geometryColorChooser</sender>
-      <signal>colorChanged(QColor)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>geometryColorChooser_colorChanged(QColor)</slot>
-    </connection>
-    <connection>
-      <sender>annotationColorChooser</sender>
-      <signal>colorChanged(QColor)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>annotationColorChooser_colorChanged(QColor)</slot>
-    </connection>
-    <connection>
-      <sender>gridColorChooser</sender>
-      <signal>colorChanged(QColor)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>gridColorChooser_colorChanged(QColor)</slot>
-    </connection>
-    <connection>
-      <sender>constraintPrimaryColorChooser</sender>
-      <signal>colorChanged(QColor)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>constraintPrimaryColorChooser_colorChanged(QColor)</slot>
-    </connection>
-    <connection>
-      <sender>constraintSecondaryColorChooser</sender>
-      <signal>colorChanged(QColor)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>constraintSecondaryColorChooser_colorChanged(QColor)</slot>
-    </connection>
-    <connection>
-      <sender>backgroundSlider</sender>
-      <signal>valueChanged(int)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>backgroundSlider_valueChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>solidBackgroundColorChooser</sender>
-      <signal>colorChanged(QColor)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>solidBackgroundColorChooser_colorChanged(QColor)</slot>
-    </connection>
-    <connection>
-      <sender>gradientBackgroundColorChooser</sender>
-      <signal>colorChanged(QColor)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>gradientBackgroundColorChooser_colorChanged(QColor)</slot>
-    </connection>
-    <connection>
-      <sender>patternBackgroundFileChooser</sender>
-      <signal>fileNameChanged(QString)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>patternBackgroundFileChooser_fileNameChanged(QString)</slot>
-    </connection>
-    <connection>
-      <sender>dimensionFontChooser</sender>
-      <signal>fontChanged(QString)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>dimensionFontChooser_fontChanged(QString)</slot>
-    </connection>
-    <connection>
-      <sender>arrowHeadLengthSpinBox</sender>
-      <signal>valueChanged(double)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>arrowHeadLengthSpinBox_valueChanged(double)</slot>
-    </connection>
-    <connection>
-      <sender>arrowHeadStyleComboBox</sender>
-      <signal>valueChanged(int)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>arrowHeadStyleComboBox_valueChanged(int)</slot>
-    </connection>
-    <connection>
-      <sender>clearanceLengthSpinBox</sender>
-      <signal>valueChanged(double)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>clearanceLengthSpinBox_valueChanged(double)</slot>
-    </connection>
-    <connection>
-      <sender>lineThicknessLengthSpinBox</sender>
-      <signal>valueChanged(double)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>lineThicknessLengthSpinBox_valueChanged(double)</slot>
-    </connection>
-    <connection>
-      <sender>extensionOffsetLengthSpinBox</sender>
-      <signal>valueChanged(double)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>extensionOffsetLengthSpinBox_valueChanged(double)</slot>
-    </connection>
-    <connection>
-      <sender>annotationFontChooser</sender>
-      <signal>fontChanged(QString)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>annotationFontChooser_fontChanged(QString)</slot>
-    </connection>
-    <connection>
-      <sender>handleLengthSpinBox</sender>
-      <signal>valueChanged(double)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>handleLengthSpinBox_valueChanged(double)</slot>
-    </connection>
-    <connection>
-      <sender>arrowHeadWidthRatioSpinBox</sender>
-      <signal>valueChanged(Ratio)</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>arrowHeadWidthRatioSpinBox_valueChanged(Ratio)</slot>
-    </connection>
-    <connection>
-      <sender>buttonHelp</sender>
-      <signal>clicked()</signal>
-      <receiver>PreferencesDialog</receiver>
-      <slot>buttonHelp_clicked()</slot>
-    </connection>
-  </connections>
 </ui>

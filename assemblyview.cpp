@@ -32,6 +32,7 @@
 #include <qbuttongroup.h>
 #include <qlabel.h>
 #include <QPixmap>
+#include <QTreeWidgetItem>
 
 #include <BRepTools.hxx>
 #include <TopoDS_Compound.hxx>
@@ -1381,10 +1382,9 @@ bool AssemblyView::configure ( void )
 
     if ( page.data()->type() == lC::STR::PART ||
 	 page.data()->type() == lC::STR::ASSEMBLY )
-      new QListViewItem( config_dialog_->modelListView,
-			 config_dialog_->modelListView->lastItem(),
-			 lC::formatName( page.data()->name() ),
-			 trC( page.data()->type() ) );
+      new QTreeWidgetItem( config_dialog_->modelListView,
+			   QStringList{ lC::formatName( page.data()->name() ),
+					trC( page.data()->type() ) } );
   }
 
   config_dialog_->buttonOk->setEnabled( false );
@@ -1784,10 +1784,9 @@ void AssemblyView::addModel ( void )
 
     if ( page.data()->type() == lC::STR::PART ||
 	 page.data()->type() == lC::STR::ASSEMBLY )
-      new QListViewItem( add_dialog_->modelListView,
-			 add_dialog_->modelListView->lastItem(),
-			 lC::formatName( page.data()->name() ),
-			 trC( page.data()->type() ) );
+      new QTreeWidgetItem( add_dialog_->modelListView,
+			   QStringList{ lC::formatName( page.data()->name() ),
+					trC( page.data()->type() ) } );
   }
 
   add_dialog_->buttonOk->setEnabled( false );

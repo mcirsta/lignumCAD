@@ -27,112 +27,135 @@
 ** update this file, preserving your code. Create an init() slot in place of
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
+#include <QAbstractButton>
+#include <QCursor>
+#include <QGridLayout>
+#include <QIcon>
+#include <QScrollArea>
+#include <QTreeWidgetItem>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <QWhatsThis>
+#include <QWizardPage>
+
 #include <vector>
 
 void NewPartWizard::init()
 {    
-    scroll_view_ = 0;
-    
-    nextButton()->setEnabled( false );
-    finishButton()->setEnabled( false );
+    scroll_area_ = 0;
+    scroll_widget_ = 0;
+    scroll_layout_ = 0;
+
+    setOption( QWizard::HaveHelpButton, true );
+    setStartId( pageId( initialPartPage ) );
+    partParametersPage->setFinalPage( true );
+
+    button( QWizard::NextButton )->setEnabled( false );
+    button( QWizard::FinishButton )->setEnabled( false );
     
     const PartMetadataList& parts = PartFactory::instance()->parts();
     for ( PartMetadata* part : parts ) {
-	QListViewItem* group = groups_.find( trC( part->group() ) );
+	QTreeWidgetItem* group = groups_.value( trC( part->group() ), 0 );
 	if ( group == 0 ) {
-	    group = new QListViewItem( partLibraryListView, trC( part->group() ) );
-	    group->setOpen( true );
-	    group->setSelectable( false );
+	    group = new QTreeWidgetItem( partLibraryListView, QStringList( trC( part->group() ) ) );
+	    group->setExpanded( true );
+	    group->setFlags( group->flags() & ~Qt::ItemIsSelectable );
 	    groups_.insert( trC( part->group() ), group);
 	}
-	QListViewItem* item = new QListViewItem( group, trC( part->name() ) );
-	item->setOpen( true );
-	item->setPixmap( 1, QPixmap( part->icon() ) );
+	QTreeWidgetItem* item = new QTreeWidgetItem( group, QStringList() << trC( part->name() ) << QString() );
+	item->setExpanded( true );
+	item->setIcon( 1, QIcon( part->icon() ) );
 	parts_.insert( item, part );
     }
-    
-    connect( nextButton(), SIGNAL( clicked() ), SLOT( validateName() ) );
 }
 
-void NewPartWizard::partLibraryListView_currentChanged( QListViewItem* item )
+void NewPartWizard::partLibraryListView_currentChanged( QTreeWidgetItem* item )
 {
-    if ( item != 0 ) {
-	if ( groups_.find( item->text( 0 ) ) != 0 )
-	    nextButton()->setEnabled( false );
-	else
-	    nextButton()->setEnabled( true );
-    }
-    else
-	nextButton()->setEnabled( false );
+    button( QWizard::NextButton )->setEnabled( item != 0 && parts_.contains( item ) );
 }
 
 
-void NewPartWizard::NewPartWizard_selected( const QString& /*page_name*/ )
+void NewPartWizard::NewPartWizard_currentIdChanged( int )
 {
-    if ( currentPage() == initialPartPage ) {
-	partLibraryListView_currentChanged( partLibraryListView->currentItem() );
-	partLibraryListView->setFocus();
-	nextButton()->setDefault( true );
+    if ( currentPage() == initialPartPage )
+	focusInitialPartPage();
+    else if ( currentPage() == partParametersPage )
+	focusPartParametersPage();
+}
+
+
+void NewPartWizard::focusInitialPartPage()
+{
+    partLibraryListView_currentChanged( partLibraryListView->currentItem() );
+    partLibraryListView->setFocus();
+}
+
+
+void NewPartWizard::focusPartParametersPage()
+{
+    PartMetadata* part = selectedPart();
+    if ( part == 0 ) {
+	button( QWizard::FinishButton )->setEnabled( false );
+	return;
     }
-    else if ( currentPage() == partParametersPage ) {
-	QListViewItem* item = partLibraryListView->currentItem();
-#if 0	
-	PartMetadata* part = PartFactory::instance()->part( item->parent()->text(0),
-							    item->text( 0 ) );
-#else
-	PartMetadata* part = parts_[ item ];
-#endif
-	partParameterFrame->setTitle( tr( "&Parameters for %1::%2" ).
-				      arg( trC( part->group() ) ).
-				      arg( lC::formatName( part->name() ) ) );
-	// Construct how ever many input parameter fields this part needs.
-	uint n_parameters = part->parameterCount();
-	if ( scroll_view_ == 0 ) {
-	    QGridLayout* layout = new QGridLayout( partParameterFrame->layout() );
-	    scroll_view_ = new QScrollView( partParameterFrame, "parameterScrollView" );
-	    layout->addWidget( scroll_view_, 0, 0 );
-	    scroll_vbox_ = new QVBox( scroll_view_->viewport(), "parameterVBox" );
-	    scroll_view_->addChild( scroll_vbox_ );
-	    scroll_view_->show();
-	}
-	
-	for ( size_t n = labels_.size(); n < n_parameters; n++ ) {
-	    lCDefaultLengthConstraint* length_constraint =
-		    new lCDefaultLengthConstraint( scroll_vbox_, "parameterLabel" );
-	    length_constraint->setLengthLimits( UnitsBasis::instance()->lengthUnit(),
-						UnitsBasis::instance()->format(),
-						UnitsBasis::instance()->precision(),
-						0,
-						lC::MAXIMUM_DIMENSION, 0 );
-	    length_constraint->setSpecifiedButtonToolTip( tr( "Use a specified size." ) );
-	    length_constraint->setSpecifiedButtonWhatsThis( tr("<p><b>Specified Size</b></p> <p>Select this option if you want the parameter to have an independent, specified size.</p>" ) );
-	    length_constraint->setSpecifiedSpinBoxToolTip( tr( "Enter the size." ) );
-	    length_constraint->setSpecifiedSpinBoxWhatsThis( tr( "<p><b>Specified Size</b></p> <p>Enter the size of the parameter. The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).</p> <p>If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:</p> <p><code>1.234</code></p> <p>If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:</p> <p><code>1</code> (equals 1.0)</p> <p><code>1/2</code> (equals 0.5)</p> <p><code>1 1/2</code> (equals 1.5, note the blank separating the whole number and the fraction)</p> <p>If you modify the value, you can always go back to the default value when the dialog was opened by clicking the <img src=\"default_active.png\"> button</p>" ) );
-	    connect( length_constraint, SIGNAL( valueChanged( double ) ),
-		     this, SLOT(updateValidity( double ) ) );
-	    labels_.push_back( length_constraint );
-	}
-	QStringList::const_iterator parameter = part->parameters();
-	std::vector<lCDefaultLengthConstraint*>::iterator label = labels_.begin();
-	parameter_labels_.clear();
-	for ( uint n = 0; n < n_parameters; n++ ) {
-	    lCDefaultLengthConstraint* parameter_label = *label;
-	    parameter_label->setTitle( trC( *parameter ) );
-	    parameter_label->setDefaultLength( 0 );
-	    parameter_label->setLength( 0 );
-	    parameter_label->show();
-	    parameter_labels_.insert( *parameter, parameter_label );
-	    ++parameter;
-	    ++label;
-	}
-	for ( ; label != labels_.end(); ++label ) {
-	    (*label)->hide();
-	}
-	scroll_view_->ensureVisible( 0, 0 );
-	if ( n_parameters > 0 && !labels_.empty() )
-	    labels_.front()->setFocus();
-	finishButton()->setDefault( true );
+
+    button( QWizard::FinishButton )->setEnabled( false );
+    partParameterFrame->setTitle( tr( "&Parameters for %1::%2" ).
+				  arg( trC( part->group() ) ).
+				  arg( lC::formatName( part->name() ) ) );
+
+    uint n_parameters = part->parameterCount();
+    if ( scroll_area_ == 0 ) {
+	QGridLayout* layout = static_cast<QGridLayout*>( partParameterFrame->layout() );
+	scroll_area_ = new QScrollArea( partParameterFrame );
+	scroll_area_->setObjectName( "parameterScrollArea" );
+	scroll_area_->setWidgetResizable( true );
+	layout->addWidget( scroll_area_, 0, 0 );
+
+	scroll_widget_ = new QWidget( scroll_area_ );
+	scroll_widget_->setObjectName( "parameterWidget" );
+	scroll_layout_ = new QVBoxLayout( scroll_widget_ );
+	scroll_layout_->setContentsMargins( 0, 0, 0, 0 );
+	scroll_layout_->setSpacing( 6 );
+	scroll_area_->setWidget( scroll_widget_ );
     }
+
+    for ( size_t n = labels_.size(); n < n_parameters; n++ ) {
+	lCDefaultLengthConstraint* length_constraint =
+		new lCDefaultLengthConstraint( scroll_widget_, "parameterLabel" );
+	scroll_layout_->addWidget( length_constraint );
+	length_constraint->setLengthLimits( UnitsBasis::instance()->lengthUnit(),
+					    UnitsBasis::instance()->format(),
+					    UnitsBasis::instance()->precision(),
+					    0,
+					    lC::MAXIMUM_DIMENSION, 0 );
+	length_constraint->setSpecifiedButtonToolTip( tr( "Use a specified size." ) );
+	length_constraint->setSpecifiedButtonWhatsThis( tr("<p><b>Specified Size</b></p> <p>Select this option if you want the parameter to have an independent, specified size.</p>" ) );
+	length_constraint->setSpecifiedSpinBoxToolTip( tr( "Enter the size." ) );
+	length_constraint->setSpecifiedSpinBoxWhatsThis( tr( "<p><b>Specified Size</b></p> <p>Enter the size of the parameter. The units of the value are given in the default units specified in the application Preferences (so, you do not have to enter the units abbreviation).</p> <p>If the default units format is DECIMAL, then the entered value can have the usual floating point representation, e.g.:</p> <p><code>1.234</code></p> <p>If the default units format is FRACTIONAL, then, in addition to the decimal format, any of the following representations can be typed in:</p> <p><code>1</code> (equals 1.0)</p> <p><code>1/2</code> (equals 0.5)</p> <p><code>1 1/2</code> (equals 1.5, note the blank separating the whole number and the fraction)</p> <p>If you modify the value, you can always go back to the default value when the dialog was opened by clicking the <img src=\"default_active.png\"> button</p>" ) );
+	connect( length_constraint, SIGNAL( valueChanged( double ) ),
+		 this, SLOT(updateValidity( double ) ) );
+	labels_.push_back( length_constraint );
+    }
+    QStringList::const_iterator parameter = part->parameters();
+    std::vector<lCDefaultLengthConstraint*>::iterator label = labels_.begin();
+    parameter_labels_.clear();
+    for ( uint n = 0; n < n_parameters; n++ ) {
+	lCDefaultLengthConstraint* parameter_label = *label;
+	parameter_label->setTitle( trC( *parameter ) );
+	parameter_label->setDefaultLength( 0 );
+	parameter_label->setLength( 0 );
+	parameter_label->show();
+	parameter_labels_.insert( *parameter, parameter_label );
+	++parameter;
+	++label;
+    }
+    for ( ; label != labels_.end(); ++label )
+	(*label)->hide();
+
+    scroll_area_->ensureVisible( 0, 0 );
+    if ( n_parameters > 0 && !labels_.empty() )
+	labels_.front()->setFocus();
 }
 
 
@@ -144,12 +167,7 @@ const PartParameterMap& NewPartWizard::parameters( void )
 
 const PartMetadata* NewPartWizard::part( void )
 {
-    QListViewItem* item = partLibraryListView->currentItem();
-#if 0    
-    return PartFactory::instance()->part( item->parent()->text(0), item->text( 0 ) );
-#else
-    return parts_[ item ];
-#endif
+    return selectedPart();
 }
 
 
@@ -157,14 +175,14 @@ void NewPartWizard::updateValidity( double )
 {
     // One of the parameter boxes was changed, so recheck the validity of the input.
     if ( part()->valid(parameter_labels_) )
-	finishButton()->setEnabled( true );
+	button( QWizard::FinishButton )->setEnabled( true );
 }
 
 
 void NewPartWizard::NewPartWizard_helpClicked()
 {
     if ( currentPage() == initialPartPage ) {
-	QWhatsThis::display( tr( "<p><b>Initial Part Page</b></p>\
+	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Initial Part Page</b></p>\
 <p>Each Part is based on a three-dimensional solid geometry model. From this page, \
 you can select the base solid geometry. The list shows the predefined solid templates. There \
 are essentially two kinds of base solids: blanks and customized parts. The blanks \
@@ -180,10 +198,10 @@ click the <b>Next</b> button \
 proceed to the next page.</p>\
 <p>If you click the <b>Cancel</b> button \
 (or press <b>ESC</b> or <b>Alt+C</b>), \
-no Part will be generated.</p>" ) );
+no Part will be generated.</p>" ), this );
     }
     else if ( currentPage() == partParametersPage ) {
-	QWhatsThis::display( tr( "<p><b>Part Parameters Page</b></p>\
+	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Part Parameters Page</b></p>\
 <p>On this page, the parameters (dimensions or sizes) of the template solids are \
 defined. When acceptable \
 values are entered for all parameters, the <b>Finish</b> button will become \
@@ -198,21 +216,37 @@ even if you select the same \
 base solid template.)</p>\
 <p>If you click <b>Cancel</b> \
 (or press <b>ESC</b> or <b>Alt+C</b>), \
-no new Part will be created.</p></p>" ) );
+no new Part will be created.</p></p>" ), this );
     }
 }
 
-void NewPartWizard::validateName( void )
+bool NewPartWizard::validateCurrentPage()
 {
+    if ( currentPage() != initialPartPage )
+	return QWizard::validateCurrentPage();
+
     // Check that no part already has this name.
     int ret = part_view_->parent()->uniquePageName( part_view_, nameEdit->text(), lC::STR::PART );
     switch ( ret ) {
+	case lC::OK:
+	    return true;
 	case lC::Redo:
-		showPage( initialPartPage );
-	break;
+	    focusInitialPartPage();
+	    return false;
 	case lC::Rejected:
-		reject();
+	    reject();
+	    return false;
     }
+
+    return false;
+}
+
+
+void NewPartWizard::showInitialPartPage()
+{
+    setStartId( pageId( initialPartPage ) );
+    restart();
+    NewPartWizard_currentIdChanged( currentId() );
 }
 
 
@@ -222,7 +256,25 @@ void NewPartWizard::setPartView( PartView * part_view )
 }
 
 
+int NewPartWizard::pageId( const QWizardPage* page ) const
+{
+    const QList<int> ids = pageIds();
+    for ( int id : ids ) {
+	if ( this->page( id ) == page )
+	    return id;
+    }
+
+    return -1;
+}
+
+
+PartMetadata* NewPartWizard::selectedPart() const
+{
+    return parts_.value( partLibraryListView->currentItem(), 0 );
+}
+
+
 QString NewPartWizard::trC( const QString & string )
 {
-  return qApp->translate( "Constants", string );
+  return qApp->translate( "Constants", string.toUtf8().constData() );
 }

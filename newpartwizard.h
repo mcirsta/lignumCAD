@@ -10,9 +10,11 @@
 #include "ui_newpartwizard.h"
 
 class lCDefaultLengthConstraint;
-class QListViewItem;
-class QScrollView;
-class QVBox;
+class QScrollArea;
+class QTreeWidgetItem;
+class QVBoxLayout;
+class QWizardPage;
+class QWidget;
 class PartMetadata;
 class PartView;
 
@@ -28,25 +30,34 @@ public:
 
 public slots:
   virtual void init();
-  virtual void partLibraryListView_currentChanged( QListViewItem* item );
-  virtual void NewPartWizard_selected( const QString& );
+  virtual void partLibraryListView_currentChanged( QTreeWidgetItem* item );
+  virtual void NewPartWizard_currentIdChanged( int );
   const PartParameterMap& parameters();
   const PartMetadata* part();
   virtual void NewPartWizard_helpClicked();
+  void showInitialPartPage();
   void setPartView( PartView* part_view );
+
+protected:
+  bool validateCurrentPage() override;
 
 private slots:
   void updateValidity( double );
-  void validateName();
   QString trC( const QString& string );
 
 private:
-  QMap<QListViewItem*, PartMetadata*> parts_;
-  QScrollView* scroll_view_ = nullptr;
+  void focusInitialPartPage();
+  void focusPartParametersPage();
+  int pageId( const QWizardPage* page ) const;
+  PartMetadata* selectedPart() const;
+
+  QMap<QTreeWidgetItem*, PartMetadata*> parts_;
+  QScrollArea* scroll_area_ = nullptr;
   std::vector<lCDefaultLengthConstraint*> labels_;
-  QMap<QString, QListViewItem*> groups_;
+  QMap<QString, QTreeWidgetItem*> groups_;
   PartParameterMap parameter_labels_;
-  QVBox* scroll_vbox_ = nullptr;
+  QWidget* scroll_widget_ = nullptr;
+  QVBoxLayout* scroll_layout_ = nullptr;
   PartView* part_view_ = nullptr;
 };
 

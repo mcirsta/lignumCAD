@@ -38,15 +38,12 @@ Constraints</string>
         </widget>
       </item>
       <item>
-        <widget class="Q3ButtonGroup" name="constraintButtonGroup">
+        <widget class="QGroupBox" name="constraintButtonGroup">
           <property name="lineWidth">
             <number>0</number>
           </property>
           <property name="title">
             <string/>
-          </property>
-          <property name="exclusive">
-            <bool>true</bool>
           </property>
           <layout class="QVBoxLayout">
             <property name="margin">
@@ -207,12 +204,4 @@ Constraints</string>
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <connections>
-    <connection>
-      <sender>helpPushButton</sender>
-      <signal>clicked()</signal>
-      <receiver>AssemblyConstraintForm</receiver>
-      <slot>helpPushButton_clicked()</slot>
-    </connection>
-  </connections>
 </ui>

@@ -4,7 +4,7 @@
   <comment></comment>
   <exportmacro></exportmacro>
   <class>NewModelWizard</class>
-  <widget class="Q3Wizard" name="NewModelWizard">
+  <widget class="QWizard" name="NewModelWizard">
     <property name="geometry">
       <rect>
         <x>0</x>
@@ -19,7 +19,7 @@
     <property name="windowIcon">
       <pixmap>lignumCAD.png</pixmap>
     </property>
-    <widget class="QWidget" name="NewModelPage">
+    <widget class="QWizardPage" name="NewModelPage">
       <attribute name="title">
         <string>Enter the Information about the New Model</string>
       </attribute>
@@ -271,7 +271,7 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
         </item>
       </layout>
     </widget>
-    <widget class="QWidget" name="InitialPagePage">
+    <widget class="QWizardPage" name="InitialPagePage">
       <attribute name="title">
         <string>Select an Initial Page for Model</string>
       </attribute>
@@ -420,24 +420,4 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
     <tabstop>revisionSpinBox</tabstop>
     <tabstop>descriptionEdit</tabstop>
   </tabstops>
-  <connections>
-    <connection>
-      <sender>modelNameEdit</sender>
-      <signal>textChanged(QString)</signal>
-      <receiver>NewModelWizard</receiver>
-      <slot>modelNameEdit_textChanged(QString)</slot>
-    </connection>
-    <connection>
-      <sender>NewModelWizard</sender>
-      <signal>selected(QString)</signal>
-      <receiver>NewModelWizard</receiver>
-      <slot>NewModelWizard_selected(QString)</slot>
-    </connection>
-    <connection>
-      <sender>NewModelWizard</sender>
-      <signal>helpClicked()</signal>
-      <receiver>NewModelWizard</receiver>
-      <slot>NewModelWizard_helpClicked()</slot>
-    </connection>
-  </connections>
 </ui>

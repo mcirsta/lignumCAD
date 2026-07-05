@@ -114,7 +114,7 @@
         <widget class="QLineEdit" name="nameEdit"/>
       </item>
       <item row="2" column="0" rowspan="1" colspan="2">
-        <widget class="Q3ListView" name="modelListView">
+        <widget class="QTreeWidget" name="modelListView">
           <column>
             <property name="text">
               <string>Name</string>
@@ -155,30 +155,4 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <connections>
-    <connection>
-      <sender>buttonOk</sender>
-      <signal>clicked()</signal>
-      <receiver>AssemblyConfigDialog</receiver>
-      <slot>accept()</slot>
-    </connection>
-    <connection>
-      <sender>buttonCancel</sender>
-      <signal>clicked()</signal>
-      <receiver>AssemblyConfigDialog</receiver>
-      <slot>reject()</slot>
-    </connection>
-    <connection>
-      <sender>modelListView</sender>
-      <signal>selectionChanged(Q3ListViewItem*)</signal>
-      <receiver>AssemblyConfigDialog</receiver>
-      <slot>modelListView_selectionChanged(Q3ListViewItem*)</slot>
-    </connection>
-    <connection>
-      <sender>buttonHelp</sender>
-      <signal>clicked()</signal>
-      <receiver>AssemblyConfigDialog</receiver>
-      <slot>buttonHelp_clicked()</slot>
-    </connection>
-  </connections>
 </ui>

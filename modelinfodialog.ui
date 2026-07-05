@@ -315,30 +315,4 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
     <tabstop>buttonOk</tabstop>
     <tabstop>buttonCancel</tabstop>
   </tabstops>
-  <connections>
-    <connection>
-      <sender>buttonOk</sender>
-      <signal>clicked()</signal>
-      <receiver>ModelInfoDialog</receiver>
-      <slot>accept()</slot>
-    </connection>
-    <connection>
-      <sender>buttonCancel</sender>
-      <signal>clicked()</signal>
-      <receiver>ModelInfoDialog</receiver>
-      <slot>reject()</slot>
-    </connection>
-    <connection>
-      <sender>modelNameEdit</sender>
-      <signal>textChanged(QString)</signal>
-      <receiver>ModelInfoDialog</receiver>
-      <slot>modelNameEdit_textChanged(QString)</slot>
-    </connection>
-    <connection>
-      <sender>buttonHelp</sender>
-      <signal>clicked()</signal>
-      <receiver>ModelInfoDialog</receiver>
-      <slot>buttonHelp_clicked()</slot>
-    </connection>
-  </connections>
 </ui>
