@@ -40,7 +40,6 @@
 #include <qdom.h>
 #include <qpainter.h>
 #include <qpicture.h>
-#include <qlistbox.h>
 #include <qslider.h>
 #include <qlayout.h>
 #include <qsimplerichtext.h>

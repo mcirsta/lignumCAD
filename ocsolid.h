@@ -23,6 +23,7 @@
 #ifndef SOLID_H
 #define SOLID_H
 
+#include <functional>
 #include <map>
 #include <hash_map>
 
@@ -173,7 +174,7 @@ namespace Space3D {
      * \return hash value of face.
      */
     size_t operator() ( const TopoDS_Face& f ) const
-    { return f.HashCode( IntegerLast() );}
+    { return std::hash<TopoDS_Face>{}( f ); }
   };
 
   class OCSolid : public Figure {

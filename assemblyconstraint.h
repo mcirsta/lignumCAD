@@ -31,7 +31,6 @@
 #include <qstringlist.h>
 
 class Subassembly;
-class Handle( Geom_Surface );
 
 //! Possible statuses as a result of adding a surface to the current constraint
 typedef enum {
