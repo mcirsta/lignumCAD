@@ -45,7 +45,7 @@ namespace Space2D {
   }
 
   Centerline::Centerline ( uint id, const QDomElement& xml_rep, Page* parent )
-    : Figure( id, QString::null, lC::STR::CENTERLINE, parent ), line_( 0 )
+    : Figure( id, QString(), lC::STR::CENTERLINE, parent ), line_( 0 )
   {
     QDomNode n = xml_rep.firstChild();
 

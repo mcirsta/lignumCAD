@@ -283,7 +283,7 @@ public:
    * Generate a name and id for this geometry. If a suggestion is passed in,
    * we'll use that (if we have one already), or create it if not. If
    * no name is passed in, construct a unique name.
-   * \param suggestion requested name (or suggestion). If equal to QString::null,
+   * \param suggestion requested name (or suggestion). If equal to QString(),
    * invent a unique name.
    * \return the matched set of name and integer id.
    */

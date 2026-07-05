@@ -1708,7 +1708,7 @@ namespace Space2D {
     else if ( selection_name == top_edge_.selectionName() )
       return rectangle_->top()->name();
     else if ( selection_name == solid_rectangle_.selectionName() )
-      return QString::null;
+      return QString();
     else if ( selection_name == lb_handle_.selectionName() )
       return QString( "the left bottom handle" );
     else if ( selection_name == mb_handle_.selectionName() )

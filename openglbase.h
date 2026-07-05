@@ -75,7 +75,7 @@ struct FaceData {
   /*
    *! Construct a Face lookup key.
    * \param font The Qt string representation of a font. If
-   * specified as QString::null (or the empty string, ""), the Face
+   * specified as QString() (or the empty string, ""), the Face
    * will use the Qt application default font.
    * \param color The of the rendered text. Default is black.
    * \param horizontal_justification The horizontal justification of the
@@ -86,7 +86,7 @@ struct FaceData {
    * of the string.
    * \param scale scale of the OpenGL view.
    */
-  FaceData ( const QString& font = QString::null,
+  FaceData ( const QString& font = QString(),
 	     uint orientation = 0,
 	     QRgb color = 0,
 	     lC::HorizontalJustification horizontal_justification = lC::ORIGIN,

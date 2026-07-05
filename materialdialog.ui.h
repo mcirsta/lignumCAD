@@ -53,7 +53,7 @@ void MaterialDialog::init()
 void MaterialDialog::MaterialList_selectionChanged( QListViewItem * item )
 {
     if ( item == 0 ) {
-	MaterialText->setText( QString::null );
+	MaterialText->setText( QString() );
 	
 	SolidColor->setPaletteBackgroundColor( colorGroup().background() );
     

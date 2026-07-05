@@ -280,7 +280,7 @@ namespace Space3D {
       if ( drawer != drawers_.end() )
 	return (*drawer).second->selectionText( subcomponent, entity );
 
-      return QString::null;
+      return QString();
     }
     /*!
      * Set the designated item to the given highlight mode.
@@ -386,7 +386,7 @@ namespace Space3D {
 	  arg( subassembly_->subassembly()->type() ).
 	  arg( (*drawer).second->geometry( subcomponent ) );
 
-      return QString::null;
+      return QString();
     }
     /*!
      * Try to locate the geometry (face) selected by this list of GL names.

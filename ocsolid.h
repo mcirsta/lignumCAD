@@ -62,7 +62,7 @@ namespace Space3D {
      * \param end1 position of the other end of the dimension.
      * \param normal orientation of extension lines.
      */
-    Parameter ( const QString& title = QString::null,
+    Parameter ( const QString& title = QString(),
 		Type type = LINEAR, gp_Dir normal = gp::DZ(),
 		double value = 0,
 		gp_Pnt end0 = gp::Origin(), gp_Pnt end1 = gp::Origin() )
@@ -87,7 +87,7 @@ namespace Space3D {
       if ( type_ == DIAMETER )
 	return QString( QChar( 0x2300 ) ); // UNICODE diameter symbol
 
-      return QString::null;
+      return QString();
     }
     /*!
      * Update the current value of the parameter.
@@ -236,7 +236,7 @@ namespace Space3D {
       if ( face_name != face_names_.end() )
 	return PartFactory::instance()->name( (*face_name).second );
       else
-	return QString::null;
+	return QString();
     }
     /*!
      * Retrieve the face associated with the name.

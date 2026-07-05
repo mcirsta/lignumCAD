@@ -43,7 +43,7 @@ Drawing::Drawing ( uint id, const QString name, Model* parent )
 }
 
 Drawing::Drawing ( uint id, const QDomElement& xml_rep, Model* parent )
-  : Page( id, QString::null, lC::STR::DRAWING, parent )
+  : Page( id, QString(), lC::STR::DRAWING, parent )
 {
   setName( xml_rep.attribute( lC::STR::NAME ) );
 

@@ -80,7 +80,7 @@ void PreferencesDialog::init ()
 /*!
   * Respond to changes in the logo file name. The user can pick nothing (the default),
   * a bitmap or an SVG file (with varying degrees of success).
-  * \param file_name either QString::null, i.e., no logo, or the name of file containing
+  * \param file_name either QString(), i.e., no logo, or the name of file containing
   * a graphics image Qt understands.
   */
 void PreferencesDialog::logoFileChooser_fileNameChanged( const QString & file_name )

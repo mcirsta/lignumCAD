@@ -52,7 +52,7 @@ namespace Space2D {
    * Constructor for creation from a file.
    */
   Annotation::Annotation ( uint id, const QDomElement& xml_rep, Page* parent )
-    : Figure( id, QString::null, lC::STR::ANNOTATION, parent )
+    : Figure( id, QString(), lC::STR::ANNOTATION, parent )
   {
     setName( xml_rep.attribute( lC::STR::NAME ) );
 

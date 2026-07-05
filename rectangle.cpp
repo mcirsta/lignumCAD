@@ -53,7 +53,7 @@ namespace Space2D {
   }
 
   Rectangle::Rectangle ( uint id, const QDomElement& xml_rep, Page* parent )
-    : Figure( id, QString::null, lC::STR::RECTANGLE, parent ),
+    : Figure( id, QString(), lC::STR::RECTANGLE, parent ),
       x0_( 0 ), y0_( 0 ), x1_( 0 ), y1_( 0 )
   {
     setName( xml_rep.attribute( lC::STR::NAME ) );

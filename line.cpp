@@ -111,7 +111,7 @@ namespace Space2D {
 
   ConstrainedLine::ConstrainedLine ( uint id, const QDomElement& xml_rep,
 				     Figure* parent )
-    : Line( id, QString::null, parent ), constraint_( 0 )
+    : Line( id, QString(), parent ), constraint_( 0 )
   {
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
@@ -278,7 +278,7 @@ namespace Space2D {
     if ( constraint_ != 0 )
       return constraint_->note();
     else
-      return QString::null;
+      return QString();
   }
 
   void ConstrainedLine::write ( QDomElement& xml_rep ) const

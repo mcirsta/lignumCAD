@@ -32,7 +32,7 @@ void ModelItem::setName ( const QString& name )
 {
   // It was pointed out that "/" can't really be in a name, so encode it.
   // Evidently, neither can "\".
-  name_ = QString::null;
+  name_ = QString();
 
   for ( uint i = 0; i < name.length(); i++ )
     if ( name[i] == '/' || name[i] == '\\' )

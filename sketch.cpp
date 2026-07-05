@@ -49,7 +49,7 @@ Sketch::Sketch ( uint id, const QString& name, Model* parent )
 }
 
 Sketch::Sketch ( uint id, const QDomElement& xml_rep, Model* parent )
-  : Page( id, QString::null, lC::STR::SKETCH, parent )
+  : Page( id, QString(), lC::STR::SKETCH, parent )
 {
   setName( xml_rep.attribute( lC::STR::NAME ) );
 

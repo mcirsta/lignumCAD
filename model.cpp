@@ -50,7 +50,7 @@ Model::Model ( const QString name, const QString description )
 {}
 
 Model::Model ( const QString file_name, const QDomElement& xml_rep )
-  : ModelItem( uniqueID(), QString::null, lC::STR::MODEL ), unique_page_id_( 0 ),
+  : ModelItem( uniqueID(), QString(), lC::STR::MODEL ), unique_page_id_( 0 ),
     read_file_name_( file_name ), write_file_name_( file_name ), changed_( false )
 {
   QDomNode n = xml_rep.firstChild();
@@ -182,10 +182,10 @@ QString Model::path ( void ) const
 QString Model::idPath ( const QVector<uint>& id_path ) const
 {
   if ( id_path.empty() )
-    return QString::null;	// Really an error...
+    return QString();	// Really an error...
 
   if ( id_path[0] != id() )
-    return QString::null;	// Really an error...
+    return QString();	// Really an error...
 
   QVector<uint> my_path = id_path;
 
@@ -201,7 +201,7 @@ QString Model::idPath ( const QVector<uint>& id_path ) const
 
   QMap<uint,PageBase*>::const_iterator p = pages_.find( my_path[0] );
   if ( p == pages_.end() )
-    return QString::null;	// Really an error...
+    return QString();	// Really an error...
 
   my_path.erase( my_path.begin() );
 

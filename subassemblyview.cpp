@@ -477,7 +477,7 @@ void SubassemblyView::init ( void )
     constraint_item = new ListViewItem( list_view_item_, constraint_item );
     constraint_item->setText( lC::NAME, trC( lC::STR::CONSTRAINT ) );
     constraint_item->setText( lC::TYPE, trC( constraint->type() ) );
-    constraint_item->setText( lC::DETAIL, QString::null );
+    constraint_item->setText( lC::DETAIL, QString() );
 
     updateChangedConstraint( 0, constraint );
 
@@ -742,7 +742,7 @@ void SubassemblyView::updateNewConstraint ( const AssemblyConstraint* constraint
   ListViewItem* constraint_item = new ListViewItem( list_view_item_, last_item );
   constraint_item->setText( lC::NAME, trC( lC::STR::CONSTRAINT ) );
   constraint_item->setText( lC::TYPE, trC( constraint->type() ) );
-  constraint_item->setText( lC::DETAIL, QString::null );
+  constraint_item->setText( lC::DETAIL, QString() );
   constraint_item->setOpen( true );
   constraint_item->listView()->ensureItemVisible( constraint_item );
 }

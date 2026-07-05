@@ -62,7 +62,7 @@ Subassembly::Subassembly ( uint id, const QString& name, Space3D::Page* subassem
 
 Subassembly::Subassembly ( uint id, const QDomElement& xml_rep,
 			   Space3D::Page* parent )
-  : Space3D::Figure( id, QString::null, lC::STR::SUBASSEMBLY, parent ),
+  : Space3D::Figure( id, QString(), lC::STR::SUBASSEMBLY, parent ),
 	     constraints_( this )
 {
   setName( xml_rep.attribute( lC::STR::NAME ) );
@@ -426,7 +426,7 @@ bool Subassembly::referenced ( const Subassembly* target ) const
 QString Subassembly::idPath ( QVector<uint> id_path ) const
 {
   if ( subassembly_->id() != id_path[0] )
-    return QString::null;	// Really an error...
+    return QString();	// Really an error...
 
   id_path.erase( id_path.begin() );
 

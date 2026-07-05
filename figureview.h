@@ -151,7 +151,7 @@ namespace Space3D {
     Space space ( void ) const { return SPACE3D; }
 
     virtual QString geometry ( GLuint /*selection_name*/ ) const
-    { return QString::null; }
+    { return QString(); }
   };
 } // End of Space3D namespace
 

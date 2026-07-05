@@ -45,7 +45,7 @@ namespace Space2D {
   }
 
   ReferenceLine::ReferenceLine ( uint id, const QDomElement& xml_rep, Page* parent )
-    : Figure( id, QString::null, lC::STR::REFERENCE_LINE, parent ), line_( 0 )
+    : Figure( id, QString(), lC::STR::REFERENCE_LINE, parent ), line_( 0 )
   {
     QDomNode n = xml_rep.firstChild();
 

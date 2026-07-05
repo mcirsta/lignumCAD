@@ -628,7 +628,7 @@ namespace OGLFT {
 
     it = list.remove( it );	// Remove the "matched" string, leaving the pieces
 
-    if ( it == list.end() ) return QString::null; // Probably an error
+    if ( it == list.end() ) return QString(); // Probably an error
 
     // Extract each piece from the list
 

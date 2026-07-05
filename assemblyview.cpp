@@ -2050,7 +2050,7 @@ void AssemblyView::constraintAdded ( const AssemblyConstraint* constraint )
   {
     QString id_string;
 
-    if ( ID.size() < 1 ) return QString::null;
+    if ( ID.size() < 1 ) return QString();
 
     id_string = QString::number( ID[0] );
 

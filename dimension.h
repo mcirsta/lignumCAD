@@ -129,7 +129,7 @@ namespace Space2D {
     Dimension ( OpenGLBase* view );
 
     Dimension ( const Point& end0, const Point& end1, const Vector& normal,
-		OpenGLBase* view, const QString& note = QString::null );
+		OpenGLBase* view, const QString& note = QString() );
 
     void init ( void );
 
@@ -138,7 +138,7 @@ namespace Space2D {
     Vector normal ( void ) const { return normal_; }
 
     void setEndsNormal ( const Point& end0, const Point& end1,const Vector& normal,
-			 OpenGLBase* view, const QString& note = QString::null );
+			 OpenGLBase* view, const QString& note = QString() );
     void setUseExtensionLine ( bool end0, bool end1 );
 
     void setDimensionAttributes ( double extension_offset, double dimension_offset,
@@ -298,7 +298,7 @@ namespace Space3D {
     Dimension ( OpenGLBase* view );
 
     Dimension ( const Point& end0, const Point& end1, const Vector& normal,
-		OpenGLBase* view, const QString& note = QString::null );
+		OpenGLBase* view, const QString& note = QString() );
 
     void init ( void );
 
@@ -309,7 +309,7 @@ namespace Space3D {
     lC::Render::Mode mode ( void ) const { return mode_; }
 
     void setEndsNormal ( const Point& end0, const Point& end1,const Vector& normal,
-			 OpenGLBase* view, const QString& note = QString::null );
+			 OpenGLBase* view, const QString& note = QString() );
     void setUseExtensionLine ( bool end0, bool end1 );
 
     void setDimensionAttributes ( double extension_offset, double dimension_offset,

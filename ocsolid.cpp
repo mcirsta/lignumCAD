@@ -86,7 +86,7 @@ namespace Space3D {
   {}
 
   OCSolid::OCSolid ( uint id, const QDomElement& xml_rep, Page* parent )
-    : Figure( id, QString::null, lC::STR::SOLID, parent ), material_( 0 )
+    : Figure( id, QString(), lC::STR::SOLID, parent ), material_( 0 )
   {
     setName( xml_rep.attribute( lC::STR::NAME ) );
 
@@ -235,7 +235,7 @@ namespace Space3D {
       if ( (*face).second == id_path[0] )
 	return PartFactory::instance()->name( id_path[0] ) + '.' + lC::STR::FACE;
 
-    return QString::null;	// Really an error...
+    return QString();	// Really an error...
   }
 
   // Return the name of the geometry (face) indicated in the string path. (That

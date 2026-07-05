@@ -233,7 +233,7 @@ public:
 	return lC::STR::VALUE_UNIT.arg( value, 0, 'f', precision).arg(abbreviation());
       }
     }
-    return QString::null;
+    return QString();
   }
 
   double parse ( const QString& text, enum UnitFormat format, int precision ) const
@@ -382,7 +382,7 @@ public:
 	arg( abbreviation() );
       }
     }
-    return QString::null;
+    return QString();
   }
 
   double parse ( const QString& text, enum UnitFormat format, int precision ) const
@@ -542,7 +542,7 @@ public:
 	arg( value / ( INCHES_PER_YARD), 0, 'f', significant_digits ).
 	arg( abbreviation() );
     }
-    return QString::null;
+    return QString();
   }
 
   double parse ( const QString& text, enum UnitFormat format, int precision ) const
@@ -618,7 +618,7 @@ public:
 	arg( MM_PER_INCH * value, 0, 'f', significant_digits ).
 	arg( abbreviation() );
     }
-    return QString::null;
+    return QString();
   }
 
   double parse ( const QString& text, enum UnitFormat format, int precision ) const
@@ -663,7 +663,7 @@ public:
 	arg( CM_PER_INCH * value, 0, 'f', significant_digits ).
 	arg( abbreviation() );
     }
-    return QString::null;
+    return QString();
   }
 
   double parse ( const QString& text, enum UnitFormat format, int precision ) const
@@ -706,7 +706,7 @@ public:
       return lC::STR::VALUE_UNIT.
 	arg( M_PER_INCH * value, 0, 'f', significant_digits ).arg(abbreviation());
     }
-    return QString::null;
+    return QString();
   }
 
   double parse ( const QString& text, enum UnitFormat format, int precision ) const

@@ -350,7 +350,7 @@ namespace Space3D {
 	  lC::formatName( PartFactory::instance()->name( (*face).first ) ) +
 	  ".face";
 
-    return QString::null;
+    return QString();
   }
 
   QString OCSolidDraw::faceNameUntyped ( GLuint selection_name ) const
@@ -363,7 +363,7 @@ namespace Space3D {
 	return lC::formatName( solid_->name() ) + '/' +
 	  lC::formatName( PartFactory::instance()->name( (*face).first ) );
 
-    return QString::null;
+    return QString();
   }
 
   QVector<uint> OCSolidDraw::faceID ( GLuint selection_name ) const
@@ -424,7 +424,7 @@ namespace Space3D {
 	  return (*dimension_name).first;
       }
     }
-    return QString::null;
+    return QString();
   }
 
   void OCSolidDraw::updateHiddenOutline ( void )

@@ -133,7 +133,7 @@ namespace Space2D {
 
     ostream& edit ( ostream& o ) const;
     QString detail ( void ) const;
-    QString note ( void ) const { return QString::null; }
+    QString note ( void ) const { return QString(); }
     void write ( QDomElement& xml_rep ) const;
   };
 #endif
@@ -162,7 +162,7 @@ namespace Space2D {
 
     std::ostream& edit ( std::ostream& o ) const;
     QString detail ( void ) const;
-    QString note ( void ) const { return QString::null; }
+    QString note ( void ) const { return QString(); }
     void write ( QDomElement& xml_rep ) const;
   };
 
@@ -203,7 +203,7 @@ namespace Space2D {
 
     std::ostream& edit ( std::ostream& o ) const;
     QString detail ( void ) const;
-    QString note ( void ) const { return QString::null; }
+    QString note ( void ) const { return QString(); }
     void write ( QDomElement& xml_rep ) const;
   };
 

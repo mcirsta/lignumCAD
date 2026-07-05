@@ -123,7 +123,7 @@ DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
   // child Tabs, it won't have a height!). So, make the user do
   // something first.
 
-  Model* model = new Model ( tr( "unnamed" ), QString::null );
+  Model* model = new Model ( tr( "unnamed" ), QString() );
 
   uint initial_page_id;
 
@@ -232,19 +232,19 @@ void DesignBookView::init ( void )
   bool ok;
 
   QString business_name =
-    settings.readEntry( lC::Setting::Business::NAME, QString::null, &ok );
+    settings.readEntry( lC::Setting::Business::NAME, QString(), &ok );
 
   if ( ok )
     BusinessInfo::instance().setName( business_name );
 
   QString business_location =
-    settings.readEntry( lC::Setting::Business::LOCATION, QString::null, &ok );
+    settings.readEntry( lC::Setting::Business::LOCATION, QString(), &ok );
 
   if ( ok )
     BusinessInfo::instance().setLocation( business_location );
 
   QString business_logo =
-    settings.readEntry( lC::Setting::Business::LOGO, QString::null, &ok );
+    settings.readEntry( lC::Setting::Business::LOGO, QString(), &ok );
 
   if ( ok )
     BusinessInfo::instance().setLogo( business_logo );
@@ -275,7 +275,7 @@ void DesignBookView::init ( void )
       QString color_name;
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::GEOMETRY, QString::null, &ok );
+	readEntry( lC::Setting::ColorScheme::GEOMETRY, QString(), &ok );
 
       if ( ok ) {
 	QColor color( color_name );
@@ -283,7 +283,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::ANNOTATION, QString::null, &ok );
+	readEntry( lC::Setting::ColorScheme::ANNOTATION, QString(), &ok );
 
       if ( ok ) {
 	QColor color( color_name );
@@ -291,7 +291,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::GRID, QString::null, &ok );
+	readEntry( lC::Setting::ColorScheme::GRID, QString(), &ok );
 
       if ( ok ) {
 	QColor color( color_name );
@@ -299,7 +299,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::CONSTRAINT_PRIMARY, QString::null,&ok);
+	readEntry( lC::Setting::ColorScheme::CONSTRAINT_PRIMARY, QString(),&ok);
 
       if ( ok ) {
 	QColor color( color_name );
@@ -307,7 +307,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry(lC::Setting::ColorScheme::CONSTRAINT_SECONDARY,QString::null,&ok);
+	readEntry(lC::Setting::ColorScheme::CONSTRAINT_SECONDARY,QString(),&ok);
 
       if ( ok ) {
 	QColor color( color_name );
@@ -315,14 +315,14 @@ void DesignBookView::init ( void )
       }
 
       QString style = settings.
-        readEntry( lC::Setting::ColorScheme::BACKGROUND_STYLE, QString::null, &ok );
+        readEntry( lC::Setting::ColorScheme::BACKGROUND_STYLE, QString(), &ok );
 
       if ( ok )
 	OpenGLGlobals::instance()->
 	  setBackgroundStyle( lC::Background::backgroundStyle( style ) );
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::BACKGROUND, QString::null, &ok );
+	readEntry( lC::Setting::ColorScheme::BACKGROUND, QString(), &ok );
 
       if ( ok ) {
 	QColor color( color_name );
@@ -330,7 +330,7 @@ void DesignBookView::init ( void )
       }
 
       color_name = settings.
-	readEntry( lC::Setting::ColorScheme::GRADIENT, QString::null, &ok );
+	readEntry( lC::Setting::ColorScheme::GRADIENT, QString(), &ok );
 
       if ( ok ) {
 	QColor color( color_name );
@@ -338,7 +338,7 @@ void DesignBookView::init ( void )
       }
 
       QString pattern_file = settings.
-	readEntry( lC::Setting::ColorScheme::PATTERN_FILE, QString::null, &ok );
+	readEntry( lC::Setting::ColorScheme::PATTERN_FILE, QString(), &ok );
 
       if ( ok )
 	OpenGLGlobals::instance()->setPatternFile( pattern_file );
@@ -365,7 +365,7 @@ void DesignBookView::init ( void )
       setArrowHeadWidthRatio( Ratio( arrow_head_width_ratio ) );
 
   QString arrow_head_style =
-    settings.readEntry( lC::Setting::Dimension::ARROW_HEAD_STYLE,QString::null,&ok);
+    settings.readEntry( lC::Setting::Dimension::ARROW_HEAD_STYLE,QString(),&ok);
 
   if ( ok )
     OpenGLGlobals::instance()->
@@ -539,7 +539,7 @@ void DesignBookView::showView ( void )
 		   arg( lC::formatName( model_->name() ) ).
 		   arg( model_->version() ).
 		   arg( model_->revision() ).
-       arg( model_->changed() ? tr( "*", "model changed flag" ) : QString::null ) );
+       arg( model_->changed() ? tr( "*", "model changed flag" ) : QString() ) );
 
   if ( not gui_visible_ ) {
     old_central_widget_ = lCMW_->centralWidget();
@@ -1439,7 +1439,7 @@ void DesignBookView::newModel ( void )
   // nothing but erase their current model...so, let's give the Wizard
   // his own copy of the model for starters.
 
-  Model* model = new Model ( tr( "unnamed" ), QString::null );
+  Model* model = new Model ( tr( "unnamed" ), QString() );
 
   uint initial_page_id;
 
@@ -1502,7 +1502,7 @@ void DesignBookView::open ( void )
   }
 
   QString file_name =
-    QFileDialog::getOpenFileName( QString::null,
+    QFileDialog::getOpenFileName( QString(),
                                   tr( "lignumCAD (*.lcad);;All Files (*)" ),
                                   0,
                                   "open file dialog",
@@ -1561,7 +1561,7 @@ bool DesignBookView::saveAs ( void )
     if ( !file_name.endsWith( lC::STR::LCAD_FILE_EXT ) )
       file_name += lC::STR::LCAD_FILE_EXT;
  
-    model_->setReadFileName( QString::null ); // Force a file existence check
+    model_->setReadFileName( QString() ); // Force a file existence check
     model_->setWriteFileName( file_name );
  
     success = write();
@@ -1652,7 +1652,7 @@ void DesignBookView::exportPage ( void )
   if ( page_view == 0 ) return;
 
   QString export_file =
-    QFileDialog::getSaveFileName( QString::null,
+    QFileDialog::getSaveFileName( QString(),
 				  tr( "EMF (*.emf)" ),
 				  lCMW_,
 				  "export file dialog",
@@ -1822,7 +1822,7 @@ bool DesignBookView::write ( void )
 
 	if ( choice == QMessageBox::Yes ) {
 	  QString file_name =
-	    QFileDialog::getSaveFileName( QString::null,
+	    QFileDialog::getSaveFileName( QString(),
 					  tr( "lignumCAD (*.lcad);;All Files (*)" ),
 					  0,
 					  "save file dialog",

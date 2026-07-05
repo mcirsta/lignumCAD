@@ -138,7 +138,7 @@ namespace Space3D {
      * \param id_path id path to item.
      * \return string encoded path to item.
      */
-    QString idPath ( QVector<uint> /*id_path*/ ) const { return QString::null;}
+    QString idPath ( QVector<uint> /*id_path*/ ) const { return QString();}
     /*!
      * Construct a id path to the specified item. May be either the
      * figure itself or one of its geometries or subfigures.

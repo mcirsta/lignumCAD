@@ -258,14 +258,14 @@ void lignumCADMainWindow::showView( const char * file_name )
 	    switch ( mb.exec() ) {
 		case QMessageBox::Yes:
 			new_file_name =
-			QFileDialog::getOpenFileName( QString::null,
+			QFileDialog::getOpenFileName( QString(),
 						  tr( "lignumCAD (*.lcad);;All Files (*)" ),
 						  0,
 						  "open file dialog",
 						  tr( "Choose a file" ) );
 		break;
 		case QMessageBox::No:
-			new_file_name = QString::null;
+			new_file_name = QString();
 		break;
 		case QMessageBox::Cancel:
 			exit(0 );

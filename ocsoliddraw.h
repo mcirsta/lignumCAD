@@ -192,7 +192,7 @@ namespace Space3D {
      * \return selected handle id.
      */
     uint handleID ( GLuint selection_name ) const;
-    //! \return the name of (an) active parameter dimension (or QString::null
+    //! \return the name of (an) active parameter dimension (or QString()
     //! if there aren't any.
     QString activeDimensionName ( void ) const;
   private:

@@ -50,7 +50,7 @@ Part::Part ( uint id, const QString& name, Model* parent )
 }
 
 Part::Part ( uint id, const QDomElement& xml_rep, Model* parent )
-  : Page( id, QString::null, lC::STR::PART, parent ), solid_( 0 )
+  : Page( id, QString(), lC::STR::PART, parent ), solid_( 0 )
 {
   setName( xml_rep.attribute( lC::STR::NAME ) );
 
@@ -208,7 +208,7 @@ QString Part::idPath ( QVector<uint> id_path ) const
   QMap<uint,Figure*>::const_iterator f = figures_.find( id_path[0] );
 
   if ( f == figures_.end() )
-    return QString::null;	// Really an error...
+    return QString();	// Really an error...
 
   id_path.erase( id_path.begin() );
 
@@ -361,5 +361,5 @@ QString PartFactory::name ( uint id )
     if ( (*entry).second == id )
       return (*entry).first;
 
-  return QString::null;
+  return QString();
 }

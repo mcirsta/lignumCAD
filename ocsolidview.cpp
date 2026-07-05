@@ -777,7 +777,7 @@ namespace Space3D {
   {
     QString parameter_name = drawer_->activeDimensionName();
 
-    if ( parameter_name != QString::null ) {
+    if ( parameter_name != QString() ) {
       const Parameter& parameter( solid_->parameter( parameter_name ) );
 
       parameter_info_dialog_->parameterLengthConstraint->

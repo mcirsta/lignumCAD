@@ -77,7 +77,7 @@ namespace lC {
   const QString DEFAULT_CONSTRAINT_SECONDARY_COLOR = "#5fbc25";
 
   //! By default, we'll try to use the users UI font.
-  const QString DEFAULT_FONT = QString::null;
+  const QString DEFAULT_FONT = QString();
 
   //! Arrow head style.
   enum ArrowHeadStyle { OPEN, HOLLOW, FILLED };
@@ -477,7 +477,7 @@ namespace lC {
   {
     QString id_string;
 
-    if ( ID.size() < 1 ) return QString::null;
+    if ( ID.size() < 1 ) return QString();
 
     id_string = QString::number( ID[0] );
 
