@@ -1188,7 +1188,7 @@ void DesignBookView::editPreferences ( void )
 void DesignBookView::pageChanged ( int id )
 {
   QTab* tab = page_tabbar_->tab( id );
-  PageView* page_view = page_tabs_[tab];
+  PageView* page_view = page_tabs_.value( tab );
 
   if ( page_view == 0 ) return;
 
@@ -1312,7 +1312,7 @@ void DesignBookView::deletePage ( PageView* page_view )
   // Activate whatever page is now current in the TabBar
   QTab* tab = page_tabbar_->tab( page_tabbar_->currentTab() );
   if ( tab != 0 ) {
-    page_view = page_tabs_[tab];
+    page_view = page_tabs_.value( tab );
     setCurrentPageView( page_view );
     page_view->show();
     page_tabbar_->setCurrentTab( tab );

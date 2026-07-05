@@ -26,8 +26,8 @@
 #include <memory>
 #include <vector>
 
+#include <QHash>
 #include <qobject.h>
-#include <qptrdict.h>
 #include <qvbox.h>
 #include <qpalette.h>
 
@@ -39,6 +39,7 @@ class QLabel;
 class QWidget;
 class DBURL;
 class QPainter;
+class QTab;
 class QListBoxItem;
 class QListViewItem;
 class ListViewItem;
@@ -72,7 +73,7 @@ Q_OBJECT
 
   std::vector<std::unique_ptr<PageView>> page_views_;
   int current_page_view_;
-  QPtrDict< PageView > page_tabs_;
+  QHash<QTab*, PageView*> page_tabs_;
 
   NewModelWizard* new_model_wizard_;
   ModelInfoDialog* model_info_dialog_;
