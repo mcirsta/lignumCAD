@@ -623,7 +623,7 @@ void PreferencesDialog::updateUnitsDisplays( LengthUnit* length_unit, UnitFormat
 void PreferencesDialog::buttonHelp_clicked()
 {
     if (  preferencesTabWidget->currentPage() == identificationPage ) {
-	QWhatsThis::display( tr( "<p><b>Identification</b></p> \
+	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Identification</b></p> \
 <p><i>lignumCAD</i> allows you to identify yourself with \
 a Business name and location. Of course, a user can \
 just as well use these fields since they are not interpreted \
@@ -644,10 +644,10 @@ dialog without applying the changes by clicking the \
 or <b>Alt+C</b>).<p>\
 <p>These settings are stored in a configuration file \
 and are restored on the next invocation of \
-<i>lignumCAD</i></p>" ) );
+<i>lignumCAD</i></p>" ), this );
     }
     else if ( preferencesTabWidget->currentPage() == unitsPage ) {
-	QWhatsThis::display( tr( "<p><b>Length Units Display Representation</b></p>\
+	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Length Units Display Representation</b></p>\
 <p>First a confession: Every length in <i>lignumCAD</i> is \
 stored in inches. Even if you change the length unit, \
 the internal representation is still in inches. \
@@ -680,10 +680,10 @@ dialog without applying the changes by clicking the \
 or <b>Alt+C</b>).<p>\
 <p>These settings are stored in a configuration file \
 and are restored on the next invocation of \
-<i>lignumCAD</i></p>" ) );
+<i>lignumCAD</i></p>" ), this );
     }	
     else if ( preferencesTabWidget->currentPage() == colorSchemePage ) {
-	QWhatsThis::display( tr( "<p><b>Color Scheme</b></p>\
+	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Color Scheme</b></p>\
 <p>All of the colors used in <i>lignumCAD</i> are selectable \
 by the user. You can either select from a set of predefined \
 color schemes which are compiled into the program or \
@@ -701,10 +701,10 @@ dialog without applying the changes by clicking the \
 or <b>Alt+C</b>).<p>\
 <p>These settings are stored in a configuration file \
 and are restored on the next invocation of \
-<i>lignumCAD</i></p>" ) );
+<i>lignumCAD</i></p>" ), this );
     }
     else if ( preferencesTabWidget->currentPage() == otherStylesPage ) {
-	QWhatsThis::display( tr( "<p><b>Other Styles</b></p>\
+	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Other Styles</b></p>\
 <p>There are a number of stylistic properties related to the \
 technical drawing <i>lignumCAD</i> tries to emulate. \
 They are largely related to the sizes of drawn elements. \
@@ -733,6 +733,6 @@ or <b>Alt+C</b>).<p>\
 and are restored on the next invocation of \
 <i>lignumCAD</i>.</p>\
 <p><small>*Well, the defaults are actually from \
-that standard.</small></p>" ) );
+that standard.</small></p>" ), this );
     }
 }

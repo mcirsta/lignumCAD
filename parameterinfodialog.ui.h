@@ -31,7 +31,7 @@
 
 void ParameterInfoDialog::buttonHelp_clicked()
 {
-    QWhatsThis::display( tr("<p><b>Parameter Information</b></p>\
+    QWhatsThis::showText( QCursor::pos(), tr("<p><b>Parameter Information</b></p>\
 <p>This dialog allows you to edit the magnitude of a \
 parameter. You can either specify a fixed size or you can reference \
 another dimension in the model.</p>\
@@ -39,5 +39,5 @@ another dimension in the model.</p>\
 <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
 to accept your changes. Clicking the <b>Cancel</b> button \
 (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
-dialog without applying the changes.</p>" ) );
+dialog without applying the changes.</p>" ), this );
 }

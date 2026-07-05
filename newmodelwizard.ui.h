@@ -109,7 +109,7 @@ void NewModelWizard::NewModelWizard_currentIdChanged( int )
 void NewModelWizard::NewModelWizard_helpClicked()
 {
     if ( currentPage() == NewModelPage ) {
-	QWhatsThis::display( tr( "<p><b>New Model Page</b></p>\
+	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>New Model Page</b></p>\
 <p>Enter the basic information about the model. \
 (This is sometimes called the <i>metadata</i>.) \
 The metadata includes:\
@@ -129,10 +129,10 @@ click the <b>Next</b> button \
 proceed to the next page.</p>\
 <p>If you click the <b>Cancel</b> button \
 (or press <b>ESC</b> or <b>Alt+C</b>), \
-no new model will be created.</p>" ) );
+no new model will be created.</p>" ), this );
     }
     else if ( currentPage() == InitialPagePage ) {
-	QWhatsThis::display( tr( "<p><b>Initial Page</b></p>\
+	QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Initial Page</b></p>\
 <p><i>lignumCAD</i> requires that you start your \
 model with at least one page. Typically, you would \
 start with a few sketches to establish the overall \
@@ -149,7 +149,7 @@ will be created.</p>\
 to edit the model information some more.</p>\
 <p>If you click <b>Cancel</b> \
 (or press <b>ESC</b> or <b>Alt+C</b>), \
-no new model will be created.</p>" ) );
+no new model will be created.</p>" ), this );
     }
 }
 

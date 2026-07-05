@@ -42,7 +42,7 @@ void ModelInfoDialog::modelNameEdit_textChanged( const QString & text )
 
 void ModelInfoDialog::buttonHelp_clicked()
 {
-    QWhatsThis::display( tr( "<p><b>Edit Model Information</b></p>\
+    QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Edit Model Information</b></p>\
 <p>Modify the basic information about the model. \
 (This is sometimes called the <i>metadata</i>.) \
 The metadata includes:\
@@ -62,6 +62,6 @@ click the <b>OK</b> button (or press <b>Enter</b> or \
 apply the changes and exit the dialog.</p>\
 <p>If you click the <b>Cancel</b> button \
 (or press <b>ESC</b> or <b>Alt+C</b>), \
-no changes to the model will be made.</p>" ) );
+no changes to the model will be made.</p>" ), this );
  
 }

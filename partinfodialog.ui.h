@@ -9,7 +9,7 @@
 
 void PartInfoDialog::buttonHelp_clicked()
 {
-    QWhatsThis::display( tr( "<p><b>Part Information</b></p>\
+    QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Part Information</b></p>\
 <p>This dialog lets you modify the overall attributes of a Part. Currently, \
 the only attribute you can change is the name of the Part.</p>\
 <p>Click the <b>OK</b> button \
@@ -17,5 +17,5 @@ the only attribute you can change is the name of the Part.</p>\
 If you enter the same name as an existing Part, \
 <i>lignumCAD</i> will reject the change.</p>\
 <p>You can cancel these changes by clicking the <b>Cancel</b> \
-button (or by pressing <b>ESC</b> or <b>Alt+C</b>).</p>" ) );
+button (or by pressing <b>ESC</b> or <b>Alt+C</b>).</p>" ), this );
 }

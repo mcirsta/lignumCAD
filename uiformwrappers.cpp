@@ -31,6 +31,7 @@
 
 #include <QButtonGroup>
 #include <QComboBox>
+#include <QCursor>
 #include <QString>
 #include <QTextEdit>
 #include <QTreeWidget>

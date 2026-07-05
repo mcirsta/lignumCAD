@@ -44,6 +44,6 @@ void AssemblyConfigDialog::modelListView_selectionChanged( QTreeWidgetItem* item
 
 void AssemblyConfigDialog::buttonHelp_clicked()
 {
-   QWhatsThis::display( tr( "<p>Set the name for this assembly and then select the model (either a Part or an Assembly) to form the basis for the assembly. Its origin will coincide with the origin of the assembly.</p>\
-<p>Note that the dialog cannot be completed until a model is selected. Canceling the dialog (either by clicking the <b>Cancel</b> button or pressing <b>ESC</b> or <b>Alt+C</b>) will cancel the creation of the assembly as well.</p>" ) );
+   QWhatsThis::showText( QCursor::pos(), tr( "<p>Set the name for this assembly and then select the model (either a Part or an Assembly) to form the basis for the assembly. Its origin will coincide with the origin of the assembly.</p>\
+<p>Note that the dialog cannot be completed until a model is selected. Canceling the dialog (either by clicking the <b>Cancel</b> button or pressing <b>ESC</b> or <b>Alt+C</b>) will cancel the creation of the assembly as well.</p>" ), this );
 }

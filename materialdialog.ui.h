@@ -135,12 +135,12 @@ void MaterialDialog::setMaterial( const Material * material )
 
 void MaterialDialog::buttonHelp_clicked()
 {
-    QWhatsThis::display( tr( "<p><b>Set Material for Part</b><p>\
+    QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Set Material for Part</b><p>\
 <p>This dialog allows you to apply a material to the current part. Materials are \
 grouped by type (e.g., solid wood, composites, and so on). Select a material from the \
 list and some attributes of the material will be displayed in the Material Details box. \
 Click the <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) to apply the material \
 to the part. If you click the \
 <b>Cancel</b> button (or press <b>Escape</b> or <b>Alt+C</b>), the material currently \
-assigned to the part will not be changed.</p>" ) );
+assigned to the part will not be changed.</p>" ), this );
 }

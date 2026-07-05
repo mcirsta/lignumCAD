@@ -31,7 +31,7 @@
 
 void CenterlineInfoDialog::buttonHelp_clicked()
 {
-    QWhatsThis::display( tr("<p><b>Centerline Information</b></p>\
+    QWhatsThis::showText( QCursor::pos(), tr("<p><b>Centerline Information</b></p>\
 <p>This dialog allows you to edit selected properties of a \
 centerline. These include:\
 <ul>\
@@ -42,5 +42,5 @@ centerline. These include:\
 <b>OK</b> button (or press <b>Enter</b> or <b>Alt+O</b>) \
 to accept your changes. Clicking the <b>Cancel</b> button \
 (or pressing <b>ESC</b> or <b>Alt+C</b>) will exit the \
-dialog without applying the changes.</p>" ) );
+dialog without applying the changes.</p>" ), this );
 }

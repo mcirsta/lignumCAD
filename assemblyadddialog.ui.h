@@ -40,5 +40,5 @@ void AssemblyAddDialog::modelListView_selectionChanged( QTreeWidgetItem* item )
 
 void AssemblyAddDialog::buttonHelp_clicked()
 {
-    QWhatsThis::display( tr( "Select the model (either a Part or an Assembly) to add to this assembly." ) );
+    QWhatsThis::showText( QCursor::pos(), tr( "Select the model (either a Part or an Assembly) to add to this assembly." ), this );
 }

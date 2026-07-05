@@ -31,7 +31,7 @@
 
 void PageInfoDialog::buttonHelp_clicked()
 {
-    QWhatsThis::display( tr( "<p><b>Rename Page</b></p>\
+    QWhatsThis::showText( QCursor::pos(), tr( "<p><b>Rename Page</b></p>\
 <p>This dialog lets you rename a page. In the current \
 version of <i>lignumCAD</i>, there is no distinction between \
 a page and its contents. For example, if you rename a Part \
@@ -43,5 +43,5 @@ version of the code.)</font></p>\
 If you enter the same name as an existing page of the same type, \
 <i>lignumCAD</i> will reject the change.</p>\
 <p>You can cancel the rename by clicking the <b>Cancel</b> \
-button (or by pressing <b>ESC</b> or <b>Alt+C</b>).</p>" ) );
+button (or by pressing <b>ESC</b> or <b>Alt+C</b>).</p>" ), this );
 }
