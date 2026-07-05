@@ -656,7 +656,7 @@ namespace OGLFT {
 	int precision = (*sit).toInt();
 	++sit;
 
-	type = (*sit).at(0).latin1();
+	type = (*sit).at(0).toLatin1();
 
 	// The regular formats just use Qt's number formatting capability
 	if ( type == 'e' || type == 'f' || type == 'g' )

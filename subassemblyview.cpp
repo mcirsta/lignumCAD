@@ -448,7 +448,7 @@ SubassemblyView::~SubassemblyView ( void )
 
 void SubassemblyView::init ( void )
 {
-  QObject::setName( subassembly_->name().latin1() );
+  setObjectName( subassembly_->name() );
 
   drawer_ = Space3D::OCSubassemblyDrawFactory::drawer( subassembly_, view() );
 

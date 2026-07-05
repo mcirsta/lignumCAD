@@ -737,7 +737,7 @@ namespace Space2D {
 
   void CenterlineView::init ( void )
   {
-    QObject::setName( centerline_->name() + lC::STR::VIEW_EXT );
+    setObjectName( centerline_->name() + lC::STR::VIEW_EXT );
 
     // Create unique GL selection names for each of the components
     // of the centerline view (i.e., the line itself, and two handles).

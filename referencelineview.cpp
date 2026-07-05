@@ -745,7 +745,7 @@ namespace Space2D {
 
   void ReferenceLineView::init ( void )
   {
-    QObject::setName( reference_line_->name().latin1() );
+    setObjectName( reference_line_->name() );
 
     // Create unique GL selection names for each of the components
     // of the reference line view (i.e., the line itself, and two handles).

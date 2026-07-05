@@ -70,7 +70,7 @@ std::ostream& operator<< ( std::ostream& o, const QPen& p )
 
 std::ostream& operator<< ( std::ostream& o, const QFont& f )
 {
-  return o << f.rawName().latin1();
+  return o << f.rawName().toLatin1().constData();
 }
 
 std::ostream& operator<< ( std::ostream& o, const QRect& r )

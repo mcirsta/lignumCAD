@@ -42,7 +42,7 @@ void ModelItem::setName ( const QString& name )
 
   //  name_ = name;
 
-  QObject::setName( name_.latin1() );
+  setObjectName( name_ );
 
   emit nameChanged( name_ );
 }

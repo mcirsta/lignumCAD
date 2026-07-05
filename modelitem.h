@@ -62,8 +62,8 @@ public:
    * \param type (string) type of the object.
    */
   ModelItem ( uint id, const QString& name, const QString& type )
-    : QObject( 0, name.latin1() ), id_( id ), name_( name ), type_( type )
-  {}
+    : QObject( 0 ), id_( id ), name_( name ), type_( type )
+  { setObjectName( name ); }
   //! Destructor does do anything.
   virtual ~ModelItem ( void )
   {}

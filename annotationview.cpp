@@ -728,7 +728,7 @@ namespace Space2D {
 
   void AnnotationView::init ( void )
   {
-    QObject::setName( annotation_->name() + lC::STR::VIEW_EXT );
+    setObjectName( annotation_->name() + lC::STR::VIEW_EXT );
 
     ogl_paintdevice_ = new OGLPaintDevice( view() );
 

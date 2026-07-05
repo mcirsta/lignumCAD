@@ -1389,7 +1389,7 @@ namespace Space2D {
 
   void RectangleView::init ( void )
   {
-    QObject::setName( rectangle_->name() + lC::STR::VIEW_EXT );
+    setObjectName( rectangle_->name() + lC::STR::VIEW_EXT );
 
     left_edge_.setSelectionName( view()->genSelectionName() );
     right_edge_.setSelectionName( view()->genSelectionName() );

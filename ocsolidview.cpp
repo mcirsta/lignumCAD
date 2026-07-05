@@ -497,7 +497,7 @@ namespace Space3D {
 #endif
   void OCSolidView::init ( void )
   {
-    QObject::setName( solid_->name().latin1() );
+    setObjectName( solid_->name() );
 
     QListViewItem* previous_item = parent()->previousItem( parent()->listViewItem(),
 							   solid_->id() );
