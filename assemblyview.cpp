@@ -498,6 +498,8 @@ public:
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 
     assembly_view_->view()->unsetCursor();
   }
@@ -640,6 +642,8 @@ public slots:
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 
     disconnect( subassembly_, SIGNAL( constraintCanceled() ),
 		this, SLOT( cancelOperation() ) );
@@ -701,6 +705,8 @@ private slots:
       cancel_action->disconnect();
       context_menu_->removeAction( cancel_action );
       context_menu_->removeAction( separator_action_ );
+      delete separator_action_;
+      separator_action_ = nullptr;
 
       assembly_view_->view()->unsetCursor();
 
@@ -818,6 +824,8 @@ public:
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 
     assembly_view_->view()->unsetCursor();
   }
@@ -975,6 +983,8 @@ public slots:
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 
     disconnect( subassembly_, SIGNAL( constraintCanceled() ),
 		this, SLOT( cancelOperation() ) );
@@ -1036,6 +1046,8 @@ private slots:
       cancel_action->disconnect();
       context_menu_->removeAction( cancel_action );
       context_menu_->removeAction( separator_action_ );
+      delete separator_action_;
+      separator_action_ = nullptr;
 
       assembly_view_->view()->unsetCursor();
 
@@ -1121,6 +1133,8 @@ public:
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 
     assembly_view_->view()->unsetCursor();
 #endif
@@ -1182,6 +1196,8 @@ public:
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 #endif
     assembly_view_->view()->unsetCursor();
 
@@ -1209,6 +1225,8 @@ public slots:
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 
     assembly_view_->cancelDeleteOperation();
   }
@@ -1631,6 +1649,8 @@ void AssemblyView::stopDisplay ( QMenu* /*context_menu*/ )
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 
     disconnect( constraint_form_->matePushButton, SIGNAL( clicked() ),
 		this, SLOT( mate() ) );
@@ -2330,6 +2350,8 @@ void AssemblyView::placementComplete ( void )
   cancel_action->disconnect();
   context_menu_->removeAction( cancel_action );
   context_menu_->removeAction( separator_action_ );
+  delete separator_action_;
+  separator_action_ = nullptr;
 
   disconnect( constraint_form_->matePushButton, SIGNAL( clicked() ),
 	      this, SLOT( mate() ) );

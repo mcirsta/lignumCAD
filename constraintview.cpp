@@ -169,6 +169,8 @@ namespace Space2D {
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 
     parent_->view()->unsetCursor();
 
@@ -198,6 +200,8 @@ namespace Space2D {
     cancel_action->disconnect();
     context_menu_->removeAction( cancel_action );
     context_menu_->removeAction( separator_action_ );
+    delete separator_action_;
+    separator_action_ = nullptr;
 
     parent_->cancelOperation();
   }
