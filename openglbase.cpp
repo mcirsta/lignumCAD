@@ -100,9 +100,8 @@ OGLFT::Face* OpenGLBase::font ( const FaceData& requested_face )
   // succeed...
   System::findFontFile( actual_face.font_, file, point_size );
 
-  // The resolution is passed as 0 to agree with what Qt's font requestor
-  // passes to Xft so the OpenGL font appears to be same size as that
-  // shown in the requestor.
+  // The resolution is passed as 0 so the OpenGL font appears to be the
+  // same size as the font shown by Qt's font requestor.
 
   QByteArray file_name = file.toLocal8Bit();
   OGLFT::Face* base_face = new OGLFT::Monochrome( file_name.constData(), point_size, 0 );
