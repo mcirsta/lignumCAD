@@ -75,9 +75,6 @@ Q_OBJECT
   ModelInfoDialog* model_info_dialog_;
   PageInfoDialog* page_info_dialog_;
 
-  QWidget* old_central_widget_;
-  bool gui_visible_;
-
   Model* model_;
 
   ListViewItem* model_list_item_;
@@ -169,7 +166,6 @@ signals:
 private:
   bool uniquePageName ( const QString name ) const;
   void showView ( void );
-  void hideView ( void );
   void init ( void );
   bool write ( void );
   bool read ( const QString file_name );

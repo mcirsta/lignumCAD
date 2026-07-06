@@ -23,7 +23,6 @@
 #include <qapplication.h>
 #include <qstatusbar.h>
 #include <qlabel.h>
-#include <qtimer.h>
 #include <qmessagebox.h>
 #include <qdir.h>
 #include <QCoreApplication>
@@ -167,14 +166,8 @@ int main( int argc, char ** argv )
     return 1;
   }
 
-  // Without command line arguments, treat the user to the splash
-  // screen for a few seconds
-
   if ( argc == 1 )
-    QTimer::singleShot( 1000, lCMW, SLOT( showView() ) );
-
-  // Otherwise, load the given model and get going
-
+    lCMW->showView();
   else
     lCMW->showView( argv[1] );
 

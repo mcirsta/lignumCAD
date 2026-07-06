@@ -110,7 +110,7 @@ void CreatePage::createPage ( void )
 // MDI version of lignumCAD?
 
 DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
-  : QWidget( lCMW ), lCMW_( lCMW ), gui_visible_( false ),
+  : QWidget( lCMW ), lCMW_( lCMW ),
     current_page_view_( -1 ), model_( 0 ), printing_( false )
 {
   setObjectName( "designbookview" );
@@ -161,7 +161,7 @@ DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW )
 }
 
 DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW, const QString file_name )
-  : QWidget( lCMW ), lCMW_( lCMW ), gui_visible_( false ),
+  : QWidget( lCMW ), lCMW_( lCMW ),
     current_page_view_( -1 ), model_( 0 ), printing_( false )
 {
   setObjectName( "designbookview" );
@@ -574,12 +574,9 @@ void DesignBookView::showView ( void )
 		   arg( model_->revision() ).
        arg( model_->changed() ? tr( "*", "model changed flag" ) : QString() ) );
 
-  if ( not gui_visible_ ) {
-    old_central_widget_ = lCMW_->centralWidget();
-    old_central_widget_->hide();
+  if ( lCMW_->centralWidget() != this ) {
     lCMW_->setCentralWidget( this );
     show();
-    gui_visible_ = true;
 #ifndef LAYOUT_COMPREHENSION
     if ( page_tabbar_->count() > 0 ) {
       if ( page_tabbar_->tabText( 0 ) == "###dummy###" )
@@ -600,16 +597,6 @@ void DesignBookView::showView ( void )
 
   connect( model_list_item_, SIGNAL( nameChanged( const QString& ) ),
 	   SLOT( setName( const QString& ) ) );
-}
-
-// Hide the design book GUI.
-
-void DesignBookView::hideView ( void )
-{
-  //  vbox_layout_->hide();
-  lCMW_->setCentralWidget( old_central_widget_ );
-  old_central_widget_->show();
-  gui_visible_ = false;
 }
 
 // If the program is about to Exit, make sure the user has saved

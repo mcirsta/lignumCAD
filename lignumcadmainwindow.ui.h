@@ -50,15 +50,6 @@ QString trMainWindowConstant ( const QString& text )
 
 void lignumCADMainWindow::init ()
 {
-    // Write the title text
-    titleLabel->setText( tr( "\n%1 Version %2.%3\nCopyright © %4 %5\n%6\ne-mail: %7" ).
-			 arg( lC::STR::LIGNUMCAD ).
-			 arg( lC::STR::VERSION_MAJOR ).
-			 arg( lC::STR::VERSION_MINOR ).
-			 arg( lC::STR::COPYRIGHT_DATES ).
-			 arg( lC::STR::LIGNUMCOMPUTINGINC ).
-			 arg( lC::STR::LIGNUMCOMPUTINGURL ).
-			 arg( lC::STR::LIGNUMCOMPUTINGEMAIL ) );
     if ( whatsThisAction->icon().isNull() )
 	whatsThisAction->setIcon( style()->standardIcon( QStyle::SP_TitleBarContextHelpButton ) );
     
