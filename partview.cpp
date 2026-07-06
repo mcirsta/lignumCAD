@@ -718,3 +718,5 @@ public:
 };
 
 PartViewMetadata part_view_metadata;
+
+#include "moc_partview.cpp"

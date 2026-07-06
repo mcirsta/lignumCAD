@@ -27,6 +27,7 @@
 #include <qclipboard.h>
 #include <qcursor.h>
 #include <qmessagebox.h>
+#include <QPushButton>
 
 #include "configuration.h"
 #include "command.h"
@@ -922,22 +923,23 @@ lC::RenameStatus PageView::uniqueFigureName ( const FigureViewBase* figure_view,
 
     if ( lC::formatName( fv->name() ) == name &&
 	 fv->type() == type ) {
-      QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
+      QMessageBox mb( QMessageBox::Warning,
+		      trC( lC::STR::LIGNUMCAD ),
 		      tr( "The name \"%1\" for a figure of type %2 already exists." ).
 		      arg( name ).arg( trC( type ) ),
-		      QMessageBox::Warning,
-		      QMessageBox::Yes | QMessageBox::Default,
-		      QMessageBox::Cancel,
 		      QMessageBox::NoButton );
-      mb.setButtonText( QMessageBox::Yes, tr( "Enter another name" ) );
-      mb.setButtonText( QMessageBox::Cancel, tr( "Cancel figure edit" ) );
+      QPushButton* redo_button =
+	mb.addButton( tr( "Enter another name" ), QMessageBox::AcceptRole );
+      QPushButton* cancel_button =
+	mb.addButton( tr( "Cancel figure edit" ), QMessageBox::RejectRole );
+      mb.setDefaultButton( redo_button );
+      mb.exec();
 
-      switch ( mb.exec() ) {
-      case QMessageBox::Yes:
+      if ( mb.clickedButton() == redo_button )
 	return lC::Redo;
-      case QMessageBox::Cancel:
+      if ( mb.clickedButton() == cancel_button )
 	return lC::Rejected;
-      }
+
       break;
     }
   }

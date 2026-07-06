@@ -59,8 +59,9 @@ namespace Space2D {
     // calls to glTexCoord versus recomputing the texture coordinates
     // over and over.
 
-    GLfloat s_coefficients[] = { 0.5/side, 0., 0., 1./2. };
-    GLfloat t_coefficients[] = { 0., 0.5/side, 0., 1./2. };
+    const GLfloat texture_scale = static_cast<GLfloat>( 0.5 / side );
+    GLfloat s_coefficients[] = { texture_scale, 0.f, 0.f, 0.5f };
+    GLfloat t_coefficients[] = { 0.f, texture_scale, 0.f, 0.5f };
 
     glEnable( GL_LIGHTING );
     glEnable( GL_LIGHT0 );

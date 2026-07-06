@@ -1277,7 +1277,8 @@ void OpenGLView::select( QMouseEvent* me, SelectedNames& selected_names )
   glLoadIdentity();
   // Note: convert X window convention to OpenGL window convention for
   // y coordinate.
-  gluPickMatrix( me->x(), viewport_[3] - me->y(),
+  const QPoint mouse_position = me->position().toPoint();
+  gluPickMatrix( mouse_position.x(), viewport_[3] - mouse_position.y(),
 		 PICK_APERTURE, PICK_APERTURE,
 		 viewport_ );
   glOrtho( ll_corner_[X], ur_corner_[X],
@@ -1652,14 +1653,15 @@ void OpenGLView::csys ( void )
     { 6, 7, 3, 2 }
   };
 
+  const GLfloat axis_corner = static_cast<GLfloat>( scale_ / 8. );
   GLfloat vertices[8][3] = {
-    { scale_/8, 0,        scale_/8 },
-    { scale_/8, scale_/8, scale_/8 },
-    { 0,        scale_/8, scale_/8 },
-    { 0,        0,        scale_/8 },
-    { scale_/8, 0,        0        },
-    { scale_/8, scale_/8, 0        },
-    { 0,        scale_/8, 0        },
+    { axis_corner, 0,           axis_corner },
+    { axis_corner, axis_corner, axis_corner },
+    { 0,           axis_corner, axis_corner },
+    { 0,           0,           axis_corner },
+    { axis_corner, 0,           0           },
+    { axis_corner, axis_corner, 0           },
+    { 0,           axis_corner, 0           },
     { 0,        0,        0        }
   };
   

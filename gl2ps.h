@@ -191,7 +191,7 @@ typedef struct {
 
 typedef struct {
   GLint format, sort, options, colorsize, colormode, buffersize;
-  char *title, *producer;
+  const char *title, *producer;
   GLboolean shade, boundary;
   GLfloat *feedback, offset[2];
   GL2PSrgba *colormap;
@@ -203,12 +203,12 @@ typedef struct {
 /* public functions */
 #if 0
 GLvoid gl2psBeginPage(GLint format,
-		      char *title, char *producer, GLint sort, GLint options, 
+		      const char *title, const char *producer, GLint sort, GLint options, 
 		      GLint colormode, GLint colorsize, GL2PSrgba *colormap, 
 		      GLint buffersize, FILE * stream);
 #else
 GLvoid gl2psBeginPage(GLint format,
-		      const char *title, char *producer, GLint sort, GLint options, 
+		      const char *title, const char *producer, GLint sort, GLint options, 
 		      GLint colormode, GLint colorsize, GL2PSrgba *colormap, 
 		      GLint buffersize, void * stream);
 #endif

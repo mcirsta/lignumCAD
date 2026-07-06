@@ -18,8 +18,8 @@ Building
 
 Configure and build from the source tree with:
 
-  cmake -S . -B build-qt6
-  cmake --build build-qt6
+  cmake --preset default
+  cmake --build --preset default
 
 Running From The Build Tree
 
@@ -34,6 +34,6 @@ To install under the configured prefix:
 
 For a custom prefix:
 
-  cmake -S . -B build-qt6 -DCMAKE_INSTALL_PREFIX=/path/to/prefix
-  cmake --build build-qt6
+  cmake --preset default -DCMAKE_INSTALL_PREFIX=/path/to/prefix
+  cmake --build --preset default
   cmake --install build-qt6

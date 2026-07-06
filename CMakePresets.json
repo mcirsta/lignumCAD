@@ -1,0 +1,27 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Qt6 Ninja",
+      "description": "Configure the Qt6 port with the Ninja generator.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-qt6",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "description": "Build the default Ninja configuration."
+    }
+  ]
+}

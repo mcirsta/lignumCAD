@@ -33,6 +33,7 @@
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QSettings>
 #include <QStatusBar>
 #include <QStyle>
@@ -190,27 +191,28 @@ void lignumCADMainWindow::showView( const char * file_name )
 	    QMessageBox mb( QMessageBox::Information,
 			    trMainWindowConstant( lC::STR::LIGNUMCAD ),
 			    tr( "The file \"%1\" does not exist." ).arg( new_file_name ),
-			    QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+			    QMessageBox::NoButton,
 			    this );
-	    mb.setDefaultButton( QMessageBox::Yes );
-	    mb.setButtonText( QMessageBox::Yes, tr( "Select another file" ) );
-	    mb.setButtonText( QMessageBox::No, tr( "Create a new model" ) );
-	    mb.setButtonText( QMessageBox::Cancel, tr( "Exit lignumCAD" ) );
+	    QPushButton* select_file_button =
+		mb.addButton( tr( "Select another file" ), QMessageBox::AcceptRole );
+	    QPushButton* create_model_button =
+		mb.addButton( tr( "Create a new model" ), QMessageBox::NoRole );
+	    QPushButton* exit_button =
+		mb.addButton( tr( "Exit lignumCAD" ), QMessageBox::RejectRole );
+	    mb.setDefaultButton( select_file_button );
+	    mb.exec();
 
-	    switch ( mb.exec() ) {
-		case QMessageBox::Yes:
-			new_file_name =
-			QFileDialog::getOpenFileName( this,
+	    if ( mb.clickedButton() == select_file_button ) {
+		new_file_name =
+		    QFileDialog::getOpenFileName( this,
 						  tr( "Choose a file" ),
 						  QString(),
 						  tr( "lignumCAD (*.lcad);;All Files (*)" ) );
-		break;
-		case QMessageBox::No:
-			new_file_name = QString();
-		break;
-		case QMessageBox::Cancel:
-			exit(0 );
 	    }
+	    else if ( mb.clickedButton() == create_model_button )
+		new_file_name = QString();
+	    else if ( mb.clickedButton() == exit_button )
+		exit(0 );
 	}
     }    
     

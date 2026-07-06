@@ -475,3 +475,5 @@ void Subassembly::compound ( TopoDS_Shape& assembly )
     builder.Add( assembly, placed_solid );
   }
 }
+
+#include "moc_subassembly.cpp"

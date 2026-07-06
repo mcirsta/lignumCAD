@@ -606,25 +606,28 @@ bool DesignBookView::aboutToExit ( void )
 {
   if ( model_ ) {
     if ( model_->changed() ) {
-      QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
+      QMessageBox mb( QMessageBox::Information,
+		      trC( lC::STR::LIGNUMCAD ),
 		      tr( "The current model has been modified.\n"
 			  "Do you really want to exit lignumCAD?" ),
-		      QMessageBox::Information,
-		      QMessageBox::Yes | QMessageBox::Default,
-		      QMessageBox::No,
-		      QMessageBox::Cancel, lCMW() );
-      mb.setButtonText( QMessageBox::Yes, tr( "Discard changes" ) );
-      mb.setButtonText( QMessageBox::No, tr( "Save it first" ) );
-      mb.setButtonText( QMessageBox::Cancel, tr( "Cancel exit" ) );
+		      QMessageBox::NoButton,
+		      lCMW() );
+      QPushButton* discard_button =
+	mb.addButton( tr( "Discard changes" ), QMessageBox::DestructiveRole );
+      QPushButton* save_button =
+	mb.addButton( tr( "Save it first" ), QMessageBox::AcceptRole );
+      QPushButton* cancel_button =
+	mb.addButton( tr( "Cancel exit" ), QMessageBox::RejectRole );
+      mb.setDefaultButton( discard_button );
+      mb.exec();
 
-      switch ( mb.exec() ) {
-      case QMessageBox::Yes:
+      if ( mb.clickedButton() == discard_button ) {
 	//      clear();
-	break;
-      case QMessageBox::No:
+      }
+      else if ( mb.clickedButton() == save_button ) {
 	if ( !save() ) return false;
-	break;
-      case QMessageBox::Cancel:
+      }
+      else if ( mb.clickedButton() == cancel_button ) {
 	return false;
       }
     }
@@ -671,22 +674,24 @@ lC::RenameStatus DesignBookView::uniquePageName ( const PageView* page_view,
 
     if ( lC::formatName( pv->name() ) == name &&
 	 pv->type() == type ) {
-      QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
+      QMessageBox mb( QMessageBox::Warning,
+		      trC( lC::STR::LIGNUMCAD ),
 		      tr( "The name \"%1\" for a page of type %2 already exists." ).
 		      arg( name ).arg( trC( type ) ),
-		      QMessageBox::Warning,
-		      QMessageBox::Yes | QMessageBox::Default,
-		      QMessageBox::Cancel,
-		      QMessageBox::NoButton );
-      mb.setButtonText( QMessageBox::Yes, tr( "Enter another name" ) );
-      mb.setButtonText( QMessageBox::Cancel, tr( "Cancel page edit" ) );
+		      QMessageBox::NoButton,
+		      lCMW_ );
+      QPushButton* redo_button =
+	mb.addButton( tr( "Enter another name" ), QMessageBox::AcceptRole );
+      QPushButton* cancel_button =
+	mb.addButton( tr( "Cancel page edit" ), QMessageBox::RejectRole );
+      mb.setDefaultButton( redo_button );
+      mb.exec();
 
-      switch ( mb.exec() ) {
-      case QMessageBox::Yes:
+      if ( mb.clickedButton() == redo_button )
 	return lC::Redo;
-      case QMessageBox::Cancel:
+      if ( mb.clickedButton() == cancel_button )
 	return lC::Rejected;
-      }
+
       break;
     }
   }
@@ -1251,23 +1256,24 @@ void DesignBookView::renamePage ( void )
       emit pageChanged( page_view->name() );
     }
     else {
-      QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
+      QMessageBox mb( QMessageBox::Information,
+		      trC( lC::STR::LIGNUMCAD ),
 		      tr( "The name \"%1\" for a page of type %2 already exists." ).
 		      arg( page_info_dialog_->nameEdit->text() ).
 		      arg( trC( page_view->type() ) ),
-		      QMessageBox::Information,
-		      QMessageBox::Yes | QMessageBox::Default,
-		      QMessageBox::Cancel,
-		      QMessageBox::NoButton );
-      mb.setButtonText( QMessageBox::Yes, tr( "Enter another name" ) );
-      mb.setButtonText( QMessageBox::Cancel, tr( "Cancel name change" ) );
+		      QMessageBox::NoButton,
+		      lCMW_ );
+      QPushButton* redo_button =
+	mb.addButton( tr( "Enter another name" ), QMessageBox::AcceptRole );
+      QPushButton* cancel_button =
+	mb.addButton( tr( "Cancel name change" ), QMessageBox::RejectRole );
+      mb.setDefaultButton( redo_button );
+      mb.exec();
 
-      switch ( mb.exec() ) {
-      case QMessageBox::Yes:
+      if ( mb.clickedButton() == redo_button )
 	goto RENAME;
-      case QMessageBox::Cancel:
+      if ( mb.clickedButton() == cancel_button )
 	return;
-      }
     }
   }
 }
@@ -1288,18 +1294,13 @@ void DesignBookView::deletePage ( void )
       usage_name_list << QString( "%1.%2" ).arg( usages.at(i)->name() ).
 	arg( trC( usages.at(i)->type() ) );
 
-    QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
-		    tr( "<p>You cannot delete \"%1\" because it is referenced by "
-			"other assemblies:<br>"
-			"<ul><li>%2</li></ul></p>" ).
-		    arg( page_view->name() ).
-		    arg( usage_name_list.join( "</li><li>" ) ),
-		    QMessageBox::Information,
-		    QMessageBox::Ok | QMessageBox::Default,
-		    QMessageBox::NoButton,
-		    QMessageBox::NoButton, lCMW_ );
-
-    mb.exec();
+    QMessageBox::information( lCMW_,
+			      trC( lC::STR::LIGNUMCAD ),
+			      tr( "<p>You cannot delete \"%1\" because it is referenced by "
+				  "other assemblies:<br>"
+				  "<ul><li>%2</li></ul></p>" ).
+			      arg( page_view->name() ).
+			      arg( usage_name_list.join( "</li><li>" ) ) );
 
     return;
   }
@@ -1426,26 +1427,26 @@ void DesignBookView::newModel ( void )
 {
   // If the current model has been changed, give the user a chance to save it
   if ( model_ && model_->changed() ) {
-    QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
+    QMessageBox mb( QMessageBox::Information,
+		    trC( lC::STR::LIGNUMCAD ),
 		    tr( "The current model has been modified.\n"
 			"Do you really want to replace it with a new model?" ),
-		    QMessageBox::Information,
-		    QMessageBox::Yes | QMessageBox::Default,
-		    QMessageBox::No,
-		    QMessageBox::Cancel );
-    mb.setButtonText( QMessageBox::Yes, tr( "Discard changes" ) );
-    mb.setButtonText( QMessageBox::No, tr( "Save it first" ) );
-    mb.setButtonText( QMessageBox::Cancel, tr( "Cancel creation of new model" ) );
+		    QMessageBox::NoButton,
+		    lCMW_ );
+    QPushButton* discard_button =
+      mb.addButton( tr( "Discard changes" ), QMessageBox::DestructiveRole );
+    QPushButton* save_button =
+      mb.addButton( tr( "Save it first" ), QMessageBox::AcceptRole );
+    QPushButton* cancel_button =
+      mb.addButton( tr( "Cancel creation of new model" ), QMessageBox::RejectRole );
+    mb.setDefaultButton( discard_button );
+    mb.exec();
 
-    switch ( mb.exec() ) {
-    case QMessageBox::Yes:
-      break;
-    case QMessageBox::No:
+    if ( mb.clickedButton() == save_button ) {
       if ( !save() ) return;
-      break;
-    case QMessageBox::Cancel:
-      return;
     }
+    else if ( mb.clickedButton() == cancel_button )
+      return;
   }
 
   // Well, the user could cancel the Wizard and then we'd have done
@@ -1492,26 +1493,26 @@ void DesignBookView::open ( void )
 {
   // If the current model has been changed, give the user a chance to save it
   if ( model_ && model_->changed() ) {
-    QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
+    QMessageBox mb( QMessageBox::Information,
+		    trC( lC::STR::LIGNUMCAD ),
 		    tr( "The current model has been modified.\n"
 			"Do you really want to replace it with a new model?" ),
-		    QMessageBox::Information,
-		    QMessageBox::Yes | QMessageBox::Default,
-		    QMessageBox::No,
-		    QMessageBox::Cancel );
-    mb.setButtonText( QMessageBox::Yes, tr( "Discard changes" ) );
-    mb.setButtonText( QMessageBox::No, tr( "Save it first" ) );
-    mb.setButtonText( QMessageBox::Cancel, tr( "Cancel opening of new model" ) );
+		    QMessageBox::NoButton,
+		    lCMW_ );
+    QPushButton* discard_button =
+      mb.addButton( tr( "Discard changes" ), QMessageBox::DestructiveRole );
+    QPushButton* save_button =
+      mb.addButton( tr( "Save it first" ), QMessageBox::AcceptRole );
+    QPushButton* cancel_button =
+      mb.addButton( tr( "Cancel opening of new model" ), QMessageBox::RejectRole );
+    mb.setDefaultButton( discard_button );
+    mb.exec();
 
-    switch ( mb.exec() ) {
-    case QMessageBox::Yes:
-      break;
-    case QMessageBox::No:
+    if ( mb.clickedButton() == save_button ) {
       if ( !save() ) return;
-      break;
-    case QMessageBox::Cancel:
-      return;
     }
+    else if ( mb.clickedButton() == cancel_button )
+      return;
   }
 
   QString file_name =
@@ -1825,21 +1826,23 @@ bool DesignBookView::write ( void )
     while ( true ) {
       QFileInfo info( model_->writeFileName() );
       if ( info.exists() ) {
-	QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
+	QMessageBox mb( QMessageBox::Information,
+			trC( lC::STR::LIGNUMCAD ),
 			tr( "The file \"%1\" already exists.\n"
 			    "Do you really want to over-write it?" ).
 			arg( model_->writeFileName() ),
-			QMessageBox::Information,
-			QMessageBox::Yes | QMessageBox::Default,
-			QMessageBox::No,
-			QMessageBox::Cancel );
-	mb.setButtonText( QMessageBox::Yes, tr( "Pick a new file name" ) );
-	mb.setButtonText( QMessageBox::No, tr( "Over-write it" ) );
-	mb.setButtonText( QMessageBox::Cancel, tr( "Cancel saving of model" ) );
+			QMessageBox::NoButton,
+			lCMW_ );
+	QPushButton* pick_file_button =
+	  mb.addButton( tr( "Pick a new file name" ), QMessageBox::AcceptRole );
+	QPushButton* overwrite_button =
+	  mb.addButton( tr( "Over-write it" ), QMessageBox::DestructiveRole );
+	QPushButton* cancel_button =
+	  mb.addButton( tr( "Cancel saving of model" ), QMessageBox::RejectRole );
+	mb.setDefaultButton( pick_file_button );
+	mb.exec();
 
-	int choice = mb.exec();
-
-	if ( choice == QMessageBox::Yes ) {
+	if ( mb.clickedButton() == pick_file_button ) {
 	  QString file_name =
 	    QFileDialog::getSaveFileName( lCMW_,
 					  tr( "Choose a file" ),
@@ -1863,9 +1866,9 @@ bool DesignBookView::write ( void )
 	    model_->setWriteFileName( file_name );
 	  }
 	}
-	else if ( choice == QMessageBox::No )
+	else if ( mb.clickedButton() == overwrite_button )
 	  break;
-	else if ( choice == QMessageBox::Cancel )
+	else if ( mb.clickedButton() == cancel_button )
 	  return false;
       }
       else

@@ -21,7 +21,6 @@
  *
  */
 
-#include <fstream>
 #include <iostream>
 
 #include <qpainter.h>
@@ -82,9 +81,10 @@ OGLFT::Face* OpenGLPrinter::font ( const FaceData& requested_face )
   if ( actual_face.font_.isEmpty() )
     actual_face.font_ = QWidget::font().toString();
 
-  QMap< FaceData, OGLFT::Face* >::const_iterator face = faces_.find( actual_face );
+  QMap< FaceData, OGLFT::Face* >::const_iterator face =
+    faces_.constFind( actual_face );
 
-  if ( face != faces_.end() )
+  if ( face != faces_.constEnd() )
     return face.value();
 
   QString file;
@@ -321,8 +321,8 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
   QString model_str = tr( "Model: %1" ).
     arg( model->name() ).prepend(' ').append(' ');
   QString page_str = tr( "%1: %2" ).
-    arg( tr( page_view_->type().toUtf8().constData() ) ).
-    arg( page_view_->name() ).prepend(' ').append(' ');
+    arg( tr( page_view_->type().toUtf8().constData() ),
+	 page_view_->name() ).prepend(' ').append(' ');
   QString date_str = tr( "Date: %1" ).
     arg( model->modified().date().toString(Qt::ISODate) ).prepend(' ').append(' ');
   QString scale_str = tr( "Scale: %1:%2" ).

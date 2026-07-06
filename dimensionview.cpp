@@ -32,6 +32,7 @@
 #include <qcursor.h>
 #include <qmessagebox.h>
 #include <qpainter.h>
+#include <QPushButton>
 
 #include "configuration.h"
 #include "units.h"
@@ -825,31 +826,31 @@ namespace Space2D {
 							    nameEdit->text() ) )
 	setName( dimension_info_dialog_->nameEdit->text() );
       else {
-	QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
-			qApp->translate( "Space2D::DimensionView",
-		 "The name \"%1\" for a geometry of type %2 already exists\n"
-					 "as a child of %3." ).
-			arg( dimension_info_dialog_->nameEdit->text() ).
-			arg( trC( dimensioned_line_->type() ) ).
-			arg( dimensioned_line_->parent()->name() ),
-			QMessageBox::Information,
-			QMessageBox::Yes | QMessageBox::Default,
-			QMessageBox::Cancel,
-			QMessageBox::NoButton );
-	mb.setButtonText( QMessageBox::Yes,
-			  qApp->translate( "Space2D::DimensionView",
-					   "Enter another name" ) );
-	mb.setButtonText( QMessageBox::Cancel,
-			  qApp->translate( "Space2D::DimensionView",
-					   "Cancel changes" ) );
+		QMessageBox mb( QMessageBox::Information,
+				trC( lC::STR::LIGNUMCAD ),
+				qApp->translate( "Space2D::DimensionView",
+			 "The name \"%1\" for a geometry of type %2 already exists\n"
+						 "as a child of %3." ).
+				arg( dimension_info_dialog_->nameEdit->text() ).
+				arg( trC( dimensioned_line_->type() ) ).
+				arg( dimensioned_line_->parent()->name() ),
+				QMessageBox::NoButton );
+		QPushButton* redo_button =
+		  mb.addButton( qApp->translate( "Space2D::DimensionView",
+						 "Enter another name" ),
+				QMessageBox::AcceptRole );
+		QPushButton* cancel_button =
+		  mb.addButton( qApp->translate( "Space2D::DimensionView",
+						 "Cancel changes" ),
+				QMessageBox::RejectRole );
+		mb.setDefaultButton( redo_button );
+		mb.exec();
 
-	switch ( mb.exec() ) {
-	case QMessageBox::Yes:
-	  goto REDO;
-	case QMessageBox::Cancel:
-	  return;
-	}
-      }
+		if ( mb.clickedButton() == redo_button )
+		  goto REDO;
+		if ( mb.clickedButton() == cancel_button )
+		  return;
+	      }
 #endif
       modified = true;
     }

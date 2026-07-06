@@ -152,3 +152,5 @@ void ListViewItem::activate ( void )
 {
   emit picked();
 }
+
+#include "moc_listviewitem.cpp"

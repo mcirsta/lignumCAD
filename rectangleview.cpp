@@ -32,6 +32,7 @@
 #include <qlabel.h>
 #include <qmessagebox.h>
 #include <QImage>
+#include <QPushButton>
 #include <iostream>
 
 using std::cerr;
@@ -2771,10 +2772,14 @@ namespace Space2D {
     if ( x_resolution == 0. ) x_resolution = 20. / image.width();
     if ( y_resolution == 0. ) y_resolution = 20. / image.height();
 
-    GLfloat s_coefficients[] = { x_resolution, 0., 0.,
-				 -x_resolution * rectangle_->lbVertex()[X] };
-    GLfloat t_coefficients[] = { 0., y_resolution, 0.,
-				 -y_resolution * rectangle_->lbVertex()[Y] };
+    GLfloat s_coefficients[] = {
+      x_resolution, 0.f, 0.f,
+      static_cast<GLfloat>( -x_resolution * rectangle_->lbVertex()[X] )
+    };
+    GLfloat t_coefficients[] = {
+      0.f, y_resolution, 0.f,
+      static_cast<GLfloat>( -y_resolution * rectangle_->lbVertex()[Y] )
+    };
 
     glEnable( GL_TEXTURE_GEN_S );
     glEnable( GL_TEXTURE_GEN_T );
@@ -4370,22 +4375,22 @@ namespace Space2D {
 	   && role != lC::STR::X1 ) ||
 	 ( name == lC::formatName( rectangle_->y1()->name() )
 	   && role != lC::STR::Y1 ) ) {
-      QMessageBox mb( trC( lC::STR::LIGNUMCAD ),
+      QMessageBox mb( QMessageBox::Warning,
+		      trC( lC::STR::LIGNUMCAD ),
 		      tr( "The name \"%1\" for an edge already exists." ).
 		      arg( name ),
-		      QMessageBox::Warning,
-		      QMessageBox::Yes | QMessageBox::Default,
-		      QMessageBox::Cancel,
 		      QMessageBox::NoButton );
-      mb.setButtonText( QMessageBox::Yes, tr( "Enter another name" ) );
-      mb.setButtonText( QMessageBox::Cancel, tr( "Cancel edge edit" ) );
+      QPushButton* redo_button =
+	mb.addButton( tr( "Enter another name" ), QMessageBox::AcceptRole );
+      QPushButton* cancel_button =
+	mb.addButton( tr( "Cancel edge edit" ), QMessageBox::RejectRole );
+      mb.setDefaultButton( redo_button );
+      mb.exec();
 
-      switch ( mb.exec() ) {
-      case QMessageBox::Yes:
+      if ( mb.clickedButton() == redo_button )
 	return lC::Redo;
-      case QMessageBox::Cancel:
+      if ( mb.clickedButton() == cancel_button )
 	return lC::Rejected;
-      }
     }
     return lC::OK;
   }
