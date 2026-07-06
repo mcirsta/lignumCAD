@@ -5,6 +5,8 @@ project(lignumCAD
   LANGUAGES C CXX
 )
 
+include(GNUInstallDirs)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -97,8 +99,34 @@ endif()
 
 list(REMOVE_DUPLICATES LIGNUMCAD_OPENCASCADE_LIBRARIES)
 
+set(LIGNUMCAD_INSTALL_DATA_DIR
+  "${CMAKE_INSTALL_DATADIR}/lignumCAD/v${PROJECT_VERSION}"
+)
+set(LIGNUMCAD_INSTALL_FULL_DATA_DIR
+  "${CMAKE_INSTALL_FULL_DATADIR}/lignumCAD/v${PROJECT_VERSION}"
+)
+set(LIGNUMCAD_DEVELOPMENT_DATA_DIR
+  "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+option(LIGNUMCAD_ENABLE_SOURCE_DATA_FALLBACK
+  "Allow uninstalled builds to load runtime data from the source tree"
+  ON
+)
+if(LIGNUMCAD_ENABLE_SOURCE_DATA_FALLBACK)
+  set(LIGNUMCAD_ENABLE_DEVELOPMENT_DATA_DIR true)
+else()
+  set(LIGNUMCAD_ENABLE_DEVELOPMENT_DATA_DIR false)
+endif()
+
+configure_file(
+  configuration.h.in
+  "${CMAKE_CURRENT_BINARY_DIR}/generated/configuration.h"
+  @ONLY
+)
+
 set(LIGNUMCAD_SOURCES
   main.cpp
+  runtimepaths.cpp
   uiformwrappers.cpp
   designbookview.cpp
   sketchview.cpp
@@ -263,6 +291,7 @@ set(LIGNUMCAD_HEADERS
   dburl.h
   businessinfo.h
   usersettings.h
+  runtimepaths.h
   constraintview.h
   lcdebug.h
   style.h
@@ -270,7 +299,7 @@ set(LIGNUMCAD_HEADERS
   ratio.h
   view.h
   printer.h
-  configuration.h
+  ${CMAKE_CURRENT_BINARY_DIR}/generated/configuration.h
   material.h
   ocsolid.h
   ocsolidview.h
@@ -422,6 +451,7 @@ target_compile_definitions(lignumCAD PRIVATE
 # modern cross-platform replacement.
 
 target_include_directories(lignumCAD PRIVATE
+  ${CMAKE_CURRENT_BINARY_DIR}/generated
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/lcfilechooser
   ${CMAKE_CURRENT_SOURCE_DIR}/lcfontchooser
@@ -449,4 +479,27 @@ target_link_libraries(lignumCAD PRIVATE
   Qt6::PrintSupport
   Qt6::Svg
   ${LIGNUMCAD_OPENCASCADE_LIBRARIES}
+)
+
+install(TARGETS lignumCAD
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(DIRECTORY materials
+  DESTINATION ${LIGNUMCAD_INSTALL_DATA_DIR}
+)
+
+install(DIRECTORY doc
+  DESTINATION ${LIGNUMCAD_INSTALL_DATA_DIR}
+)
+
+install(DIRECTORY images
+  DESTINATION ${LIGNUMCAD_INSTALL_DATA_DIR}
+)
+
+install(FILES
+  lignumCAD_en.qm
+  lignumCAD_de.qm
+  qt_de.qm
+  DESTINATION ${LIGNUMCAD_INSTALL_DATA_DIR}/translations
 )

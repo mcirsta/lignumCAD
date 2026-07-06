@@ -23,14 +23,13 @@
 #include <qdom.h>
 #include <qdir.h>
 #include <qfile.h>
-#include <qsettings.h>
 #include <QLocale>
 #if 0
 #include <zlib.h>
 #endif
 #include "constants.h"
 #include "configuration.h"
-#include "usersettings.h"
+#include "runtimepaths.h"
 #include "material.h"
 
 namespace {
@@ -55,15 +54,11 @@ MaterialDatabase& MaterialDatabase::instance ( void )
 
 MaterialDatabase::MaterialDatabase ( void )
 {
-  QSettings settings;
-  bool ok;
-  QString home =
-    lC::Setting::readString( settings, lC::Setting::HOME, &ok,
-			     lC::STR::HOME );
-  QDir materials_dir( QString( "%1%2v%3.%4%5%6" ).
-		      arg( home ).arg( QDir::separator() ).
-		      arg( lC::STR::VERSION_MAJOR ).arg( lC::STR::VERSION_MINOR ).
-		      arg( QDir::separator() ).arg( lC::STR::MATERIALS ) );
+  const QString data_dir_path = lC::Runtime::dataDirPath();
+  if ( data_dir_path.isEmpty() )
+    return;
+
+  QDir materials_dir( QDir( data_dir_path ).filePath( lC::STR::MATERIALS ) );
 
   if ( !materials_dir.exists() ) return;
   QString image_path = materials_dir.filePath( lC::STR::IMAGES );

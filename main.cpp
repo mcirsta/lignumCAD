@@ -25,7 +25,6 @@
 #include <qlabel.h>
 #include <qtimer.h>
 #include <qmessagebox.h>
-#include <qsettings.h>
 #include <qdir.h>
 #include <QCoreApplication>
 #include <QLocale>
@@ -39,7 +38,7 @@
 #include "configuration.h"
 #include "systemdependencies.h"
 #include "constants.h"
-#include "usersettings.h"
+#include "runtimepaths.h"
 #include "lignumcadmainwindow.h"
 #include "cursorfactory.h"
 #include "command.h"
@@ -53,6 +52,21 @@ namespace {
   QString trMessage ( const char* text )
   {
     return QCoreApplication::translate( "Messages", text );
+  }
+
+  bool loadTranslation ( QTranslator& translator, const QString& name,
+			 const QDir& data_dir )
+  {
+    if ( translator.load( name, "." ) )
+      return true;
+
+    for ( const QString& translation_dir :
+	    lC::Runtime::translationDirs( data_dir ) ) {
+      if ( translator.load( name, translation_dir ) )
+	return true;
+    }
+
+    return false;
   }
 
   // A not especially effective segv handler.
@@ -73,37 +87,31 @@ int main( int argc, char ** argv )
   QApplication app( argc, argv );
 
   // First, we have to locate our data directory
-  QSettings settings;
-  QString home = settings.value( lC::Setting::HOME, lC::STR::HOME ).toString();
-
-  QDir home_dir( QString( "%1%2v%3.%4" ).arg(home).arg(QDir::separator()).
-		 arg( lC::STR::VERSION_MAJOR ).arg( lC::STR::VERSION_MINOR ) );
-
-  if ( !home_dir.exists() ) {
+  const QString data_dir_path = lC::Runtime::dataDirPath();
+  if ( data_dir_path.isEmpty() ) {
     QMessageBox::critical( 0, trConstant( lC::STR::LIGNUMCAD ),
-                           trMessage( "The data directory for lignumCAD does not exist in:\n"
+                           trMessage( "The data directory for lignumCAD was not found.\n"
+				      "Checked:\n"
                                       "%1\n"
                                       "Please check your installation." ).
-                           arg( home_dir.absolutePath() ) );
+                           arg( lC::Runtime::dataDirCandidates().join( "\n" ) ) );
     return 1;
   }
+
+  QDir home_dir( data_dir_path );
 
   // Translations should be in the data directory
 
   QString locale = QLocale::system().name();
   QTranslator translator;
-  if ( !translator.load( QString( "lignumCAD_" ) + locale, "." ) ) {
-    if ( !translator.load( QString( "lignumCAD_" ) + locale,
-                           home_dir.absolutePath() + QDir::separator() +
-                           "translations" ) ) {
-       
-      QMessageBox::warning( 0, trConstant( lC::STR::LIGNUMCAD ),
-                            trMessage( "Could not find translation file for locale:\n"
-                                       "%1\n"
-                                       "Continuing with built-in strings.\n"
-                                       "Please check your installation." ).
-                            arg( locale ) );
-    }
+  if ( !loadTranslation( translator, QString( "lignumCAD_" ) + locale,
+			 home_dir ) ) {
+    QMessageBox::warning( 0, trConstant( lC::STR::LIGNUMCAD ),
+			  trMessage( "Could not find translation file for locale:\n"
+				     "%1\n"
+				     "Continuing with built-in strings.\n"
+				     "Please check your installation." ).
+			  arg( locale ) );
   }
 
   app.installTranslator( &translator );
@@ -115,18 +123,14 @@ int main( int argc, char ** argv )
 
   if ( !locale.startsWith( "en" ) ) {
 
-    if ( !qt_translator.load( QString( "qt_" ) + locale, "." ) ) {
-      if ( !qt_translator.load( QString( "qt_" ) + locale,
-                                home_dir.absolutePath() + QDir::separator() +
-                                "translations" ) ) {
-	
-	QMessageBox::warning( 0, trConstant( lC::STR::LIGNUMCAD ),
-			       trMessage( "Could not find Qt translation file for locale:\n"
-					  "%1\n"
-					  "Continuing with built-in strings.\n"
-					  "Please check your installation." ).
-			       arg( locale ) );
-      }
+    if ( !loadTranslation( qt_translator, QString( "qt_" ) + locale,
+			   home_dir ) ) {
+      QMessageBox::warning( 0, trConstant( lC::STR::LIGNUMCAD ),
+			    trMessage( "Could not find Qt translation file for locale:\n"
+				       "%1\n"
+				       "Continuing with built-in strings.\n"
+				       "Please check your installation." ).
+			    arg( locale ) );
     }
 
     app.installTranslator( &qt_translator );
