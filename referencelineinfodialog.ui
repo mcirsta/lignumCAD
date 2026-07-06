@@ -17,7 +17,7 @@
       <string>Reference Line Information</string>
     </property>
     <property name="windowIcon">
-      <pixmap>lignumCAD.png</pixmap>
+      <pixmap>:/images/lignumCAD.png</pixmap>
     </property>
     <layout class="QGridLayout">
       <property name="margin">

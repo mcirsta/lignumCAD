@@ -17,7 +17,7 @@
       <string>Annotation Information</string>
     </property>
     <property name="windowIcon">
-      <pixmap>lignumCAD.png</pixmap>
+      <pixmap>:/images/lignumCAD.png</pixmap>
     </property>
     <property name="sizeGripEnabled">
       <bool>true</bool>

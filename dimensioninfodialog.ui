@@ -17,7 +17,7 @@
       <string>Dimension Information</string>
     </property>
     <property name="windowIcon">
-      <pixmap>dimensioninfodialog.png</pixmap>
+      <pixmap>:/images/dimensioninfodialog.png</pixmap>
     </property>
     <layout class="QGridLayout">
       <property name="margin">

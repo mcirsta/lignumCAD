@@ -17,7 +17,7 @@
       <string>About lignumCAD</string>
     </property>
     <property name="windowIcon">
-      <pixmap>lignumCAD.png</pixmap>
+      <pixmap>:/images/lignumCAD.png</pixmap>
     </property>
     <property name="sizeGripEnabled">
       <bool>false</bool>
@@ -56,7 +56,7 @@
           <item>
             <widget class="QLabel" name="PixmapLabel1">
               <property name="pixmap">
-                <pixmap>splash.png</pixmap>
+                <pixmap>:/images/splash.png</pixmap>
               </property>
               <property name="scaledContents">
                 <bool>true</bool>

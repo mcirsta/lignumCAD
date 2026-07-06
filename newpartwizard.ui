@@ -17,7 +17,7 @@
       <string>New Part Wizard</string>
     </property>
     <property name="windowIcon">
-      <pixmap>lignumCAD.png</pixmap>
+      <pixmap>:/images/lignumCAD.png</pixmap>
     </property>
     <widget class="QWizardPage" name="initialPartPage">
       <attribute name="title">
@@ -57,7 +57,7 @@
             <item>
               <widget class="QLabel" name="PixmapLabel5">
                 <property name="pixmap">
-                  <pixmap>machines.png</pixmap>
+                  <pixmap>:/images/machines.png</pixmap>
                 </property>
                 <property name="scaledContents">
                   <bool>false</bool>
@@ -199,7 +199,7 @@ This list contains the available template parts. The parts are categorized by gr
             <item>
               <widget class="QLabel" name="PixmapLabel5_2">
                 <property name="pixmap">
-                  <pixmap>machines.png</pixmap>
+                  <pixmap>:/images/machines.png</pixmap>
                 </property>
                 <property name="scaledContents">
                   <bool>false</bool>

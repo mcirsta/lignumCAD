@@ -17,7 +17,7 @@
       <string>lignumCAD</string>
     </property>
     <property name="windowIcon">
-      <pixmap>lignumCAD.png</pixmap>
+      <pixmap>:/images/lignumCAD.png</pixmap>
     </property>
     <property name="windowIconText">
       <string>lignumCAD</string>
@@ -39,7 +39,7 @@
               <enum>QFrame::Raised</enum>
             </property>
             <property name="pixmap">
-              <pixmap>splash.png</pixmap>
+              <pixmap>:/images/splash.png</pixmap>
             </property>
             <property name="scaledContents">
               <bool>false</bool>
@@ -170,7 +170,7 @@ lignumCAD Version x.y</string>
     </widget>
     <action name="fileNewAction">
       <property name="icon">
-        <iconset>new_file.png</iconset>
+        <iconset>:/images/new_file.png</iconset>
       </property>
       <property name="iconText">
         <string>New</string>
@@ -187,7 +187,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="fileOpenAction">
       <property name="icon">
-        <iconset>open_file.png</iconset>
+        <iconset>:/images/open_file.png</iconset>
       </property>
       <property name="iconText">
         <string>Open</string>
@@ -204,7 +204,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="fileSaveAction">
       <property name="icon">
-        <iconset>save_file.png</iconset>
+        <iconset>:/images/save_file.png</iconset>
       </property>
       <property name="iconText">
         <string>Save</string>
@@ -221,7 +221,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="fileSaveAsAction">
       <property name="icon">
-        <iconset>saveas_file.png</iconset>
+        <iconset>:/images/saveas_file.png</iconset>
       </property>
       <property name="iconText">
         <string>Save As</string>
@@ -238,7 +238,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="filePrintAction">
       <property name="icon">
-        <iconset>print.png</iconset>
+        <iconset>:/images/print.png</iconset>
       </property>
       <property name="iconText">
         <string>Print</string>
@@ -255,7 +255,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="fileExitAction">
       <property name="icon">
-        <iconset>exit.png</iconset>
+        <iconset>:/images/exit.png</iconset>
       </property>
       <property name="iconText">
         <string>Exit</string>
@@ -272,7 +272,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="editUndoAction">
       <property name="icon">
-        <iconset>undo.png</iconset>
+        <iconset>:/images/undo.png</iconset>
       </property>
       <property name="iconText">
         <string>Undo</string>
@@ -289,7 +289,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="editRedoAction">
       <property name="icon">
-        <iconset>redo.png</iconset>
+        <iconset>:/images/redo.png</iconset>
       </property>
       <property name="iconText">
         <string>Redo</string>
@@ -306,7 +306,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="editCutAction">
       <property name="icon">
-        <iconset>edit_cut.png</iconset>
+        <iconset>:/images/edit_cut.png</iconset>
       </property>
       <property name="iconText">
         <string>Cut</string>
@@ -323,7 +323,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="editCopyAction">
       <property name="icon">
-        <iconset>edit_copy.png</iconset>
+        <iconset>:/images/edit_copy.png</iconset>
       </property>
       <property name="iconText">
         <string>Copy</string>
@@ -340,7 +340,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="editPasteAction">
       <property name="icon">
-        <iconset>edit_paste.png</iconset>
+        <iconset>:/images/edit_paste.png</iconset>
       </property>
       <property name="iconText">
         <string>Paste</string>
@@ -357,7 +357,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="editFindAction">
       <property name="icon">
-        <iconset>find.png</iconset>
+        <iconset>:/images/find.png</iconset>
       </property>
       <property name="iconText">
         <string>Find</string>
@@ -374,7 +374,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="helpContentsAction">
       <property name="icon">
-        <iconset>help_contents.png</iconset>
+        <iconset>:/images/help_contents.png</iconset>
       </property>
       <property name="iconText">
         <string>Contents</string>
@@ -391,7 +391,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="helpAboutAction">
       <property name="icon">
-        <iconset>lignumCAD.png</iconset>
+        <iconset>:/images/lignumCAD.png</iconset>
       </property>
       <property name="iconText">
         <string>About lignumCAD</string>
@@ -408,7 +408,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="insertSketchAction">
       <property name="icon">
-        <iconset>new_sketch.png</iconset>
+        <iconset>:/images/new_sketch.png</iconset>
       </property>
       <property name="iconText">
         <string>Sketch...</string>
@@ -425,7 +425,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="insertPartAction">
       <property name="icon">
-        <iconset>new_part.png</iconset>
+        <iconset>:/images/new_part.png</iconset>
       </property>
       <property name="iconText">
         <string>Part...</string>
@@ -442,7 +442,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="insertAssemblyAction">
       <property name="icon">
-        <iconset>new_assembly.png</iconset>
+        <iconset>:/images/new_assembly.png</iconset>
       </property>
       <property name="iconText">
         <string>Assembly...</string>
@@ -459,7 +459,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="insertDrawingAction">
       <property name="icon">
-        <iconset>new_drawing.png</iconset>
+        <iconset>:/images/new_drawing.png</iconset>
       </property>
       <property name="iconText">
         <string>Drawing...</string>
@@ -476,7 +476,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolRectangleAction">
       <property name="icon">
-        <iconset>new_rectangle.png</iconset>
+        <iconset>:/images/new_rectangle.png</iconset>
       </property>
       <property name="iconText">
         <string>Rectangle...</string>
@@ -493,7 +493,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolDimensionAction">
       <property name="icon">
-        <iconset>new_dimension.png</iconset>
+        <iconset>:/images/new_dimension.png</iconset>
       </property>
       <property name="iconText">
         <string>Dimension...</string>
@@ -510,7 +510,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolReferenceLineAction">
       <property name="icon">
-        <iconset>new_reference_line.png</iconset>
+        <iconset>:/images/new_reference_line.png</iconset>
       </property>
       <property name="iconText">
         <string>Reference Line...</string>
@@ -527,7 +527,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolCenterlineAction">
       <property name="icon">
-        <iconset>new_centerline.png</iconset>
+        <iconset>:/images/new_centerline.png</iconset>
       </property>
       <property name="iconText">
         <string>Centerline...</string>
@@ -544,7 +544,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="deletePageAction">
       <property name="icon">
-        <iconset>delete_page.png</iconset>
+        <iconset>:/images/delete_page.png</iconset>
       </property>
       <property name="iconText">
         <string>Delete Page</string>
@@ -561,7 +561,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="renamePageAction">
       <property name="icon">
-        <iconset>rename_page.png</iconset>
+        <iconset>:/images/rename_page.png</iconset>
       </property>
       <property name="iconText">
         <string>Rename Page...</string>
@@ -578,7 +578,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolStraightCutAction">
       <property name="icon">
-        <iconset>new_straight_cut.png</iconset>
+        <iconset>:/images/new_straight_cut.png</iconset>
       </property>
       <property name="iconText">
         <string>Straight Cut...</string>
@@ -595,7 +595,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolHoleAction">
       <property name="icon">
-        <iconset>new_hole.png</iconset>
+        <iconset>:/images/new_hole.png</iconset>
       </property>
       <property name="iconText">
         <string>Hole...</string>
@@ -612,7 +612,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolFreeCutAction">
       <property name="icon">
-        <iconset>new_free_cut.png</iconset>
+        <iconset>:/images/new_free_cut.png</iconset>
       </property>
       <property name="iconText">
         <string>Free Cut...</string>
@@ -629,7 +629,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolAddModelAction">
       <property name="icon">
-        <iconset>add_model.png</iconset>
+        <iconset>:/images/add_model.png</iconset>
       </property>
       <property name="iconText">
         <string>Add Model...</string>
@@ -646,7 +646,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolViewAction">
       <property name="icon">
-        <iconset>add_view.png</iconset>
+        <iconset>:/images/add_view.png</iconset>
       </property>
       <property name="iconText">
         <string>Add View...</string>
@@ -663,7 +663,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="exportPageAction">
       <property name="icon">
-        <iconset>export_page.png</iconset>
+        <iconset>:/images/export_page.png</iconset>
       </property>
       <property name="iconText">
         <string>Export...</string>
@@ -680,7 +680,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="modelInfoAction">
       <property name="icon">
-        <iconset>model_info.png</iconset>
+        <iconset>:/images/model_info.png</iconset>
       </property>
       <property name="iconText">
         <string>Model Information...</string>
@@ -697,7 +697,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolEdgeTreatmentAction">
       <property name="icon">
-        <iconset>new_edge_treatment.png</iconset>
+        <iconset>:/images/new_edge_treatment.png</iconset>
       </property>
       <property name="iconText">
         <string>Edge Treatment...</string>
@@ -714,7 +714,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolMaterialAction">
       <property name="icon">
-        <iconset>new_material.png</iconset>
+        <iconset>:/images/new_material.png</iconset>
       </property>
       <property name="iconText">
         <string>Material...</string>
@@ -731,7 +731,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolJointAction">
       <property name="icon">
-        <iconset>new_joint.png</iconset>
+        <iconset>:/images/new_joint.png</iconset>
       </property>
       <property name="iconText">
         <string>Joint...</string>
@@ -748,7 +748,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="viewRestoreAction">
       <property name="icon">
-        <iconset>restore_view2.png</iconset>
+        <iconset>:/images/restore_view2.png</iconset>
       </property>
       <property name="iconText">
         <string>Restore view</string>
@@ -765,7 +765,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="editPreferencesAction">
       <property name="icon">
-        <iconset>edit_properties.png</iconset>
+        <iconset>:/images/edit_properties.png</iconset>
       </property>
       <property name="iconText">
         <string>Preferences...</string>
@@ -782,7 +782,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolAlignmentAction">
       <property name="icon">
-        <iconset>new_alignment.png</iconset>
+        <iconset>:/images/new_alignment.png</iconset>
       </property>
       <property name="iconText">
         <string>Alignment...</string>
@@ -799,7 +799,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="cancelReferenceLineAction">
       <property name="icon">
-        <iconset>cancel_reference_line.png</iconset>
+        <iconset>:/images/cancel_reference_line.png</iconset>
       </property>
       <property name="iconText">
         <string>Cancel Reference Line Creation</string>
@@ -813,7 +813,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="cancelRectangleAction">
       <property name="icon">
-        <iconset>cancel_rectangle.png</iconset>
+        <iconset>:/images/cancel_rectangle.png</iconset>
       </property>
       <property name="iconText">
         <string>Cancel Rectangle Creation</string>
@@ -827,7 +827,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="cancelCenterlineAction">
       <property name="icon">
-        <iconset>cancel_centerline.png</iconset>
+        <iconset>:/images/cancel_centerline.png</iconset>
       </property>
       <property name="iconText">
         <string>Cancel Centerline Creation</string>
@@ -841,7 +841,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="cancelDimensionAction">
       <property name="icon">
-        <iconset>cancel_dimension.png</iconset>
+        <iconset>:/images/cancel_dimension.png</iconset>
       </property>
       <property name="iconText">
         <string>Cancel Dimension Creation</string>
@@ -855,7 +855,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="cancelAlignmentAction">
       <property name="icon">
-        <iconset>cancel_alignment.png</iconset>
+        <iconset>:/images/cancel_alignment.png</iconset>
       </property>
       <property name="iconText">
         <string>Cancel Alignment Creation</string>
@@ -869,7 +869,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolAnnotationAction">
       <property name="icon">
-        <iconset>new_annotation.png</iconset>
+        <iconset>:/images/new_annotation.png</iconset>
       </property>
       <property name="iconText">
         <string>Annotation...</string>
@@ -886,7 +886,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="cancelAnnotationAction">
       <property name="icon">
-        <iconset>cancel_annotation.png</iconset>
+        <iconset>:/images/cancel_annotation.png</iconset>
       </property>
       <property name="iconText">
         <string>Cancel Annotation</string>
@@ -900,7 +900,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolConstraintDeleteAction">
       <property name="icon">
-        <iconset>delete_constraint.png</iconset>
+        <iconset>:/images/delete_constraint.png</iconset>
       </property>
       <property name="iconText">
         <string>Delete Constraint...</string>
@@ -917,7 +917,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="cancelConstraintDeleteAction">
       <property name="icon">
-        <iconset>delete_constraint.png</iconset>
+        <iconset>:/images/delete_constraint.png</iconset>
       </property>
       <property name="iconText">
         <string>Cancel Constraint Deletion</string>
@@ -951,7 +951,7 @@ lignumCAD Version x.y</string>
         <bool>false</bool>
       </property>
       <property name="icon">
-        <iconset>view_left2.png</iconset>
+        <iconset>:/images/view_left2.png</iconset>
       </property>
       <property name="iconText">
         <string>View Left</string>
@@ -968,7 +968,7 @@ lignumCAD Version x.y</string>
         <bool>false</bool>
       </property>
       <property name="icon">
-        <iconset>view_right2.png</iconset>
+        <iconset>:/images/view_right2.png</iconset>
       </property>
       <property name="iconText">
         <string>View Right</string>
@@ -985,7 +985,7 @@ lignumCAD Version x.y</string>
         <bool>false</bool>
       </property>
       <property name="icon">
-        <iconset>view_front2.png</iconset>
+        <iconset>:/images/view_front2.png</iconset>
       </property>
       <property name="iconText">
         <string>View Front</string>
@@ -1002,7 +1002,7 @@ lignumCAD Version x.y</string>
         <bool>false</bool>
       </property>
       <property name="icon">
-        <iconset>view_back2.png</iconset>
+        <iconset>:/images/view_back2.png</iconset>
       </property>
       <property name="iconText">
         <string>View Back</string>
@@ -1019,7 +1019,7 @@ lignumCAD Version x.y</string>
         <bool>false</bool>
       </property>
       <property name="icon">
-        <iconset>view_bottom2.png</iconset>
+        <iconset>:/images/view_bottom2.png</iconset>
       </property>
       <property name="iconText">
         <string>View Bottom</string>
@@ -1036,7 +1036,7 @@ lignumCAD Version x.y</string>
         <bool>false</bool>
       </property>
       <property name="icon">
-        <iconset>view_top2.png</iconset>
+        <iconset>:/images/view_top2.png</iconset>
       </property>
       <property name="iconText">
         <string>View Top</string>
@@ -1067,7 +1067,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="cancelAddModelAction">
       <property name="icon">
-        <iconset>cancel_add_model.png</iconset>
+        <iconset>:/images/cancel_add_model.png</iconset>
       </property>
       <property name="iconText">
         <string>Cancel Model Addition</string>
@@ -1081,7 +1081,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="cancelAssemblyConstraintAction">
       <property name="icon">
-        <iconset>cancel_assembly_constraint.png</iconset>
+        <iconset>:/images/cancel_assembly_constraint.png</iconset>
       </property>
       <property name="iconText">
         <string>Cancel constraint</string>
@@ -1095,7 +1095,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="toolDeleteModelAction">
       <property name="icon">
-        <iconset>cancel_add_model.png</iconset>
+        <iconset>:/images/cancel_add_model.png</iconset>
       </property>
       <property name="iconText">
         <string>Delete Model</string>
@@ -1112,7 +1112,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="zoomInAction">
       <property name="icon">
-        <iconset>zoom_in4.png</iconset>
+        <iconset>:/images/zoom_in4.png</iconset>
       </property>
       <property name="iconText">
         <string>Zoom In</string>
@@ -1129,7 +1129,7 @@ lignumCAD Version x.y</string>
     </action>
     <action name="zoomOutAction">
       <property name="icon">
-        <iconset>zoom_out4.png</iconset>
+        <iconset>:/images/zoom_out4.png</iconset>
       </property>
       <property name="iconText">
         <string>Zoom Out</string>

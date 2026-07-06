@@ -17,7 +17,7 @@
       <string>New Model Wizard</string>
     </property>
     <property name="windowIcon">
-      <pixmap>lignumCAD.png</pixmap>
+      <pixmap>:/images/lignumCAD.png</pixmap>
     </property>
     <widget class="QWizardPage" name="NewModelPage">
       <attribute name="title">
@@ -190,7 +190,7 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
             <item>
               <widget class="QLabel" name="newWizardPixmap">
                 <property name="pixmap">
-                  <pixmap>shop.png</pixmap>
+                  <pixmap>:/images/shop.png</pixmap>
                 </property>
                 <property name="scaledContents">
                   <bool>true</bool>
@@ -301,7 +301,7 @@ standard file requestor if you want to overwrite an existing file.&lt;/p&gt;</st
         <item row="1" column="0" rowspan="3" colspan="1">
           <widget class="QLabel" name="newWizardPixmap_2">
             <property name="pixmap">
-              <pixmap>shop.png</pixmap>
+              <pixmap>:/images/shop.png</pixmap>
             </property>
             <property name="scaledContents">
               <bool>true</bool>
