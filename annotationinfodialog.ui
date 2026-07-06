@@ -110,7 +110,7 @@
                 <string>&amp;Help</string>
               </property>
               <property name="shortcut">
-                <number>276824136</number>
+                <string>Alt+H</string>
               </property>
               <property name="autoDefault">
                 <bool>true</bool>
@@ -139,7 +139,7 @@
                 <string>&amp;OK</string>
               </property>
               <property name="shortcut">
-                <number>276824143</number>
+                <string>Alt+O</string>
               </property>
               <property name="autoDefault">
                 <bool>true</bool>
@@ -155,7 +155,7 @@
                 <string>&amp;Cancel</string>
               </property>
               <property name="shortcut">
-                <number>276824131</number>
+                <string>Alt+C</string>
               </property>
               <property name="autoDefault">
                 <bool>true</bool>

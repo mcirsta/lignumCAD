@@ -40,10 +40,10 @@
           <item>
             <widget class="QPushButton" name="buttonHelp">
               <property name="text">
-                <string>&amp;Help</string>
+                <string>Help</string>
               </property>
               <property name="shortcut">
-                <number>276824136</number>
+                <string>F1</string>
               </property>
               <property name="autoDefault">
                 <bool>true</bool>
@@ -69,10 +69,10 @@
           <item>
             <widget class="QPushButton" name="buttonOk">
               <property name="text">
-                <string>&amp;OK</string>
+                <string>OK</string>
               </property>
               <property name="shortcut">
-                <number>276824143</number>
+                <number>0</number>
               </property>
               <property name="autoDefault">
                 <bool>true</bool>
@@ -85,10 +85,10 @@
           <item>
             <widget class="QPushButton" name="buttonCancel">
               <property name="text">
-                <string>&amp;Cancel</string>
+                <string>Cancel</string>
               </property>
               <property name="shortcut">
-                <number>276824131</number>
+                <number>0</number>
               </property>
               <property name="autoDefault">
                 <bool>true</bool>
