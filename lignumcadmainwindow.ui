@@ -411,6 +411,9 @@ lignumCAD Version x.y</string>
         <iconset>new_sketch.png</iconset>
       </property>
       <property name="iconText">
+        <string>Sketch...</string>
+      </property>
+      <property name="text">
         <string>&amp;Sketch...</string>
       </property>
       <property name="toolTip">
@@ -425,6 +428,9 @@ lignumCAD Version x.y</string>
         <iconset>new_part.png</iconset>
       </property>
       <property name="iconText">
+        <string>Part...</string>
+      </property>
+      <property name="text">
         <string>&amp;Part...</string>
       </property>
       <property name="toolTip">
@@ -439,6 +445,9 @@ lignumCAD Version x.y</string>
         <iconset>new_assembly.png</iconset>
       </property>
       <property name="iconText">
+        <string>Assembly...</string>
+      </property>
+      <property name="text">
         <string>&amp;Assembly...</string>
       </property>
       <property name="toolTip">
@@ -453,6 +462,9 @@ lignumCAD Version x.y</string>
         <iconset>new_drawing.png</iconset>
       </property>
       <property name="iconText">
+        <string>Drawing...</string>
+      </property>
+      <property name="text">
         <string>&amp;Drawing...</string>
       </property>
       <property name="toolTip">
@@ -537,6 +549,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Delete Page</string>
       </property>
+      <property name="text">
+        <string>&amp;Delete Page</string>
+      </property>
       <property name="toolTip">
         <string>Delete the current Page</string>
       </property>
@@ -568,6 +583,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Straight Cut...</string>
       </property>
+      <property name="text">
+        <string>&amp;Straight Cut...</string>
+      </property>
       <property name="toolTip">
         <string>Create a Straight Cut</string>
       </property>
@@ -581,6 +599,9 @@ lignumCAD Version x.y</string>
       </property>
       <property name="iconText">
         <string>Hole...</string>
+      </property>
+      <property name="text">
+        <string>&amp;Hole...</string>
       </property>
       <property name="toolTip">
         <string>Create a Circular Hole</string>
@@ -596,6 +617,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Free Cut...</string>
       </property>
+      <property name="text">
+        <string>&amp;Free Cut...</string>
+      </property>
       <property name="toolTip">
         <string>Create a Free Cut</string>
       </property>
@@ -608,6 +632,9 @@ lignumCAD Version x.y</string>
         <iconset>add_model.png</iconset>
       </property>
       <property name="iconText">
+        <string>Add Model...</string>
+      </property>
+      <property name="text">
         <string>&amp;Add Model...</string>
       </property>
       <property name="toolTip">
@@ -624,6 +651,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Add View...</string>
       </property>
+      <property name="text">
+        <string>Add &amp;View...</string>
+      </property>
       <property name="toolTip">
         <string>Add a View of a Model (Part or Assembly)</string>
       </property>
@@ -636,6 +666,9 @@ lignumCAD Version x.y</string>
         <iconset>export_page.png</iconset>
       </property>
       <property name="iconText">
+        <string>Export...</string>
+      </property>
+      <property name="text">
         <string>&amp;Export...</string>
       </property>
       <property name="toolTip">
@@ -650,6 +683,9 @@ lignumCAD Version x.y</string>
         <iconset>model_info.png</iconset>
       </property>
       <property name="iconText">
+        <string>Model Information...</string>
+      </property>
+      <property name="text">
         <string>Model &amp;Information...</string>
       </property>
       <property name="toolTip">
@@ -665,6 +701,9 @@ lignumCAD Version x.y</string>
       </property>
       <property name="iconText">
         <string>Edge Treatment...</string>
+      </property>
+      <property name="text">
+        <string>&amp;Edge Treatment...</string>
       </property>
       <property name="toolTip">
         <string>Add an Edge Treatment </string>
@@ -695,6 +734,9 @@ lignumCAD Version x.y</string>
         <iconset>new_joint.png</iconset>
       </property>
       <property name="iconText">
+        <string>Joint...</string>
+      </property>
+      <property name="text">
         <string>&amp;Joint...</string>
       </property>
       <property name="toolTip">
@@ -711,6 +753,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Restore view</string>
       </property>
+      <property name="text">
+        <string>&amp;Restore View</string>
+      </property>
       <property name="toolTip">
         <string>Restore the view to its default scale and position</string>
       </property>
@@ -723,6 +768,9 @@ lignumCAD Version x.y</string>
         <iconset>edit_properties.png</iconset>
       </property>
       <property name="iconText">
+        <string>Preferences...</string>
+      </property>
+      <property name="text">
         <string>Pr&amp;eferences...</string>
       </property>
       <property name="toolTip">
@@ -756,6 +804,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Cancel Reference Line Creation</string>
       </property>
+      <property name="text">
+        <string>Cancel Reference Line Creation</string>
+      </property>
       <property name="whatsThis">
         <string>&lt;p&gt;&lt;b&gt;Cancel Reference Line Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this reference line.&lt;/p&gt;</string>
       </property>
@@ -765,6 +816,9 @@ lignumCAD Version x.y</string>
         <iconset>cancel_rectangle.png</iconset>
       </property>
       <property name="iconText">
+        <string>Cancel Rectangle Creation</string>
+      </property>
+      <property name="text">
         <string>Cancel Rectangle Creation</string>
       </property>
       <property name="whatsThis">
@@ -778,6 +832,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Cancel Centerline Creation</string>
       </property>
+      <property name="text">
+        <string>Cancel Centerline Creation</string>
+      </property>
       <property name="whatsThis">
         <string>&lt;p&gt;&lt;b&gt;Cancel Centerline Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this centerline.&lt;/p&gt;</string>
       </property>
@@ -789,6 +846,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Cancel Dimension Creation</string>
       </property>
+      <property name="text">
+        <string>Cancel Dimension Creation</string>
+      </property>
       <property name="whatsThis">
         <string>&lt;p&gt;&lt;b&gt;Cancel Dimension Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this offset constraint.&lt;/p&gt;</string>
       </property>
@@ -798,6 +858,9 @@ lignumCAD Version x.y</string>
         <iconset>cancel_alignment.png</iconset>
       </property>
       <property name="iconText">
+        <string>Cancel Alignment Creation</string>
+      </property>
+      <property name="text">
         <string>Cancel Alignment Creation</string>
       </property>
       <property name="whatsThis">
@@ -828,6 +891,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Cancel Annotation</string>
       </property>
+      <property name="text">
+        <string>Cancel Annotation</string>
+      </property>
       <property name="whatsThis">
         <string>&lt;p&gt;&lt;b&gt;Cancel Annotation Creation&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Click this button (or press &lt;b&gt;ESC&lt;/b&gt;) to cancel the creation of this annotation.&lt;/p&gt;</string>
       </property>
@@ -837,6 +903,9 @@ lignumCAD Version x.y</string>
         <iconset>delete_constraint.png</iconset>
       </property>
       <property name="iconText">
+        <string>Delete Constraint...</string>
+      </property>
+      <property name="text">
         <string>D&amp;elete Constraint...</string>
       </property>
       <property name="toolTip">
@@ -851,6 +920,9 @@ lignumCAD Version x.y</string>
         <iconset>delete_constraint.png</iconset>
       </property>
       <property name="iconText">
+        <string>Cancel Constraint Deletion</string>
+      </property>
+      <property name="text">
         <string>Cancel Constraint Deletion</string>
       </property>
       <property name="toolTip">
@@ -884,6 +956,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>View Left</string>
       </property>
+      <property name="text">
+        <string>View &amp;Left</string>
+      </property>
       <property name="statusTip">
         <string>View the model from the left side</string>
       </property>
@@ -897,6 +972,9 @@ lignumCAD Version x.y</string>
       </property>
       <property name="iconText">
         <string>View Right</string>
+      </property>
+      <property name="text">
+        <string>View &amp;Right</string>
       </property>
       <property name="statusTip">
         <string>View the model from the right side</string>
@@ -912,6 +990,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>View Front</string>
       </property>
+      <property name="text">
+        <string>View &amp;Front</string>
+      </property>
       <property name="statusTip">
         <string>View the model from the front</string>
       </property>
@@ -925,6 +1006,9 @@ lignumCAD Version x.y</string>
       </property>
       <property name="iconText">
         <string>View Back</string>
+      </property>
+      <property name="text">
+        <string>View &amp;Back</string>
       </property>
       <property name="statusTip">
         <string>View the model from behind</string>
@@ -940,6 +1024,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>View Bottom</string>
       </property>
+      <property name="text">
+        <string>View B&amp;ottom</string>
+      </property>
       <property name="statusTip">
         <string>View the model from below</string>
       </property>
@@ -953,6 +1040,9 @@ lignumCAD Version x.y</string>
       </property>
       <property name="iconText">
         <string>View Top</string>
+      </property>
+      <property name="text">
+        <string>View &amp;Top</string>
       </property>
       <property name="statusTip">
         <string>View the model from above</string>
@@ -968,6 +1058,9 @@ lignumCAD Version x.y</string>
       <property name="iconText">
         <string>Show Origin CSys</string>
       </property>
+      <property name="text">
+        <string>Show Origin &amp;CSys</string>
+      </property>
       <property name="statusTip">
         <string>Toggle the display of the origin coordinate system.</string>
       </property>
@@ -977,6 +1070,9 @@ lignumCAD Version x.y</string>
         <iconset>cancel_add_model.png</iconset>
       </property>
       <property name="iconText">
+        <string>Cancel Model Addition</string>
+      </property>
+      <property name="text">
         <string>Cancel Model Addition</string>
       </property>
       <property name="toolTip">
@@ -989,6 +1085,9 @@ lignumCAD Version x.y</string>
       </property>
       <property name="iconText">
         <string>Cancel constraint</string>
+      </property>
+      <property name="text">
+        <string>Cancel Constraint</string>
       </property>
       <property name="toolTip">
         <string>Cancel adding assembly constraint</string>
