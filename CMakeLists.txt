@@ -27,6 +27,7 @@ find_package(Qt6 REQUIRED COMPONENTS
 find_package(Freetype REQUIRED)
 find_package(Fontconfig REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(PkgConfig QUIET)
 if(TARGET OpenGL::GLU)
   set(LIGNUMCAD_GLU_TARGET OpenGL::GLU)
 else()
@@ -35,6 +36,23 @@ else()
   set(LIGNUMCAD_GLU_TARGET PkgConfig::GLU)
 endif()
 find_package(ZLIB REQUIRED)
+
+if(PkgConfig_FOUND)
+  pkg_check_modules(GL2PS QUIET IMPORTED_TARGET gl2ps)
+endif()
+
+if(TARGET PkgConfig::GL2PS)
+  set(LIGNUMCAD_GL2PS_TARGET PkgConfig::GL2PS)
+else()
+  find_path(GL2PS_INCLUDE_DIR NAMES gl2ps.h REQUIRED)
+  find_library(GL2PS_LIBRARY NAMES gl2ps REQUIRED)
+  add_library(GL2PS::GL2PS UNKNOWN IMPORTED)
+  set_target_properties(GL2PS::GL2PS PROPERTIES
+    IMPORTED_LOCATION "${GL2PS_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${GL2PS_INCLUDE_DIR}"
+  )
+  set(LIGNUMCAD_GL2PS_TARGET GL2PS::GL2PS)
+endif()
 
 set(LIGNUMCAD_OPENCASCADE_MODULES
   FoundationClasses
@@ -166,8 +184,6 @@ set(LIGNUMCAD_SOURCES
   command.cpp
   cursorfactory.cpp
   constrainthistory.cpp
-  gl2ps.c
-  gl2ps_qt.cpp
   annotation.cpp
   annotationview.cpp
   oglpaintdevice.cpp
@@ -268,7 +284,6 @@ set(LIGNUMCAD_HEADERS
   command.h
   cursorfactory.h
   constrainthistory.h
-  gl2ps.h
   annotation.h
   annotationview.h
   oglpaintdevice.h
@@ -442,13 +457,7 @@ qt_add_resources(lignumCAD "lignumcad_images"
 
 target_compile_definitions(lignumCAD PRIVATE
   OGLFT_NO_SOLID
-  GL2PS_USE_QT
 )
-
-# TODO(Qt6): Revisit EMF export after the application is running again.
-# The old GL2PS_USE_EMF path depends on bundled Winelib headers that do not
-# build cleanly on modern x86_64 Linux; PDF/SVG export would be a better
-# modern cross-platform replacement.
 
 target_include_directories(lignumCAD PRIVATE
   ${CMAKE_CURRENT_BINARY_DIR}/generated
@@ -478,6 +487,7 @@ target_link_libraries(lignumCAD PRIVATE
   Qt6::Xml
   Qt6::PrintSupport
   Qt6::Svg
+  ${LIGNUMCAD_GL2PS_TARGET}
   ${LIGNUMCAD_OPENCASCADE_LIBRARIES}
 )
 

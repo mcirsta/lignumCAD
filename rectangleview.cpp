@@ -2532,45 +2532,48 @@ namespace Space2D {
     QColor highlight_color = regular_color.lighter();
 
     // Determine if we need to draw a solid rectangle and its color.
+    // Print/PDF export draws outlines only.
 
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
-    if ( style_ == 0 ) {
-      if ( parent()->renderStyle() == lC::Render::SOLID ) {
+    if ( !view()->printing() ) {
+      if ( style_ == 0 ) {
+	if ( parent()->renderStyle() == lC::Render::SOLID ) {
+	  if ( isActivated() )
+	    glColor3ubv( lC::qCubv( highlight_color ) );
+	  else
+	    glColor3ubv( lC::qCubv( regular_color ) );
+
+	  glRectdv( rectangle_->lbVertex(), rectangle_->rtVertex() );
+	}
+      }
+      else if ( style_->style() == lC::Render::SOLID ) {
+	QColor solid_color = style_->solidColor();
+
 	if ( isActivated() )
-	  glColor3ubv( lC::qCubv( highlight_color ) );
-	else
-	  glColor3ubv( lC::qCubv( regular_color ) );
+	  solid_color = solid_color.lighter();
+
+	glColor3ubv( lC::qCubv( solid_color ) );
 
 	glRectdv( rectangle_->lbVertex(), rectangle_->rtVertex() );
       }
-    }
-    else if ( style_->style() == lC::Render::SOLID ) {
-      QColor solid_color = style_->solidColor();
 
-      if ( isActivated() )
-	solid_color = solid_color.lighter();
+      // Maybe it should be textured.
+      if ( style_ == 0 ) {
+	if ( parent()->renderStyle() == lC::Render::TEXTURED ) {
+	  QString texture_file = OpenGLGlobals::instance()->textureFile();
+	  GLuint gl_texture_name = view()->texture( texture_file );
+	  QImage image = QImage( texture_file );
 
-      glColor3ubv( lC::qCubv( solid_color ) );
-
-      glRectdv( rectangle_->lbVertex(), rectangle_->rtVertex() );
-    }
-
-    // Maybe it should be textured.
-    if ( style_ == 0 ) {
-      if ( parent()->renderStyle() == lC::Render::TEXTURED ) {
-	QString texture_file = OpenGLGlobals::instance()->textureFile();
-	GLuint gl_texture_name = view()->texture( texture_file );
-	QImage image = QImage( texture_file );
+	  drawTextured( gl_texture_name, image );
+	}
+      }
+      else if ( style_->style() == lC::Render::TEXTURED ) {
+	GLuint gl_texture_name = view()->texture( style_->textureFile() );
+	QImage image = QImage( style_->textureFile() );
 
 	drawTextured( gl_texture_name, image );
       }
-    }
-    else if ( style_->style() == lC::Render::TEXTURED ) {
-      GLuint gl_texture_name = view()->texture( style_->textureFile() );
-      QImage image = QImage( style_->textureFile() );
-
-      drawTextured( gl_texture_name, image );
     }
 
     // Use a special stipple for the edges?
@@ -2594,12 +2597,10 @@ namespace Space2D {
       stippled = true;
     }
 
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-
     // Each edge may be highlighted separately depending on the seletion
     // mode.
 
-    glBegin( GL_QUADS );
+    glBegin( GL_LINES );
 
     if ( isHighlighted() || isActivated() ||
 	 left_edge_.isHighlighted() || left_edge_.isActivated() )
@@ -2608,6 +2609,7 @@ namespace Space2D {
       glColor3ubv( lC::qCubv( regular_color ) );
 
     glVertex2dv( rectangle_->lbVertex() );
+    glVertex2dv( rectangle_->ltVertex() );
 
     if ( isHighlighted() || isActivated() ||
 	 bottom_edge_.isHighlighted() || bottom_edge_.isActivated() )
@@ -2615,6 +2617,7 @@ namespace Space2D {
     else
       glColor3ubv( lC::qCubv( regular_color ) );
 
+    glVertex2dv( rectangle_->lbVertex() );
     glVertex2dv( rectangle_->rbVertex() );
 
     if ( isHighlighted() || isActivated() ||
@@ -2623,6 +2626,7 @@ namespace Space2D {
     else
       glColor3ubv( lC::qCubv( regular_color ) );
 
+    glVertex2dv( rectangle_->rbVertex() );
     glVertex2dv( rectangle_->rtVertex() );
 
     if ( isHighlighted() || isActivated() ||
@@ -2631,9 +2635,12 @@ namespace Space2D {
     else
       glColor3ubv( lC::qCubv( regular_color ) );
 
+    glVertex2dv( rectangle_->rtVertex() );
     glVertex2dv( rectangle_->ltVertex() );
 
     glEnd();
+
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
     if ( stippled ) glDisable( GL_LINE_STIPPLE );
 
@@ -2752,10 +2759,12 @@ namespace Space2D {
 
     // Draw any dimension views we have
 
-    if ( x0_dimensionview_ != 0 ) x0_dimensionview_->draw();
-    if ( y0_dimensionview_ != 0 ) y0_dimensionview_->draw();
-    if ( x1_dimensionview_ != 0 ) x1_dimensionview_->draw();
-    if ( y1_dimensionview_ != 0 ) y1_dimensionview_->draw();
+    if ( !view()->printing() ) {
+      if ( x0_dimensionview_ != 0 ) x0_dimensionview_->draw();
+      if ( y0_dimensionview_ != 0 ) y0_dimensionview_->draw();
+      if ( x1_dimensionview_ != 0 ) x1_dimensionview_->draw();
+      if ( y1_dimensionview_ != 0 ) y1_dimensionview_->draw();
+    }
   }
 
   void RectangleView::drawTextured ( GLuint gl_texture_name, const QImage& image )

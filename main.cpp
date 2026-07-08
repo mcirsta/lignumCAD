@@ -83,6 +83,12 @@ namespace {
 
 int main( int argc, char ** argv )
 {
+  // Put all QOpenGLWidget contexts in one share group. The offscreen
+  // PDF/print context shares display lists and textures through the
+  // global share context, which outlives any individual widget context
+  // (widget contexts are torn down on hide/reparent under Qt 6).
+  QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts );
+
   QApplication app( argc, argv );
 
   // First, we have to locate our data directory

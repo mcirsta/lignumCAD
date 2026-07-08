@@ -34,7 +34,6 @@
 #include "designbookview.h"
 #include "pageview.h"
 #include "OGLFT.h"
-#include "gl2ps.h"
 #include "command.h"
 #include "openglview.h"
 

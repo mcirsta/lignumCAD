@@ -24,7 +24,21 @@
 #ifndef OPENGLPRINTER_H
 #define OPENGLPRINTER_H
 
+#include <QString>
+
 #include "openglview.h"
+
+class QOffscreenSurface;
+class QOpenGLContext;
+
+struct GL2PSPageSettings {
+  double paperWidthPts = 0.0;
+  double paperHeightPts = 0.0;
+  double marginPts = 36.0;
+  int outputDpi = 72;
+  bool color = true;
+  bool drawFrame = false;
+};
 
 /*!
  * OpenGLPrinter prints pages from the Design Book (I hope).
@@ -65,10 +79,46 @@ public:
 
   bool printing ( void ) const { return true; }
 
-  void print ( PageView* page_view, QPainter& painter, int page_no, int pages );
-  void exportPage ( PageView* page_view, OpenGLView* view,
-		    const QString& exportFilename, int page_no, int pages );
+  //! Paper is white: draw geometry in black regardless of the screen
+  //! color scheme.
+  QColor geometryColor ( void ) const { return QColor( Qt::black ); }
+  //! Paper is white: draw annotations in black regardless of the screen
+  //! color scheme.
+  QColor annotationColor ( void ) const { return QColor( Qt::black ); }
+
+  bool printToPdf ( PageView* page_view, const GL2PSPageSettings& settings,
+		    const QString& pdf_path, int page_no, int pages,
+		    QString* error = 0 );
+  bool exportPage ( PageView* page_view, OpenGLView* source_view,
+		    const GL2PSPageSettings& settings,
+		    const QString& pdf_path, int page_no, int pages,
+		    QString* error = 0 );
 private:
+  /*!
+   * Lazily create the offscreen OpenGL context used for gl2ps capture.
+   * A hidden QOpenGLWidget never initializes its own context under Qt 6,
+   * so rendering happens in a QOffscreenSurface context shared with the
+   * on-screen view instead.
+   * \param error receives a description of the failure, if any.
+   * \return true if the offscreen context is current.
+   */
+  bool makeRenderContextCurrent ( QString* error );
+
+  /*!
+   * Determine the extent of the page's drawn content by rendering it
+   * once in OpenGL feedback mode over a very large projection and
+   * reading back the captured vertices. Requires the render context to
+   * be current and page_view_ to be set. 2D pages only.
+   * \param ll receives the lower left corner of the content in model units.
+   * \param ur receives the upper right corner of the content in model units.
+   * \return true if any content was captured.
+   */
+  bool measureContentBounds2D ( Space2D::Point& ll, Space2D::Point& ur );
+
+  bool renderPagePdf ( PageView* page_view, OpenGLView* source_view,
+		       const GL2PSPageSettings& settings,
+		       const QString& pdf_path, int page_no, int pages,
+		       QString* error );
   /*!
    * Draw the box containing the page metadata. Someday, the user will
    * more control over the format and the contents...
@@ -79,6 +129,15 @@ private:
 
   //! Save the original scale when a subwindow is created.
   Ratio old_scale_;
+  //! PDF/gl2ps output grid, in points per inch.
+  int output_dpi_ = 72;
+  //! The on-screen view whose context the offscreen context shares
+  //! (for display lists and textures).
+  QOpenGLWidget* share_widget_;
+  //! Offscreen context in which gl2ps feedback capture runs.
+  QOpenGLContext* render_context_ = nullptr;
+  //! Surface backing render_context_.
+  QOffscreenSurface* render_surface_ = nullptr;
 };
 
 #endif // OPENGLPRINTER_H

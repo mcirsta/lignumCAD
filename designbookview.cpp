@@ -42,8 +42,13 @@
 #include <qpicture.h>
 #include <qslider.h>
 #include <qlayout.h>
+#include <iostream>
+
 #include <QPrintDialog>
+#include <QProcess>
 #include <QSignalBlocker>
+#include <QTemporaryDir>
+#include <QTimer>
 #include <QVBoxLayout>
 
 #include "configuration.h"
@@ -173,6 +178,12 @@ DesignBookView::DesignBookView ( lignumCADMainWindow* lCMW, const QString file_n
   if ( model_ == 0 ) return;
 
   showView();
+
+  // Temporary Phase 3/4 diagnostic hook (docs/gl2ps-pdf-print-export-plan.md):
+  // export the current page to $LIGNUMCAD_AUTO_EXPORT once the view has
+  // painted, then exit.
+  if ( qEnvironmentVariableIsSet( "LIGNUMCAD_AUTO_EXPORT" ) )
+    QTimer::singleShot( 1500, this, &DesignBookView::autoExportDiagnostic );
 }
 
 DesignBookView::~DesignBookView ()
@@ -1591,6 +1602,49 @@ OpenGLView* DesignBookView::view ( void ) const
   else
     return opengl_view_;
 }
+
+namespace {
+  GL2PSPageSettings gl2psSettingsFromPrinter( const QPrinter* printer )
+  {
+    GL2PSPageSettings settings;
+    const QRect paper = printer->pageLayout().fullRectPoints();
+
+    settings.paperWidthPts = paper.width();
+    settings.paperHeightPts = paper.height();
+    settings.marginPts = 36.;
+    settings.outputDpi = 72;
+    settings.color = printer->colorMode() != QPrinter::GrayScale;
+    // The title block is entirely OGLFT outline text; keep it off until
+    // text export is proven (see docs/gl2ps-pdf-print-export-plan.md,
+    // Phase 5).
+    settings.drawFrame = false;
+
+    return settings;
+  }
+
+  GL2PSPageSettings gl2psSettingsFromView( const OpenGLView* view,
+					   const QPrinter* printer )
+  {
+    GL2PSPageSettings settings = gl2psSettingsFromPrinter( printer );
+    const QRect paper = printer->pageLayout().fullRectPoints();
+
+    if ( view->width() > view->height() ) {
+      settings.paperWidthPts = qMax( paper.width(), paper.height() );
+      settings.paperHeightPts = qMin( paper.width(), paper.height() );
+    }
+    else {
+      settings.paperWidthPts = qMin( paper.width(), paper.height() );
+      settings.paperHeightPts = qMax( paper.width(), paper.height() );
+    }
+
+    settings.marginPts = 36.;
+    settings.outputDpi = 72;
+    settings.drawFrame = false;
+
+    return settings;
+  }
+}
+
 /*
  * Print the design note book.
  */
@@ -1604,69 +1658,103 @@ void DesignBookView::print ( void )
 			arg( lC::STR::VERSION_MAJOR ).
 			arg( lC::STR::VERSION_MINOR ) );
 
+  printer_->setFromTo( 1, page_views_.size() );
+
   QPrintDialog print_dialog( printer_, lCMW_ );
   if ( print_dialog.exec() != QDialog::Accepted )
     return;
 
+  int from_page = 1;
+  int to_page = page_views_.size();
+
+  if ( printer_->printRange() == QPrinter::PageRange ) {
+    from_page = qBound( 1, printer_->fromPage(), (int)page_views_.size() );
+    to_page = qBound( from_page, printer_->toPage(), (int)page_views_.size() );
+  }
+
+  QTemporaryDir temp_dir;
+  if ( !temp_dir.isValid() ) {
+    QMessageBox::warning( lCMW_, tr( "Print" ),
+			  tr( "Could not create a temporary directory for "
+			      "the print files." ) );
+    return;
+  }
+
+  // gl2ps produces one complete PDF document per page, so render each
+  // selected page to its own file and hand the files to the spooler.
+  const GL2PSPageSettings settings = gl2psSettingsFromPrinter( printer_ );
+
   printing_ = true;
 
-  opengl_printer_->makeCurrent();
+  QString error;
+  QStringList page_files;
+  bool rendered = true;
 
-  QPainter painter( printer_ );
+  for ( int page_no = from_page; page_no <= to_page; ++page_no ) {
+    const QString page_file =
+      temp_dir.filePath( QString( "lignumcad-page-%1.pdf" ).arg( page_no ) );
 
-  // OK, deduct 1/2" margin all around. For a QRect, that's 1/2" in
-  // from the top and left edges and a width of 'page width - 2 *
-  // DPI * 1/2"' and a height of 'page height - 2 * DPI * 1/2"'.
-  QRect margin( (int)rint( printer_->logicalDpiX() * .5 ),
-		(int)rint( printer_->logicalDpiY() * .5 ),
-		printer_->width() - printer_->logicalDpiX(),
-		printer_->height() - printer_->logicalDpiY() );
+    if ( !opengl_printer_->printToPdf( page_views_[page_no - 1].get(),
+				       settings, page_file, page_no,
+				       page_views_.size(), &error ) ) {
+      rendered = false;
+      break;
+    }
 
-  painter.setViewport( margin );
-
-  // The window has the same size as the viewport (including having
-  // units of DOTS [aka device units]), but the upper left corner is
-  // (0,0) in window coodinates.
-
-  margin.translate( -margin.x(), -margin.y() );
-
-  // Reverse the polarity of the Y axis here.
-  painter.setWindow( 0, margin.height(), margin.width(), -margin.height() );
-
-  // Print the first page...
-  uint page_no = 1;
-
-  opengl_printer_->print( page_views_.front().get(), painter, page_no,
-				  page_views_.size() );
-
-  // ...then any more which happen to be there. (Evidently, painter is
-  // not flushed by QPrinter::newPage(); you have to draw some more to get
-  // rid of the old stuff. And, you get an extra page if there
-  // are residual graphics in painter.)
-
-  for ( size_t i = 1; i < page_views_.size(); ++i, ++page_no ){
-    printer_->newPage();
-
-    opengl_printer_->print( page_views_[i].get(), painter, page_no,
-				    page_views_.size() );
+    page_files << page_file;
   }
 
   printing_ = false;
   opengl_view_->redisplay();
+
+  if ( !rendered ) {
+    QMessageBox::warning( lCMW_, tr( "Print" ), error );
+    return;
+  }
+
+  const QString output_file = printer_->outputFileName();
+
+  if ( !output_file.isEmpty() ) {
+    QFile::remove( output_file );
+
+    if ( page_files.size() == 1 ) {
+      if ( !QFile::copy( page_files.front(), output_file ) )
+	QMessageBox::warning( lCMW_, tr( "Print" ),
+			      tr( "Could not write '%1'." ).arg( output_file ) );
+    }
+    else {
+      QStringList merge_args = page_files;
+      merge_args << output_file;
+
+      if ( QProcess::execute( "pdfunite", merge_args ) != 0 )
+	QMessageBox::warning( lCMW_, tr( "Print" ),
+			      tr( "Could not merge the pages into '%1'. "
+				  "Printing multiple pages to a file requires "
+				  "the 'pdfunite' tool from poppler." ).
+			      arg( output_file ) );
+    }
+  }
+  else {
+    QStringList lp_args;
+    lp_args << "-d" << printer_->printerName()
+	    << "-t" << printer_->docName();
+
+    if ( printer_->copyCount() > 1 )
+      lp_args << "-n" << QString::number( printer_->copyCount() );
+
+    lp_args += page_files;
+
+    if ( QProcess::execute( "lp", lp_args ) != 0 )
+      QMessageBox::warning( lCMW_, tr( "Print" ),
+			    tr( "Could not send the pages to printer '%1' "
+				"with 'lp'." ).arg( printer_->printerName() ) );
+  }
 }
 /*
- * Export the current page as some kind of metafile.
+ * Export the current page as a PDF file.
  */
 void DesignBookView::exportPage ( void )
 {
-#ifndef GL2PS_USE_EMF
-  // TODO(Qt6): Revisit EMF export after the application is running again.
-  // The old path relies on bundled Winelib headers; prefer a modern PDF/SVG
-  // export path before restoring EMF.
-  QMessageBox::information( lCMW_, tr( "Export page" ),
-			    tr( "EMF export is disabled during the Qt6 port." ) );
-  return;
-#else
   PageView* page_view = currentPageView();
 
   if ( page_view == 0 ) return;
@@ -1675,20 +1763,59 @@ void DesignBookView::exportPage ( void )
     QFileDialog::getSaveFileName( lCMW_,
 				  tr( "Enter a file name for page export" ),
 				  QString(),
-				  tr( "EMF (*.emf)" ) );
+				  tr( "PDF (*.pdf)" ) );
 
   if ( export_file.isEmpty() ) return;
 
+  if ( !export_file.endsWith( ".pdf", Qt::CaseInsensitive ) )
+    export_file += ".pdf";
+
   printing_ = true;
 
-  opengl_printer_->makeCurrent();
-
-  opengl_printer_->exportPage( page_view, opengl_view_, export_file,
-			       current_page_view_ + 1, page_views_.size() );
+  QString error;
+  const bool exported =
+    opengl_printer_->exportPage( page_view, opengl_view_,
+				 gl2psSettingsFromView( opengl_view_, printer_ ),
+				 export_file, current_page_view_ + 1,
+				 page_views_.size(), &error );
 
   printing_ = false;
   opengl_view_->redisplay();
-#endif
+
+  if ( !exported )
+    QMessageBox::warning( lCMW_, tr( "Export page" ), error );
+}
+
+/*
+ * Temporary Phase 3/4 diagnostic (docs/gl2ps-pdf-print-export-plan.md):
+ * export the current page to $LIGNUMCAD_AUTO_EXPORT without any dialogs
+ * and exit with a status code.
+ */
+void DesignBookView::autoExportDiagnostic ( void )
+{
+  const QString export_file = qEnvironmentVariable( "LIGNUMCAD_AUTO_EXPORT" );
+  PageView* page_view = currentPageView();
+
+  if ( page_view == 0 ) {
+    std::cerr << "auto-export: no current page" << std::endl;
+    qApp->exit( 1 );
+    return;
+  }
+
+  printing_ = true;
+
+  QString error;
+  const bool exported =
+    opengl_printer_->exportPage( page_view, opengl_view_,
+				 gl2psSettingsFromView( opengl_view_, printer_ ),
+				 export_file, current_page_view_ + 1,
+				 page_views_.size(), &error );
+
+  printing_ = false;
+
+  std::cerr << "auto-export: "
+	    << ( exported ? "OK" : error.toStdString() ) << std::endl;
+  qApp->exit( exported ? 0 : 1 );
 }
 
 // Visit all the Elements in the XML file and create the corresponding

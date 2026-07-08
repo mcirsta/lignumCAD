@@ -22,16 +22,34 @@
  */
 
 #include <iostream>
+#include <cstdio>
+#include <clocale>
+#include <limits>
+#include <vector>
 
 #include <qpainter.h>
 #include <qfileinfo.h>
 #include <QColor>
+#include <QFile>
+#include <QOffscreenSurface>
+#include <QOpenGLContext>
+#include <QOpenGLFramebufferObject>
 #include <QSvgRenderer>
+
+#include <gl2ps.h>
+
+#if !defined(GL2PS_MAJOR_VERSION) || GL2PS_MAJOR_VERSION != 1 || \
+  !defined(GL2PS_MINOR_VERSION) || GL2PS_MINOR_VERSION < 4
+#error "lignumCAD requires system gl2ps 1.4.x or newer"
+#endif
+
+#ifndef GL2PS_PDF
+#error "This gl2ps header does not support PDF output"
+#endif
 
 #include "OGLFT.h"
 
 #include "vectoralgebra.h"
-#include "gl2ps.h"
 #include "pageview.h"
 #include "model.h"
 #include "designbookview.h"
@@ -53,6 +71,65 @@ extern "C" {
   extern int lCSymbols_ttf_size;
 };
 
+namespace {
+  class NumericLocaleGuard {
+  public:
+    NumericLocaleGuard()
+      : old_locale_( std::setlocale( LC_NUMERIC, 0 ) )
+    {
+      std::setlocale( LC_NUMERIC, "C" );
+    }
+
+    ~NumericLocaleGuard()
+    {
+      if ( !old_locale_.isEmpty() )
+	std::setlocale( LC_NUMERIC, old_locale_.constData() );
+    }
+
+  private:
+    QByteArray old_locale_;
+  };
+
+  //! Release the offscreen context when PDF rendering leaves scope.
+  class CurrentContextGuard {
+  public:
+    explicit CurrentContextGuard( QOpenGLContext* context )
+      : context_( context )
+    {}
+
+    ~CurrentContextGuard()
+    {
+      if ( context_ != nullptr )
+	context_->doneCurrent();
+    }
+
+  private:
+    QOpenGLContext* context_;
+  };
+
+  QString gl2psStatusName( GLint status )
+  {
+    switch ( status ) {
+    case GL2PS_SUCCESS:
+      return QStringLiteral( "GL2PS_SUCCESS" );
+    case GL2PS_INFO:
+      return QStringLiteral( "GL2PS_INFO" );
+    case GL2PS_WARNING:
+      return QStringLiteral( "GL2PS_WARNING" );
+    case GL2PS_ERROR:
+      return QStringLiteral( "GL2PS_ERROR" );
+    case GL2PS_NO_FEEDBACK:
+      return QStringLiteral( "GL2PS_NO_FEEDBACK" );
+    case GL2PS_OVERFLOW:
+      return QStringLiteral( "GL2PS_OVERFLOW" );
+    case GL2PS_UNINITIALIZED:
+      return QStringLiteral( "GL2PS_UNINITIALIZED" );
+    default:
+      return QStringLiteral( "GL2PS_UNKNOWN" );
+    }
+  }
+}
+
 /*!
  * Construct an OpenGL Printer.
  * \param parent The parent widget (a layout, most likely).
@@ -60,14 +137,73 @@ extern "C" {
  */
 OpenGLPrinter::OpenGLPrinter ( DesignBookView* parent, const char* name,
 			       QOpenGLWidget* share_widget )
-  : OpenGLView( parent, name, 0, share_widget )
+  : OpenGLView( parent, name, 0, share_widget ),
+    share_widget_( share_widget )
 {
   hide(); // Very shy
   resize( 1, 1 );
 }
 
 OpenGLPrinter::~OpenGLPrinter ( void )
-{}
+{
+  delete render_context_;
+  delete render_surface_;
+}
+
+bool OpenGLPrinter::makeRenderContextCurrent ( QString* error )
+{
+  if ( render_context_ == nullptr ) {
+    // The global share context (Qt::AA_ShareOpenGLContexts) lives as long
+    // as the application; a QOpenGLWidget's own context can be torn down
+    // on hide/reparent, so it is only the fallback.
+    QOpenGLContext* share_context = QOpenGLContext::globalShareContext();
+
+    if ( share_context == nullptr && share_widget_ != nullptr )
+      share_context = share_widget_->context();
+
+    if ( share_context == nullptr )
+      // Geometry still exports without sharing; only display lists and
+      // textures cached by the on-screen view would be missing.
+      qWarning( "OpenGLPrinter: no share context available; "
+		"PDF rendering uses an unshared OpenGL context" );
+
+    render_context_ = new QOpenGLContext;
+    render_context_->setFormat( share_context != nullptr ?
+				share_context->format() :
+				QSurfaceFormat::defaultFormat() );
+    render_context_->setShareContext( share_context );
+
+    if ( !render_context_->create() ) {
+      delete render_context_;
+      render_context_ = nullptr;
+      if ( error )
+	*error = tr( "Could not create an OpenGL context for PDF rendering." );
+      return false;
+    }
+
+    render_surface_ = new QOffscreenSurface;
+    render_surface_->setFormat( render_context_->format() );
+    render_surface_->create();
+
+    if ( !render_surface_->isValid() ) {
+      delete render_surface_;
+      render_surface_ = nullptr;
+      delete render_context_;
+      render_context_ = nullptr;
+      if ( error )
+	*error = tr( "Could not create an OpenGL surface for PDF rendering." );
+      return false;
+    }
+  }
+
+  if ( !render_context_->makeCurrent( render_surface_ ) ) {
+    if ( error )
+      *error = tr( "Could not activate the OpenGL context for PDF rendering." );
+    return false;
+  }
+
+  return true;
+}
 
 // Lazily construct and cache a font corresponding to the given
 // attributes (since the OGLFT display list caches are cleared on
@@ -101,7 +237,7 @@ OGLFT::Face* OpenGLPrinter::font ( const FaceData& requested_face )
 
   QByteArray file_name = file.toUtf8();
   OGLFT::Face* base_face = new OGLFT::Filled( file_name.constData(),
-					      point_size * scale_ * 72 / logicalDpiY(), 1 );
+					      point_size * scale_ * 72 / output_dpi_, 1 );
 
   faces_.insert( actual_face, base_face );
 
@@ -156,8 +292,8 @@ QRect OpenGLPrinter::newWindow ( const Space2D::Point& origin,
 			      const Space2D::Vector& size )
 {
   // Compute the size in (OpenGL) screen coordinates.
-  int w = (int)fabs( rint( size[X] * logicalDpiX() ) );
-  int h = (int)fabs( rint( size[Y] * logicalDpiY() ) );
+  int w = (int)fabs( rint( size[X] * output_dpi_ ) );
+  int h = (int)fabs( rint( size[Y] * output_dpi_ ) );
 
   // This is a bit of gloss: don't render outside (below) the bounding box.
   glEnable( GL_CLIP_PLANE0 );
@@ -173,10 +309,10 @@ QRect OpenGLPrinter::newWindow ( const Space2D::Point& origin,
   GLdouble plane[] = { 0, 1, 0, scale_ * fabs(size[Y]) };
   glClipPlane( GL_CLIP_PLANE0, plane );
 
-  glScaled( view_data_.scale_/(double)logicalDpiX(),
-	    view_data_.scale_/(double)logicalDpiY(), 1. );
+  glScaled( view_data_.scale_/(double)output_dpi_,
+	    view_data_.scale_/(double)output_dpi_, 1. );
 
-  scale_ = logicalDpiX();
+  scale_ = output_dpi_;
   old_scale_ = view_data_.scale_;
   view_data_.scale_ = scale_;
 
@@ -192,39 +328,184 @@ void OpenGLPrinter::resetWindow ( void )
   scale_ = view_data_.scale_ = old_scale_;
 }
 
-/*
- * Printing is done using OpenGL feedback (and a substantial additional
- * infrastructure). Eventually, the OpenGL primitives are drawn using
- * Qt's drawing routines which themselves are converted into whatever
- * graphics language the QPrinter device uses.
- */
-void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
-			    int page_no, int pages )
+bool OpenGLPrinter::measureContentBounds2D ( Space2D::Point& ll,
+					     Space2D::Point& ur )
 {
+  // Render the page over a region large enough to contain any plausible
+  // drawing and let the feedback buffer report where the content actually
+  // is, in window coordinates.
+  const double world_ll = -1000.;
+  const double world_ur = 1000.;
+  const int measure_viewport = 4096;
+
+  std::vector<GLfloat> buffer( 1 << 20 );
+  GLint captured = -1;
+
+  while ( true ) {
+    glViewport( 0, 0, measure_viewport, measure_viewport );
+
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
+    gluOrtho2D( world_ll, world_ur, world_ll, world_ur );
+
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+
+    glFeedbackBuffer( (GLsizei)buffer.size(), GL_2D, buffer.data() );
+    glRenderMode( GL_FEEDBACK );
+
+    page_view_->draw();
+
+    captured = glRenderMode( GL_RENDER );
+
+    if ( captured >= 0 )
+      break;
+
+    // A negative count means the buffer overflowed.
+    if ( buffer.size() >= ( 1 << 26 ) )
+      return false;
+    buffer.resize( buffer.size() * 4 );
+  }
+
+  if ( captured == 0 )
+    return false;
+
+  double min_x = std::numeric_limits<double>::max();
+  double min_y = std::numeric_limits<double>::max();
+  double max_x = -std::numeric_limits<double>::max();
+  double max_y = -std::numeric_limits<double>::max();
+  bool any_vertex = false;
+
+  GLint i = 0;
+  while ( i < captured ) {
+    const GLfloat token = buffer[i++];
+    int vertices = 0;
+
+    if ( token == GL_POINT_TOKEN ||
+	 token == GL_BITMAP_TOKEN ||
+	 token == GL_DRAW_PIXEL_TOKEN ||
+	 token == GL_COPY_PIXEL_TOKEN )
+      vertices = 1;
+    else if ( token == GL_LINE_TOKEN || token == GL_LINE_RESET_TOKEN )
+      vertices = 2;
+    else if ( token == GL_POLYGON_TOKEN )
+      vertices = (int)buffer[i++];
+    else if ( token == GL_PASS_THROUGH_TOKEN ) {
+      i++;
+      continue;
+    }
+    else
+      break; // Unknown token: stop rather than misparse.
+
+    for ( int v = 0; v < vertices && i + 1 < captured; v++ ) {
+      const double x = buffer[i++];
+      const double y = buffer[i++];
+      min_x = qMin( min_x, x );
+      min_y = qMin( min_y, y );
+      max_x = qMax( max_x, x );
+      max_y = qMax( max_y, y );
+      any_vertex = true;
+    }
+  }
+
+  if ( !any_vertex )
+    return false;
+
+  // Map the window coordinates back into model units.
+  const double world_extent = world_ur - world_ll;
+  ll = Space2D::Point( world_ll + min_x / measure_viewport * world_extent,
+		       world_ll + min_y / measure_viewport * world_extent );
+  ur = Space2D::Point( world_ll + max_x / measure_viewport * world_extent,
+		       world_ll + max_y / measure_viewport * world_extent );
+
+  return true;
+}
+
+bool OpenGLPrinter::printToPdf ( PageView* page_view,
+				 const GL2PSPageSettings& settings,
+				 const QString& pdf_path,
+				 int page_no, int pages,
+				 QString* error )
+{
+  return renderPagePdf( page_view, 0, settings, pdf_path, page_no, pages, error );
+}
+
+bool OpenGLPrinter::exportPage ( PageView* page_view,
+				 OpenGLView* source_view,
+				 const GL2PSPageSettings& settings,
+				 const QString& pdf_path,
+				 int page_no, int pages,
+				 QString* error )
+{
+  return renderPagePdf( page_view, source_view, settings, pdf_path, page_no, pages, error );
+}
+
+bool OpenGLPrinter::renderPagePdf ( PageView* page_view,
+				    OpenGLView* source_view,
+				    const GL2PSPageSettings& settings,
+				    const QString& pdf_path,
+				    int page_no, int pages,
+				    QString* error )
+{
+  if ( page_view == 0 ) {
+    if ( error ) *error = tr( "No page is selected for export." );
+    return false;
+  }
+
+  const int page_width = qRound( settings.paperWidthPts );
+  const int page_height = qRound( settings.paperHeightPts );
+  const int margin = qMax( 0, qRound( settings.marginPts ) );
+
+  if ( page_width <= 0 || page_height <= 0 ||
+       page_width <= 2 * margin || page_height <= 2 * margin ) {
+    if ( error ) *error = tr( "The selected paper size or margin is invalid." );
+    return false;
+  }
+
+  QByteArray file_name = QFile::encodeName( pdf_path );
+  if ( file_name.isEmpty() ) {
+    if ( error ) *error = tr( "The PDF file name is empty." );
+    return false;
+  }
+
+  output_dpi_ = settings.outputDpi > 0 ? settings.outputDpi : 72;
+  NumericLocaleGuard numeric_locale_guard;
+
+  // gl2ps captures through the OpenGL feedback buffer, so a real, current
+  // context is required for the whole begin/draw/end sequence.
+  if ( !makeRenderContextCurrent( error ) )
+    return false;
+
+  CurrentContextGuard context_guard( render_context_ );
+
+  // The offscreen surface has no default framebuffer on some platforms
+  // (e.g. Wayland). Feedback capture never rasterizes, but an incomplete
+  // framebuffer still makes GL discard every draw call with
+  // GL_INVALID_FRAMEBUFFER_OPERATION, so bind a small FBO for the capture.
+  QOpenGLFramebufferObject capture_fbo( 16, 16 );
+  if ( !capture_fbo.bind() ) {
+    if ( error )
+      *error = tr( "Could not bind a framebuffer for PDF rendering." );
+    return false;
+  }
+
   page_view_ = page_view;
   page_view_->viewData( view_data_ );
   scale_ = view_data_.scale_;
   page_view_->viewAttributeChanged();
   page_view_->hideHighlights();
 
-  // This really only needs to happen when the scale is changed...
   clearFontCache();
 
-  QPaintDevice* print_device = painter.device();
+  // Frame the page's actual content: measure it with a plain feedback
+  // pass now, before gl2ps enters its own feedback mode. The screen
+  // viewport is not a usable frame; it may be panned anywhere.
+  Space2D::Point content_ll, content_ur;
+  bool have_content = false;
+  if ( page_view_->space() == SPACE2D )
+    have_content = measureContentBounds2D( content_ll, content_ur );
 
-  // Use the maximum sized viewport on the theory that the OpenGL
-  // implementation may use fixed point for the screen coordinates.
-
-  GLint max_viewport_dims[2];
-  glGetIntegerv( GL_MAX_VIEWPORT_DIMS, max_viewport_dims );
-
-  glViewport( 0, 0, max_viewport_dims[0], max_viewport_dims[1] );
-
-  glGetIntegerv( GL_VIEWPORT, viewport_ );
-
-  // Unfortunately, we can't know a priori how much space the OpenGL
-  // feedback buffer will require, so we have to keep iterating
-  // until we capture the entire page.
+  GLint page_viewport[4] = { 0, 0, page_width, page_height };
 
   GLint buffsize = 0;
   GLint state = GL2PS_OVERFLOW;
@@ -232,49 +513,126 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
   while ( state == GL2PS_OVERFLOW ) {
     buffsize += 1024 * 1024;
 
+    FILE* fp = ::fopen( file_name.constData(), "wb" );
+    if ( fp == 0 ) {
+      page_view_->restoreHighlights();
+      if ( error )
+	*error = tr( "Could not open '%1' for writing." ).arg( pdf_path );
+      return false;
+    }
+
+    glViewport( page_viewport[0], page_viewport[1],
+		page_viewport[2], page_viewport[3] );
+    glGetIntegerv( GL_VIEWPORT, viewport_ );
+
     QByteArray page_name = parent()->objectName().toUtf8();
-    gl2psBeginPage( GL2PS_QT, page_name.constData(), "lignumCAD",
-		    page_view_->space() == SPACE2D? GL2PS_NO_SORT : GL2PS_BSP_SORT,
-		    GL2PS_SIMPLE_LINE_OFFSET | GL2PS_SILENT,
-		    GL_RGBA, 0, NULL, buffsize, &painter );
+    if ( page_name.isEmpty() )
+      page_name = "lignumCAD";
 
-    // The first thing to do is to set up the paper size viewport for
-    // 2D drawing so that we can draw the frame and the metadata box.
+    const GLint sort =
+      page_view_->space() == SPACE2D ? GL2PS_NO_SORT : GL2PS_BSP_SORT;
+    const GLint options = GL2PS_SIMPLE_LINE_OFFSET | GL2PS_SILENT;
 
-    widthIN_ = view_data_.scale_ * painter.viewport().width()
-      / print_device->logicalDpiX();
-    heightIN_ = view_data_.scale_ * painter.viewport().height()
-      / print_device->logicalDpiY();
+    GLint begin = gl2psBeginPage( page_name.constData(), "lignumCAD",
+				  page_viewport,
+				  GL2PS_PDF, sort, options,
+				  GL_RGBA,
+				  0, 0,
+				  0, 0, 0,
+				  buffsize,
+				  fp,
+				  file_name.constData() );
 
-    ll_corner_ = view_data_.view_point_;
-    ur_corner_ = ll_corner_ + Vector( widthIN_, heightIN_ );
+    if ( begin != GL2PS_SUCCESS ) {
+      ::fclose( fp );
+      page_view_->restoreHighlights();
+      if ( error )
+	*error = tr( "gl2ps could not start PDF export: %1 (%2)." ).
+	  arg( gl2psStatusName( begin ) ).arg( begin );
+      return false;
+    }
+
+    if ( page_view_->space() == SPACE2D &&
+	 ( have_content || source_view != 0 ) ) {
+      // Fit the measured content to the printable area; fall back to the
+      // on-screen framing when the page is empty.
+      double region_ll_x, region_ll_y, region_width, region_height;
+
+      if ( have_content ) {
+	// Pad the bounds a little so strokes at the very edge survive.
+	const double pad = .05 * qMax( content_ur[X] - content_ll[X],
+				       content_ur[Y] - content_ll[Y] );
+	region_ll_x = content_ll[X] - pad;
+	region_ll_y = content_ll[Y] - pad;
+	region_width = content_ur[X] - content_ll[X] + 2. * pad;
+	region_height = content_ur[Y] - content_ll[Y] + 2. * pad;
+      }
+      else {
+	const Point source_ll = source_view->llCorner();
+	const Point source_ur = source_view->urCorner();
+	region_ll_x = source_ll[X];
+	region_ll_y = source_ll[Y];
+	region_width = source_ur[X] - source_ll[X];
+	region_height = source_ur[Y] - source_ll[Y];
+      }
+
+      const double draw_width_pts = qMax( 1, page_width - 2 * margin );
+      const double draw_height_pts = qMax( 1, page_height - 2 * margin );
+
+      if ( region_width > 0. && region_height > 0. ) {
+	const double world_per_point =
+	  qMax( region_width / draw_width_pts, region_height / draw_height_pts );
+	widthIN_ = page_width * world_per_point;
+	heightIN_ = page_height * world_per_point;
+
+	const double center_x = region_ll_x + .5 * region_width;
+	const double center_y = region_ll_y + .5 * region_height;
+
+	ll_corner_ = Point( center_x - .5 * widthIN_,
+			    center_y - .5 * heightIN_ );
+	ur_corner_ = Point( center_x + .5 * widthIN_,
+			    center_y + .5 * heightIN_ );
+      }
+      else {
+	ll_corner_ = Point( region_ll_x, region_ll_y );
+	ur_corner_ = Point( region_ll_x + region_width,
+			    region_ll_y + region_height );
+	widthIN_ = region_width;
+	heightIN_ = region_height;
+      }
+    }
+    else {
+      widthIN_ = view_data_.scale_ *
+	static_cast<double>( page_width - 2 * margin ) / output_dpi_;
+      heightIN_ = view_data_.scale_ *
+	static_cast<double>( page_height - 2 * margin ) / output_dpi_;
+
+      ll_corner_ = view_data_.view_point_;
+      ur_corner_ = ll_corner_ + Vector( widthIN_, heightIN_ );
+    }
 
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
 
     gluOrtho2D( ll_corner_[X], ur_corner_[X], ll_corner_[Y], ur_corner_[Y] );
 
-    // There is a slight mismatch between Qt's and OpenGL's idea of
-    // the last pixel on a drawing surface, so reduce the size of the
-    // bounding box by the equivalent of one pixel.
-    ll_corner_ += Vector( view_data_.scale_ / print_device->logicalDpiX(),
-			  view_data_.scale_ / print_device->logicalDpiY() );
-    ur_corner_ -= Vector( view_data_.scale_ / print_device->logicalDpiX(),
-			  view_data_.scale_ / print_device->logicalDpiY() );
+    ll_corner_ += Vector( view_data_.scale_ / output_dpi_,
+			  view_data_.scale_ / output_dpi_ );
+    ur_corner_ -= Vector( view_data_.scale_ / output_dpi_,
+			  view_data_.scale_ / output_dpi_ );
 
     glGetDoublev( GL_PROJECTION_MATRIX, projection_ );
 
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
 
-    // (All that for just this)
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    qglColor( Qt::black );
-    glRectdv( ll_corner_, ur_corner_ );
+    if ( settings.drawFrame ) {
+      glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+      qglColor( Qt::black );
+      glRectdv( ll_corner_, ur_corner_ );
 
-    drawFrame( page_no, pages );
-
-    // Set the viewing transform for the page (which is already set for 2D)
+      drawFrame( page_no, pages );
+    }
 
     if ( page_view_->space() == SPACE3D ) {
       ll_corner_ = view_data_.view_point_ +
@@ -301,14 +659,56 @@ void OpenGLPrinter::print ( PageView* page_view, QPainter& painter,
       glGetDoublev( GL_MODELVIEW_MATRIX, modelview_ );
     }
 
-    page_view_->draw();
+    // Phase 3 diagnostics (docs/gl2ps-pdf-print-export-plan.md): report the
+    // capture framing and optionally draw a known-good primitive.
+    // LIGNUMCAD_GL2PS_SMOKE=before draws it in addition to the page;
+    // LIGNUMCAD_GL2PS_SMOKE=only draws it instead of the page.
+    const QByteArray smoke = qgetenv( "LIGNUMCAD_GL2PS_SMOKE" );
+
+    std::cerr << "gl2ps: space=" << ( page_view_->space() == SPACE2D ? "2D" : "3D" )
+	      << " page=" << page_width << "x" << page_height
+	      << " scale=" << (double)view_data_.scale_
+	      << " figures=" << page_view_->figureViews().size()
+	      << " ortho ll=(" << ll_corner_[X] << "," << ll_corner_[Y]
+	      << ") ur=(" << ur_corner_[X] << "," << ur_corner_[Y] << ")"
+	      << " glGetError(setup)=0x" << std::hex << glGetError() << std::dec
+	      << ( smoke.isEmpty() ? "" : " smoke=" ) << smoke.constData()
+	      << std::endl;
+
+    if ( !smoke.isEmpty() ) {
+      glColor3d( 0., 0., 0. );
+      glBegin( GL_LINES );
+      glVertex3d( ll_corner_[X], ll_corner_[Y], 0. );
+      glVertex3d( ur_corner_[X], ur_corner_[Y], 0. );
+      glEnd();
+    }
+
+    if ( smoke != "only" )
+      page_view_->draw();
+
+    const GLenum draw_error = glGetError();
 
     state = gl2psEndPage();
+    ::fclose( fp );
+
+    std::cerr << "gl2ps: end=" << gl2psStatusName( state ).toStdString()
+	      << " glGetError(draw)=0x" << std::hex << draw_error << std::dec
+	      << std::endl;
+
     if ( state == GL2PS_OVERFLOW )
       std::cout << "hmm. Gl2PS overflow" << std::endl;
   }
 
   page_view_->restoreHighlights();
+
+  if ( state != GL2PS_SUCCESS ) {
+    if ( error )
+      *error = tr( "gl2ps PDF export failed: %1 (%2)." ).
+	arg( gl2psStatusName( state ) ).arg( state );
+    return false;
+  }
+
+  return true;
 }
 
 /*
@@ -376,16 +776,16 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
       // the font sizes).
       QSize logo_size = logo.defaultSize();
       if ( logo_loaded && logo_size.isValid() && logo_size.height() > 0 ) {
-	logo_width = scale_ * logo_size.width() / logicalDpiX();
-	logo_height = scale_ * logo_size.height() / logicalDpiY();
+	logo_width = scale_ * logo_size.width() / output_dpi_;
+	logo_height = scale_ * logo_size.height() / output_dpi_;
 
 	// Scale the logo down so that it is not higher than the business info
 	// text.
 	double logo_scale = ( medium_face->height() + large_face->height() ) /
 	  logo_height;
 	logo_width *= logo_scale;
-	logo_scale_x = scale_ * logo_scale / logicalDpiX();
-	logo_scale_y = scale_ * logo_scale / logicalDpiY();
+	logo_scale_x = scale_ * logo_scale / output_dpi_;
+	logo_scale_y = scale_ * logo_scale / output_dpi_;
       }
       else
 	logo_loaded = false;
@@ -488,134 +888,4 @@ void OpenGLPrinter::drawFrame ( int page_no, int pages )
 
   large_face->draw( row_x + row_cell_width + logo_width/2, text_y,
 		    BusinessInfo::instance().name());
-}
-
-void OpenGLPrinter::exportPage ( PageView* page_view, OpenGLView* view,
-				 const QString& exportFilename,
-				 int page_no, int pages )
-{
-#ifdef GL2PS_USE_EMF
-  GL2PSEMF emf;
-  emf.stream = ::fopen( exportFilename, "w" );
-
-  page_view_ = page_view;
-  page_view_->viewData( view_data_ );
-  scale_ = view_data_.scale_;
-  page_view_->viewAttributeChanged();
-  page_view_->hideHighlights();
-
-  // This really only needs to happen when the scale is changed...
-  clearFontCache();
-
-  // Use the maximum sized viewport on the theory that the OpenGL
-  // implementation may use fixed point for the screen coordinates.
-
-  GLint max_viewport_dims[2];
-  glGetIntegerv( GL_MAX_VIEWPORT_DIMS, max_viewport_dims );
-
-  glViewport( 0, 0, max_viewport_dims[0], max_viewport_dims[1] );
-
-  glGetIntegerv( GL_VIEWPORT, viewport_ );
-
-  // The first thing to do is to set up the paper size viewport for
-  // 2D drawing so that we can draw the frame and the metadata box.
-
-  widthIN_ = view_data_.scale_ * view->width() / view->logicalDpiX();
-  heightIN_ = view_data_.scale_ * view->height() / view->logicalDpiY();
-
-  emf.width = (GLdouble)view->width() / view->logicalDpiX();
-  emf.height = (GLdouble)view->height() / view->logicalDpiY();
-  emf.scale_x = 2540 * emf.width / max_viewport_dims[0];
-  emf.scale_y = 2540 * emf.height / max_viewport_dims[1];
-
-  // Unfortunately, we can't know a priori how much space the OpenGL
-  // feedback buffer will require, so we have to keep iterating
-  // until we capture the entire page.
-
-  GLint buffsize = 0;
-  GLint state = GL2PS_OVERFLOW;
-
-  while ( state == GL2PS_OVERFLOW ) {
-    buffsize += 1024 * 1024;
-
-    gl2psBeginPage( GL2PS_EMF, parent()->name(), "lignumCAD",
-		    page_view_->space() == SPACE2D? GL2PS_NO_SORT : GL2PS_BSP_SORT,
-		    GL2PS_SIMPLE_LINE_OFFSET | GL2PS_SILENT,
-		    GL_RGBA, 0, NULL, buffsize, &emf );
-
-    ll_corner_ = view_data_.view_point_;
-    ur_corner_ = ll_corner_ + Vector( widthIN_, heightIN_ );
-
-    glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
-
-    gluOrtho2D( ll_corner_[X], ur_corner_[X], ll_corner_[Y], ur_corner_[Y] );
-
-    // There is a slight mismatch between Qt's and OpenGL's idea of
-    // the last pixel on a drawing surface, so reduce the size of the
-    // bounding box by the equivalent of one pixel.
-    ll_corner_ += Vector( view_data_.scale_ / view->logicalDpiX(),
-			  view_data_.scale_ / view->logicalDpiY() );
-    ur_corner_ -= Vector( view_data_.scale_ / view->logicalDpiX(),
-			  view_data_.scale_ / view->logicalDpiY() );
-
-    glGetDoublev( GL_PROJECTION_MATRIX, projection_ );
-
-    glMatrixMode( GL_MODELVIEW );
-    glLoadIdentity();
-
-    // (All that for just this)
-
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    qglColor( Qt::black );
-    glRectdv( ll_corner_, ur_corner_ );
-
-    drawFrame( page_no, pages );
-
-    // Set the viewing transform for the page (which is already set for 2D)
-
-    if ( page_view_->space() == SPACE3D ) {
-      ll_corner_ = view_data_.view_point_ +
-	Vector( -widthIN_/2., -heightIN_/2., -widthIN_/2. );
-      ur_corner_ = view_data_.view_point_ +
-	Vector( widthIN_/2., heightIN_/2., widthIN_/2. );
-
-      glMatrixMode( GL_PROJECTION );
-      glLoadIdentity();
-
-      glOrtho( ll_corner_[X], ur_corner_[X],
-	       ll_corner_[Y], ur_corner_[Y],
-	       ll_corner_[Z], ur_corner_[Z] );
-
-      glGetDoublev( GL_PROJECTION_MATRIX, projection_ );
-
-      glMatrixMode( GL_MODELVIEW );
-      glLoadIdentity();
-
-      glRotated( view_data_.z_angle_1_, 0, 0, 1 );
-      glRotated( view_data_.y_angle_0_, 0, 1, 0 );
-      glRotated( view_data_.z_angle_0_, 0, 0, 1 );
-      
-      glGetDoublev( GL_MODELVIEW_MATRIX, modelview_ );
-    }
-
-    page_view_->draw();
-
-    state = gl2psEndPage();
-    if ( state == GL2PS_OVERFLOW ) cout << "hmm. Gl2PS overflow" << endl;
-  }
-
-  ::fclose( emf.stream );
-
-  page_view_->restoreHighlights();
-#else
-  Q_UNUSED( page_view );
-  Q_UNUSED( view );
-  Q_UNUSED( exportFilename );
-  Q_UNUSED( page_no );
-  Q_UNUSED( pages );
-  // TODO(Qt6): Revisit EMF export after the application is running again.
-  // The old GL2PS path depends on bundled Winelib headers that do not build
-  // cleanly on modern x86_64 Linux.
-#endif
 }

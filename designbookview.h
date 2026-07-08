@@ -181,6 +181,9 @@ private slots:
   void setName ( const QString& );
   void updateName ( const QString& );
   void updateUndoRedo ( bool, bool );
+  //! Temporary diagnostic: dialog-free export driven by
+  //! $LIGNUMCAD_AUTO_EXPORT (see docs/gl2ps-pdf-print-export-plan.md).
+  void autoExportDiagnostic ( void );
 };
 
 /*!

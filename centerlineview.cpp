@@ -29,6 +29,8 @@
 #include <qcursor.h>
 #include <iostream>
 
+#include <gl2ps.h>
+
 using std::cerr;
 using std::endl;
 
@@ -46,7 +48,6 @@ using std::endl;
 #include "openglview.h"
 #include "alignment.h"
 #include "handle.h"
-#include "gl2ps.h"
 #include "listviewitem.h"
 #include "dimensionview.h"
 #include "lcdefaultlengthspinbox.h"
@@ -977,7 +978,6 @@ namespace Space2D {
     glLineStipple( 1, 0x18ff );
 
     gl2psEnable( GL2PS_LINE_STIPPLE );
-    gl2psLineStipple( GL2PS_LINE_STIPPLE_DASHDOT );
 
     glBegin( GL_LINES );
     glVertex2dv( end[0] );
