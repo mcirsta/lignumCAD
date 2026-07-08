@@ -461,6 +461,9 @@ void DesignBookView::init ( void )
   layout->addWidget( opengl_view_ );
   layout->addWidget( page_tabbar_ );
 
+  if ( lCMW_->centralWidget() != this )
+    lCMW_->setCentralWidget( this );
+
 #ifndef LAYOUT_COMPREHENSION
   // TODO Without at least one tab, QTabBar starts with an initial height
   // of 0, from which the layout never seems to recover. It's probably
@@ -585,16 +588,15 @@ void DesignBookView::showView ( void )
 		   arg( model_->revision() ).
        arg( model_->changed() ? tr( "*", "model changed flag" ) : QString() ) );
 
-  if ( lCMW_->centralWidget() != this ) {
+  if ( lCMW_->centralWidget() != this )
     lCMW_->setCentralWidget( this );
-    show();
+  show();
 #ifndef LAYOUT_COMPREHENSION
-    if ( page_tabbar_->count() > 0 ) {
-      if ( page_tabbar_->tabText( 0 ) == "###dummy###" )
-	page_tabbar_->removeTab( 0 );
-    }
-#endif
+  if ( page_tabbar_->count() > 0 ) {
+    if ( page_tabbar_->tabText( 0 ) == "###dummy###" )
+      page_tabbar_->removeTab( 0 );
   }
+#endif
 
   model_list_item_->setText( lC::NAME, lC::STR::NAME_ID.
 			     arg( lC::formatName( model_->name() ) ).

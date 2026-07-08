@@ -43,6 +43,9 @@
 
 aboutDialog* lignumCADMainWindow::about_dialog_ = 0;
 
+namespace {
+  constexpr int DOCK_LAYOUT_VERSION = 1;
+}
 
 QString trMainWindowConstant ( const QString& text )
 {
@@ -114,7 +117,7 @@ void lignumCADMainWindow::fileExit()
 
   QSettings settings;
   settings.setValue( lC::Setting::DOCK_GEOMETRIES,
-		     QString::fromLatin1( saveState().toBase64() ) );
+		     QString::fromLatin1( saveState( DOCK_LAYOUT_VERSION ).toBase64() ) );
 
   delete design_book_view_;
 
@@ -218,16 +221,6 @@ void lignumCADMainWindow::showView( const char * file_name )
     
     model_hierarchy_view_ = new QDockWidget( tr( "Model Hierarchy" ), this );
     model_hierarchy_view_->setObjectName( "modelHierarchyView" );
-    addDockWidget( Qt::BottomDockWidgetArea, model_hierarchy_view_ );
-    
-    // See if the user has already set up a layout that they like.
-    // NOTE: THE Qt CODE FOR THIS EXPECTS THE DOCKWINDOW TO HAVE
-    // ALREADY BEEN CREATED! IT EXPECTS THE CAPTION NAME TO BE THE
-    // SAME AS WHAT'S IN THE SETTINGS FILE.
-    QSettings settings;
-    QString buffer = settings.value( lC::Setting::DOCK_GEOMETRIES ).toString();
-    if ( !buffer.isEmpty() )
-	restoreState( QByteArray::fromBase64( buffer.toLatin1() ) );
     
     model_hierarchy_list_ = new ModelHierarchyTreeWidget( model_hierarchy_view_ );
     model_hierarchy_list_->setObjectName( "modelHierarchyList" );
@@ -249,6 +242,18 @@ the name in order for the name change to be detected.</p>" ) );
 	design_book_view_ = new DesignBookView( this, new_file_name );
     else
 	design_book_view_ = new DesignBookView( this );
+
+    addDockWidget( Qt::BottomDockWidgetArea, model_hierarchy_view_ );
+
+    // See if the user has already set up a layout that they like.
+    // NOTE: THE Qt CODE FOR THIS EXPECTS THE DOCKWINDOW TO HAVE
+    // ALREADY BEEN CREATED! IT EXPECTS THE CAPTION NAME TO BE THE
+    // SAME AS WHAT'S IN THE SETTINGS FILE.
+    QSettings settings;
+    QString buffer = settings.value( lC::Setting::DOCK_GEOMETRIES ).toString();
+    if ( !buffer.isEmpty() )
+	restoreState( QByteArray::fromBase64( buffer.toLatin1() ),
+		      DOCK_LAYOUT_VERSION );
 }
 
 void lignumCADMainWindow::fileModelInfo()
