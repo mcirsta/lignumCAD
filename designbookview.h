@@ -160,7 +160,7 @@ public slots:
   void updateCutCopy ( bool );
 
 signals:
-  void setCaption ( const QString& caption );
+  void titleChanged ( const QString& title );
   void pageChanged ( const QString& name );
 
 private:

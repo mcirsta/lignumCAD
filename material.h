@@ -60,8 +60,6 @@ public:
   //! \return an iterator over all material records.
   const MaterialMap& materials ( void ) const { return materials_; }
 private:
-  static MaterialDatabase material_database_;
-
   MaterialMap materials_;
 protected:
   MaterialDatabase ( void );

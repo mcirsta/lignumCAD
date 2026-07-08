@@ -507,8 +507,8 @@ void DesignBookView::init ( void )
   connect( lCMW_->renamePageAction, SIGNAL( triggered(bool) ), SLOT( renamePage() ) );
   connect( lCMW_->deletePageAction, SIGNAL( triggered(bool) ), SLOT( deletePage() ) );
 
-  connect( this, SIGNAL( setCaption( const QString& ) ),
-	   lCMW_, SLOT( setCaption( const QString& ) ) );
+  connect( this, &DesignBookView::titleChanged,
+	   lCMW_, &QWidget::setWindowTitle );
   connect( this, SIGNAL( pageChanged( const QString& ) ),
 	   lCMW_, SLOT( pageChanged( const QString& ) ) );
 
@@ -579,7 +579,7 @@ void DesignBookView::showView ( void )
     insertAction->setEnabled( true );
   }
 
-  emit setCaption( tr( "lignumCAD: %1-%2.%3%4" ).
+  emit titleChanged( tr( "lignumCAD: %1-%2.%3%4" ).
 		   arg( lC::formatName( model_->name() ) ).
 		   arg( model_->version() ).
 		   arg( model_->revision() ).
@@ -824,7 +824,7 @@ void DesignBookView::modelChanged ( bool status )
   if ( status ) {
     model_->setChanged( true );
 
-    emit setCaption( tr( "lignumCAD: %1-%2.%3%4" ).
+    emit titleChanged( tr( "lignumCAD: %1-%2.%3%4" ).
 		     arg( lC::formatName( model_->name() ) ).
 		     arg( model_->version() ).
 		     arg( model_->revision() ).
@@ -835,7 +835,7 @@ void DesignBookView::modelChanged ( bool status )
   else {
     model_->setChanged( false );
 
-    emit setCaption( tr( "lignumCAD: %1-%2.%3" ).
+    emit titleChanged( tr( "lignumCAD: %1-%2.%3" ).
 		     arg( lC::formatName( model_->name() ) ).
 		     arg( model_->version() ).
 		     arg( model_->revision() ) );
@@ -2093,7 +2093,7 @@ bool DesignBookView::newModelWizard ( Model* model, uint& initial_page_id )
 
   new_model_wizard_->selectedPage( initial_page_id );
 
-  emit setCaption( tr( "lignumCAD: %1-%2.%3" ).
+  emit titleChanged( tr( "lignumCAD: %1-%2.%3" ).
 		   arg( model->name() ).
 		   arg( model->version() ).
 		   arg( model->revision() ) );
@@ -2140,7 +2140,7 @@ void DesignBookView::editModelInfo ( void )
     model_->setRevision( model_info_dialog_->revisionSpinBox->value() );
 
   if ( model_->changed() ) {
-    emit setCaption( tr( "lignumCAD: %1-%2.%3%4" ).
+    emit titleChanged( tr( "lignumCAD: %1-%2.%3%4" ).
 		     arg( lC::formatName( model_->name() ) ).
 		     arg( model_->version() ).
 		     arg( model_->revision() ).
@@ -2175,7 +2175,7 @@ void DesignBookView::updateName ( const QString& name )
 			     arg( lC::formatName( model_->name() ) ).
 			     arg( model_->id() ) );
 
-  emit setCaption( tr( "lignumCAD: %1-%2.%3%4" ).
+  emit titleChanged( tr( "lignumCAD: %1-%2.%3%4" ).
 		   arg( lC::formatName( model_->name() ) ).
 		   arg( model_->version() ).
 		   arg( model_->revision() ).

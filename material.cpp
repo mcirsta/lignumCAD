@@ -45,11 +45,10 @@ namespace {
   }
 }
 
-MaterialDatabase MaterialDatabase::material_database_;
-
 MaterialDatabase& MaterialDatabase::instance ( void )
 {
-  return material_database_;
+  static MaterialDatabase material_database;
+  return material_database;
 }
 
 MaterialDatabase::MaterialDatabase ( void )
