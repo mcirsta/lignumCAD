@@ -156,7 +156,7 @@ int main( int argc, char ** argv )
 
   lCMW->setHomeDir( home_dir );
 
-  lCMW->show();
+  lCMW->showMaximized();
 
   // OpenGL text rendering uses FreeType and needs a real font file for
   // the default application font.
