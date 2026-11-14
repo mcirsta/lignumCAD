@@ -127,6 +127,8 @@ public:
 
   std::vector<FigureViewBase*> figureViews ( void ) const;
   const QHash<GLuint, FigureViewBase*>& figureSelectionNames ( void ) const;
+  void pick2D ( const Space2D::Point& point, double tolerance,
+		SelectedNames& selected ) const;
 
   InputObject* inputObject( void ) const { return input_object_; }
   void setInputObject( InputObject* input_object );

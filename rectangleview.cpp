@@ -33,6 +33,7 @@
 #include <qmessagebox.h>
 #include <QImage>
 #include <QPushButton>
+#include <algorithm>
 #include <iostream>
 
 using std::cerr;
@@ -702,7 +703,8 @@ namespace Space2D {
   RectangleModifyInput::RectangleModifyInput ( Rectangle* rectangle,
 					       RectangleView* rectangle_view )
     : selection_type_( TRANSIENT, FIGURE ),
-      rectangle_( rectangle ), rectangle_view_( rectangle_view ), xml_rep_( 0 )
+      rectangle_( rectangle ), rectangle_view_( rectangle_view ),
+      drag_handle_( 0 ), xml_rep_( 0 )
   {
   }
 
@@ -738,12 +740,9 @@ namespace Space2D {
 	    edges_ = rectangle_view_->dragEdges( g );
 
 	    me->accept();
-	  }
-	  else {
-	    rectangle_view_->unsetCursor();
-	  }
 
-	  return; // Probably not the last word here
+	    return;
+	  }
 	}
       }
     }
@@ -794,6 +793,8 @@ namespace Space2D {
 
 	    // Prevent highlighting of this figure's geometry.
 	    rectangle_->setComplete( false );
+
+	    me->accept();
 
 	    return;
 	  }
@@ -1406,14 +1407,14 @@ namespace Space2D {
     bottom_edge_.setSelectionName( view()->genSelectionName() );
     top_edge_.setSelectionName( view()->genSelectionName() );
 
-    left_edge_.setCursorShape( Qt::SizeAllCursor );
-    right_edge_.setCursorShape( Qt::SizeAllCursor );
-    bottom_edge_.setCursorShape( Qt::SizeAllCursor );
-    top_edge_.setCursorShape( Qt::SizeAllCursor );
+    left_edge_.setCursorShape( Qt::OpenHandCursor );
+    right_edge_.setCursorShape( Qt::OpenHandCursor );
+    bottom_edge_.setCursorShape( Qt::OpenHandCursor );
+    top_edge_.setCursorShape( Qt::OpenHandCursor );
 
     solid_rectangle_.setSelectionName( view()->genSelectionName() );
 
-    solid_rectangle_.setCursorShape( Qt::SizeAllCursor );
+    solid_rectangle_.setCursorShape( Qt::OpenHandCursor );
 
     lb_handle_.setSelectionName( view()->genSelectionName() );
     mb_handle_.setSelectionName( view()->genSelectionName() );
@@ -2929,6 +2930,85 @@ namespace Space2D {
     if ( y0_dimensionview_ != 0 ) y0_dimensionview_->select( selection_type );
     if ( x1_dimensionview_ != 0 ) x1_dimensionview_->select( selection_type );
     if ( y1_dimensionview_ != 0 ) y1_dimensionview_->select( selection_type );
+  }
+
+  void RectangleView::pick ( const Point& point, double tolerance,
+			     SelectionType selection_type,
+			     SelectedNames& selected ) const
+  {
+    if ( !rectangle_->isComplete() ) return;
+
+    auto add_hit = [this, &selected]( GLfloat priority, GLuint detail ) {
+      std::vector<GLuint> path;
+      path.push_back( selectionName() );
+      if ( detail != 0 )
+	path.push_back( detail );
+      selected.insert( std::pair<GLfloat, std::vector<GLuint> >( priority, path ) );
+    };
+
+    const double handle_side = view()->handleSize() * view()->scale();
+
+    auto in_handle = [&point, handle_side]( const Point& center ) {
+      return fabs( point[X] - center[X] ) <= handle_side &&
+	     fabs( point[Y] - center[Y] ) <= handle_side;
+    };
+
+    auto try_handle = [&in_handle, &add_hit]( const Point& center,
+					      GLuint selection_name ) {
+      if ( !in_handle( center ) )
+	return false;
+
+      add_hit( 0.f, selection_name );
+      return true;
+    };
+
+    const Point lb = rectangle_->lbVertex();
+    const Point rb = rectangle_->rbVertex();
+    const Point rt = rectangle_->rtVertex();
+    const Point lt = rectangle_->ltVertex();
+
+    if ( isHighlighted() || isActivated() ) {
+      if ( try_handle( lb, lb_handle_.selectionName() ) ||
+	   try_handle( lb + 0.5 * ( rb - lb ), mb_handle_.selectionName() ) ||
+	   try_handle( rb, rb_handle_.selectionName() ) ||
+	   try_handle( rb + 0.5 * ( rt - rb ), mr_handle_.selectionName() ) ||
+	   try_handle( rt, rt_handle_.selectionName() ) ||
+	   try_handle( rt + 0.5 * ( lt - rt ), mt_handle_.selectionName() ) ||
+	   try_handle( lt, lt_handle_.selectionName() ) ||
+	   try_handle( lt + 0.5 * ( lb - lt ), ml_handle_.selectionName() ) )
+	return;
+    }
+
+    const double left = std::min( lb[X], rt[X] );
+    const double right = std::max( lb[X], rt[X] );
+    const double bottom = std::min( lb[Y], rt[Y] );
+    const double top = std::max( lb[Y], rt[Y] );
+
+    const bool in_x = point[X] >= left - tolerance && point[X] <= right + tolerance;
+    const bool in_y = point[Y] >= bottom - tolerance && point[Y] <= top + tolerance;
+
+    if ( fabs( point[Y] - bottom ) <= tolerance && in_x ) {
+      add_hit( .1f, bottom_edge_.selectionName() );
+      return;
+    }
+    if ( fabs( point[X] - right ) <= tolerance && in_y ) {
+      add_hit( .1f, right_edge_.selectionName() );
+      return;
+    }
+    if ( fabs( point[Y] - top ) <= tolerance && in_x ) {
+      add_hit( .1f, top_edge_.selectionName() );
+      return;
+    }
+    if ( fabs( point[X] - left ) <= tolerance && in_y ) {
+      add_hit( .1f, left_edge_.selectionName() );
+      return;
+    }
+
+    if ( selection_type.entity_ == FIGURE &&
+	 point[X] >= left && point[X] <= right &&
+	 point[Y] >= bottom && point[Y] <= top ) {
+      add_hit( .2f, solid_rectangle_.selectionName() );
+    }
   }
 
   /*!

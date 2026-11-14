@@ -333,6 +333,7 @@ private:
   static GLushort phase ( GLdouble c );
   static GLushort phase ( int c );
   static QPoint toPhase ( const QPoint& p );
+  Space3D::Point viewportPoint ( const QPoint& p ) const;
   void set2DView ( void );
   void set3DView ( void );
   void pan2D ( const QPoint& mouse_delta );

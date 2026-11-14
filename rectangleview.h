@@ -227,6 +227,8 @@ namespace Space2D {
   
     void draw ( void ) const;
     void select ( SelectionType select_type ) const;
+    void pick ( const Point& point, double tolerance,
+		SelectionType selection_type, SelectedNames& selected ) const;
 
     std::vector<ConstrainedLine*> dragEdges (  GLuint selection_name ) const;
 

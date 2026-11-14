@@ -317,7 +317,8 @@ namespace Space3D {
   OCSolidModifyInput::OCSolidModifyInput ( OCSolid* solid,
 					   OCSolidView* solid_view )
     : selection_type_( TRANSIENT, FIGURE ),
-      solid_( solid ), solid_view_( solid_view )
+      solid_( solid ), solid_view_( solid_view ),
+      drag_handle_( 0 )
   {
   }
 
@@ -394,6 +395,8 @@ namespace Space3D {
 
 	    // Prevent highlighting of this figure's geometry.
 	    solid_->setComplete( false );
+
+	    me->accept();
 
 	    return;
 	  }

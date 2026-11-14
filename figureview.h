@@ -128,6 +128,9 @@ namespace Space2D {
     Space space ( void ) const { return SPACE2D; }
 
     virtual Curve* geometry ( GLuint /*selection_name*/ ) const { return 0; }
+    virtual void pick ( const Point& /*point*/, double /*tolerance*/,
+			SelectionType /*selection_type*/,
+			SelectedNames& /*selected*/ ) const {}
 
     // Not implemented in 2D...
     void lookup ( QVector<uint>& /*id_path*/, std::vector<GLuint>& /*name_path*/ )

@@ -357,6 +357,8 @@ namespace Space2D {
      * (unused).
      */
     void select ( SelectionType select_type ) const;
+    void pick ( const Point& point, double tolerance,
+		SelectionType selection_type, SelectedNames& selected ) const;
     /*!
      * Since the size of the annotation text box is display property, not
      * an Annotation property, the modify object reports a resize here.

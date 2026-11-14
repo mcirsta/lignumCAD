@@ -460,13 +460,26 @@ inline QPoint OpenGLView::toPhase ( const QPoint& p )
   return QPoint( phase( p.x() ), phase( p.y() ) );
 }
 
+Space3D::Point OpenGLView::viewportPoint ( const QPoint& p ) const
+{
+  double x = p.x();
+  double y = p.y();
+
+  if ( width() > 0 )
+    x *= static_cast<double>( viewport_[2] ) / static_cast<double>( width() );
+  if ( height() > 0 )
+    y *= static_cast<double>( viewport_[3] ) / static_cast<double>( height() );
+
+  return Point( viewport_[0] + x, viewport_[1] + viewport_[3] - y, 0 );
+}
+
 /*
  * "Unproject" the mouse coordinates into model coordinates. For 2D,
  * take the z window coordinate to be zero.
  */
 Space2D::Point OpenGLView::unproject2D ( const QPoint& p ) const
 {
-  return mpv_inverse_ * Point( p.x(), height()-p.y(), 0 );
+  return mpv_inverse_ * viewportPoint( p );
 }
 
 /*
@@ -475,7 +488,7 @@ Space2D::Point OpenGLView::unproject2D ( const QPoint& p ) const
  */
 Space3D::Point OpenGLView::unproject3D ( const QPoint& p ) const
 {
-  return mpv_inverse_ * Point( p.x(), height()-p.y(), 0 );
+  return mpv_inverse_ * viewportPoint( p );
 }
 
 /*
@@ -699,13 +712,13 @@ void OpenGLView::mousePressEvent ( QMouseEvent* me )
   // or if the user didn't actually click on anything, assume it's
   // a view manipulation command.
 
-  if ( ( !me->isAccepted() /*&& selected_names.empty()*/ ) &&
+  if ( ( !me->isAccepted() && selected_names.empty() ) &&
        ( me->button() == Qt::LeftButton ||
 	 me->button() == Qt::MiddleButton ) ) {
     mouse_mode_ = VIEW;
     mouse_position_ = me->pos();
     old_cursor_ = cursor();
-    setCursor( QCursor( Qt::SizeAllCursor ) );
+    setCursor( QCursor( Qt::ClosedHandCursor ) );
   }
 
   updateGL();
@@ -962,9 +975,18 @@ void OpenGLView::wheelEvent ( QWheelEvent* we )
 {
   if ( page_view_ == 0 ) return;
 
+  int wheel_delta = we->angleDelta().y();
+  if ( wheel_delta == 0 )
+    wheel_delta = we->pixelDelta().y();
+
+  if ( wheel_delta == 0 ) {
+    we->ignore();
+    return;
+  }
+
   ViewData old_view_data = view_data_;
 
-  if ( we->angleDelta().y() < 0 )
+  if ( wheel_delta < 0 )
     --view_data_.scale_;
   else
     ++view_data_.scale_;
@@ -990,6 +1012,7 @@ void OpenGLView::wheelEvent ( QWheelEvent* we )
 				       old_view_data, view_data_ ) );
 
   updateGL();
+  we->accept();
 }
 
 /*
@@ -1263,6 +1286,21 @@ void OpenGLView::keyPressEvent ( QKeyEvent* ke )
  */
 void OpenGLView::select( QMouseEvent* me, SelectedNames& selected_names )
 {
+  if ( selection_type_.entity_ == NONE )
+    return;
+
+  if ( page_view_ != 0 && page_view_->space() == SPACE2D ) {
+    const QPoint mouse_position = me->position().toPoint();
+    const Space2D::Point model_position = unproject2D( mouse_position );
+    const Space2D::Point tolerance_position =
+      unproject2D( mouse_position + QPoint( PICK_APERTURE, 0 ) );
+
+    page_view_->pick2D( model_position,
+			model_position.distance( tolerance_position ),
+			selected_names );
+    return;
+  }
+
   const int SELBUFSIZE = 64;
   GLuint select_buffer[SELBUFSIZE];
 
@@ -1276,9 +1314,16 @@ void OpenGLView::select( QMouseEvent* me, SelectedNames& selected_names )
   glLoadIdentity();
   // Note: convert X window convention to OpenGL window convention for
   // y coordinate.
-  const QPoint mouse_position = me->position().toPoint();
-  gluPickMatrix( mouse_position.x(), viewport_[3] - mouse_position.y(),
-		 PICK_APERTURE, PICK_APERTURE,
+  const Point mouse_position = viewportPoint( me->position().toPoint() );
+  const double pick_width = width() > 0
+    ? PICK_APERTURE * static_cast<double>( viewport_[2] ) / static_cast<double>( width() )
+    : PICK_APERTURE;
+  const double pick_height = height() > 0
+    ? PICK_APERTURE * static_cast<double>( viewport_[3] ) / static_cast<double>( height() )
+    : PICK_APERTURE;
+
+  gluPickMatrix( mouse_position[X], mouse_position[Y],
+		 pick_width, pick_height,
 		 viewport_ );
   glOrtho( ll_corner_[X], ur_corner_[X],
 	   ll_corner_[Y], ur_corner_[Y],

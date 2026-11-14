@@ -30,6 +30,7 @@
 #include <QAbstractTextDocumentLayout>
 #include <QTextDocument>
 #include <qrect.h>
+#include <algorithm>
 
 #include "lignumcadmainwindow.h"
 #include "command.h"
@@ -462,7 +463,8 @@ namespace Space2D {
   AnnotationModifyInput::AnnotationModifyInput ( Annotation* annotation,
 						 AnnotationView* annotation_view )
     : selection_type_( TRANSIENT, FIGURE ),
-      annotation_( annotation ), annotation_view_( annotation_view ), xml_rep_( 0 )
+      annotation_( annotation ), annotation_view_( annotation_view ),
+      drag_handle_( 0 ), xml_rep_( 0 )
   {}
   /*!
    * Accept the scanning mouse position.
@@ -534,6 +536,8 @@ namespace Space2D {
 	    old_size_ = annotation_view_->size();
 
 	    selection_type_ = SelectionType( TRANSIENT, NONE );
+
+	    me->accept();
 
 	    return;
 	  }
@@ -742,14 +746,14 @@ namespace Space2D {
     bottom_edge_.setSelectionName( view()->genSelectionName() );
     top_edge_.setSelectionName( view()->genSelectionName() );
 
-    left_edge_.setCursorShape( Qt::SizeAllCursor );
-    right_edge_.setCursorShape( Qt::SizeAllCursor );
-    bottom_edge_.setCursorShape( Qt::SizeAllCursor );
-    top_edge_.setCursorShape( Qt::SizeAllCursor );
+    left_edge_.setCursorShape( Qt::OpenHandCursor );
+    right_edge_.setCursorShape( Qt::OpenHandCursor );
+    bottom_edge_.setCursorShape( Qt::OpenHandCursor );
+    top_edge_.setCursorShape( Qt::OpenHandCursor );
 
     solid_annotation_.setSelectionName( view()->genSelectionName() );
 
-    solid_annotation_.setCursorShape( Qt::SizeAllCursor );
+    solid_annotation_.setCursorShape( Qt::OpenHandCursor );
 
     lb_handle_.setSelectionName( view()->genSelectionName() );
     mb_handle_.setSelectionName( view()->genSelectionName() );
@@ -1142,6 +1146,61 @@ namespace Space2D {
     glRectd( lbVertex()[X], lbVertex()[Y], rtVertex()[X], rtVertex()[Y] );
 
     glPopName();
+  }
+
+  void AnnotationView::pick ( const Point& point, double /*tolerance*/,
+			      SelectionType /*selection_type*/,
+			      SelectedNames& selected ) const
+  {
+    if ( !annotation_->isComplete() ) return;
+
+    auto add_hit = [this, &selected]( GLfloat priority, GLuint detail ) {
+      std::vector<GLuint> path;
+      path.push_back( selectionName() );
+      path.push_back( detail );
+      selected.insert( std::pair<GLfloat, std::vector<GLuint> >( priority, path ) );
+    };
+
+    const double handle_side = view()->handleSize() * view()->scale();
+    auto in_handle = [&point, handle_side]( const Point& center ) {
+      return fabs( point[X] - center[X] ) <= handle_side &&
+	     fabs( point[Y] - center[Y] ) <= handle_side;
+    };
+
+    auto try_handle = [&in_handle, &add_hit]( const Point& center,
+					      GLuint selection_name ) {
+      if ( !in_handle( center ) )
+	return false;
+
+      add_hit( 0.f, selection_name );
+      return true;
+    };
+
+    const Point lb = lbVertex();
+    const Point rb = rbVertex();
+    const Point rt = rtVertex();
+    const Point lt = ltVertex();
+
+    if ( isHighlighted() || isActivated() ) {
+      if ( try_handle( lb, lb_handle_.selectionName() ) ||
+	   try_handle( lb + 0.5 * ( rb - lb ), mb_handle_.selectionName() ) ||
+	   try_handle( rb, rb_handle_.selectionName() ) ||
+	   try_handle( rb + 0.5 * ( rt - rb ), mr_handle_.selectionName() ) ||
+	   try_handle( rt, rt_handle_.selectionName() ) ||
+	   try_handle( rt + 0.5 * ( lt - rt ), mt_handle_.selectionName() ) ||
+	   try_handle( lt, lt_handle_.selectionName() ) ||
+	   try_handle( lt + 0.5 * ( lb - lt ), ml_handle_.selectionName() ) )
+	return;
+    }
+
+    const double left = std::min( lb[X], rt[X] );
+    const double right = std::max( lb[X], rt[X] );
+    const double bottom = std::min( lb[Y], rt[Y] );
+    const double top = std::max( lb[Y], rt[Y] );
+
+    if ( point[X] >= left && point[X] <= right &&
+	 point[Y] >= bottom && point[Y] <= top )
+      add_hit( .2f, solid_annotation_.selectionName() );
   }
 
   lC::ValidDelta AnnotationView::adjust ( int selection_name,

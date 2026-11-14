@@ -142,6 +142,8 @@ namespace Space2D {
     // Implementation of GraphicsObject interface
     void draw ( void ) const;
     void select ( SelectionType select_type ) const;
+    void pick ( const Point& point, double tolerance,
+		SelectionType selection_type, SelectedNames& selected ) const;
 
     // Implementation of FigureView interface
 

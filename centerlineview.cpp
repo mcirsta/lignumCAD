@@ -436,8 +436,9 @@ namespace Space2D {
 
   CenterlineModifyInput::CenterlineModifyInput( Centerline* centerline,
 						CenterlineView* centerline_view )
-    : centerline_( centerline ), centerline_view_( centerline_view ),
-      xml_rep_( 0 )
+    : selection_type_( TRANSIENT, FIGURE ),
+      centerline_( centerline ), centerline_view_( centerline_view ),
+      drag_handle_( 0 ), xml_rep_( 0 )
   {}
 
   /*
@@ -524,6 +525,7 @@ namespace Space2D {
 
 	  // I think this controls some state...
 	  drag_handle_ = (*f).second[1]; // (*(*f).second->rbegin()).first;
+	  me->accept();
 	  return;
 	}
       }
@@ -1065,6 +1067,67 @@ namespace Space2D {
     glPopName();
 
     if ( dimension_view_ != 0 ) dimension_view_->select( selection_type );
+  }
+
+  void CenterlineView::pick ( const Point& point, double tolerance,
+			      SelectionType /*selection_type*/,
+			      SelectedNames& selected ) const
+  {
+    if ( !centerline_->isComplete() ) return;
+
+    auto add_hit = [this, &selected]( GLfloat priority, GLuint detail ) {
+      std::vector<GLuint> path;
+      path.push_back( selectionName() );
+      path.push_back( detail );
+      selected.insert( std::pair<GLfloat, std::vector<GLuint> >( priority, path ) );
+    };
+
+    Point ll_corner = view()->llCorner();
+    Point ur_corner = view()->urCorner();
+
+    Point end0;
+    Point end1;
+
+    if ( centerline_->line()->isHorizontal() ) {
+      end0 = Point( ll_corner[X], centerline_->line()->o()[Y] );
+      end1 = Point( ur_corner[X], centerline_->line()->o()[Y] );
+    }
+    else {
+      end0 = Point( centerline_->line()->o()[X], ll_corner[Y] );
+      end1 = Point( centerline_->line()->o()[X], ur_corner[Y] );
+    }
+
+    const double handle_side = view()->handleSize() * view()->scale();
+    auto in_handle = [&point, handle_side]( const Point& center ) {
+      return fabs( point[X] - center[X] ) <= handle_side &&
+	     fabs( point[Y] - center[Y] ) <= handle_side;
+    };
+
+    auto try_handle = [&in_handle, &add_hit]( const Point& center,
+					      GLuint selection_name ) {
+      if ( !in_handle( center ) )
+	return false;
+
+      add_hit( 0.f, selection_name );
+      return true;
+    };
+
+    if ( isHighlighted() || isActivated() ) {
+      Vector spacing = (1./3.) * ( end1 - end0 );
+
+      if ( try_handle( end0 + spacing, handle0_.selectionName() ) ||
+	   try_handle( end1 - spacing, handle1_.selectionName() ) )
+	return;
+    }
+
+    if ( centerline_->line()->isHorizontal() ) {
+      if ( fabs( point[Y] - centerline_->line()->o()[Y] ) <= tolerance )
+	add_hit( .1f, line_.selectionName() );
+    }
+    else {
+      if ( fabs( point[X] - centerline_->line()->o()[X] ) <= tolerance )
+	add_hit( .1f, line_.selectionName() );
+    }
   }
 
   void CenterlineView::setCursor ( GLuint selection_name )

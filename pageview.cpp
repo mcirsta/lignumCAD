@@ -99,6 +99,30 @@ const QHash<GLuint, FigureViewBase*>& PageView::figureSelectionNames ( void ) co
   return figure_selection_names_;
 }
 
+void PageView::pick2D ( const Space2D::Point& point, double tolerance,
+			SelectedNames& selected ) const
+{
+  GLfloat figure_depth = 0;
+  const SelectionType selection_type = selectionType();
+
+  for ( auto f = figure_views_.rbegin(); f != figure_views_.rend(); ++f ) {
+    const Space2D::FigureView* figure_view =
+      dynamic_cast<const Space2D::FigureView*>( f->get() );
+
+    if ( figure_view == 0 )
+      continue;
+
+    SelectedNames figure_selected;
+    figure_view->pick( point, tolerance, selection_type, figure_selected );
+
+    for ( const auto& hit : figure_selected )
+      selected.insert( std::pair<GLfloat, std::vector<GLuint> >
+		       ( figure_depth + hit.first, hit.second ) );
+
+    figure_depth += 1.f;
+  }
+}
+
 /*
  * If an input object is set on the page, then PageView sends mouse
  * events to it first. If the object ignores the event, PageView
@@ -624,6 +648,8 @@ void PageView::pickFigure ( QMouseEvent* /*me*/, const SelectedNames& selected )
  */
 void PageView::activateFigure ( QMouseEvent* me, const SelectedNames& selected )
 {
+  me->accept();
+
   // Get the "first" element
   SelectedNames::const_iterator f = selected.begin();
   // This will be the only figure in activated_ after this operation
